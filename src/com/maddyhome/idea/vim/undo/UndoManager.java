@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.undo;
 
 /*
 * IdeaVim - A Vim emulator plugin for IntelliJ Idea
-* Copyright (C) 2003 Rick Maddy
+* Copyright (C) 2003-2005 Rick Maddy
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -184,7 +184,8 @@ public class UndoManager
             EditorUndoList list = (EditorUndoList)UndoManager.getInstance().getEditors().get(event.getDocument());
             if (list != null)
             {
-                list.addChange(new DocumentChange(event.getOffset(), event.getOldFragment(), event.getNewFragment()));
+                list.addChange(new DocumentChange(event.getOffset(), event.getOldFragment().toString(),
+                    event.getNewFragment().toString()));
             }
         }
     }

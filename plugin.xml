@@ -5,11 +5,11 @@
     <vendor email="rick@maddyhome.com">Rick Maddy</vendor>
     <change-notes>
 <![CDATA[
-New Features<br>
-- Support for Irida (build 3136).<br>
+Bug Fixes<br>
+- Support for Irida (build 3185).<br>
 ]]>
     </change-notes>
-    <idea-version since-build="3136"/>
+    <idea-version since-build="3185"/>
 
     <application-components>
         <component>

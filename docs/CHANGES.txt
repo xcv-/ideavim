@@ -1,8 +1,12 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.9.0
-New Features
-- Support for Irida (build 3136)
+@VERSION@ from 0.9.1
+Bug Fixes
+- Support for Irida API changes (build 3185)
+
+0.9.1 from 0.9.0
+Bug Fixes
+- Support for Irida API changes (build 3136)
 
 0.9.0 from 0.8.3
 New Features

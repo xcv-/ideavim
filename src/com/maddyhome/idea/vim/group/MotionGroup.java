@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.group;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2004 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -460,7 +460,7 @@ public class MotionGroup extends AbstractActionGroup
         Project proj = EditorData.getProject(editor);
         FileEditorManager fMgr = FileEditorManager.getInstance(proj);
         //return fMgr.openFile(new OpenFileDescriptor(file), ScrollType.RELATIVE, true);
-        return fMgr.openTextEditor(new OpenFileDescriptor(file), true);
+        return fMgr.openTextEditor(new OpenFileDescriptor(proj, file), true);
     }
 
     public int moveCaretToMatchingPair(Editor editor, DataContext context)
@@ -914,16 +914,16 @@ public class MotionGroup extends AbstractActionGroup
     {
         int start = EditorHelper.getLineStartOffset(editor, lline);
         int end = EditorHelper.getLineEndOffset(editor, lline, true);
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = editor.getDocument().getCharsSequence();
         int pos = start;
         for (int offset = end; offset > start; offset--)
         {
-            if (offset >= chars.length)
+            if (offset >= chars.length())
             {
                 break;
             }
 
-            if (!Character.isWhitespace(chars[offset]))
+            if (!Character.isWhitespace(chars.charAt(offset)))
             {
                 pos = offset;
                 break;

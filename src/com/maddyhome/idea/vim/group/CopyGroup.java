@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.group;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -154,7 +154,7 @@ public class CopyGroup extends AbstractActionGroup
                 pos = Math.min(editor.getDocument().getTextLength(),
                     CommandGroups.getInstance().getMotion().moveCaretToLineEnd(editor, true) + 1);
                 if (pos > 0 && pos == editor.getDocument().getTextLength() &&
-                    editor.getDocument().getChars()[pos - 1] != '\n')
+                    editor.getDocument().getCharsSequence().charAt(pos - 1) != '\n')
                 {
                     editor.getDocument().insertString(pos, "\n");
                 }
@@ -188,7 +188,7 @@ public class CopyGroup extends AbstractActionGroup
                 pos = Math.min(editor.getDocument().getTextLength(),
                     CommandGroups.getInstance().getMotion().moveCaretToLineEnd(editor, true) + 1);
                 if (pos > 0 && pos == editor.getDocument().getTextLength() &&
-                    editor.getDocument().getChars()[pos - 1] != '\n')
+                    editor.getDocument().getCharsSequence().charAt(pos - 1) != '\n')
                 {
                     editor.getDocument().insertString(pos, "\n");
                 }

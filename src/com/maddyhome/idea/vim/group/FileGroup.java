@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,7 +58,7 @@ public class FileGroup extends AbstractActionGroup
             if (vf != null)
             {
                 FileEditorManager fem = FileEditorManager.getInstance(proj);
-                fem.openTextEditor(new OpenFileDescriptor(vf), true);
+                fem.openTextEditor(new OpenFileDescriptor(proj, vf), true);
 
                 return true;
             }
@@ -182,7 +182,7 @@ public class FileGroup extends AbstractActionGroup
         }
 
         //fem.openFile(new OpenFileDescriptor(editors[count]), ScrollType.RELATIVE, true);
-        fem.openTextEditor(new OpenFileDescriptor(editors[count]), true);
+        fem.openTextEditor(new OpenFileDescriptor(proj, editors[count]), true);
 
         return true;
     }
@@ -205,7 +205,7 @@ public class FileGroup extends AbstractActionGroup
                 int pos = (i + (count % editors.length) + editors.length) % editors.length;
 
                 //fem.openFile(new OpenFileDescriptor(editors[pos]), ScrollType.RELATIVE, true);
-                fem.openTextEditor(new OpenFileDescriptor(editors[pos]), true);
+                fem.openTextEditor(new OpenFileDescriptor(proj, editors[pos]), true);
             }
         }
     }
@@ -220,7 +220,7 @@ public class FileGroup extends AbstractActionGroup
         VirtualFile vf = (VirtualFile)lastSelections.get(fem);
         if (vf != null)
         {
-            fem.openTextEditor(new OpenFileDescriptor(vf), true);
+            fem.openTextEditor(new OpenFileDescriptor(proj, vf), true);
         }
         else
         {

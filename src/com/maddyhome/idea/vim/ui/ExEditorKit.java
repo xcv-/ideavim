@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.ui;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2004 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -198,7 +198,7 @@ public class ExEditorKit extends DefaultEditorKit
             {
                 Document doc = target.getDocument();
                 Caret caret = target.getCaret();
-                int offset = SearchHelper.findNextWord(target.getText().toCharArray(), caret.getDot(), doc.getLength(),
+                int offset = SearchHelper.findNextWord(target.getText(), caret.getDot(), doc.getLength(),
                     -1, false, false);
                 try
                 {

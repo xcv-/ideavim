@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.group;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2004 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -291,7 +291,7 @@ public class ChangeGroup extends AbstractActionGroup
         if (vp.column < len)
         {
             int offset = EditorHelper.visualPostionToOffset(editor, vp);
-            char ch = editor.getDocument().getChars()[offset];
+            char ch = editor.getDocument().getCharsSequence().charAt(offset);
             processKey(editor, context, KeyStroke.getKeyStroke(ch));
             res = true;
         }
@@ -767,9 +767,9 @@ public class ChangeGroup extends AbstractActionGroup
         }
 
         // This is a kludge for dw, dW, and d[w. Without this kludge, an extra newline is deleted when it shouldn't be.
-        String text = new String(editor.getDocument().getChars(), range.getStartOffset(),
-            range.getEndOffset() - range.getStartOffset());
-        if (text.indexOf('\n') >= 0 && !(range.getStartOffset() == 0 || editor.getDocument().getChars()[range.getStartOffset() - 1] == '\n'))
+        String text = editor.getDocument().getCharsSequence().subSequence(range.getStartOffset(),
+            range.getEndOffset()).toString();
+        if (text.indexOf('\n') >= 0 && !(range.getStartOffset() == 0 || editor.getDocument().getCharsSequence().charAt(range.getStartOffset() - 1) == '\n'))
         {
             String id = ActionManager.getInstance().getId(argument.getMotion().getAction());
             logger.debug("action id=" + id);
@@ -922,14 +922,14 @@ public class ChangeGroup extends AbstractActionGroup
      */
     public boolean changeCharacterRange(Editor editor, DataContext context, TextRange range, char ch)
     {
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = editor.getDocument().getCharsSequence();
         int[] starts = range.getStartOffsets();
         int[] ends = range.getStartOffsets();
         for (int j = ends.length - 1; j >= 0; j--)
         {
             for (int i = starts[j]; i < ends[j]; i++)
             {
-                if (i < chars.length && '\n' != chars[i])
+                if (i < chars.length() && '\n' != chars.charAt(i))
                 {
                     replaceText(editor, context, i, i + 1, Character.toString(ch));
                 }
@@ -1013,7 +1013,7 @@ public class ChangeGroup extends AbstractActionGroup
         if (id.equals("VimMotionWordRight"))
         {
             if (EditorHelper.getFileSize(editor) > 0 &&
-                !Character.isWhitespace(editor.getDocument().getChars()[editor.getCaretModel().getOffset()]))
+                !Character.isWhitespace(editor.getDocument().getCharsSequence().charAt(editor.getCaretModel().getOffset())))
             {
                 kludge = true;
                 argument.getMotion().setAction(ActionManager.getInstance().getAction("VimMotionWordEndRight"));
@@ -1023,7 +1023,7 @@ public class ChangeGroup extends AbstractActionGroup
         else if (id.equals("VimMotionBigWordRight"))
         {
             if (EditorHelper.getFileSize(editor) > 0 &&
-                !Character.isWhitespace(editor.getDocument().getChars()[editor.getCaretModel().getOffset()]))
+                !Character.isWhitespace(editor.getDocument().getCharsSequence().charAt(editor.getCaretModel().getOffset())))
             {
                 kludge = true;
                 skipPunc = true;
@@ -1034,7 +1034,7 @@ public class ChangeGroup extends AbstractActionGroup
         else if (id.equals("VimMotionCamelRight"))
         {
             if (EditorHelper.getFileSize(editor) > 0 &&
-                !Character.isWhitespace(editor.getDocument().getChars()[editor.getCaretModel().getOffset()]))
+                !Character.isWhitespace(editor.getDocument().getCharsSequence().charAt(editor.getCaretModel().getOffset())))
             {
                 kludge = true;
                 argument.getMotion().setAction(ActionManager.getInstance().getAction("VimMotionCamelEndRight"));
@@ -1047,8 +1047,8 @@ public class ChangeGroup extends AbstractActionGroup
             int pos = editor.getCaretModel().getOffset();
             int size = EditorHelper.getFileSize(editor);
             int cnt = count * argument.getMotion().getCount();
-            int pos1 = SearchHelper.findNextWordEnd(editor.getDocument().getChars(), pos, size, cnt, skipPunc, false, false);
-            int pos2 = SearchHelper.findNextWordEnd(editor.getDocument().getChars(), pos1, size, -cnt, skipPunc, false, false);
+            int pos1 = SearchHelper.findNextWordEnd(editor.getDocument().getCharsSequence(), pos, size, cnt, skipPunc, false, false);
+            int pos2 = SearchHelper.findNextWordEnd(editor.getDocument().getCharsSequence(), pos1, size, -cnt, skipPunc, false, false);
             logger.debug("pos=" + pos);
             logger.debug("pos1=" + pos1);
             logger.debug("pos2=" + pos2);
@@ -1202,16 +1202,16 @@ public class ChangeGroup extends AbstractActionGroup
             start = t;
         }
 
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = editor.getDocument().getCharsSequence();
         for (int i = start; i < end; i++)
         {
-            if (i >= chars.length)
+            if (i >= chars.length())
             {
                 break;
             }
 
-            char ch = CharacterHelper.changeCase(chars[i], type);
-            if (ch != chars[i])
+            char ch = CharacterHelper.changeCase(chars.charAt(i), type);
+            if (ch != chars.charAt(i))
             {
                 replaceText(editor, context, i, i + 1, Character.toString(ch));
             }

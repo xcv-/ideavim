@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.helper;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -143,7 +143,7 @@ public class EditorHelper
     {
         int len = editor.getDocument().getLineCount();
         if (editor.getDocument().getTextLength() > 0 &&
-            editor.getDocument().getChars()[editor.getDocument().getTextLength() - 1] == '\n')
+            editor.getDocument().getCharsSequence().charAt(editor.getDocument().getTextLength() - 1) == '\n')
         {
             len--;
         }
@@ -170,7 +170,7 @@ public class EditorHelper
     {
         Document doc = editor.getDocument();
         int len = doc.getTextLength();
-        if (!incEnd && len >= 1 && doc.getChars()[len - 1] == '\n')
+        if (!incEnd && len >= 1 && doc.getCharsSequence().charAt(len - 1) == '\n')
         {
             len--;
         }
@@ -362,16 +362,16 @@ public class EditorHelper
     {
         int start = getLineStartOffset(editor, lline);
         int end = getLineEndOffset(editor, lline, true);
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = editor.getDocument().getCharsSequence();
         int pos = end;
         for (int offset = start; offset < end; offset++)
         {
-            if (offset >= chars.length)
+            if (offset >= chars.length())
             {
                 break;
             }
 
-            if (!Character.isWhitespace(chars[offset]))
+            if (!Character.isWhitespace(chars.charAt(offset)))
             {
                 pos = offset;
                 break;
@@ -386,7 +386,7 @@ public class EditorHelper
         int start = getLineStartOffset(editor, lline);
         int end = getLeadingCharacterOffset(editor, lline);
 
-        return new String(editor.getDocument().getChars(), start, end - start);
+        return editor.getDocument().getCharsSequence().subSequence(start, end).toString();
     }
 
     /**
@@ -432,7 +432,7 @@ public class EditorHelper
      */
     public static String getText(Editor editor, int start, int end)
     {
-        return new String(editor.getDocument().getChars(), start, end - start);
+        return editor.getDocument().getCharsSequence().subSequence(start, end).toString();
     }
 
     /**
@@ -490,7 +490,7 @@ public class EditorHelper
 
     public static CharBuffer getLineBuffer(Editor editor, int lline)
     {
-        return CharBuffer.wrap(editor.getDocument().getChars(), getLineStartOffset(editor, lline),
+        return CharBuffer.wrap(editor.getDocument().getCharsSequence(), getLineStartOffset(editor, lline),
             getLineCharCount(editor, lline));
     }
 }
