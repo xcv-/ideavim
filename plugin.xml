@@ -6,10 +6,10 @@
     <change-notes>
 <![CDATA[
 New Features<br>
-- Support for Irida (build 3075).<br>
+- Support for Irida (build 3136).<br>
 ]]>
     </change-notes>
-    <idea-version since-build="3075"/>
+    <idea-version since-build="3136"/>
 
     <application-components>
         <component>

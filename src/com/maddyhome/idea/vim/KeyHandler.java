@@ -464,7 +464,7 @@ public class KeyHandler
         // What is "place"? Leave it the empty string for now.
         // Is the template presentation sufficient?
         // What are the modifiers? Is zero OK?
-        action.actionPerformed(new AnActionEvent(null, context, "", action.getTemplatePresentation(), 0));
+        action.actionPerformed(new AnActionEvent(null, context, "", action.getTemplatePresentation(), ActionManager.getInstance(), 0));
     }
 
     /**
