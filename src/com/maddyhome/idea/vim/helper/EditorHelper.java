@@ -490,7 +490,7 @@ public class EditorHelper
 
     public static CharBuffer getLineBuffer(Editor editor, int lline)
     {
-        return CharBuffer.wrap(editor.getDocument().getCharsSequence(), getLineStartOffset(editor, lline),
-            getLineCharCount(editor, lline));
+        int start = getLineStartOffset(editor, lline);
+        return CharBuffer.wrap(editor.getDocument().getCharsSequence(), start, start + getLineCharCount(editor, lline));
     }
 }

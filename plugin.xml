@@ -6,7 +6,8 @@
     <change-notes>
 <![CDATA[
 Bug Fixes<br>
-- Support for Irida (build 3185).<br>
+- Fixed internal error when doing searches and many other actions. Regression
+  from 0.9.1.
 ]]>
     </change-notes>
     <idea-version since-build="3185"/>
