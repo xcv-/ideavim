@@ -5,22 +5,11 @@
     <vendor email="rick@maddyhome.com">Rick Maddy</vendor>
     <change-notes>
 <![CDATA[
-Bug Fixes<br>
-- After a fresh install it is possible to get a NPE when loading the first
-project. Now fixed.<br>
-- Fixed :class and :find. These were also broken by the focus fix in 0.7.2.<br>
-- Fixed * and # commands on one letter words.<br>
-- Fixed * and # commands on last word of line with trailing punctuation.<br>
-- Fixed b and e commands when trying to move to first or last word of file and
-the first or last character of the file was punctuation.<br>
-- Fixed NullPointerException appearing in system log when viewing a .form file.<br>
-- Fixed extraneous characters getting added to a register during recording.<br>
-- Use file type's indent size instead of tab size for indenting text.<br>
-- Restore caret if plugin is disabled.<br>
-- Fixed ability to delete blank line at end of files.<br>
+New Features<br>
+- Support for Irida (build 3075).<br>
 ]]>
     </change-notes>
-    <idea-version since-build="1162"/>
+    <idea-version since-build="3075"/>
 
     <application-components>
         <component>

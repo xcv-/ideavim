@@ -38,6 +38,7 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.common.CharacterPosition;
 import com.maddyhome.idea.vim.common.TextRange;
@@ -56,10 +57,12 @@ import com.maddyhome.idea.vim.regexp.CharHelper;
 import com.maddyhome.idea.vim.regexp.CharPointer;
 import com.maddyhome.idea.vim.regexp.CharacterClasses;
 import com.maddyhome.idea.vim.regexp.RegExp;
-import com.maddyhome.idea.vim.VimPlugin;
 import org.jdom.CDATA;
 import org.jdom.Element;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -68,9 +71,6 @@ import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -1237,7 +1237,11 @@ public class SearchGroup extends AbstractActionGroup
     {
         if (ApiHelper.supportsColorSchemes())
         {
-            TextAttributes color = editor.getColorsScheme().getAttributes(EditorColors.SELECTION_FOREGROUND_COLOR);
+            TextAttributes color = new TextAttributes(
+                editor.getColorsScheme().getColor(EditorColors.SELECTION_FOREGROUND_COLOR),
+                editor.getColorsScheme().getColor(EditorColors.SELECTION_BACKGROUND_COLOR),
+                null, null, 0
+            );
             return editor.getMarkupModel().addRangeHighlighter(start, end, HighlighterLayer.ADDITIONAL_SYNTAX + 2,
                 color, HighlighterTargetArea.EXACT_RANGE);
         }

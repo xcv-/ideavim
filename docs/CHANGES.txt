@@ -1,6 +1,10 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.8.2
+@VERSION@ from 0.8.3
+New Features
+- Support for Irida (build 3075)
+
+0.8.3 from 0.8.2
 Bug Fixes
 - After a fresh install it is possible to get a NPE when loading the first
   project. Now fixed.
