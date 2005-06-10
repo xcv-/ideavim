@@ -1,6 +1,10 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
 @VERSION@ from 0.9.2
+New Features
+- Support for Irida (build 3354)
+
+0.9.3 from 0.9.2
 Bug Fixes
 - Fixed internal error when doing searches and many other actions. Regression
   from 0.9.1.

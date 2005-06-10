@@ -5,12 +5,11 @@
     <vendor email="rick@maddyhome.com">Rick Maddy</vendor>
     <change-notes>
 <![CDATA[
-Bug Fixes<br>
-- Fixed internal error when doing searches and many other actions. Regression
-  from 0.9.1.
+New Features<br>
+- Support for Irida #3354
 ]]>
     </change-notes>
-    <idea-version since-build="3185"/>
+    <idea-version since-build="3354"/>
 
     <application-components>
         <component>
