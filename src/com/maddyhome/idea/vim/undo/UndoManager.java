@@ -67,24 +67,38 @@ public class UndoManager
         return list.inCommand();
     }
 
+    public void allowNewCommands(boolean allow)
+    {
+        this.allow = allow;
+    }
+
     public void beginCommand(Editor editor)
     {
-        logger.debug("begin command");
-        EditorUndoList list = getEditorUndoList(editor);
-        list.beginCommand(editor);
+        if (allow)
+        {
+            logger.debug("begin command");
+            EditorUndoList list = getEditorUndoList(editor);
+            list.beginCommand(editor);
+        }
     }
 
     public void abortCommand(Editor editor)
     {
-        EditorUndoList list = getEditorUndoList(editor);
-        list.abortCommand();
+        if (allow)
+        {
+            EditorUndoList list = getEditorUndoList(editor);
+            list.abortCommand();
+        }
     }
 
     public void endCommand(Editor editor)
     {
-        EditorUndoList list = getEditorUndoList(editor);
-        list.endCommand();
-        logger.debug("endCommand: list=" + list);
+        if (allow)
+        {
+            EditorUndoList list = getEditorUndoList(editor);
+            list.endCommand();
+            logger.debug("endCommand: list=" + list);
+        }
     }
 
     public boolean undo(Editor editor, DataContext context)
@@ -213,6 +227,7 @@ public class UndoManager
     //private DocumentListener listener;
     private HashMap editors;
     private HashMap documents;
+    private boolean allow = true;
 
     private static UndoManager instance;
     private static Logger logger = Logger.getInstance(UndoManager.class.getName());
