@@ -251,7 +251,7 @@ public class DigraphSequence
 
     private void postKeys(ArrayList keys, Editor editor, DataContext context)
     {
-        CommandGroups.getInstance().getMacro().playbackKeys(editor, context, keys, 0);
+        CommandGroups.getInstance().getMacro().playbackKeys(editor, context, keys, 0, 0, 1);
     }
 
     private int digraphState = DIG_STATE_START;
