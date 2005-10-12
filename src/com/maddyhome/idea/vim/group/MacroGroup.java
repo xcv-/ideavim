@@ -24,7 +24,9 @@ import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.diagnostic.Logger;
 import com.maddyhome.idea.vim.KeyHandler;
+import com.maddyhome.idea.vim.undo.UndoManager;
 import com.maddyhome.idea.vim.common.Register;
 import java.util.List;
 import javax.swing.KeyStroke;
@@ -49,17 +51,16 @@ public class MacroGroup extends AbstractActionGroup
      */
     public boolean playbackRegister(Editor editor, DataContext context, char reg, int count)
     {
+        logger.debug("play bakc register " + reg + " " + count + " times");
         Register register = CommandGroups.getInstance().getRegister().getPlaybackRegister(reg);
         if (register == null)
         {
             return false;
         }
 
+        UndoManager.getInstance().allowNewCommands(false);
         List keys = register.getKeys();
-        for (int i = 0; i < count; i++)
-        {
-            playbackKeys(editor, context, keys, 0);
-        }
+        playbackKeys(editor, context, keys, 0, 0, count);
 
         lastRegister = reg;
 
@@ -90,10 +91,17 @@ public class MacroGroup extends AbstractActionGroup
      * @param keys The list of keys to playback
      * @param pos The position within the list for the specific key to queue
      */
-    public void playbackKeys(final Editor editor, final DataContext context, final List keys, final int pos)
+    public void playbackKeys(final Editor editor, final DataContext context, final List keys, final int pos,
+        final int cnt, final int total)
     {
-        if (pos >= keys.size())
+        logger.debug("playbackKeys " + pos);
+        if (pos >= keys.size() || cnt >= total)
         {
+            logger.debug("done");
+            UndoManager.getInstance().allowNewCommands(true);
+            UndoManager.getInstance().endCommand(editor);
+            UndoManager.getInstance().beginCommand(editor);
+
             return;
         }
 
@@ -105,26 +113,32 @@ public class MacroGroup extends AbstractActionGroup
         // events getting queued, they get queued before the next key, just what would happen if the user was typing
         // the keys one at a time. With the old loop approach, all the keys got queued, then any events they caused
         // were queued - after the keys. This is what caused the problem.
-        final KeyStroke stroke = (KeyStroke)keys.get(pos);
         final Runnable run = new Runnable() {
             public void run()
             {
+                logger.debug("processing key " + pos);
                 // Handle one keystroke then queue up the next key
-                KeyHandler.getInstance().handleKey(editor, stroke, context);
-                if (pos < keys.size())
+                KeyHandler.getInstance().handleKey(editor, (KeyStroke)keys.get(pos), context);
+                if (pos < keys.size() - 1)
                 {
-                    playbackKeys(editor, context, keys, pos + 1);
+                    playbackKeys(editor, context, keys, pos + 1, cnt, total);
+                }
+                else if (cnt < total)
+                {
+                    playbackKeys(editor, context, keys, 0, cnt + 1, total);
                 }
             }
         };
 
+        final Project project = (Project)context.getData(DataConstants.PROJECT);
         SwingUtilities.invokeLater(new Runnable() {
             public void run()
             {
-                CommandProcessor.getInstance().executeCommand((Project)context.getData(DataConstants.PROJECT), run, "foo", "bar");
+                CommandProcessor.getInstance().executeCommand(project, run, "playback", keys.get(pos));
             }
         });
     }
 
     private char lastRegister = 0;
+    private static Logger logger = Logger.getInstance(MacroGroup.class.getName());
 }
