@@ -151,6 +151,9 @@ public class KeyHandler
             {
                 switch (key.getKeyCode())
                 {
+                    case KeyEvent.VK_TAB:
+                        chKey = '\t';
+                        break;
                     case KeyEvent.VK_ENTER:
                         chKey = '\n';
                         break;
@@ -408,13 +411,14 @@ public class KeyHandler
             else
             {
                 Runnable action = new ActionRunner(editor, context, cmd, key);
+                final Project project = (Project)context.getData(DataConstants.PROJECT);
                 if (cmd.isWriteType())
                 {
-                    RunnableHelper.runWriteCommand((Project)context.getData(DataConstants.PROJECT), action);
+                    RunnableHelper.runWriteCommand(project, action);
                 }
                 else
                 {
-                    RunnableHelper.runReadCommand((Project)context.getData(DataConstants.PROJECT), action);
+                    RunnableHelper.runReadCommand(project, action);
                 }
             }
         }
