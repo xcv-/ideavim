@@ -1,12 +1,27 @@
 Bugs to fix:
 
+- Ctrl-E/Ctrl-Y
 - Split text when typing fast after o command.
 - Show message after shifting lines with :< or :>
 - Replace mode - fix cursor. Can't figure out how to keep block cursor.
+- Visual mode not exited after executing non-vim key command. See below.
 
 Requested Functionality to add:
 
 - Visual Column mode
 - More fold region support
 - Window support (need access to splitter)
+- / and ? as command operators
+
+o Visual mode not ended after edit command
+
+ Visual mode is not ended when applying the 'comment
+ block' editing action, as I think it should be.
+
+ To repeat:
+
+ v
+ [select text]
+ Ctrl-Shift-/
+ [movement command]
 
