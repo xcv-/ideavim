@@ -150,11 +150,21 @@ public class DigraphSequence
                         logger.debug("decimal");
                         return RES_OK;
                     default:
-                        logger.debug("unknown");
-                        digraphState = DIG_STATE_START;
-                        postKey(key, editor, context);
+                        switch (key.getKeyCode())
+                        {
+                            case KeyEvent.VK_TAB:
+                                KeyStroke code = KeyStroke.getKeyStroke('\t');
+                                digraphState = DIG_STATE_START;
+                                postKey(code, editor, context);
 
-                        return RES_DONE;
+                                return RES_DONE;
+                            default:
+                                logger.debug("unknown");
+                                digraphState = DIG_STATE_START;
+                                postKey(key, editor, context);
+
+                                return RES_DONE;
+                        }
                 }
             case DIG_STATE_CODE_CHAR:
                 logger.debug("DIG_STATE_CODE_CHAR");
