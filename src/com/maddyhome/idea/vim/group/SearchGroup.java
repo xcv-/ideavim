@@ -772,15 +772,15 @@ public class SearchGroup extends AbstractActionGroup
                     {
                         removeSearchHighlight(editor);
 
-                        return;
+                        continue;
                     }
                     else if (lastSearch != null && lastSearch.equals(els))
                     {
-                        return;
+                        continue;
                     }
                     else if (lastSearch == null)
                     {
-                        return;
+                        continue;
                     }
 
                     removeSearchHighlight(editor);
