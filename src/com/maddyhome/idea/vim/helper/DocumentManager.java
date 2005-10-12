@@ -23,12 +23,12 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
+import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
+
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -39,12 +39,13 @@ public class DocumentManager
         return instance;
     }
 
-    public void openProject(Project project)
+    public void init()
     {
         logger.debug("opening project");
-        FileEditorManager.getInstance(project).addFileEditorManagerListener(listener);
+        FileDocumentManager.getInstance().addFileDocumentManagerListener(listener);
     }
 
+    /*
     public void closeProject(Project project)
     {
         logger.debug("closing project");
@@ -58,8 +59,9 @@ public class DocumentManager
             removeListeners(FileDocumentManager.getInstance().getDocument(files[i]));
         }
 
-        FileEditorManager.getInstance(project).removeFileEditorManagerListener(listener);
+        FileDocumentManager.getInstance().removeFileDocumentManagerListener(listener);
     }
+    */
 
     public void addDocumentListener(DocumentListener listener)
     {
@@ -104,8 +106,9 @@ public class DocumentManager
     {
     }
 
-    private class FileEditorListener extends FileEditorManagerAdapter
+    private class FileDocumentListener extends FileDocumentManagerAdapter
     {
+        /*
         public void fileOpened(FileEditorManager fileEditorManager, VirtualFile virtualFile)
         {
             logger.debug("opened vf=" + virtualFile.getPresentableName());
@@ -125,9 +128,15 @@ public class DocumentManager
                 removeListeners(doc);
             }
         }
+        */
+
+        public void fileContentLoaded(VirtualFile file, Document document)
+        {
+            addListeners(document);
+        }
     }
 
-    private FileEditorListener listener = new FileEditorListener();
+    private FileDocumentListener listener = new FileDocumentListener();
     private HashSet docListeners = new HashSet();
 
     private static DocumentManager instance = new DocumentManager();
