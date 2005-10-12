@@ -131,6 +131,7 @@ public class KeyHandler
         {
             // Update the count
             count = count * 10 + (chKey - '0');
+            logger.debug("count now " + count);
         }
         // Pressing delete while entering a count "removes" the last digit entered
         else if ((CommandState.getInstance().getMode() == CommandState.MODE_COMMAND ||
@@ -140,6 +141,7 @@ public class KeyHandler
         {
             // "Remove" the last digit sent to us
             count /= 10;
+            logger.debug("count now " + count);
         }
         // If we got this far the user is entering a command or supplying an argument to an entered command.
         // First let's check to see if we are at the point of expecting a single character argument to a command.
