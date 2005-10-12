@@ -13,13 +13,18 @@ First Time Installation
 
 UNIX/Linux
 
-Copy Vim.xml from the plugin to $HOME/.IntelliJIdea/config/keymaps. You will
+Copy Vim.xml from the plugin to $HOME/.IntelliJIdea50/config/keymaps. You will
 have to create the keymaps directory if it doesn't exist.
+
+Mac/OSX
+
+Copy Vim.xml from the plugin to ~/Library/Preferences/IntelliJIDEA50/keymaps.
+You will have to create the keymaps directory if it doesn't exist.
 
 Windows
 
 Copy Vim.xml from the plugin to
-C:\Documents and Settings\<user>\.IntelliJIdea\config\keymaps.
+C:\Documents and Settings\<user>\.IntelliJIdea50\config\keymaps.
 You will have to create the keymaps directory if it doesn't exist.
 
 Starting
