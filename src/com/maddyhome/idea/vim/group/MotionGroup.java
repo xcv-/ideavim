@@ -1101,6 +1101,7 @@ public class MotionGroup extends AbstractActionGroup
 
     public static void moveCaretIntoView(Editor editor)
     {
+        // TODO - fix horizontal movement
         int cline = EditorHelper.getCurrentVisualLine(editor);
         int vline = getVisualLineAtTopOfScreen(editor);
         if (cline < vline)

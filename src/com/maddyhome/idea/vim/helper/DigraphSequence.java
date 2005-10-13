@@ -27,6 +27,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 public class DigraphSequence
 {
@@ -74,7 +75,7 @@ public class DigraphSequence
                 else
                 {
                     postKey(key, editor, context);
-                    
+
                     return RES_DONE;
                 }
             case DIG_STATE_DIG_ONE:
@@ -249,9 +250,32 @@ public class DigraphSequence
         postKeys(list, editor, context);
     }
 
-    private void postKeys(ArrayList keys, Editor editor, DataContext context)
+    private void postKeys(ArrayList keys, final Editor editor, DataContext context)
     {
-        CommandGroups.getInstance().getMacro().playbackKeys(editor, context, keys, 0, 0, 1);
+        //CommandGroups.getInstance().getMacro().playbackKeys(editor, context, keys, 0, 0, 1);
+        for (int i = 0; i < keys.size(); i++)
+        {
+            KeyStroke stroke = (KeyStroke)keys.get(i);
+            final KeyEvent event = eventForStroke(editor, stroke);
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run()
+                {
+                    editor.getContentComponent().dispatchEvent(event);
+                }
+            });
+        }
+    }
+
+    private KeyEvent eventForStroke(Editor editor, KeyStroke stroke)
+    {
+        if (stroke.getKeyChar() == KeyEvent.CHAR_UNDEFINED)
+        {
+            return new KeyEvent(editor.getContentComponent(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), stroke.getModifiers(), stroke.getKeyCode(), stroke.getKeyChar());
+        }
+        else
+        {
+            return new KeyEvent(editor.getContentComponent(), KeyEvent.KEY_TYPED, System.currentTimeMillis(), stroke.getModifiers(), stroke.getKeyCode(), stroke.getKeyChar());
+        }
     }
 
     private int digraphState = DIG_STATE_START;
