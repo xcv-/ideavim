@@ -72,6 +72,11 @@ public class UndoManager
         this.allow = allow;
     }
 
+    public boolean allowNewCommands()
+    {
+        return allow;
+    }
+    
     public void beginCommand(Editor editor)
     {
         if (allow)
