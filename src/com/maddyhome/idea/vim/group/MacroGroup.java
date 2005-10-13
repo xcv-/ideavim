@@ -20,7 +20,6 @@ package com.maddyhome.idea.vim.group;
  */
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
@@ -49,7 +48,7 @@ public class MacroGroup extends AbstractActionGroup
      * @param count The number of times to execute the macro
      * @return true if able to play the macro, false if invalid or empty register
      */
-    public boolean playbackRegister(Editor editor, DataContext context, char reg, int count)
+    public boolean playbackRegister(Editor editor, DataContext context, Project project, char reg, int count)
     {
         logger.debug("play bakc register " + reg + " " + count + " times");
         Register register = CommandGroups.getInstance().getRegister().getPlaybackRegister(reg);
@@ -60,7 +59,7 @@ public class MacroGroup extends AbstractActionGroup
 
         UndoManager.getInstance().allowNewCommands(false);
         List keys = register.getKeys();
-        playbackKeys(editor, context, keys, 0, 0, count);
+        playbackKeys(editor, context, project, keys, 0, 0, count);
 
         lastRegister = reg;
 
@@ -74,11 +73,11 @@ public class MacroGroup extends AbstractActionGroup
      * @param count The number of times to execute the macro
      * @return true if able to play the macro, false in no previous playback
      */
-    public boolean playbackLastRegister(Editor editor, DataContext context, int count)
+    public boolean playbackLastRegister(Editor editor, DataContext context, Project project, int count)
     {
         if (lastRegister != 0)
         {
-            return playbackRegister(editor, context, lastRegister, count);
+            return playbackRegister(editor, context, project, lastRegister, count);
         }
 
         return false;
@@ -91,16 +90,19 @@ public class MacroGroup extends AbstractActionGroup
      * @param keys The list of keys to playback
      * @param pos The position within the list for the specific key to queue
      */
-    public void playbackKeys(final Editor editor, final DataContext context, final List keys, final int pos,
+    public void playbackKeys(final Editor editor, final DataContext context, final Project project, final List keys, final int pos,
         final int cnt, final int total)
     {
         logger.debug("playbackKeys " + pos);
         if (pos >= keys.size() || cnt >= total)
         {
             logger.debug("done");
-            UndoManager.getInstance().allowNewCommands(true);
-            UndoManager.getInstance().endCommand(editor);
-            UndoManager.getInstance().beginCommand(editor);
+            if (!UndoManager.getInstance().allowNewCommands())
+            {
+                UndoManager.getInstance().allowNewCommands(true);
+                UndoManager.getInstance().endCommand(editor);
+                UndoManager.getInstance().beginCommand(editor);
+            }
 
             return;
         }
@@ -118,19 +120,18 @@ public class MacroGroup extends AbstractActionGroup
             {
                 logger.debug("processing key " + pos);
                 // Handle one keystroke then queue up the next key
-                KeyHandler.getInstance().handleKey(editor, (KeyStroke)keys.get(pos), context);
+                KeyHandler.getInstance().handleKey(editor, (KeyStroke)keys.get(pos), context, project);
                 if (pos < keys.size() - 1)
                 {
-                    playbackKeys(editor, context, keys, pos + 1, cnt, total);
+                    playbackKeys(editor, context, project, keys, pos + 1, cnt, total);
                 }
                 else if (cnt < total)
                 {
-                    playbackKeys(editor, context, keys, 0, cnt + 1, total);
+                    playbackKeys(editor, context, project, keys, 0, cnt + 1, total);
                 }
             }
         };
 
-        final Project project = (Project)context.getData(DataConstants.PROJECT);
         SwingUtilities.invokeLater(new Runnable() {
             public void run()
             {

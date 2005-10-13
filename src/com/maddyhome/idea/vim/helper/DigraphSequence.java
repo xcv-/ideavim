@@ -19,15 +19,15 @@ package com.maddyhome.idea.vim.helper;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.maddyhome.idea.vim.group.CommandGroups;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.project.Project;
+import com.maddyhome.idea.vim.group.CommandGroups;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 
 public class DigraphSequence
 {
@@ -52,7 +52,7 @@ public class DigraphSequence
         return false;
     }
 
-    public int processKey(KeyStroke key, Editor editor, DataContext context)
+    public int processKey(KeyStroke key, Editor editor, DataContext context, Project project)
     {
         switch (digraphState)
         {
@@ -74,7 +74,7 @@ public class DigraphSequence
                 }
                 else
                 {
-                    postKey(key, editor, context);
+                    postKey(key, editor, context, project);
 
                     return RES_DONE;
                 }
@@ -98,7 +98,7 @@ public class DigraphSequence
                 if (key.getKeyChar() != KeyEvent.CHAR_UNDEFINED)
                 {
                     char ch = CommandGroups.getInstance().getDigraph().getDigraph(digraphChar, key.getKeyChar());
-                    postKey(KeyStroke.getKeyStroke(ch), editor, context);
+                    postKey(KeyStroke.getKeyStroke(ch), editor, context, project);
 
                     return RES_DONE;
                 }
@@ -156,13 +156,13 @@ public class DigraphSequence
                             case KeyEvent.VK_TAB:
                                 KeyStroke code = KeyStroke.getKeyStroke('\t');
                                 digraphState = DIG_STATE_START;
-                                postKey(code, editor, context);
+                                postKey(code, editor, context, project);
 
                                 return RES_DONE;
                             default:
                                 logger.debug("unknown");
                                 digraphState = DIG_STATE_START;
-                                postKey(key, editor, context);
+                                postKey(key, editor, context, project);
 
                                 return RES_DONE;
                         }
@@ -203,7 +203,7 @@ public class DigraphSequence
                         int val = Integer.parseInt(digits, codeType);
                         KeyStroke code = KeyStroke.getKeyStroke((char)val);
                         digraphState = DIG_STATE_START;
-                        postKey(code, editor, context);
+                        postKey(code, editor, context, project);
 
                         return RES_DONE;
                     }
@@ -220,7 +220,7 @@ public class DigraphSequence
                     digraphState = DIG_STATE_START;
                     KeyStroke code = KeyStroke.getKeyStroke((char)val);
 
-                    postKeys(code, key, editor, context);
+                    postKeys(code, key, editor, context, project);
 
                     return RES_DONE;
                 }
@@ -233,49 +233,26 @@ public class DigraphSequence
         }
     }
 
-    private void postKey(KeyStroke key, Editor editor, DataContext context)
+    private void postKey(KeyStroke key, Editor editor, DataContext context, Project project)
     {
         ArrayList list = new ArrayList();
         list.add(key);
 
-        postKeys(list, editor, context);
+        postKeys(list, editor, context, project);
     }
 
-    private void postKeys(KeyStroke key1, KeyStroke key2, Editor editor, DataContext context)
+    private void postKeys(KeyStroke key1, KeyStroke key2, Editor editor, DataContext context, Project project)
     {
         ArrayList list = new ArrayList();
         list.add(key1);
         list.add(key2);
 
-        postKeys(list, editor, context);
+        postKeys(list, editor, context, project);
     }
 
-    private void postKeys(ArrayList keys, final Editor editor, DataContext context)
+    private void postKeys(ArrayList keys, final Editor editor, DataContext context, Project project)
     {
-        //CommandGroups.getInstance().getMacro().playbackKeys(editor, context, keys, 0, 0, 1);
-        for (int i = 0; i < keys.size(); i++)
-        {
-            KeyStroke stroke = (KeyStroke)keys.get(i);
-            final KeyEvent event = eventForStroke(editor, stroke);
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run()
-                {
-                    editor.getContentComponent().dispatchEvent(event);
-                }
-            });
-        }
-    }
-
-    private KeyEvent eventForStroke(Editor editor, KeyStroke stroke)
-    {
-        if (stroke.getKeyChar() == KeyEvent.CHAR_UNDEFINED)
-        {
-            return new KeyEvent(editor.getContentComponent(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), stroke.getModifiers(), stroke.getKeyCode(), stroke.getKeyChar());
-        }
-        else
-        {
-            return new KeyEvent(editor.getContentComponent(), KeyEvent.KEY_TYPED, System.currentTimeMillis(), stroke.getModifiers(), stroke.getKeyCode(), stroke.getKeyChar());
-        }
+        CommandGroups.getInstance().getMacro().playbackKeys(editor, context, project, keys, 0, 0, 1);
     }
 
     private int digraphState = DIG_STATE_START;

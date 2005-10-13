@@ -1,7 +1,7 @@
 Bugs to fix:
 
+- Support for 'scrolljump', 'scrolloff', 'sidescroll', 'sidescrolloff' options
 - Internal error when inserting digraphs
-- Horizontal scrolling
 - Split text when typing fast after o command.
 - Show message after shifting lines with :< or :>
 - Replace mode - fix cursor. Can't figure out how to keep block cursor.

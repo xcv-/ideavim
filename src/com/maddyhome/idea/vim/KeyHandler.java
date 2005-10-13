@@ -104,6 +104,19 @@ public class KeyHandler
      */
     public void handleKey(Editor editor, KeyStroke key, DataContext context)
     {
+        handleKey(editor, key, context, (Project)context.getData(DataConstants.PROJECT));
+    }
+
+    /**
+     * This is the main key handler for the Vim plugin. Every keystroke not handled directly by Idea is sent
+     * here for processing.
+     * @param editor The editor the key was typed into
+     * @param key The keystroke typed by the user
+     * @param context The data context
+     * @param project The project
+     */
+    public void handleKey(Editor editor, KeyStroke key, DataContext context, Project project)
+    {
         boolean isRecording = CommandState.getInstance().isRecording();
         boolean shouldRecord = true;
         // If this is a "regular" character keystroke, get the character
@@ -195,7 +208,7 @@ public class KeyHandler
             }
             if (digraph != null)
             {
-                int res = digraph.processKey(key, editor, context);
+                int res = digraph.processKey(key, editor, context, project);
                 switch (res)
                 {
                     case DigraphSequence.RES_OK:
@@ -226,7 +239,7 @@ public class KeyHandler
                     ArgumentNode arg = (ArgumentNode)((BranchNode)currentNode).getArgumentNode();
                     if (arg != null && (arg.getFlags() & Command.FLAG_NO_ARG_RECORDING) != 0)
                     {
-                        handleKey(editor, KeyStroke.getKeyStroke(' '), context);
+                        handleKey(editor, KeyStroke.getKeyStroke(' '), context, project);
                     }
                 }
             }
@@ -319,7 +332,7 @@ public class KeyHandler
                 {
                     partialReset();
                     boolean saveRecording = isRecording;
-                    handleKey(editor, key, context);
+                    handleKey(editor, key, context, project);
                     isRecording = saveRecording;
                     shouldRecord = false; // Prevent this from getting recorded twice
                 }
@@ -413,7 +426,6 @@ public class KeyHandler
             else
             {
                 Runnable action = new ActionRunner(editor, context, cmd, key);
-                final Project project = (Project)context.getData(DataConstants.PROJECT);
                 if (cmd.isWriteType())
                 {
                     RunnableHelper.runWriteCommand(project, action);
