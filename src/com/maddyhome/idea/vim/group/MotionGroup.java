@@ -874,6 +874,11 @@ public class MotionGroup extends AbstractActionGroup
         editor.getScrollingModel().scrollVertically(vline * editor.getLineHeight());
     }
 
+    private static void scrollColumnToLeftOfScreen(Editor editor, int vcol)
+    {
+        editor.getScrollingModel().scrollHorizontally(vcol * EditorHelper.getColumnWidth(editor));
+    }
+
     public int moveCaretToMiddleColumn(Editor editor)
     {
         int width = EditorHelper.getScreenWidth(editor) / 2;
@@ -943,10 +948,9 @@ public class MotionGroup extends AbstractActionGroup
 
     public int moveCaretToLineEnd(Editor editor, int lline, boolean allowPastEnd)
     {
-        int offset = EditorHelper.normalizeOffset(editor, lline, EditorHelper.getLineEndOffset(editor, lline, allowPastEnd),
-            allowPastEnd);
 
-        return offset;
+        return EditorHelper.normalizeOffset(editor, lline, EditorHelper.getLineEndOffset(editor, lline, allowPastEnd),
+            allowPastEnd);
     }
 
     public int moveCaretToLineEndOffset(Editor editor, int cntForward, boolean allowPastEnd)
@@ -976,8 +980,7 @@ public class MotionGroup extends AbstractActionGroup
             return EditorHelper.getFileSize(editor);
         }
 
-        int start = EditorHelper.getLineStartOffset(editor, lline);
-        return start;
+        return EditorHelper.getLineStartOffset(editor, lline);
     }
 
     public int moveCaretToLineStartOffset(Editor editor, int offset)
@@ -1101,7 +1104,6 @@ public class MotionGroup extends AbstractActionGroup
 
     public static void moveCaretIntoView(Editor editor)
     {
-        // TODO - fix horizontal movement
         int cline = EditorHelper.getCurrentVisualLine(editor);
         int vline = getVisualLineAtTopOfScreen(editor);
         if (cline < vline)
@@ -1115,6 +1117,21 @@ public class MotionGroup extends AbstractActionGroup
         if (diff > 0)
         {
             scrollLineToTopOfScreen(editor, vline + diff);
+        }
+
+        // TODO - support for 'sidescroll' option
+        int ccol = EditorHelper.getCurrentVisualColumn(editor);
+        int vcol = EditorHelper.getLeftVisibleColumn(editor);
+        if (ccol < vcol)
+        {
+            scrollColumnToLeftOfScreen(editor, ccol);
+        }
+
+        int width = EditorHelper.getScreenWidth(editor);
+        diff = ccol - (vcol + width - 1);
+        if (diff > 0)
+        {
+            scrollColumnToLeftOfScreen(editor, vcol + diff);
         }
     }
 
@@ -1352,7 +1369,7 @@ public class MotionGroup extends AbstractActionGroup
         LogicalPosition sp = editor.offsetToLogicalPosition(start);
         LogicalPosition ep = editor.offsetToLogicalPosition(end);
         int lines = ep.line - sp.line + 1;
-        int chars = 0;
+        int chars;
         int type;
         if (CommandState.getInstance().getSubMode() == Command.FLAG_MOT_LINEWISE ||
             (cmdFlags & Command.FLAG_MOT_LINEWISE) != 0)
