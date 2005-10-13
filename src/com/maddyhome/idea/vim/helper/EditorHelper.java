@@ -204,6 +204,34 @@ public class EditorHelper
     }
 
     /**
+     * Gets the number of pixels per column of text.
+     * @param editor The editor
+     * @return The number of pixels
+     */
+    public static int getColumnWidth(Editor editor)
+    {
+        Rectangle rect = editor.getScrollingModel().getVisibleArea();
+        Point pt = new Point(rect.width, 0);
+        VisualPosition vp = editor.xyToVisualPosition(pt);
+
+        return rect.width / vp.column;
+    }
+
+    /**
+     * Gets the column currently displayed at the left edge of the editor.
+     * @param editor The editor
+     * @return The column number
+     */
+    public static int getLeftVisibleColumn(Editor editor)
+    {
+        Rectangle rect = editor.getScrollingModel().getVisibleArea();
+        Point pt = new Point(rect.x, 0);
+        VisualPosition vp = editor.xyToVisualPosition(pt);
+
+        return vp.column;
+    }
+
+    /**
      * Converts a visual line number to a logical line number.
      * @param editor The editor
      * @param vline The visual line number to convert
