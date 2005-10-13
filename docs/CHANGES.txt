@@ -1,15 +1,18 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.9.4
+@VERSION@ from 0.9.5
 Bug Fixes
-- You can now insert a real tab using <Ctrl-V><Tab>
+- You can now insert a real tab using <Ctrl-V><Tab>.
 - <Tab> now properly works as a character argument to commands such as f and t.
+- Fixed Ctrl-E and Ctrl-Y when cursor was at top/bottom of screen.
+- Fixed various scrolling and cursor movement so cursor can appear on first or
+  last line of editor.
+- Fixed playing back macros if preceded by a non-one count.
 
 0.9.5 from 0.9.4
 Bug Fixes
 - Fixed several internal errors with Idea 5.0
 - Updated installation notes for Mac
-- Fixed playing back macros if preceded by a non-one count.
 
 0.9.4 from 0.9.3
 New Features

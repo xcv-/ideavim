@@ -712,12 +712,12 @@ public class MotionGroup extends AbstractActionGroup
 
     public int moveCaretToLastScreenLine(Editor editor, DataContext context, int count)
     {
-        return moveCaretToScreenLine(editor, EditorHelper.getScreenHeight(editor) - count);
+        return moveCaretToScreenLine(editor, EditorHelper.getScreenHeight(editor) - count + 1);
     }
 
     public int moveCaretToLastScreenLineEnd(Editor editor, DataContext context, int count)
     {
-        int offset = moveCaretToScreenLine(editor, EditorHelper.getScreenHeight(editor) - count);
+        int offset = moveCaretToLastScreenLine(editor, context, count);
         LogicalPosition lline = editor.offsetToLogicalPosition(offset);
 
         return moveCaretToLineEnd(editor, lline.line, false);
@@ -813,15 +813,18 @@ public class MotionGroup extends AbstractActionGroup
         int cline = EditorHelper.getCurrentVisualLine(editor);
         vline = EditorHelper.normalizeVisualLine(editor, vline + lines);
         logger.debug("vline=" + vline + ", cline=" + cline);
-        scrollLineToTopOfScreen(editor, vline);
+        int col = EditorData.getLastColumn(editor);
         if (cline < vline)
         {
             moveCaret(editor, context, moveCaretVertical(editor, vline - cline));
         }
-        else if (cline > vline + EditorHelper.getScreenHeight(editor))
+        else if (cline >= vline + EditorHelper.getScreenHeight(editor))
         {
-            moveCaret(editor, context, moveCaretVertical(editor, vline + EditorHelper.getScreenHeight(editor) - cline));
+            moveCaret(editor, context, moveCaretVertical(editor, vline + EditorHelper.getScreenHeight(editor) - cline - 1));
         }
+
+        EditorData.setLastColumn(editor, col);
+        scrollLineToTopOfScreen(editor, vline);
 
         return true;
     }
@@ -859,14 +862,14 @@ public class MotionGroup extends AbstractActionGroup
         return true;
     }
 
-    private int getVisualLineAtTopOfScreen(Editor editor)
+    private static int getVisualLineAtTopOfScreen(Editor editor)
     {
         int vline = editor.getScrollingModel().getVerticalScrollOffset() / editor.getLineHeight();
         logger.debug("top = " + vline);
         return vline;
     }
 
-    private void scrollLineToTopOfScreen(Editor editor, int vline)
+    private static void scrollLineToTopOfScreen(Editor editor, int vline)
     {
         editor.getScrollingModel().scrollVertically(vline * editor.getLineHeight());
     }
@@ -1083,7 +1086,7 @@ public class MotionGroup extends AbstractActionGroup
         {
             editor.getCaretModel().moveToOffset(offset);
             EditorData.setLastColumn(editor, editor.getCaretModel().getVisualPosition().column);
-            editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+            moveCaretIntoView(editor);
 
             if (CommandState.getInstance().getMode() == CommandState.MODE_VISUAL)
             {
@@ -1093,6 +1096,24 @@ public class MotionGroup extends AbstractActionGroup
             {
                 editor.getSelectionModel().removeSelection();
             }
+        }
+    }
+
+    public static void moveCaretIntoView(Editor editor)
+    {
+        int cline = EditorHelper.getCurrentVisualLine(editor);
+        int vline = getVisualLineAtTopOfScreen(editor);
+        if (cline < vline)
+        {
+            scrollLineToTopOfScreen(editor, cline);
+            return;
+        }
+
+        int height = EditorHelper.getScreenHeight(editor);
+        int diff = cline - (vline + height - 1);
+        if (diff > 0)
+        {
+            scrollLineToTopOfScreen(editor, vline + diff);
         }
     }
 

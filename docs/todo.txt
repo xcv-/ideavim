@@ -1,6 +1,5 @@
 Bugs to fix:
 
-- Ctrl-E/Ctrl-Y
 - Split text when typing fast after o command.
 - Show message after shifting lines with :< or :>
 - Replace mode - fix cursor. Can't figure out how to keep block cursor.
