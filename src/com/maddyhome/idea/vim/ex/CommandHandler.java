@@ -21,6 +21,7 @@ package com.maddyhome.idea.vim.ex;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.VimPlugin;
+import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.helper.MessageHelper;
 import com.maddyhome.idea.vim.helper.Msg;
 import com.maddyhome.idea.vim.undo.UndoManager;
@@ -212,6 +213,8 @@ public abstract class CommandHandler
             cmd.getRanges().setDefaultLine(1);
         }
 
+        CommandState.getInstance().setFlags(optFlags);
+        
         if ((argFlags & WRITABLE) != 0)
         {
             //RunnableHelper.runWriteCommand((Project)context.getData(DataConstants.PROJECT), new Runnable() {
