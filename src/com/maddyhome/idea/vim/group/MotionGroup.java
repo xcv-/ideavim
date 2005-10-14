@@ -1106,17 +1106,47 @@ public class MotionGroup extends AbstractActionGroup
     {
         int cline = EditorHelper.getCurrentVisualLine(editor);
         int vline = getVisualLineAtTopOfScreen(editor);
-        if (cline < vline)
+        boolean scrolljump = (CommandState.getInstance().getFlags() & Command.FLAG_IGNORE_SCROLL_JUMP) == 0;
+        int sjSize = 0;
+        if (scrolljump)
         {
-            scrollLineToTopOfScreen(editor, cline);
-            return;
+            sjSize = Math.max(0, ((NumberOption)Options.getInstance().getOption("scrolljump")).value() - 1);
         }
 
-        int height = EditorHelper.getScreenHeight(editor);
-        int diff = cline - (vline + height - 1);
-        if (diff > 0)
+        int diff = 0;
+        if (cline < vline)
         {
-            scrollLineToTopOfScreen(editor, vline + diff);
+            diff = cline - vline;
+            sjSize = -sjSize;
+        }
+        else
+        {
+            int height = EditorHelper.getScreenHeight(editor);
+            diff = cline - (vline + height - 1);
+            if (diff < 0)
+            {
+                diff = 0;
+            }
+        }
+
+        if (diff != 0)
+        {
+            int height = EditorHelper.getScreenHeight(editor);
+            int line;
+            // If we need to move the top line more than a half screen worth then we just center the cursor line
+            if (Math.abs(diff) > height / 2)
+            {
+                line = cline - height / 2 - 1;
+            }
+            // Otherwise put the new cursor line "scrolljump" lines from the top/bottom
+            else
+            {
+                line = vline + diff + sjSize;
+            }
+
+            line = Math.min(line, EditorHelper.getVisualLineCount(editor) - height);
+            line = Math.max(0, line);
+            scrollLineToTopOfScreen(editor, line);
         }
 
         // TODO - support for 'sidescroll' option

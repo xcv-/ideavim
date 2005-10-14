@@ -50,6 +50,8 @@ public class Command
     /** This is a backspace command */
     public static final int FLAG_IS_BACKSPACE = 1 << 11;
 
+    public static final int FLAG_IGNORE_SCROLL_JUMP = 1 << 12;
+
     /** Search Flags */
     public static final int FLAG_SEARCH_FWD = 1 << 16;
     public static final int FLAG_SEARCH_REV = 1 << 17;

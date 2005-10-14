@@ -236,6 +236,23 @@ is entered.  When an option is "reset", ":set nooption" is used.
         be used as the new value for 'scroll'.  Reset to half the window
         height with ":set scroll=0".
 
+                                                *'scrolljump'* *'sj'*
+'scrolljump' 'sj'       number  (default 1)
+                        global
+        Minimal number of lines to scroll when the cursor gets off the
+        screen (e.g., with "j").  Not used for scroll commands (e.g., CTRL-E,
+        CTRL-D).
+
+                                                *'scrolloff'* *'so'*
+'scrolloff' 'so'        number  (default 0)
+                        global
+        Minimal number of screen lines to keep above and below the cursor.
+        This will make some context visible around where you are working.  If
+        you set it to a very large value (999) the cursor line will always be
+        in the middle of the window (except at the start or end of the file or
+        when long lines wrap).
+        For scrolling horizontally see 'sidescrolloff'.
+
                                                 *'selection'* *'sel'*
 'selection' 'sel'       string  (default "inclusive")
                         global
@@ -258,6 +275,26 @@ is entered.  When an option is "reset", ":set nooption" is used.
         If in Insert, Replace or Visual mode put a message on the last line.
         Use the 'M' flag in 'highlight' to set the type of highlighting for
         this message.
+
+                                                *'sidescroll'* *'ss'*
+'sidescroll' 'ss'       number  (default 0)
+                        global
+        The minimal number of columns to scroll horizontally.  Used only when
+        the 'wrap' option is off and the cursor is moved off of the screen.
+        When it is zero the cursor will be put in the middle of the screen.
+        Not used for "zh" and "zl" commands.
+
+                                                *'sidescrolloff'* *'siso'*
+'sidescrolloff' 'siso'  number (default 0)
+                        global
+        The minimal number of screen columns to keep to the left and to the
+        right of the cursor if 'nowrap' is set. Setting this option to a value
+        greater than 0 while having |'sidescroll'| also at a non-zero value
+        makes some context visible in the line you are scrolling in
+        horizontally (except at the end and beginning of the line).  Setting
+        this option to a large value (like 999) has the effect of keeping the
+        cursor horizontally centered in the window, as long as one does not
+        come too close to the beginning or end of the line.
 
                         *'smartcase'* *'scs'* *'nosmartcase'* *'noscs'*
 'smartcase' 'scs'       boolean (default off)

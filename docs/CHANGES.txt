@@ -11,6 +11,9 @@ Bug Fixes
 - Fixed internal error about "Assertion failed: cannot share data context
   between Swing events"
 
+New Features
+- Added support for scrolljump option.
+
 0.9.5 from 0.9.4
 Bug Fixes
 - Fixed several internal errors with Idea 5.0
