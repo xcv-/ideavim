@@ -22,22 +22,13 @@ package com.maddyhome.idea.vim.helper;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.vim.group.CommandGroups;
 
-import java.awt.Component;
-import java.awt.Window;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 
 public class DigraphSequence
 {
-    public static final int RES_OK = 0;
-    public static final int RES_BAD = 1;
-    public static final int RES_DONE = 2;
-
     public DigraphSequence()
     {
     }
@@ -55,7 +46,7 @@ public class DigraphSequence
         return false;
     }
 
-    public int processKey(KeyStroke key, Editor editor, DataContext context, Project project)
+    public DigraphResult processKey(KeyStroke key, Editor editor, DataContext context)
     {
         switch (digraphState)
         {
@@ -65,7 +56,7 @@ public class DigraphSequence
                 {
                     logger.debug("found Ctrl-K");
                     digraphState = DIG_STATE_DIG_ONE;
-                    return RES_OK;
+                    return DigraphResult.OK;
                 }
                 else if (key.getKeyCode() == KeyEvent.VK_V && (key.getModifiers() & KeyEvent.CTRL_MASK) != 0)
                 {
@@ -73,13 +64,11 @@ public class DigraphSequence
                     digraphState = DIG_STATE_CODE_START;
                     codeChars = new char[8];
                     codeCnt = 0;
-                    return RES_OK;
+                    return DigraphResult.OK;
                 }
                 else
                 {
-                    postKey(key, editor, context, project);
-
-                    return RES_DONE;
+                    return new DigraphResult(key);
                 }
             case DIG_STATE_DIG_ONE:
                 logger.debug("DIG_STATE_DIG_ONE");
@@ -88,12 +77,12 @@ public class DigraphSequence
                     digraphChar = key.getKeyChar();
                     digraphState = DIG_STATE_DIG_TWO;
 
-                    return RES_OK;
+                    return DigraphResult.OK;
                 }
                 else
                 {
                     digraphState = DIG_STATE_START;
-                    return RES_BAD;
+                    return DigraphResult.BAD;
                 }
             case DIG_STATE_DIG_TWO:
                 logger.debug("DIG_STATE_DIG_TWO");
@@ -101,12 +90,11 @@ public class DigraphSequence
                 if (key.getKeyChar() != KeyEvent.CHAR_UNDEFINED)
                 {
                     char ch = CommandGroups.getInstance().getDigraph().getDigraph(digraphChar, key.getKeyChar());
-                    postKey(KeyStroke.getKeyStroke(ch), editor, context, project);
 
-                    return RES_DONE;
+                    return new DigraphResult(KeyStroke.getKeyStroke(ch));
                 }
 
-                return RES_BAD;
+                return DigraphResult.BAD;
             case DIG_STATE_CODE_START:
                 logger.debug("DIG_STATE_CODE_START");
                 switch (key.getKeyChar())
@@ -117,26 +105,26 @@ public class DigraphSequence
                         digraphState = DIG_STATE_CODE_CHAR;
                         codeType = 8;
                         logger.debug("Octal");
-                        return RES_OK;
+                        return DigraphResult.OK;
                     case 'x':
                     case 'X':
                         codeMax = 2;
                         digraphState = DIG_STATE_CODE_CHAR;
                         codeType = 16;
                         logger.debug("hex2");
-                        return RES_OK;
+                        return DigraphResult.OK;
                     case 'u':
                         codeMax = 4;
                         digraphState = DIG_STATE_CODE_CHAR;
                         codeType = 16;
                         logger.debug("hex4");
-                        return RES_OK;
+                        return DigraphResult.OK;
                     case 'U':
                         codeMax = 8;
                         digraphState = DIG_STATE_CODE_CHAR;
                         codeType = 16;
                         logger.debug("hex8");
-                        return RES_OK;
+                        return DigraphResult.OK;
                     case '0':
                     case '1':
                     case '2':
@@ -152,22 +140,20 @@ public class DigraphSequence
                         codeType = 10;
                         codeChars[codeCnt++] = key.getKeyChar();
                         logger.debug("decimal");
-                        return RES_OK;
+                        return DigraphResult.OK;
                     default:
                         switch (key.getKeyCode())
                         {
                             case KeyEvent.VK_TAB:
                                 KeyStroke code = KeyStroke.getKeyStroke('\t');
                                 digraphState = DIG_STATE_START;
-                                postKey(code, editor, context, project);
 
-                                return RES_DONE;
+                                return new DigraphResult(code);
                             default:
                                 logger.debug("unknown");
                                 digraphState = DIG_STATE_START;
-                                postKey(key, editor, context, project);
 
-                                return RES_DONE;
+                                return new DigraphResult(key);
                         }
                 }
             case DIG_STATE_CODE_CHAR:
@@ -206,13 +192,12 @@ public class DigraphSequence
                         int val = Integer.parseInt(digits, codeType);
                         KeyStroke code = KeyStroke.getKeyStroke((char)val);
                         digraphState = DIG_STATE_START;
-                        postKey(code, editor, context, project);
 
-                        return RES_DONE;
+                        return new DigraphResult(code);
                     }
                     else
                     {
-                        return RES_OK;
+                        return DigraphResult.OK;
                     }
                 }
                 else if (codeCnt > 0)
@@ -223,82 +208,52 @@ public class DigraphSequence
                     digraphState = DIG_STATE_START;
                     KeyStroke code = KeyStroke.getKeyStroke((char)val);
 
-                    postKeys(code, key, editor, context, project);
+                    CommandGroups.getInstance().getMacro().postKey(key, editor);
 
-                    return RES_DONE;
+                    return new DigraphResult(code);
                 }
                 else
                 {
-                    return RES_BAD;
+                    return DigraphResult.BAD;
                 }
             default:
-                return RES_BAD;
+                return DigraphResult.BAD;
         }
     }
 
-    private void postKey(KeyStroke key, Editor editor, DataContext context, Project project)
+    public static class DigraphResult
     {
-        ArrayList list = new ArrayList();
-        list.add(key);
+        public static final int RES_OK = 0;
+        public static final int RES_BAD = 1;
+        public static final int RES_DONE = 2;
 
-        postKeys(list, editor, context, project);
-    }
+        public static final DigraphResult OK = new DigraphResult(RES_OK);
+        public static final DigraphResult BAD = new DigraphResult(RES_BAD);
 
-    private void postKeys(KeyStroke key1, KeyStroke key2, Editor editor, DataContext context, Project project)
-    {
-        ArrayList list = new ArrayList();
-        list.add(key1);
-        list.add(key2);
-
-        postKeys(list, editor, context, project);
-    }
-
-    private void postKeys(ArrayList keys, final Editor editor, DataContext context, Project project)
-    {
-        //CommandGroups.getInstance().getMacro().playbackKeys(editor, context, project, keys, 0, 0, 1);
-        //Component component = DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
-        //Component component = editor.getContentComponent();
-        final Component component = SwingUtilities.getAncestorOfClass(Window.class, editor.getComponent());
-        logger.debug("editor=" + editor);
-        logger.debug("editor=" + editor.getClass());
-        logger.debug("editor.comp=" + editor.getComponent());
-        logger.debug("editor.comp=" + editor.getComponent().getClass());
-        logger.debug("editor.comp=" + editor.getComponent().getClass().getSuperclass());
-        logger.debug("editor.cont.comp=" + editor.getContentComponent());
-        logger.debug("editor.cont.comp=" + editor.getContentComponent().getClass());
-        logger.debug("editor.cont.comp=" + editor.getContentComponent().getClass().getSuperclass());
-        logger.debug("component=" + component);
-        for (int i = 0; i < keys.size(); i++)
+        DigraphResult(int result)
         {
-            KeyStroke stroke = (KeyStroke)keys.get(i);
-            final KeyEvent event = createKeyEvent(stroke, component);
-            //Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(event);
-            //KeyboardFocusManager.getCurrentKeyboardFocusManager().dispatchKeyEvent(event);
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run()
-                {
-                    logger.debug("posting " + event);
-                    //IdeEventQueue.getInstance().dispatchEvent(event);
-                    //DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager().dispatchKeyEvent(event);
-                    component.dispatchEvent(event);
-                }
-            });
-        }
-    }
-
-    private KeyEvent createKeyEvent(KeyStroke stroke, Component component)
-    {
-        KeyEvent res = null;
-        if (stroke.getKeyChar() == KeyEvent.CHAR_UNDEFINED)
-        {
-            res = new KeyEvent(component, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), stroke.getModifiers(), stroke.getKeyCode(), stroke.getKeyChar());
-        }
-        else
-        {
-            res = new KeyEvent(component, KeyEvent.KEY_TYPED, System.currentTimeMillis(), stroke.getModifiers(), stroke.getKeyCode(), stroke.getKeyChar());
+            this.result = result;
+            stroke = null;
         }
 
-        return res;
+        DigraphResult(KeyStroke stroke)
+        {
+            result = RES_DONE;
+            this.stroke = stroke;
+        }
+
+        public KeyStroke getStroke()
+        {
+            return stroke;
+        }
+
+        public int getResult()
+        {
+            return result;
+        }
+
+        private int result;
+        private KeyStroke stroke;
     }
 
     private int digraphState = DIG_STATE_START;

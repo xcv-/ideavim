@@ -20,13 +20,18 @@ package com.maddyhome.idea.vim.group;
  */
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.vim.KeyHandler;
-import com.maddyhome.idea.vim.undo.UndoManager;
 import com.maddyhome.idea.vim.common.Register;
+import com.maddyhome.idea.vim.undo.UndoManager;
+
+import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -120,7 +125,7 @@ public class MacroGroup extends AbstractActionGroup
             {
                 logger.debug("processing key " + pos);
                 // Handle one keystroke then queue up the next key
-                KeyHandler.getInstance().handleKey(editor, (KeyStroke)keys.get(pos), context, project);
+                KeyHandler.getInstance().handleKey(editor, (KeyStroke)keys.get(pos), context);
                 if (pos < keys.size() - 1)
                 {
                     playbackKeys(editor, context, project, keys, pos + 1, cnt, total);
@@ -138,6 +143,27 @@ public class MacroGroup extends AbstractActionGroup
                 CommandProcessor.getInstance().executeCommand(project, run, "playback", keys.get(pos));
             }
         });
+    }
+
+    public void postKey(KeyStroke stroke, Editor editor)
+    {
+        final Component component = SwingUtilities.getAncestorOfClass(Window.class, editor.getComponent());
+        final KeyEvent event = createKeyEvent(stroke, component);
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+                logger.debug("posting " + event);
+                Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(event);
+            }
+        });
+    }
+
+    private KeyEvent createKeyEvent(KeyStroke stroke, Component component)
+    {
+        return new KeyEvent(component,
+            stroke.getKeyChar() == KeyEvent.CHAR_UNDEFINED ? KeyEvent.KEY_PRESSED : KeyEvent.KEY_TYPED,
+            System.currentTimeMillis(), stroke.getModifiers(), stroke.getKeyCode(), stroke.getKeyChar());
     }
 
     private char lastRegister = 0;

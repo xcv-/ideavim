@@ -7,7 +7,9 @@ Bug Fixes
 - Fixed Ctrl-E and Ctrl-Y when cursor was at top/bottom of screen.
 - Fixed various scrolling and cursor movement so cursor can appear on first or
   last line of editor.
-- Fixed playing back macros if preceded by a non-one count.
+- Fixed playing back macros if preceded by a count greater than 1.
+- Fixed internal error about "Assertion failed: cannot share data context
+  between Swing events"
 
 0.9.5 from 0.9.4
 Bug Fixes
