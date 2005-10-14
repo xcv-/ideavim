@@ -25,9 +25,12 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.vim.group.CommandGroups;
 
+import java.awt.Component;
+import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 public class DigraphSequence
 {
@@ -252,7 +255,50 @@ public class DigraphSequence
 
     private void postKeys(ArrayList keys, final Editor editor, DataContext context, Project project)
     {
-        CommandGroups.getInstance().getMacro().playbackKeys(editor, context, project, keys, 0, 0, 1);
+        //CommandGroups.getInstance().getMacro().playbackKeys(editor, context, project, keys, 0, 0, 1);
+        //Component component = DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+        //Component component = editor.getContentComponent();
+        final Component component = SwingUtilities.getAncestorOfClass(Window.class, editor.getComponent());
+        logger.debug("editor=" + editor);
+        logger.debug("editor=" + editor.getClass());
+        logger.debug("editor.comp=" + editor.getComponent());
+        logger.debug("editor.comp=" + editor.getComponent().getClass());
+        logger.debug("editor.comp=" + editor.getComponent().getClass().getSuperclass());
+        logger.debug("editor.cont.comp=" + editor.getContentComponent());
+        logger.debug("editor.cont.comp=" + editor.getContentComponent().getClass());
+        logger.debug("editor.cont.comp=" + editor.getContentComponent().getClass().getSuperclass());
+        logger.debug("component=" + component);
+        for (int i = 0; i < keys.size(); i++)
+        {
+            KeyStroke stroke = (KeyStroke)keys.get(i);
+            final KeyEvent event = createKeyEvent(stroke, component);
+            //Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(event);
+            //KeyboardFocusManager.getCurrentKeyboardFocusManager().dispatchKeyEvent(event);
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run()
+                {
+                    logger.debug("posting " + event);
+                    //IdeEventQueue.getInstance().dispatchEvent(event);
+                    //DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager().dispatchKeyEvent(event);
+                    component.dispatchEvent(event);
+                }
+            });
+        }
+    }
+
+    private KeyEvent createKeyEvent(KeyStroke stroke, Component component)
+    {
+        KeyEvent res = null;
+        if (stroke.getKeyChar() == KeyEvent.CHAR_UNDEFINED)
+        {
+            res = new KeyEvent(component, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), stroke.getModifiers(), stroke.getKeyCode(), stroke.getKeyChar());
+        }
+        else
+        {
+            res = new KeyEvent(component, KeyEvent.KEY_TYPED, System.currentTimeMillis(), stroke.getModifiers(), stroke.getKeyCode(), stroke.getKeyChar());
+        }
+
+        return res;
     }
 
     private int digraphState = DIG_STATE_START;

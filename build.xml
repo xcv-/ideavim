@@ -41,6 +41,7 @@
         <pathelement path="${idea.home}/lib/extensions.jar" />
         <pathelement path="${idea.home}/lib/openapi.jar" />
         <pathelement path="${idea.home}/lib/jdom.jar" />
+        <pathelement path="${idea.home}/lib/idea.jar" />
         <pathelement path="${classes}"/>
     </path>
 

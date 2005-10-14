@@ -22,8 +22,8 @@ package com.maddyhome.idea.vim;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
@@ -117,6 +117,7 @@ public class KeyHandler
      */
     public void handleKey(Editor editor, KeyStroke key, DataContext context, Project project)
     {
+        logger.debug("handleKey " + key);
         boolean isRecording = CommandState.getInstance().isRecording();
         boolean shouldRecord = true;
         // If this is a "regular" character keystroke, get the character
@@ -225,6 +226,7 @@ public class KeyHandler
                         break;
                 }
 
+                logger.debug("digraph done");
                 return;
             }
 
