@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -37,12 +38,12 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.command.Argument;
@@ -534,7 +535,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param key The user entered keystroke
      * @return true if this was a regular character, false if not
      */
-    public boolean processKey(Editor editor, DataContext context, KeyStroke key)
+    public boolean processKey(final Editor editor, final DataContext context, final KeyStroke key)
     {
         logger.debug("processKey(" + key + ")");
 
@@ -544,7 +545,12 @@ public class ChangeGroup extends AbstractActionGroup
             // for repeating later.
             strokes.add(new Character(key.getKeyChar()));
 
-            KeyHandler.getInstance().getOriginalHandler().execute(editor, key.getKeyChar(), context);
+            ApplicationManager.getApplication().runWriteAction(new Runnable() {
+                public void run()
+                {
+                    KeyHandler.getInstance().getOriginalHandler().execute(editor, key.getKeyChar(), context);
+                }
+            });
 
             return true;
         }
