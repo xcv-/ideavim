@@ -31,6 +31,6 @@ public class MotionScrollHalfPageDownHandler extends AbstractEditorActionHandler
 {
     protected boolean execute(Editor editor, DataContext context, Command cmd)
     {
-        return CommandGroups.getInstance().getMotion().scrollHalfPageDown(editor, context, cmd.getRawCount());
+        return CommandGroups.getInstance().getMotion().scrollHalfPage(editor, context, 1, cmd.getRawCount());
     }
 }

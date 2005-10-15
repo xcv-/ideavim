@@ -28,6 +28,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.common.CharacterPosition;
+
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.nio.CharBuffer;
@@ -75,6 +76,17 @@ public class EditorHelper
     public static int getCurrentLogicalColumn(Editor editor)
     {
         return editor.getCaretModel().getLogicalPosition().column;
+    }
+
+    public static int getVisualLineAtTopOfScreen(Editor editor)
+    {
+        int vline = editor.getScrollingModel().getVerticalScrollOffset() / editor.getLineHeight();
+        return vline;
+    }
+
+    public static int getCurrentVisualScreenLine(Editor editor)
+    {
+        return getCurrentVisualLine(editor) - getVisualLineAtTopOfScreen(editor) + 1;
     }
 
     /**

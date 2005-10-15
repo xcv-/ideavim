@@ -31,6 +31,6 @@ public class MotionScrollPageUpHandler extends AbstractEditorActionHandler
 {
     protected boolean execute(Editor editor, DataContext context, Command cmd)
     {
-        return CommandGroups.getInstance().getMotion().scrollPage(editor, context, -cmd.getCount());
+        return CommandGroups.getInstance().getMotion().scrollFullPage(editor, context, -cmd.getCount());
     }
 }
