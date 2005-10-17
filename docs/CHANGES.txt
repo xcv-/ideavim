@@ -14,6 +14,8 @@ Bug Fixes
 New Features
 - Added support for scrolljump option.
 - Added support for scrolloff option.
+- Added support for sidescroll option.
+- Added support for sidescrolloff option.
 - Caret now stays in view when scrolling using the mouse wheel or scrollbars.
 
 0.9.5 from 0.9.4

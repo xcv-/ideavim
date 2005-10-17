@@ -34,8 +34,8 @@ import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.event.SelectionEvent;
 import com.intellij.openapi.editor.event.SelectionListener;
-import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.editor.event.VisibleAreaEvent;
+import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
@@ -53,10 +53,10 @@ import com.maddyhome.idea.vim.command.VisualChange;
 import com.maddyhome.idea.vim.command.VisualRange;
 import com.maddyhome.idea.vim.common.Mark;
 import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.helper.ApiHelper;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.SearchHelper;
-import com.maddyhome.idea.vim.helper.ApiHelper;
 import com.maddyhome.idea.vim.key.KeyParser;
 import com.maddyhome.idea.vim.option.BoundStringOption;
 import com.maddyhome.idea.vim.option.NumberOption;
@@ -176,7 +176,7 @@ public class MotionGroup extends AbstractActionGroup
                 {
                     editor.getCaretModel().moveToVisualPosition(new VisualPosition(vp.line, col));
                 }
-                MotionGroup.moveCaretIntoView(editor);
+                MotionGroup.scrollCaretIntoView(editor);
                 break;
             case Command.FLAG_MOT_CHARACTERWISE:
                 /*
@@ -813,22 +813,56 @@ public class MotionGroup extends AbstractActionGroup
     private void moveCaretToView(Editor editor, DataContext context)
     {
         int scrolloff = ((NumberOption)Options.getInstance().getOption("scrolloff")).value();
+        int sidescroll = ((NumberOption)Options.getInstance().getOption("sidescroll")).value();
         int height = EditorHelper.getScreenHeight(editor);
+        int width = EditorHelper.getScreenWidth(editor);
         if (scrolloff > height / 2)
         {
             scrolloff = height / 2;
+        }
+        if (sidescroll > width / 2)
+        {
+            sidescroll = width / 2;
         }
 
         int col = EditorData.getLastColumn(editor);
         int vline = EditorHelper.getVisualLineAtTopOfScreen(editor);
         int cline = EditorHelper.getCurrentVisualLine(editor);
+        int vcol = EditorHelper.getLeftVisibleColumn(editor);
+        //int ccol = EditorHelper.getCurrentVisualColumn(editor);
+        int ccol = col;
+        int newline = cline;
         if (cline < vline + scrolloff)
         {
-            moveCaret(editor, context, moveCaretVertical(editor, vline - cline + scrolloff));
+            newline = EditorHelper.normalizeVisualLine(editor, vline + scrolloff);
         }
         else if (cline >= vline + height - scrolloff)
         {
-            moveCaret(editor, context, moveCaretVertical(editor, vline - cline + height - scrolloff - 1));
+            newline = EditorHelper.normalizeVisualLine(editor, vline + height - scrolloff - 1);
+        }
+        int newcol = ccol;
+        if (ccol < vcol + sidescroll)
+        {
+            newcol = vcol + sidescroll;
+        }
+        else if (ccol >= vcol + width - sidescroll)
+        {
+            newcol = vcol + width - sidescroll - 1;
+        }
+
+        if (newline == cline && newcol != ccol)
+        {
+            col = newcol;
+        }
+
+        newcol = EditorHelper.normalizeVisualColumn(editor, newline, newcol,
+            CommandState.getInstance().getMode() == CommandState.MODE_INSERT ||
+            CommandState.getInstance().getMode() == CommandState.MODE_REPLACE);
+
+        if (newline != cline || newcol != ccol)
+        {
+            int offset = EditorHelper.visualPostionToOffset(editor, new VisualPosition(newline, newcol));
+            moveCaret(editor, context, offset);
         }
 
         EditorData.setLastColumn(editor, col);
@@ -1084,7 +1118,7 @@ public class MotionGroup extends AbstractActionGroup
         {
             editor.getCaretModel().moveToOffset(offset);
             EditorData.setLastColumn(editor, editor.getCaretModel().getVisualPosition().column);
-            moveCaretIntoView(editor);
+            scrollCaretIntoView(editor);
 
             if (CommandState.getInstance().getMode() == CommandState.MODE_VISUAL)
             {
@@ -1097,7 +1131,7 @@ public class MotionGroup extends AbstractActionGroup
         }
     }
 
-    public static void moveCaretIntoView(Editor editor)
+    public static void scrollCaretIntoView(Editor editor)
     {
         int cline = EditorHelper.getCurrentVisualLine(editor);
         int vline = EditorHelper.getVisualLineAtTopOfScreen(editor);
@@ -1157,19 +1191,65 @@ public class MotionGroup extends AbstractActionGroup
             scrollLineToTopOfScreen(editor, line);
         }
 
-        // TODO - support for 'sidescroll' option
         int ccol = EditorHelper.getCurrentVisualColumn(editor);
         int vcol = EditorHelper.getLeftVisibleColumn(editor);
-        if (ccol < vcol)
+        int width = EditorHelper.getScreenWidth(editor);
+        scrolljump = (CommandState.getInstance().getFlags() & Command.FLAG_IGNORE_SIDE_SCROLL_JUMP) == 0;
+        scrolloff = ((NumberOption)Options.getInstance().getOption("sidescrolloff")).value();
+        sjSize = 0;
+        if (scrolljump)
         {
-            scrollColumnToLeftOfScreen(editor, ccol);
+            sjSize = Math.max(0, ((NumberOption)Options.getInstance().getOption("sidescroll")).value() - 1);
+            if (sjSize == 0)
+            {
+                sjSize = width / 2;
+            }
         }
 
-        int width = EditorHelper.getScreenWidth(editor);
-        diff = ccol - (vcol + width - 1);
-        if (diff > 0)
+        int vleft = vcol + scrolloff;
+        int vright = vcol + width - scrolloff;
+        if (scrolloff >= width / 2)
         {
-            scrollColumnToLeftOfScreen(editor, vcol + diff);
+            scrolloff = width / 2;
+            vleft = vcol + scrolloff;
+            vright = vcol + width - scrolloff;
+            if (vleft == vright)
+            {
+                vright++;
+            }
+        }
+
+        sjSize = Math.min(sjSize, width / 2 - scrolloff);
+
+        if (ccol < vleft)
+        {
+            diff = ccol - vleft + 1;
+            sjSize = -sjSize;
+        }
+        else
+        {
+            diff = ccol - vright + 1;
+            if (diff < 0)
+            {
+                diff = 0;
+            }
+        }
+
+        if (diff != 0)
+        {
+            int col;
+            if (Math.abs(diff) > width / 2)
+            {
+                col = ccol - width / 2 - 1;
+            }
+            else
+            {
+                col = vcol + diff + sjSize;
+            }
+
+            //col = Math.min(col, EditorHelper.getMaximumColumnWidth());
+            col = Math.max(0, col);
+            scrollColumnToLeftOfScreen(editor, col);
         }
     }
 

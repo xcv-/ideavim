@@ -80,8 +80,8 @@ public class EditorHelper
 
     public static int getVisualLineAtTopOfScreen(Editor editor)
     {
-        int vline = editor.getScrollingModel().getVerticalScrollOffset() / editor.getLineHeight();
-        return vline;
+        int lh = editor.getLineHeight();
+        return (editor.getScrollingModel().getVerticalScrollOffset() + lh - 1) / lh;
     }
 
     public static int getCurrentVisualScreenLine(Editor editor)
@@ -121,6 +121,13 @@ public class EditorHelper
         }
     }
 
+    /*
+    public static int getMaximumLineLength(Editor editor)
+    {
+        int width = editor.getScrollingModel().
+    }
+    */
+    
     /**
      * Gets the number of characters on the specified visual line. This will be different than the number of visual
      * characters if there are "real" tabs in the line.
@@ -198,7 +205,11 @@ public class EditorHelper
      */
     public static int getScreenHeight(Editor editor)
     {
-        return editor.getScrollingModel().getVisibleArea().height / editor.getLineHeight();
+        int lh = editor.getLineHeight();
+        int height = editor.getScrollingModel().getVisibleArea().y +
+            editor.getScrollingModel().getVisibleArea().height -
+            getVisualLineAtTopOfScreen(editor) * lh;
+        return height / lh;
     }
 
     /**
@@ -237,11 +248,9 @@ public class EditorHelper
      */
     public static int getLeftVisibleColumn(Editor editor)
     {
-        Rectangle rect = editor.getScrollingModel().getVisibleArea();
-        Point pt = new Point(rect.x, 0);
-        VisualPosition vp = editor.xyToVisualPosition(pt);
-
-        return vp.column;
+        int cw = getColumnWidth(editor);
+        if (cw == 0) return 0;
+        return (editor.getScrollingModel().getHorizontalScrollOffset() + cw - 1) / cw;
     }
 
     /**
@@ -320,7 +329,7 @@ public class EditorHelper
      */
     public static int normalizeVisualLine(Editor editor, int vline)
     {
-        vline = Math.min(Math.max(0, vline), getVisualLineCount(editor) - 1);
+        vline = Math.max(0, Math.min(vline, getVisualLineCount(editor) - 1));
 
         return vline;
     }
@@ -349,7 +358,7 @@ public class EditorHelper
      */
     public static int normalizeVisualColumn(Editor editor, int vline, int col, boolean allowEnd)
     {
-        col = Math.min(Math.max(0, col), getVisualLineLength(editor, vline) - (allowEnd ? 0 : 1));
+        col = Math.max(0, Math.min(col, getVisualLineLength(editor, vline) - (allowEnd ? 0 : 1)));
 
         return col;
     }
