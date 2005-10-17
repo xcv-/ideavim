@@ -72,7 +72,7 @@ return back to Normal mode. If you are typing in Insert mode and a code
 completion window is popped up, pressing Escape will both cancel the window
 and exit Insert mode. If a parameter tooltip appears, pressing Escape will not
 make the tooltip go away whether in Insert or Normal mode. The only way to make
-the tooltip disappear is to move the cursor outside of the parameter area of
+the tooltip disappear is to move the caret outside of the parameter area of
 the method call. (I would love to receive solutions for both of these issues.)
 
 Menu Changes
