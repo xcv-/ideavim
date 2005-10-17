@@ -34,6 +34,8 @@ import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.event.SelectionEvent;
 import com.intellij.openapi.editor.event.SelectionListener;
+import com.intellij.openapi.editor.event.VisibleAreaListener;
+import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
@@ -89,6 +91,7 @@ public class MotionGroup extends AbstractActionGroup
                 editor.addEditorMouseMotionListener(handler);
 
                 editor.getSelectionModel().addSelectionListener(selectionHandler);
+                editor.getScrollingModel().addVisibleAreaListener(scrollHandler);
             }
         });
     }
@@ -798,12 +801,17 @@ public class MotionGroup extends AbstractActionGroup
     {
         logger.debug("lines="+lines);
         int vline = EditorHelper.getVisualLineAtTopOfScreen(editor);
-        int cline = EditorHelper.getCurrentVisualLine(editor);
-        logger.debug("vline=" + vline + ", cline=" + cline);
 
         vline = EditorHelper.normalizeVisualLine(editor, vline + lines);
         scrollLineToTopOfScreen(editor, vline);
 
+        moveCaretToView(editor, context);
+
+        return true;
+    }
+
+    private void moveCaretToView(Editor editor, DataContext context)
+    {
         int scrolloff = ((NumberOption)Options.getInstance().getOption("scrolloff")).value();
         int height = EditorHelper.getScreenHeight(editor);
         if (scrolloff > height / 2)
@@ -812,6 +820,8 @@ public class MotionGroup extends AbstractActionGroup
         }
 
         int col = EditorData.getLastColumn(editor);
+        int vline = EditorHelper.getVisualLineAtTopOfScreen(editor);
+        int cline = EditorHelper.getCurrentVisualLine(editor);
         if (cline < vline + scrolloff)
         {
             moveCaret(editor, context, moveCaretVertical(editor, vline - cline + scrolloff));
@@ -822,8 +832,6 @@ public class MotionGroup extends AbstractActionGroup
         }
 
         EditorData.setLastColumn(editor, col);
-
-        return true;
     }
 
     public boolean scrollFullPage(Editor editor, DataContext context, int pages)
@@ -854,12 +862,16 @@ public class MotionGroup extends AbstractActionGroup
 
     private static void scrollLineToTopOfScreen(Editor editor, int vline)
     {
+        EditorScrollHandler.ignoreChanges(true);
         editor.getScrollingModel().scrollVertically(vline * editor.getLineHeight());
+        EditorScrollHandler.ignoreChanges(false);
     }
 
     private static void scrollColumnToLeftOfScreen(Editor editor, int vcol)
     {
+        EditorScrollHandler.ignoreChanges(true);
         editor.getScrollingModel().scrollHorizontally(vcol * EditorHelper.getColumnWidth(editor));
+        EditorScrollHandler.ignoreChanges(false);
     }
 
     public int moveCaretToMiddleColumn(Editor editor)
@@ -1111,7 +1123,7 @@ public class MotionGroup extends AbstractActionGroup
             }
         }
 
-        int diff = 0;
+        int diff;
         if (cline < vtop)
         {
             diff = cline - vtop;
@@ -1578,6 +1590,23 @@ public class MotionGroup extends AbstractActionGroup
         private boolean makingChanges = false;
     }
 
+    private static class EditorScrollHandler implements VisibleAreaListener
+    {
+        public static void ignoreChanges(boolean ignore)
+        {
+            EditorScrollHandler.ignore = ignore;
+        }
+
+        public void visibleAreaChanged(VisibleAreaEvent visibleAreaEvent)
+        {
+            if (ignore) return;
+
+            CommandGroups.getInstance().getMotion().moveCaretToView(visibleAreaEvent.getEditor(), null);
+        }
+
+        private static boolean ignore = false;
+    }
+
     private static class EditorMouseHandler implements EditorMouseListener, EditorMouseMotionListener
     {
         public void mouseMoved(EditorMouseEvent event)
@@ -1657,6 +1686,7 @@ public class MotionGroup extends AbstractActionGroup
     private int visualEnd;
     private int visualOffset;
     private EditorSelectionHandler selectionHandler = new EditorSelectionHandler();
+    private EditorScrollHandler scrollHandler = new EditorScrollHandler();
 
     private static Logger logger = Logger.getInstance(MotionGroup.class.getName());
 }

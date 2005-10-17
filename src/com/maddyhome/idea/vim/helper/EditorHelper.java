@@ -223,6 +223,7 @@ public class EditorHelper
     public static int getColumnWidth(Editor editor)
     {
         Rectangle rect = editor.getScrollingModel().getVisibleArea();
+        if (rect.width == 0) return 0;
         Point pt = new Point(rect.width, 0);
         VisualPosition vp = editor.xyToVisualPosition(pt);
 

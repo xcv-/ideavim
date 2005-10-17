@@ -1,9 +1,8 @@
 Bugs to fix:
 
-- Fix mouse wheel scrolling and scrolloff value
 - Split text when typing fast after o command.
 - Show message after shifting lines with :< or :>
-- Replace mode - fix cursor. Can't figure out how to keep block cursor.
+- Replace mode - fix caret. Can't figure out how to keep block caret.
 - Visual mode not exited after executing non-vim key command. See below.
 
 Requested Functionality to add:
