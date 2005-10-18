@@ -865,7 +865,7 @@ public class MotionGroup extends AbstractActionGroup
         return true;
     }
 
-    private void moveCaretToView(Editor editor, DataContext context)
+    public static void moveCaretToView(Editor editor, DataContext context)
     {
         int scrolloff = ((NumberOption)Options.getInstance().getOption("scrolloff")).value();
         int sidescrolloff = ((NumberOption)Options.getInstance().getOption("sidescrolloff")).value();
@@ -1736,7 +1736,16 @@ public class MotionGroup extends AbstractActionGroup
         {
             if (ignore) return;
 
-            CommandGroups.getInstance().getMotion().moveCaretToView(visibleAreaEvent.getEditor(), null);
+            logger.debug("old=" + visibleAreaEvent.getOldRectangle());
+            logger.debug("new=" + visibleAreaEvent.getNewRectangle());
+            if (visibleAreaEvent.getNewRectangle().y == visibleAreaEvent.getOldRectangle().y)
+            {
+                MotionGroup.scrollCaretIntoView(visibleAreaEvent.getEditor());
+            }
+            else
+            {
+                MotionGroup.moveCaretToView(visibleAreaEvent.getEditor(), null);
+            }
         }
 
         private static boolean ignore = false;
