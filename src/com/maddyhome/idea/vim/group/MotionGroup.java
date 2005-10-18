@@ -686,6 +686,48 @@ public class MotionGroup extends AbstractActionGroup
         return true;
     }
 
+    public boolean scrollColumnToFirstScreenColumn(Editor editor, DataContext context)
+    {
+        scrollColumnToScreenColumn(editor, context, 0);
+
+        return true;
+    }
+
+    public boolean scrollColumnToLastScreenColumn(Editor editor, DataContext context)
+    {
+        scrollColumnToScreenColumn(editor, context, EditorHelper.getScreenWidth(editor) - 1);
+
+        return true;
+    }
+
+    private void scrollColumnToScreenColumn(Editor editor, DataContext context, int scol)
+    {
+        int scrolloff = ((NumberOption)Options.getInstance().getOption("sidescrolloff")).value();
+        int width = EditorHelper.getScreenWidth(editor);
+        if (scrolloff > width / 2)
+        {
+            scrolloff = width / 2;
+        }
+        if (scol <= width / 2)
+        {
+            if (scol < scrolloff + 1)
+            {
+                scol = scrolloff + 1;
+            }
+        }
+        else
+        {
+            if (scol > width - scrolloff)
+            {
+                scol = width - scrolloff;
+            }
+        }
+
+        int vcol = EditorHelper.getCurrentVisualColumn(editor);
+        scrollColumnToLeftOfScreen(editor, EditorHelper.normalizeVisualColumn(editor,
+            EditorHelper.getCurrentVisualLine(editor), vcol - scol + 1, false));
+    }
+
     private void scrollLineToScreenLine(Editor editor, DataContext context, int sline, int rawCount, int count,
         boolean start)
     {
@@ -797,6 +839,19 @@ public class MotionGroup extends AbstractActionGroup
         return scrollPage(editor, context, dir, count, EditorHelper.getCurrentVisualScreenLine(editor));
     }
 
+    public boolean scrollColumn(Editor editor, DataContext context, int columns)
+    {
+        int vcol = EditorHelper.getVisualColumnAtLeftOfScreen(editor);
+        vcol = EditorHelper.normalizeVisualColumn(editor, EditorHelper.getCurrentVisualLine(editor), vcol + columns,
+            false);
+
+        scrollColumnToLeftOfScreen(editor, vcol);
+
+        moveCaretToView(editor, context);
+
+        return true;
+    }
+
     public boolean scrollLine(Editor editor, DataContext context, int lines)
     {
         logger.debug("lines="+lines);
@@ -813,22 +868,22 @@ public class MotionGroup extends AbstractActionGroup
     private void moveCaretToView(Editor editor, DataContext context)
     {
         int scrolloff = ((NumberOption)Options.getInstance().getOption("scrolloff")).value();
-        int sidescroll = ((NumberOption)Options.getInstance().getOption("sidescroll")).value();
+        int sidescrolloff = ((NumberOption)Options.getInstance().getOption("sidescrolloff")).value();
         int height = EditorHelper.getScreenHeight(editor);
         int width = EditorHelper.getScreenWidth(editor);
         if (scrolloff > height / 2)
         {
             scrolloff = height / 2;
         }
-        if (sidescroll > width / 2)
+        if (sidescrolloff > width / 2)
         {
-            sidescroll = width / 2;
+            sidescrolloff = width / 2;
         }
 
         int col = EditorData.getLastColumn(editor);
         int vline = EditorHelper.getVisualLineAtTopOfScreen(editor);
         int cline = EditorHelper.getCurrentVisualLine(editor);
-        int vcol = EditorHelper.getLeftVisibleColumn(editor);
+        int vcol = EditorHelper.getVisualColumnAtLeftOfScreen(editor);
         //int ccol = EditorHelper.getCurrentVisualColumn(editor);
         int ccol = col;
         int newline = cline;
@@ -841,13 +896,13 @@ public class MotionGroup extends AbstractActionGroup
             newline = EditorHelper.normalizeVisualLine(editor, vline + height - scrolloff - 1);
         }
         int newcol = ccol;
-        if (ccol < vcol + sidescroll)
+        if (ccol < vcol + sidescrolloff)
         {
-            newcol = vcol + sidescroll;
+            newcol = vcol + sidescrolloff;
         }
-        else if (ccol >= vcol + width - sidescroll)
+        else if (ccol >= vcol + width - sidescrolloff)
         {
-            newcol = vcol + width - sidescroll - 1;
+            newcol = vcol + width - sidescrolloff - 1;
         }
 
         if (newline == cline && newcol != ccol)
@@ -1192,7 +1247,7 @@ public class MotionGroup extends AbstractActionGroup
         }
 
         int ccol = EditorHelper.getCurrentVisualColumn(editor);
-        int vcol = EditorHelper.getLeftVisibleColumn(editor);
+        int vcol = EditorHelper.getVisualColumnAtLeftOfScreen(editor);
         int width = EditorHelper.getScreenWidth(editor);
         scrolljump = (CommandState.getInstance().getFlags() & Command.FLAG_IGNORE_SIDE_SCROLL_JUMP) == 0;
         scrolloff = ((NumberOption)Options.getInstance().getOption("sidescrolloff")).value();

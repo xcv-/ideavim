@@ -246,7 +246,7 @@ public class EditorHelper
      * @param editor The editor
      * @return The column number
      */
-    public static int getLeftVisibleColumn(Editor editor)
+    public static int getVisualColumnAtLeftOfScreen(Editor editor)
     {
         int cw = getColumnWidth(editor);
         if (cw == 0) return 0;

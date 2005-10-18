@@ -52,7 +52,7 @@ using IDEA in VIM Emulation mode:
     it the active keymap by pressing the <code>Set Active</code> button.</li>
 </ol>
 
-<h4>Idea Aurora/4.0.x and Pallada/4.5.x</h4>
+<h4>Idea Aurora/4.0.x, Pallada/4.5.x, and Irida/5.0.x</h4>
 
 <ol>
 <li>Use the plugin manager built into Idea to download and install the IdeaVIM
@@ -87,6 +87,8 @@ Version 0.6.x was used with Aurora.
 Version 0.7.x is used with IDEA 4.0.x
 <br>
 Version 0.8.x is used with IDEA 4.0.x and Pallada/IDEA 4.5.x
+<br>
+Version 0.9.x is used with IDEA 5.0.x
 
 <hr>
 

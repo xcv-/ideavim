@@ -17,6 +17,8 @@ New Features
 - Added support for sidescroll option.
 - Added support for sidescrolloff option.
 - Caret now stays in view when scrolling using the mouse wheel or scrollbars.
+- Added support for the column scrolling commands zh, zhl, ze, zs, z<Left>, and
+  z<Right>.
 
 0.9.5 from 0.9.4
 Bug Fixes
