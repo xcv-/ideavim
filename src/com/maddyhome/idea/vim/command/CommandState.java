@@ -84,7 +84,18 @@ public class CommandState
      */
     public void setCommand(Command cmd)
     {
-            command = cmd;
+        command = cmd;
+        setFlags(cmd.getFlags());
+    }
+
+    public void setFlags(int flags)
+    {
+        this.flags = flags;
+    }
+
+    public int getFlags()
+    {
+        return flags;
     }
 
     public void pushState(int mode, int submode, int mapping)
@@ -379,6 +390,7 @@ public class CommandState
     private State defaultState = new State(MODE_COMMAND, 0, KeyParser.MAPPING_NORMAL);
     private Command command;
     private Command lastChange;
+    private int flags;
     private char lastRegister = RegisterGroup.REGISTER_DEFAULT;
     private boolean isRecording = false;
 

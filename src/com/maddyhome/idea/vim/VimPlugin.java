@@ -22,15 +22,13 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
@@ -40,6 +38,7 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowManager;
+import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.ex.CommandParser;
 import com.maddyhome.idea.vim.group.ChangeGroup;
 import com.maddyhome.idea.vim.group.CommandGroups;
@@ -47,14 +46,13 @@ import com.maddyhome.idea.vim.group.FileGroup;
 import com.maddyhome.idea.vim.group.MarkGroup;
 import com.maddyhome.idea.vim.group.MotionGroup;
 import com.maddyhome.idea.vim.group.SearchGroup;
+import com.maddyhome.idea.vim.helper.ApiHelper;
 import com.maddyhome.idea.vim.helper.DocumentManager;
 import com.maddyhome.idea.vim.helper.EditorData;
-import com.maddyhome.idea.vim.helper.ApiHelper;
 import com.maddyhome.idea.vim.key.RegisterActions;
 import com.maddyhome.idea.vim.option.Options;
 import com.maddyhome.idea.vim.ui.MorePanel;
 import com.maddyhome.idea.vim.undo.UndoManager;
-import com.maddyhome.idea.vim.command.CommandState;
 import org.jdom.Element;
 
 import java.awt.Toolkit;
@@ -119,6 +117,11 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
     {
         DocumentManager.getInstance().addDocumentListener(new MarkGroup.MarkUpdater());
         DocumentManager.getInstance().addDocumentListener(new UndoManager.DocumentChangeListener());
+        if (ApiHelper.supportsColorSchemes())
+        {
+            DocumentManager.getInstance().addDocumentListener(new SearchGroup.DocumentSearchListener());
+        }
+        DocumentManager.getInstance().init();
 
         EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryAdapter() {
             public void editorCreated(EditorFactoryEvent event)
@@ -154,10 +157,10 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
                 FileEditorManager.getInstance(project).addFileEditorManagerListener(new FileGroup.SelectionCheck());
                 if (ApiHelper.supportsColorSchemes())
                 {
-                    FileEditorManager.getInstance(project).addFileEditorManagerListener(new SearchGroup.SelectionCheck());
+                    FileEditorManager.getInstance(project).addFileEditorManagerListener(new SearchGroup.EditorSelectionCheck());
                 }
 
-                DocumentManager.getInstance().openProject(project);
+                //DocumentManager.getInstance().openProject(project);
 
                 /*
                 ToolWindowManager mgr = ToolWindowManager.getInstance(project);
@@ -169,7 +172,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
 
             public void projectClosed(Project project)
             {
-                DocumentManager.getInstance().closeProject(project);
+                //DocumentManager.getInstance().closeProject(project);
 
                 /*
                 toolWindows.remove(project);

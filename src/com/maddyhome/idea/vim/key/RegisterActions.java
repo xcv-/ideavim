@@ -99,14 +99,14 @@ public class RegisterActions
         KeyParser parser = KeyParser.getInstance();
 
         // ******************* Insert Mode Actions **********************
-        parser.registerAction(KeyParser.MAPPING_INSERT, "ClassNameCompletion", Command.INSERT, Command.FLAG_SAVE_CHANGES,
+        parser.registerAction(KeyParser.MAPPING_INSERT, "ClassNameCompletion", Command.INSERT,
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK)));
-        parser.registerAction(KeyParser.MAPPING_INSERT, "CodeCompletion", Command.INSERT, Command.FLAG_SAVE_CHANGES, new Shortcut[] {
+        parser.registerAction(KeyParser.MAPPING_INSERT, "CodeCompletion", Command.INSERT, new Shortcut[] {
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK))
         });
-        parser.registerAction(KeyParser.MAPPING_INSERT, "InsertLiveTemplate", Command.INSERT, Command.FLAG_SAVE_CHANGES,
+        parser.registerAction(KeyParser.MAPPING_INSERT, "InsertLiveTemplate", Command.INSERT,
             new Shortcut(KeyStroke.getKeyStroke(']', KeyEvent.CTRL_MASK)));
         parser.registerAction(KeyParser.MAPPING_INSERT, "VimEditorBackSpace", Command.INSERT, Command.FLAG_SAVE_STROKE | Command.FLAG_IS_BACKSPACE, new Shortcut[] {
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_H, KeyEvent.CTRL_MASK)),
@@ -434,12 +434,8 @@ public class RegisterActions
         // TODO - add ]`
         // TODO - add g'
         // TODO - add g`
-        // TODO - add ze
-        // TODO - add zh, z<left>
         // TODO - add zj
         // TODO - add zk
-        // TODO - add zl, z<right>
-        // TODO - add zs
 
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionCamelEndLeft", Command.MOTION, Command.FLAG_MOT_INCLUSIVE,
             new Shortcut("]b"));
@@ -540,18 +536,24 @@ public class RegisterActions
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollFirstScreenLine", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut("zt")
         });
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollFirstScreenColumn", Command.OTHER_READONLY, new Shortcut[] {
+            new Shortcut("zs")
+        });
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollFirstScreenLineStart", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut(new KeyStroke[] { KeyStroke.getKeyStroke('z'), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0) })
         });
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollFirstScreenLinePageStart", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut("z+")
         });
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollHalfPageDown", Command.OTHER_READONLY,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollHalfPageDown", Command.OTHER_READONLY | Command.FLAG_IGNORE_SCROLL_JUMP,
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)));
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollHalfPageUp", Command.OTHER_READONLY,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollHalfPageUp", Command.OTHER_READONLY | Command.FLAG_IGNORE_SCROLL_JUMP,
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_U, KeyEvent.CTRL_MASK)));
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollLastScreenLine", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut("zb")
+        });
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollLastScreenColumn", Command.OTHER_READONLY, new Shortcut[] {
+            new Shortcut("ze")
         });
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollLastScreenLineStart", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut("z-")
@@ -568,6 +570,14 @@ public class RegisterActions
         });
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollMiddleScreenLineStart", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut("z.")
+        });
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollColumnLeft", Command.OTHER_READONLY | Command.FLAG_IGNORE_SIDE_SCROLL_JUMP, new Shortcut[] {
+            new Shortcut("zl"),
+            new Shortcut(new KeyStroke[] { KeyStroke.getKeyStroke('z'), KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0) })
+        });
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollColumnRight", Command.OTHER_READONLY | Command.FLAG_IGNORE_SIDE_SCROLL_JUMP, new Shortcut[] {
+            new Shortcut("zh"),
+            new Shortcut(new KeyStroke[] { KeyStroke.getKeyStroke('z'), KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0) })
         });
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollPageDown", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_MASK)),

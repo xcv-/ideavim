@@ -20,7 +20,9 @@ package com.maddyhome.idea.vim.handler.macro;
 */
 
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.handler.AbstractEditorActionHandler;
@@ -32,6 +34,7 @@ public class PlaybackRegisterHandler extends AbstractEditorActionHandler
     protected boolean execute(Editor editor, DataContext context, Command cmd)
     {
         char reg = cmd.getArgument().getCharacter();
-        return CommandGroups.getInstance().getMacro().playbackRegister(editor, context, reg, cmd.getCount());
+        return CommandGroups.getInstance().getMacro().playbackRegister(editor, context,
+            (Project)context.getData(DataConstants.PROJECT), reg, cmd.getCount());
     }
 }

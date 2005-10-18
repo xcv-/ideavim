@@ -1,13 +1,24 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.8.4
+@VERSION@ from 0.8.3
 Bug Fixes
-- The Escape key is passed up to IDEA if not used by VIM first. This fix solves
-  minor issues such as not being able to clear highlighted text using the
-  Ctrl-Shift-F7, for example.
-- :quit command now works in all forms (e.g. :q, :qu, :qui, :quit).
-- Performing a change command while in visual mode now properly terminates
-  visual mode.
+- You can now insert a real tab using <Ctrl-V><Tab>.
+- <Tab> now properly works as a character argument to commands such as f and t.
+- Fixed Ctrl-E and Ctrl-Y when caret was at top/bottom of screen.
+- Fixed various scrolling and caret movement so caret can appear on first or
+  last line of editor.
+- Fixed playing back macros if preceded by a count greater than 1.
+- Updated installation notes for Mac
+- Fixed :quit command. Now all forms of the command are recognized.
+
+New Features
+- Added support for scrolljump option.
+- Added support for scrolloff option.
+- Added support for sidescroll option.
+- Added support for sidescrolloff option.
+- Caret now stays in view when scrolling using the mouse wheel or scrollbars.
+- Added support for the column scrolling commands zh, zhl, ze, zs, z<Left>, and
+  z<Right>.
 
 0.8.3 from 0.8.2
 Bug Fixes

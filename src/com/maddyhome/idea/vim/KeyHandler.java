@@ -1,3 +1,4 @@
+
 package com.maddyhome.idea.vim;
 
 /*
@@ -28,16 +29,13 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.application.ApplicationManager;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.RegisterGroup;
-import com.maddyhome.idea.vim.group.ChangeGroup;
 import com.maddyhome.idea.vim.helper.DigraphSequence;
 import com.maddyhome.idea.vim.helper.RunnableHelper;
-import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.key.ArgumentNode;
 import com.maddyhome.idea.vim.key.BranchNode;
 import com.maddyhome.idea.vim.key.CommandNode;
@@ -50,16 +48,16 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Stack;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 
 /**
- * This handlers every keystroke that the user can argType except those that are still valid hotkeys for various
- * Idea actions. This is a singleton.
+ * This handlers every keystroke that the user can argType except those that are still valid hotkeys for various Idea
+ * actions. This is a singleton.
  */
 public class KeyHandler
 {
     /**
      * Returns a reference to the singleton instance of this class
+     *
      * @return A reference to the singleton
      */
     public static KeyHandler getInstance()
@@ -83,6 +81,7 @@ public class KeyHandler
 
     /**
      * Sets the original key handler
+     *
      * @param origHandler The original key handler
      */
     public void setOriginalHandler(TypedActionHandler origHandler)
@@ -92,6 +91,7 @@ public class KeyHandler
 
     /**
      * Gets the original key handler
+     *
      * @return The orginal key handler
      */
     public TypedActionHandler getOriginalHandler()
@@ -100,279 +100,280 @@ public class KeyHandler
     }
 
     /**
-     * This is the main key handler for the Vim plugin. Every keystroke not handled directly by Idea is sent
-     * here for processing.
+     * This is the main key handler for the Vim plugin. Every keystroke not handled directly by Idea is sent here for
+     * processing.
+     *
      * @param editor The editor the key was typed into
      * @param key The keystroke typed by the user
      * @param context The data context
      */
     public void handleKey(Editor editor, KeyStroke key, DataContext context)
     {
+        logger.debug("handleKey " + key);
         boolean isRecording = CommandState.getInstance().isRecording();
         boolean shouldRecord = true;
-        // If this is a "regular" character keystroke, get the character
-        char chKey = key.getKeyChar() == KeyEvent.CHAR_UNDEFINED ? 0 : key.getKeyChar();
-
-        if ((CommandState.getInstance().getMode() == CommandState.MODE_COMMAND || mode == STATE_COMMAND) &&
-            (key.getKeyCode() == KeyEvent.VK_ESCAPE ||
-            (key.getKeyCode() == KeyEvent.VK_C && (key.getModifiers() & KeyEvent.CTRL_MASK) != 0) ||
-            (key.getKeyCode() == '[' && (key.getModifiers() & KeyEvent.CTRL_MASK) != 0)))
+        for (int loop = 0; loop < 2; loop++)
         {
-            if (mode != STATE_COMMAND && count == 0 && currentArg == Argument.NONE && currentCmd.size() == 0 &&
-                CommandGroups.getInstance().getRegister().getCurrentRegister() == RegisterGroup.REGISTER_DEFAULT)
+            // If this is a "regular" character keystroke, get the character
+            char chKey = key.getKeyChar() == KeyEvent.CHAR_UNDEFINED ? 0 : key.getKeyChar();
+
+            if ((CommandState.getInstance().getMode() == CommandState.MODE_COMMAND || mode == STATE_COMMAND) &&
+                (key.getKeyCode() == KeyEvent.VK_ESCAPE ||
+                    (key.getKeyCode() == KeyEvent.VK_C && (key.getModifiers() & KeyEvent.CTRL_MASK) != 0) ||
+                    (key.getKeyCode() == '[' && (key.getModifiers() & KeyEvent.CTRL_MASK) != 0)))
             {
-                if (key.getKeyCode() == KeyEvent.VK_ESCAPE)
+                if (mode != STATE_COMMAND && count == 0 && currentArg == Argument.NONE && currentCmd.size() == 0 &&
+                    CommandGroups.getInstance().getRegister().getCurrentRegister() == RegisterGroup.REGISTER_DEFAULT)
                 {
-                    KeyHandler.executeAction("VimEditorEscape", context);
-                    //getOriginalHandler().execute(editor, key.getKeyChar(), context);
-                }
-                VimPlugin.indicateError();
-            }
-
-            reset();
-        }
-        // At this point the user must be typing in a command. Most commands can be preceeded by a number. Let's
-        // check if a number can be entered at this point, and if so, did the user send us a digit.
-        else if ((CommandState.getInstance().getMode() == CommandState.MODE_COMMAND ||
-            CommandState.getInstance().getMode() == CommandState.MODE_VISUAL) &&
-            mode == STATE_NEW_COMMAND && currentArg != Argument.CHARACTER && currentArg != Argument.DIGRAPH && Character.isDigit(chKey) &&
-            (count != 0 || chKey != '0'))
-        {
-            // Update the count
-            count = count * 10 + (chKey - '0');
-        }
-        // Pressing delete while entering a count "removes" the last digit entered
-        else if ((CommandState.getInstance().getMode() == CommandState.MODE_COMMAND ||
-            CommandState.getInstance().getMode() == CommandState.MODE_VISUAL) &&
-            mode == STATE_NEW_COMMAND && currentArg != Argument.CHARACTER && currentArg != Argument.DIGRAPH &&
-            key.getKeyCode() == KeyEvent.VK_DELETE && count != 0)
-        {
-            // "Remove" the last digit sent to us
-            count /= 10;
-        }
-        // If we got this far the user is entering a command or supplying an argument to an entered command.
-        // First let's check to see if we are at the point of expecting a single character argument to a command.
-        else if (currentArg == Argument.CHARACTER)
-        {
-            // We are expecting a character argument - is this a regular character the user typed?
-            // Some special keys can be handled as character arguments - let's check for them here.
-            if (chKey == 0)
-            {
-                switch (key.getKeyCode())
-                {
-                    case KeyEvent.VK_ENTER:
-                        chKey = '\n';
-                        break;
-                }
-            }
-
-            if (chKey != 0)
-            {
-                // Create the character argument, add it to the current command, and signal we are ready to process
-                // the command
-                Argument arg = new Argument(chKey);
-                Command cmd = (Command)currentCmd.peek();
-                cmd.setArgument(arg);
-                mode = STATE_READY;
-            }
-            else
-            {
-                // Oops - this isn't a valid character argument
-                mode = STATE_ERROR;
-            }
-        }
-        // If we are this far - sheesh, then the user must be entering a command or a non-single-character argument
-        // to an entered command. Let's figure out which it is
-        else
-        {
-            // For debugging purposes we track the keys entered for this command
-            keys.add(key);
-            logger.debug("keys now " + keys);
-
-            // Ask the key/action tree if this is an appropriate key at this point in the command and if so,
-            // return the node matching this keystroke
-            Node node = currentNode.getChild(key);
-
-            if (digraph == null && !(node instanceof CommandNode) && DigraphSequence.isDigraphStart(key))
-            {
-                digraph = new DigraphSequence();
-            }
-            if (digraph != null)
-            {
-                int res = digraph.processKey(key, editor, context);
-                switch (res)
-                {
-                    case DigraphSequence.RES_OK:
-                        break;
-                    case DigraphSequence.RES_BAD:
-                        digraph = null;
-                        break;
-                    case DigraphSequence.RES_DONE:
-                        if (currentArg == Argument.DIGRAPH)
-                        {
-                            currentArg = Argument.CHARACTER;
-                        }
-                        digraph = null;
-                        break;
+                    VimPlugin.indicateError();
                 }
 
-                return;
+                reset();
             }
-
-            // If this is a branch node we have entered only part of a multikey command
-            if (node instanceof BranchNode)
+            // At this point the user must be typing in a command. Most commands can be preceeded by a number. Let's
+            // check if a number can be entered at this point, and if so, did the user send us a digit.
+            else if ((CommandState.getInstance().getMode() == CommandState.MODE_COMMAND ||
+                CommandState.getInstance().getMode() == CommandState.MODE_VISUAL) &&
+                mode == STATE_NEW_COMMAND && currentArg != Argument.CHARACTER && currentArg != Argument.DIGRAPH &&
+                Character.isDigit(chKey) &&
+                (count != 0 || chKey != '0'))
             {
-                // Flag that we aren't allowing any more count digits
-                mode = STATE_COMMAND;
-                currentNode = (BranchNode)node;
-                if (CommandState.getInstance().isRecording())
+                // Update the count
+                count = count * 10 + (chKey - '0');
+                logger.debug("count now " + count);
+            }
+            // Pressing delete while entering a count "removes" the last digit entered
+            else if ((CommandState.getInstance().getMode() == CommandState.MODE_COMMAND ||
+                CommandState.getInstance().getMode() == CommandState.MODE_VISUAL) &&
+                mode == STATE_NEW_COMMAND && currentArg != Argument.CHARACTER && currentArg != Argument.DIGRAPH &&
+                key.getKeyCode() == KeyEvent.VK_DELETE && count != 0)
+            {
+                // "Remove" the last digit sent to us
+                count /= 10;
+                logger.debug("count now " + count);
+            }
+            // If we got this far the user is entering a command or supplying an argument to an entered command.
+            // First let's check to see if we are at the point of expecting a single character argument to a command.
+            else if (currentArg == Argument.CHARACTER)
+            {
+                // We are expecting a character argument - is this a regular character the user typed?
+                // Some special keys can be handled as character arguments - let's check for them here.
+                if (chKey == 0)
                 {
-                    ArgumentNode arg = (ArgumentNode)((BranchNode)currentNode).getArgumentNode();
-                    if (arg != null && (arg.getFlags() & Command.FLAG_NO_ARG_RECORDING) != 0)
+                    switch (key.getKeyCode())
                     {
-                        handleKey(editor, KeyStroke.getKeyStroke(' '), context);
+                        case KeyEvent.VK_TAB:
+                            chKey = '\t';
+                            break;
+                        case KeyEvent.VK_ENTER:
+                            chKey = '\n';
+                            break;
                     }
                 }
-            }
-            // If this is a command node the user has entered a valid key sequence of a know command
-            else if (node instanceof CommandNode)
-            {
-                // If all does well we are ready to process this command
-                mode = STATE_READY;
-                CommandNode cmdNode = (CommandNode)node;
-                // Did we just get the completed sequence for a motion command argument?
-                if (currentArg == Argument.MOTION)
+
+                if (chKey != 0)
                 {
-                    // We have been expecting a motion argument - is this one?
-                    if (cmdNode.getCmdType() == Command.MOTION)
+                    // Create the character argument, add it to the current command, and signal we are ready to process
+                    // the command
+                    Argument arg = new Argument(chKey);
+                    Command cmd = (Command)currentCmd.peek();
+                    cmd.setArgument(arg);
+                    mode = STATE_READY;
+                }
+                else
+                {
+                    // Oops - this isn't a valid character argument
+                    mode = STATE_ERROR;
+                }
+            }
+            // If we are this far - sheesh, then the user must be entering a command or a non-single-character argument
+            // to an entered command. Let's figure out which it is
+            else
+            {
+                // For debugging purposes we track the keys entered for this command
+                keys.add(key);
+                logger.debug("keys now " + keys);
+
+                // Ask the key/action tree if this is an appropriate key at this point in the command and if so,
+                // return the node matching this keystroke
+                Node node = currentNode.getChild(key);
+
+                if (digraph == null && !(node instanceof CommandNode) && DigraphSequence.isDigraphStart(key))
+                {
+                    digraph = new DigraphSequence();
+                }
+                if (digraph != null)
+                {
+                    DigraphSequence.DigraphResult res = digraph.processKey(key, editor, context);
+                    switch (res.getResult())
                     {
-                        // Create the motion command and add it to the stack
+                        case DigraphSequence.DigraphResult.RES_OK:
+                            return;
+                        case DigraphSequence.DigraphResult.RES_BAD:
+                            digraph = null;
+                            return;
+                        case DigraphSequence.DigraphResult.RES_DONE:
+                            if (currentArg == Argument.DIGRAPH)
+                            {
+                                currentArg = Argument.CHARACTER;
+                            }
+                            key = res.getStroke();
+                            digraph = null;
+                            continue;
+                    }
+
+                    logger.debug("digraph done");
+                }
+
+                // If this is a branch node we have entered only part of a multikey command
+                if (node instanceof BranchNode)
+                {
+                    // Flag that we aren't allowing any more count digits
+                    mode = STATE_COMMAND;
+                    currentNode = (BranchNode)node;
+                    if (CommandState.getInstance().isRecording())
+                    {
+                        ArgumentNode arg = (ArgumentNode)((BranchNode)currentNode).getArgumentNode();
+                        if (arg != null && (arg.getFlags() & Command.FLAG_NO_ARG_RECORDING) != 0)
+                        {
+                            handleKey(editor, KeyStroke.getKeyStroke(' '), context);
+                        }
+                    }
+                }
+                // If this is a command node the user has entered a valid key sequence of a know command
+                else if (node instanceof CommandNode)
+                {
+                    // If all does well we are ready to process this command
+                    mode = STATE_READY;
+                    CommandNode cmdNode = (CommandNode)node;
+                    // Did we just get the completed sequence for a motion command argument?
+                    if (currentArg == Argument.MOTION)
+                    {
+                        // We have been expecting a motion argument - is this one?
+                        if (cmdNode.getCmdType() == Command.MOTION)
+                        {
+                            // Create the motion command and add it to the stack
+                            Command cmd = new Command(count, cmdNode.getAction(), cmdNode.getCmdType(),
+                                cmdNode.getFlags());
+                            cmd.setKeys(keys);
+                            currentCmd.push(cmd);
+                        }
+                        else if (cmdNode.getCmdType() == Command.RESET)
+                        {
+                            currentCmd.clear();
+                            Command cmd = new Command(1, cmdNode.getAction(), cmdNode.getCmdType(), cmdNode.getFlags());
+                            cmd.setKeys(keys);
+                            currentCmd.push(cmd);
+                        }
+                        else
+                        {
+                            // Oops - this wasn't a motion command. The user goofed and typed something else
+                            mode = STATE_ERROR;
+                        }
+                    }
+                    // The user entered a valid command that doesn't take any arguments
+                    else
+                    {
+                        // Create the command and add it to the stack
                         Command cmd = new Command(count, cmdNode.getAction(), cmdNode.getCmdType(), cmdNode.getFlags());
                         cmd.setKeys(keys);
                         currentCmd.push(cmd);
-                    }
-                    else if (cmdNode.getCmdType() == Command.RESET)
-                    {
-                        currentCmd.clear();
-                        Command cmd = new Command(1, cmdNode.getAction(), cmdNode.getCmdType(), cmdNode.getFlags());
-                        cmd.setKeys(keys);
-                        currentCmd.push(cmd);
-                    }
-                    else
-                    {
-                        // Oops - this wasn't a motion command. The user goofed and typed something else
-                        mode = STATE_ERROR;
+
+                        // This is a sanity check that the command has a valid action. This should only fail if the
+                        // programmer made a typo or forgot to add the action to the plugin.xml file
+                        if (cmd.getAction() == null)
+                        {
+                            logger.error("NULL action for keys '" + keys + "'");
+                            mode = STATE_ERROR;
+                        }
                     }
                 }
-                // The user entered a valid command that doesn't take any arguments
-                else
+                // If this is an argument node then the last keystroke was not part of the current command but should
+                // be the first keystroke of the current command's argument
+                else if (node instanceof ArgumentNode)
                 {
-                    // Create the command and add it to the stack
-                    Command cmd = new Command(count, cmdNode.getAction(), cmdNode.getCmdType(), cmdNode.getFlags());
+                    // Create a new command based on what the user has typed so far, excluding this keystroke.
+                    ArgumentNode arg = (ArgumentNode)node;
+                    Command cmd = new Command(count, arg.getAction(), arg.getCmdType(), arg.getFlags());
                     cmd.setKeys(keys);
                     currentCmd.push(cmd);
-
-                    // This is a sanity check that the command has a valid action. This should only fail if the
-                    // programmer made a typo or forgot to add the action to the plugin.xml file
-                    if (cmd.getAction() == null)
+                    // What argType of argument does this command expect?
+                    switch (arg.getArgType())
                     {
-                        logger.error("NULL action for keys '" + keys + "'");
-                        mode = STATE_ERROR;
+                        case Argument.DIGRAPH:
+                            //digraphState = 0;
+                            digraph = new DigraphSequence();
+                            // No break - fall through
+                        case Argument.CHARACTER:
+                        case Argument.MOTION:
+                            mode = STATE_NEW_COMMAND;
+                            currentArg = arg.getArgType();
+                            // Is the current command an operator? If so set the state to only accept "operator pending"
+                            // commands
+                            if ((arg.getFlags() & Command.FLAG_OP_PEND) != 0)
+                            {
+                                //CommandState.getInstance().setMappingMode(KeyParser.MAPPING_OP_PEND);
+                                CommandState state = CommandState.getInstance();
+                                CommandState.getInstance().pushState(state.getMode(), state.getSubMode(),
+                                    KeyParser.MAPPING_OP_PEND);
+                            }
+                            break;
+                        default:
+                            // Oops - we aren't expecting any other argType of argument
+                            mode = STATE_ERROR;
+                    }
+
+                    // If the current keystroke is really the first character of an argument the user needs to enter,
+                    // recursively go back and handle this keystroke again with all the state properly updated to
+                    // handle the argument
+                    if (currentArg != Argument.NONE)
+                    {
+                        partialReset();
+                        boolean saveRecording = isRecording;
+                        handleKey(editor, key, context);
+                        isRecording = saveRecording;
+                        shouldRecord = false; // Prevent this from getting recorded twice
                     }
                 }
-            }
-            // If this is an argument node then the last keystroke was not part of the current command but should
-            // be the first keystroke of the current command's argument
-            else if (node instanceof ArgumentNode)
-            {
-                // Create a new command based on what the user has typed so far, excluding this keystroke.
-                ArgumentNode arg = (ArgumentNode)node;
-                Command cmd = new Command(count, arg.getAction(), arg.getCmdType(), arg.getFlags());
-                cmd.setKeys(keys);
-                currentCmd.push(cmd);
-                // What argType of argument does this command expect?
-                switch (arg.getArgType())
-                {
-                    case Argument.DIGRAPH:
-                        //digraphState = 0;
-                        digraph = new DigraphSequence();
-                        // No break - fall through
-                    case Argument.CHARACTER:
-                    case Argument.MOTION:
-                        mode = STATE_NEW_COMMAND;
-                        currentArg = arg.getArgType();
-                        // Is the current command an operator? If so set the state to only accept "operator pending"
-                        // commands
-                        if ((arg.getFlags() & Command.FLAG_OP_PEND) != 0)
-                        {
-                            //CommandState.getInstance().setMappingMode(KeyParser.MAPPING_OP_PEND);
-                            CommandState state = CommandState.getInstance();
-                            CommandState.getInstance().pushState(state.getMode(), state.getSubMode(),
-                                KeyParser.MAPPING_OP_PEND);
-                        }
-                        break;
-                    default:
-                        // Oops - we aren't expecting any other argType of argument
-                        mode = STATE_ERROR;
-                }
-
-                // If the current keystroke is really the first character of an argument the user needs to enter,
-                // recursively go back and handle this keystroke again with all the state properly updated to
-                // handle the argument
-                if (currentArg != Argument.NONE)
-                {
-                    partialReset();
-                    boolean saveRecording = isRecording;
-                    handleKey(editor, key, context);
-                    isRecording = saveRecording;
-                    shouldRecord = false; // Prevent this from getting recorded twice
-                }
-            }
-            else
-            {
-                logger.debug("checking for digraph");
-                logger.debug("lastWasBS=" + lastWasBS);
-                logger.debug("lastChar=" + lastChar);
-                if (lastWasBS && lastChar != 0 && Options.getInstance().isSet("digraph"))
-                {
-                    char dig = CommandGroups.getInstance().getDigraph().getDigraph(lastChar, key.getKeyChar());
-                    logger.debug("dig=" + dig);
-                    key = KeyStroke.getKeyStroke(dig);
-                }
-
-                /* TODO - text change
-                if (textChangeListener != null)
-                {
-                    textChangeListener.complete();
-                    textChangeListener = null;
-                }
-                */
-
-                // If we are in insert/replace mode send this key in for processing
-                if (CommandState.getInstance().getMode() == CommandState.MODE_INSERT ||
-                    CommandState.getInstance().getMode() == CommandState.MODE_REPLACE)
-                {
-                    if (!CommandGroups.getInstance().getChange().processKey(editor, context, key))
-                    {
-                        shouldRecord = false;
-                    }
-                }
-                else if (CommandState.getInstance().getMappingMode() == KeyParser.MAPPING_CMD_LINE)
-                {
-                    if (!CommandGroups.getInstance().getProcess().processExKey(editor, context, key, true))
-                    {
-                        shouldRecord = false;
-                    }
-                }
-                // If we get here then the user has entered an unrecognized series of keystrokes
                 else
                 {
-                    mode = STATE_ERROR;
-                }
+                    logger.debug("checking for digraph");
+                    logger.debug("lastWasBS=" + lastWasBS);
+                    logger.debug("lastChar=" + lastChar);
+                    if (lastWasBS && lastChar != 0 && Options.getInstance().isSet("digraph"))
+                    {
+                        char dig = CommandGroups.getInstance().getDigraph().getDigraph(lastChar, key.getKeyChar());
+                        logger.debug("dig=" + dig);
+                        key = KeyStroke.getKeyStroke(dig);
+                    }
 
-                lastChar = key.getKeyChar();
-                partialReset();
+                    // If we are in insert/replace mode send this key in for processing
+                    if (CommandState.getInstance().getMode() == CommandState.MODE_INSERT ||
+                        CommandState.getInstance().getMode() == CommandState.MODE_REPLACE)
+                    {
+                        if (!CommandGroups.getInstance().getChange().processKey(editor, context, key))
+                        {
+                            shouldRecord = false;
+                        }
+                    }
+                    else if (CommandState.getInstance().getMappingMode() == KeyParser.MAPPING_CMD_LINE)
+                    {
+                        if (!CommandGroups.getInstance().getProcess().processExKey(editor, context, key, true))
+                        {
+                            shouldRecord = false;
+                        }
+                    }
+                    // If we get here then the user has entered an unrecognized series of keystrokes
+                    else
+                    {
+                        mode = STATE_ERROR;
+                    }
+
+                    lastChar = key.getKeyChar();
+                    partialReset();
+                }
             }
+            break;
         }
 
         // Do we have a fully entere command at this point? If so, lets execute it
@@ -425,13 +426,14 @@ public class KeyHandler
             else
             {
                 Runnable action = new ActionRunner(editor, context, cmd, key);
+                Project project = (Project)context.getData(DataConstants.PROJECT);
                 if (cmd.isWriteType())
                 {
-                    RunnableHelper.runWriteCommand((Project)context.getData(DataConstants.PROJECT), action);
+                    RunnableHelper.runWriteCommand(project, action);
                 }
                 else
                 {
-                    RunnableHelper.runReadCommand((Project)context.getData(DataConstants.PROJECT), action);
+                    RunnableHelper.runReadCommand(project, action);
                 }
             }
         }
@@ -449,6 +451,7 @@ public class KeyHandler
 
     /**
      * Execute an action by name
+     *
      * @param name The name of the action to execute
      * @param context The context to run it in
      */
@@ -469,6 +472,7 @@ public class KeyHandler
 
     /**
      * Execute an action
+     *
      * @param action The action to execute
      * @param context The context to run it in
      */
@@ -485,8 +489,8 @@ public class KeyHandler
     }
 
     /**
-     * Partially resets the state of this handler. Resets the command count, clears the key list, resets the
-     * key tree node to the root for the current mode we are in.
+     * Partially resets the state of this handler. Resets the command count, clears the key list, resets the key tree
+     * node to the root for the current mode we are in.
      */
     private void partialReset()
     {
@@ -523,7 +527,7 @@ public class KeyHandler
     }
 
     /**
-     * Used to run commands
+     * This was used as an experiment to execute actions as a runnable.
      */
     static class ActionRunner implements Runnable
     {
@@ -539,50 +543,12 @@ public class KeyHandler
         {
             boolean wasRecording = CommandState.getInstance().isRecording();
 
-            /* TODO - text change
-            if (textChangeListener != null)
-            {
-                textChangeListener.complete();
-            }
-
-            textChangeListener = ((cmd.getFlags() & Command.FLAG_SAVE_CHANGES) != 0) ?
-                new ChangeGroup.TextChangeListener(editor, context) : null;
-            if (textChangeListener != null)
-            {
-                logger.debug("save changes");
-                editor.getDocument().addDocumentListener(textChangeListener);
-            }
-            */
-
             executeAction(cmd.getAction(), context);
             if (CommandState.getInstance().getMode() == CommandState.MODE_INSERT ||
                 CommandState.getInstance().getMode() == CommandState.MODE_REPLACE)
             {
                 CommandGroups.getInstance().getChange().processCommand(editor, context, cmd);
             }
-
-            /*
-            if (listener != null)
-            {
-                logger.debug("complete");
-                ApplicationManager.getApplication().invokeLater(new Runnable() {
-                    public void run()
-                    {
-                        ApplicationManager.getApplication().invokeLater(
-                            new Runnable()
-                            {
-                                public void run()
-                                {
-                                    // TODO - I can't get this to run late enough - it's getting removed before any
-                                    // change events.
-                                    editor.getDocument().removeDocumentListener(listener);
-                                    listener.complete();
-                                }
-                            });
-                    }
-                });
-            }
-            */
 
             // Now that the command has been executed let's clean up a few things.
 
@@ -627,7 +593,6 @@ public class KeyHandler
     private DigraphSequence digraph = null;
     private char lastChar;
     private boolean lastWasBS;
-    private static ChangeGroup.TextChangeListener textChangeListener = null;
 
     private static KeyHandler instance;
 

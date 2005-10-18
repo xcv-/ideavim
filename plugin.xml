@@ -6,18 +6,25 @@
     <change-notes>
 <![CDATA[
 Bug Fixes<br>
-- After a fresh install it is possible to get a NPE when loading the first
-project. Now fixed.<br>
-- Fixed :class and :find. These were also broken by the focus fix in 0.7.2.<br>
-- Fixed * and # commands on one letter words.<br>
-- Fixed * and # commands on last word of line with trailing punctuation.<br>
-- Fixed b and e commands when trying to move to first or last word of file and
-the first or last character of the file was punctuation.<br>
-- Fixed NullPointerException appearing in system log when viewing a .form file.<br>
-- Fixed extraneous characters getting added to a register during recording.<br>
-- Use file type's indent size instead of tab size for indenting text.<br>
-- Restore caret if plugin is disabled.<br>
-- Fixed ability to delete blank line at end of files.<br>
+- You can now insert a real tab using <Ctrl-V><Tab>.<br>
+- <Tab> now properly works as a character argument to commands such as f and t.<br>
+- Fixed Ctrl-E and Ctrl-Y when caret was at top/bottom of screen.<br>
+- Fixed various scrolling and caret movement so caret can appear on first or
+  last line of editor.<br>
+- Fixed playing back macros if preceded by a count greater than 1.<br>
+- Fixed internal error about "Assertion failed: cannot share data context
+  between Swing events"<br>
+- Updated installation notes for Mac<br>
+- Fixed :quit command. Now all forms of the command are recognized.<br>
+<br>
+New Features<br>
+- Added support for scrolljump option.<br>
+- Added support for scrolloff option.<br>
+- Added support for sidescroll option.<br>
+- Added support for sidescrolloff option.<br>
+- Caret now stays in view when scrolling using the mouse wheel or scrollbars.<br>
+- Added support for the column scrolling commands zh, zhl, ze, zs, z<Left>, and
+  z<Right>.<br>
 ]]>
     </change-notes>
     <idea-version since-build="1162"/>
@@ -112,6 +119,10 @@ the first or last character of the file was punctuation.<br>
         <action id="VimMotionScrollMiddleScreenLineStart" class="com.maddyhome.idea.vim.action.motion.scroll.MotionScrollMiddleScreenLineStartAction" text="Scroll Line to Middle"/>
         <action id="VimMotionScrollPageDown" class="com.maddyhome.idea.vim.action.motion.scroll.MotionScrollPageDownAction" text="Scroll Page Down"/>
         <action id="VimMotionScrollPageUp" class="com.maddyhome.idea.vim.action.motion.scroll.MotionScrollPageUpAction" text="Scroll Page Up"/>
+        <action id="VimMotionScrollFirstScreenColumn" class="com.maddyhome.idea.vim.action.motion.scroll.MotionScrollFirstScreenColumnAction" text="Scroll Column to first column"/>
+        <action id="VimMotionScrollLastScreenColumn" class="com.maddyhome.idea.vim.action.motion.scroll.MotionScrollLastScreenColumnAction" text="Scroll Column to last column"/>
+        <action id="VimMotionScrollColumnLeft" class="com.maddyhome.idea.vim.action.motion.scroll.MotionScrollColumnLeftAction" text="Scroll Column Left"/>
+        <action id="VimMotionScrollColumnRight" class="com.maddyhome.idea.vim.action.motion.scroll.MotionScrollColumnRightAction" text="Scroll Column Right"/>
         <!-- Visual -->
         <action id="VimVisualExitMode" class="com.maddyhome.idea.vim.action.motion.visual.VisualExitModeAction" text="Exit Visual Mode"/>
         <action id="VimVisualToggleCharacterMode" class="com.maddyhome.idea.vim.action.motion.visual.VisualToggleCharacterModeAction" text="Toggle Character Selection"/>

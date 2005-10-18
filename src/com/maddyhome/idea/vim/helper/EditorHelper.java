@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.helper;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,6 +28,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.common.CharacterPosition;
+
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.nio.CharBuffer;
@@ -75,6 +76,17 @@ public class EditorHelper
     public static int getCurrentLogicalColumn(Editor editor)
     {
         return editor.getCaretModel().getLogicalPosition().column;
+    }
+
+    public static int getVisualLineAtTopOfScreen(Editor editor)
+    {
+        int lh = editor.getLineHeight();
+        return (editor.getScrollingModel().getVerticalScrollOffset() + lh - 1) / lh;
+    }
+
+    public static int getCurrentVisualScreenLine(Editor editor)
+    {
+        return getCurrentVisualLine(editor) - getVisualLineAtTopOfScreen(editor) + 1;
     }
 
     /**
@@ -186,7 +198,11 @@ public class EditorHelper
      */
     public static int getScreenHeight(Editor editor)
     {
-        return editor.getScrollingModel().getVisibleArea().height / editor.getLineHeight();
+        int lh = editor.getLineHeight();
+        int height = editor.getScrollingModel().getVisibleArea().y +
+            editor.getScrollingModel().getVisibleArea().height -
+            getVisualLineAtTopOfScreen(editor) * lh;
+        return height / lh;
     }
 
     /**
@@ -201,6 +217,34 @@ public class EditorHelper
         VisualPosition vp = editor.xyToVisualPosition(pt);
 
         return vp.column;
+    }
+
+    /**
+     * Gets the number of pixels per column of text.
+     * @param editor The editor
+     * @return The number of pixels
+     */
+    public static int getColumnWidth(Editor editor)
+    {
+        Rectangle rect = editor.getScrollingModel().getVisibleArea();
+        if (rect.width == 0) return 0;
+        Point pt = new Point(rect.width, 0);
+        VisualPosition vp = editor.xyToVisualPosition(pt);
+        if (vp.column == 0) return 0;
+
+        return rect.width / vp.column;
+    }
+
+    /**
+     * Gets the column currently displayed at the left edge of the editor.
+     * @param editor The editor
+     * @return The column number
+     */
+    public static int getVisualColumnAtLeftOfScreen(Editor editor)
+    {
+        int cw = getColumnWidth(editor);
+        if (cw == 0) return 0;
+        return (editor.getScrollingModel().getHorizontalScrollOffset() + cw - 1) / cw;
     }
 
     /**
@@ -279,7 +323,7 @@ public class EditorHelper
      */
     public static int normalizeVisualLine(Editor editor, int vline)
     {
-        vline = Math.min(Math.max(0, vline), getVisualLineCount(editor) - 1);
+        vline = Math.max(0, Math.min(vline, getVisualLineCount(editor) - 1));
 
         return vline;
     }
@@ -308,7 +352,7 @@ public class EditorHelper
      */
     public static int normalizeVisualColumn(Editor editor, int vline, int col, boolean allowEnd)
     {
-        col = Math.min(Math.max(0, col), getVisualLineLength(editor, vline) - (allowEnd ? 0 : 1));
+        col = Math.max(0, Math.min(col, getVisualLineLength(editor, vline) - (allowEnd ? 0 : 1)));
 
         return col;
     }

@@ -23,14 +23,13 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.VisualPosition;
-import com.intellij.openapi.editor.event.DocumentAdapter;
-import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorMouseAdapter;
@@ -39,12 +38,12 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.command.Argument;
@@ -57,12 +56,10 @@ import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.SearchHelper;
 import com.maddyhome.idea.vim.key.KeyParser;
-import com.maddyhome.idea.vim.undo.DocumentChange;
 import com.maddyhome.idea.vim.undo.UndoManager;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
@@ -425,7 +422,6 @@ public class ChangeGroup extends AbstractActionGroup
      */
     private void repeatInsertText(Editor editor, DataContext context, int count)
     {
-        logger.debug("repeatInsertText");
         for (int i = 0; i < count; i++)
         {
             // Treat other keys special by performing the appropriate action they represent in insert/replace mode
@@ -440,10 +436,6 @@ public class ChangeGroup extends AbstractActionGroup
                 else if (obj instanceof Character)
                 {
                     processKey(editor, context, KeyStroke.getKeyStroke(((Character)obj).charValue()));
-                }
-                else if (obj instanceof List)
-                {
-                    processChanges(editor, context, (List)obj);
                 }
             }
         }
@@ -543,7 +535,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param key The user entered keystroke
      * @return true if this was a regular character, false if not
      */
-    public boolean processKey(Editor editor, DataContext context, KeyStroke key)
+    public boolean processKey(final Editor editor, final DataContext context, final KeyStroke key)
     {
         logger.debug("processKey(" + key + ")");
 
@@ -553,30 +545,17 @@ public class ChangeGroup extends AbstractActionGroup
             // for repeating later.
             strokes.add(new Character(key.getKeyChar()));
 
-            KeyHandler.getInstance().getOriginalHandler().execute(editor, key.getKeyChar(), context);
+            ApplicationManager.getApplication().runWriteAction(new Runnable() {
+                public void run()
+                {
+                    KeyHandler.getInstance().getOriginalHandler().execute(editor, key.getKeyChar(), context);
+                }
+            });
 
             return true;
         }
 
         return false;
-    }
-
-    public boolean processChanges(Editor editor, DataContext context, List changes)
-    {
-        logger.debug("processChanges");
-        for (int i = 0; i < changes.size(); i++)
-        {
-            TextChange change = (TextChange)changes.get(i);
-            int offset = editor.getCaretModel().getOffset();
-            logger.debug("offset=" + offset);
-            DocumentChange dc = new DocumentChange(offset, change.getOldText(), change.getNewText());
-            dc.redo(editor, context);
-            editor.getCaretModel().moveToOffset(offset + change.getNewText().length() - change.getOldText().length() + change.getOffset());
-        }
-
-        strokes.add(changes);
-
-        return true;
     }
 
     /**
@@ -1494,84 +1473,6 @@ public class ChangeGroup extends AbstractActionGroup
             }
         }
 
-    }
-
-    public static class TextChangeListener extends DocumentAdapter
-    {
-        private int beforeOffset = 0;
-        private Editor editor;
-        private DataContext context;
-        private List changes = new ArrayList();
-
-        public TextChangeListener(Editor editor, DataContext context)
-        {
-            this.editor = editor;
-            this.context = context;
-        }
-
-        public void beforeDocumentChange(DocumentEvent event)
-        {
-            beforeOffset = event.getOffset();
-            logger.debug("beforeOffset=" + beforeOffset);
-        }
-
-        public void documentChanged(DocumentEvent event)
-        {
-            int afterOffset = event.getOffset();
-            logger.debug("afterOffset=" + afterOffset);
-            TextChange chg = new TextChange(afterOffset - beforeOffset, event.getOldFragment(), event.getNewFragment());
-            logger.debug("chg=" + chg);
-            changes.add(chg);
-
-            //complete(event.getDocument());
-        }
-
-        public void complete(/* Document document */)
-        {
-            logger.debug("changes=" + changes);
-            CommandGroups.getInstance().getChange().strokes.add(changes);
-            editor.getDocument().removeDocumentListener(this);
-        }
-    }
-
-    private static class TextChange
-    {
-        private int offset;
-        private String oldText;
-        private String newText;
-
-        public TextChange(int offset, String oldText, String newText)
-        {
-            this.offset = offset;
-            this.oldText = oldText;
-            this.newText = newText;
-        }
-
-        public int getOffset()
-        {
-            return offset;
-        }
-
-        public String getOldText()
-        {
-            return oldText;
-        }
-
-        public String getNewText()
-        {
-            return newText;
-        }
-
-        public String toString()
-        {
-            final StringBuffer buf = new StringBuffer();
-            buf.append("TextChange");
-            buf.append("{offset=").append(offset);
-            buf.append(",oldText=").append(oldText);
-            buf.append(",newText=").append(newText);
-            buf.append('}');
-            return buf.toString();
-        }
     }
 
     private ArrayList strokes = new ArrayList();

@@ -555,8 +555,12 @@ public class Options
         addOption(new ListOption("matchpairs", "mps", new String[] { "(:)", "{:}", "[:]" }, ".:."));
         addOption(new ToggleOption("more", "more", true));
         addOption(new NumberOption("scroll", "scr", 0));
+        addOption(new NumberOption("scrolljump", "sj", 1));
+        addOption(new NumberOption("scrolloff", "so", 0));
         addOption(new BoundStringOption("selection", "sel", "inclusive", new String[] { "old", "inclusive", "exclusive" }));
         addOption(new ToggleOption("showmode", "smd", false));
+        addOption(new NumberOption("sidescroll", "ss", 0));
+        addOption(new NumberOption("sidescrolloff", "siso", 0));
         addOption(new ToggleOption("smartcase", "scs", false));
         addOption(new NumberOption("undolevels", "ul", 1000, -1, Integer.MAX_VALUE));
         addOption(new ToggleOption("visualbell", "vb", false));
