@@ -695,7 +695,7 @@ public class MotionGroup extends AbstractActionGroup
 
     public boolean scrollColumnToLastScreenColumn(Editor editor, DataContext context)
     {
-        scrollColumnToScreenColumn(editor, context, EditorHelper.getScreenWidth(editor) - 1);
+        scrollColumnToScreenColumn(editor, context, EditorHelper.getScreenWidth(editor));
 
         return true;
     }
@@ -1738,14 +1738,14 @@ public class MotionGroup extends AbstractActionGroup
 
             logger.debug("old=" + visibleAreaEvent.getOldRectangle());
             logger.debug("new=" + visibleAreaEvent.getNewRectangle());
-            if (visibleAreaEvent.getNewRectangle().y == visibleAreaEvent.getOldRectangle().y)
-            {
-                MotionGroup.scrollCaretIntoView(visibleAreaEvent.getEditor());
-            }
-            else
-            {
+            //if (visibleAreaEvent.getNewRectangle().y == visibleAreaEvent.getOldRectangle().y)
+            //{
+                //MotionGroup.scrollCaretIntoView(visibleAreaEvent.getEditor());
+            //}
+            //else
+            //{
                 MotionGroup.moveCaretToView(visibleAreaEvent.getEditor(), null);
-            }
+            //}
         }
 
         private static boolean ignore = false;
