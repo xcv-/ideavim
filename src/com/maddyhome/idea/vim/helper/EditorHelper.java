@@ -237,6 +237,7 @@ public class EditorHelper
         if (rect.width == 0) return 0;
         Point pt = new Point(rect.width, 0);
         VisualPosition vp = editor.xyToVisualPosition(pt);
+        if (vp.column == 0) return 0;
 
         return rect.width / vp.column;
     }
