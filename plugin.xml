@@ -6,7 +6,23 @@
     <change-notes>
 <![CDATA[
 Bug Fixes<br>
-- Fixes for Idea 5.0.1
+- You can now insert a real tab using <Ctrl-V><Tab>.<br>
+- <Tab> now properly works as a character argument to commands such as f and t.<br>
+- Fixed Ctrl-E and Ctrl-Y when caret was at top/bottom of screen.<br>
+- Fixed various scrolling and caret movement so caret can appear on first or
+  last line of editor.<br>
+- Fixed playing back macros if preceded by a count greater than 1.<br>
+- Fixed internal error about "Assertion failed: cannot share data context
+  between Swing events"<br>
+<br>
+New Features<br>
+- Added support for scrolljump option.<br>
+- Added support for scrolloff option.<br>
+- Added support for sidescroll option.<br>
+- Added support for sidescrolloff option.<br>
+- Caret now stays in view when scrolling using the mouse wheel or scrollbars.<br>
+- Added support for the column scrolling commands zh, zhl, ze, zs, z<Left>, and
+  z<Right>.<br>
 ]]>
     </change-notes>
     <idea-version since-build="3461"/>
