@@ -1,6 +1,13 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.9.5
+@VERSION@ from 0.9.6
+Bug Fixes
+- Fixed ze command - was one column off.
+- Fixed scrolling with horizontal scroll bar. Regression from 0.9.5.
+- Fixed :quit command. Now all forms of the command are recognized.
+- Fixed internal error when opening an empty file.
+
+0.9.6 from 0.9.5
 Bug Fixes
 - You can now insert a real tab using <Ctrl-V><Tab>.
 - <Tab> now properly works as a character argument to commands such as f and t.
