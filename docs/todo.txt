@@ -1,6 +1,5 @@
 Bugs to fix:
 
-- Pass Escape to IDEA if not used by IdeaVIM.
 - Split text when typing fast after o command.
 - Replace mode - fix caret. Can't figure out how to keep block caret.
 - Repeating a last change doesn't include text inserted by IDEA using code

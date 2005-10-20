@@ -14,7 +14,7 @@
 related files. However, it lacks one
 important feature - <code>vi</code> style commands for editing. I've been using <code>vi</code> and
 <a href="http://www.vim.org">VIM</a>
-for about 20 years. I'm used to it. I know the command keyboard shortcuts are cryptic and stange but I've been using
+for about 20 years. I'm used to it. I know the command keyboard shortcuts are cryptic and strange but I've been using
 it so long I just know how to use them and I find I am very efficient with them.
 </p>
 <p>

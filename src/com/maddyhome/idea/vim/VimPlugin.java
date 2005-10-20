@@ -147,9 +147,15 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
         ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
             public void projectOpened(Project project)
             {
-                // Make sure all the keys are registered before the user can interact with the first project
+                if (actions == null)
+                {
                 actions = RegisterActions.getInstance();
+                    if (VimPlugin.isEnabled())
+                    {
+                        RegisterActions.getInstance().enable();
+                    }
                 CommandParser.getInstance().registerHandlers();
+                }
 
                 FileEditorManager.getInstance(project).addFileEditorManagerListener(new ChangeGroup.InsertCheck());
                 FileEditorManager.getInstance(project).addFileEditorManagerListener(new MotionGroup.MotionEditorChange());
@@ -308,12 +314,14 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
     public static void turnOnPlugin()
     {
         KeyHandler.getInstance().fullReset();
+        RegisterActions.getInstance().enable();
         setCursors(true);
     }
 
     public static void turnOffPlugin()
     {
         KeyHandler.getInstance().fullReset();
+        RegisterActions.getInstance().disable();
         setCursors(isBlockCursor);
     }
 

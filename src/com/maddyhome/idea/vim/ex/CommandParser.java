@@ -111,6 +111,8 @@ public class CommandParser
      */
     public void registerHandlers()
     {
+        if (registered) return;
+
         new CmdFilterHandler();
         new CopyTextHandler();
         new DeleteLinesHandler();
@@ -156,6 +158,9 @@ public class CommandParser
         new WritePreviousFileHandler();
         new WriteQuitHandler();
         new YankLinesHandler();
+
+        registered = true;
+        //logger.debug("root=" + root);
     }
 
     /**
@@ -685,6 +690,7 @@ public class CommandParser
     }
 
     private CommandNode root = new CommandNode();
+    private boolean registered = false;
 
     private static CommandParser ourInstance;
 
@@ -712,4 +718,3 @@ public class CommandParser
 
     private static Logger logger = Logger.getInstance(CommandParser.class.getName());
 }
-
