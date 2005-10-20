@@ -124,6 +124,11 @@ public class KeyHandler
                 if (mode != STATE_COMMAND && count == 0 && currentArg == Argument.NONE && currentCmd.size() == 0 &&
                     CommandGroups.getInstance().getRegister().getCurrentRegister() == RegisterGroup.REGISTER_DEFAULT)
                 {
+                    if (key.getKeyCode() == KeyEvent.VK_ESCAPE)
+                    {
+                        KeyHandler.executeAction("VimEditorEscape", context);
+                        //getOriginalHandler().execute(editor, key.getKeyChar(), context);
+                    }
                     VimPlugin.indicateError();
                 }
 
