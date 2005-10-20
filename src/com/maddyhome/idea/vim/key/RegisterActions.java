@@ -576,9 +576,9 @@ public class RegisterActions
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollFirstScreenLinePageStart", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut("z+")
         });
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollHalfPageDown", Command.OTHER_READONLY | Command.FLAG_IGNORE_SCROLL_JUMP,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollHalfPageDown", Command.OTHER_READONLY, Command.FLAG_IGNORE_SCROLL_JUMP,
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK)));
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollHalfPageUp", Command.OTHER_READONLY | Command.FLAG_IGNORE_SCROLL_JUMP,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollHalfPageUp", Command.OTHER_READONLY, Command.FLAG_IGNORE_SCROLL_JUMP,
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_U, KeyEvent.CTRL_MASK)));
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollLastScreenLine", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut("zb")
@@ -602,11 +602,11 @@ public class RegisterActions
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollMiddleScreenLineStart", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut("z.")
         });
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollColumnLeft", Command.OTHER_READONLY | Command.FLAG_IGNORE_SIDE_SCROLL_JUMP, new Shortcut[] {
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollColumnLeft", Command.OTHER_READONLY, Command.FLAG_IGNORE_SIDE_SCROLL_JUMP, new Shortcut[] {
             new Shortcut("zl"),
             new Shortcut(new KeyStroke[] { KeyStroke.getKeyStroke('z'), KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0) })
         });
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollColumnRight", Command.OTHER_READONLY | Command.FLAG_IGNORE_SIDE_SCROLL_JUMP, new Shortcut[] {
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionScrollColumnRight", Command.OTHER_READONLY, Command.FLAG_IGNORE_SIDE_SCROLL_JUMP, new Shortcut[] {
             new Shortcut("zh"),
             new Shortcut(new KeyStroke[] { KeyStroke.getKeyStroke('z'), KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0) })
         });

@@ -1,5 +1,6 @@
 Bugs to fix:
 
+- Fix "Surround With Live Template"
 - Split text when typing fast after o command.
 - Replace mode - fix caret. Can't figure out how to keep block caret.
 - Repeating a last change doesn't include text inserted by IDEA using code
@@ -7,6 +8,8 @@ Bugs to fix:
 
 Requested Functionality to add:
 
+- Eliminate need to custom key mappings.
+- Keymappings auto restored when toggling VIM Plugin on/off.
 - Show message after shifting lines with :< or :>
 - Visual Column mode
 - / and ? as command operators

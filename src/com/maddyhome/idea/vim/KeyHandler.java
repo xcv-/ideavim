@@ -394,10 +394,12 @@ public class KeyHandler
                 cmd = top;
             }
 
+            logger.debug("cmd=" + cmd);
             // If we have a command and a motion command argument, both could possibly have their own counts. We
             // need to adjust the counts so the motion gets the product of both counts and the command's count gets
             // reset. Example 3c2w (change 2 words, three times) becomes c6w (change 6 words)
             Argument arg = cmd.getArgument();
+            logger.debug("arg=" + arg);
             if (arg != null && arg.getType() == Argument.MOTION)
             {
                 Command mot = arg.getMotion();
@@ -423,6 +425,7 @@ public class KeyHandler
 
             if (!editor.getDocument().isWritable() && !cmd.isReadType())
             {
+                logger.info("write command on read-only file");
                 editor.getDocument().fireReadOnlyModificationAttempt();
                 VimPlugin.indicateError();
                 reset();

@@ -121,6 +121,19 @@ public class Argument
         throw new IllegalStateException("Unexpected argType of " + type);
     }
 
+    public String toString()
+    {
+        StringBuffer res = new StringBuffer();
+        res.append("Argument {");
+        res.append("charArg=").append(charArg);
+        res.append(",motionArg=").append(motionArg);
+        res.append(",strArg=").append(strArg);
+        res.append(",type=").append(type);
+        res.append("}");
+
+        return res.toString();
+    }
+
     private char charArg = 0;
     private Command motionArg = null;
     private String strArg = null;

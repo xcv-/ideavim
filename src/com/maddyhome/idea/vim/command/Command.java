@@ -262,6 +262,21 @@ public class Command
         this.keys = keys;
     }
 
+    public String toString()
+    {
+        StringBuffer res = new StringBuffer();
+        res.append("Command {");
+        res.append("count=").append(count);
+        res.append(",action=").append(action);
+        res.append(",type=").append(type);
+        res.append(",flags=").append(flags);
+        res.append(",argument=").append(argument);
+        res.append(",keys=").append(keys);
+        res.append("}");
+
+        return res.toString();
+    }
+
     private int count;
     private AnAction action;
     private int type;
