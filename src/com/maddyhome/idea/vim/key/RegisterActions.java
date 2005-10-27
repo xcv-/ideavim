@@ -43,102 +43,25 @@ public class RegisterActions
 
     public void enable()
     {
-        KeyParser.setupActionHandler("GenerateConstructor");
-        KeyParser.setupActionHandler("GenerateGetter");
-        KeyParser.setupActionHandler("GenerateSetter");
-        KeyParser.setupActionHandler("GenerateGetterAndSetter");
-        KeyParser.setupActionHandler("GenerateEquals");
-
-        KeyParser.setupActionHandler("AutoIndentLines", "VimAutoIndentVisual");
-        KeyParser.setupActionHandler("ReformatCode", "VimReformatVisual");
-        KeyParser.setupActionHandler("CommentByLineComment", "VimCommentLineComment");
-        KeyParser.setupActionHandler("CommentByBlockComment", "VimCommentBlockComment");
-        KeyParser.setupActionHandler("SurroundWith", "VimSurroundWith");
-        KeyParser.setupActionHandler("SurroundWithLiveTemplate", "VimSurroundWithLiveTemplate");
-        KeyParser.setupActionHandler("MoveStatementDown", "VimMoveStatementDown");
-        KeyParser.setupActionHandler("MoveStatementUp", "VimMoveStatementUp");
+        KeyParser.getInstance().setupShortcuts();
     }
 
     public void disable()
     {
-        KeyParser.resetActionHandler("GenerateConstructor");
-        KeyParser.resetActionHandler("GenerateGetter");
-        KeyParser.resetActionHandler("GenerateSetter");
-        KeyParser.resetActionHandler("GenerateGetterAndSetter");
-        KeyParser.resetActionHandler("GenerateEquals");
-
-        KeyParser.resetActionHandler("AutoIndentLines", "VimAutoIndentVisual");
-        KeyParser.resetActionHandler("ReformatCode", "VimReformatVisual");
-        KeyParser.resetActionHandler("CommentByLineComment", "VimCommentLineComment");
-        KeyParser.resetActionHandler("CommentByBlockComment", "VimCommentBlockComment");
-        KeyParser.resetActionHandler("SurroundWith", "VimSurroundWith");
-        KeyParser.resetActionHandler("SurroundWithLiveTemplate", "VimSurroundWithLiveTemplate");
-        KeyParser.resetActionHandler("MoveStatementDown", "VimMoveStatementDown");
-        KeyParser.resetActionHandler("MoveStatementUp", "VimMoveStatementUp");
+        KeyParser.getInstance().resetShortcuts();
     }
 
     private RegisterActions()
     {
-        // Update many of the built-in IDEA actions with our key handlers.
-        // This group allows us to propagate the keystroke if action acts on something other than an editor
-        KeyParser.setupActionHandler("EditorBackSpace", "VimEditorBackSpace", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0));
-        KeyParser.setupActionHandler("EditorDelete", "VimEditorDelete", KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-        KeyParser.setupActionHandler("EditorDown", "VimEditorDown", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
-        KeyParser.setupActionHandler("EditorEnter", "VimEditorEnter", KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
-        KeyParser.setupActionHandler("EditorEscape", "VimEditorEscape", KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
-        KeyParser.setupActionHandler("EditorLeft", "VimEditorLeft", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
-        KeyParser.setupActionHandler("EditorLineStart", "VimEditorLineStart", KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
-        KeyParser.setupActionHandler("EditorLineEnd", "VimEditorLineEnd", KeyStroke.getKeyStroke(KeyEvent.VK_END, 0));
-        KeyParser.setupActionHandler("EditorPageUp", "VimEditorPageUp", KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0));
-        KeyParser.setupActionHandler("EditorRight", "VimEditorRight", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
-        KeyParser.setupActionHandler("EditorTab", "VimEditorTab", KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
-        KeyParser.setupActionHandler("EditorToggleInsertState", "VimEditorToggleInsertState", KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
-        KeyParser.setupActionHandler("EditorUp", "VimEditorUp", KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
-
-        // All the Alt keys
-
-        // All the Ctrl keys
-        KeyParser.setupActionHandler("EditorDeleteToWordEnd", null, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, KeyEvent.CTRL_MASK));
-        KeyParser.setupActionHandler("EditorDeleteToWordStart", null, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_MASK));
-        KeyParser.setupActionHandler("EditorScrollDown", null, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_MASK));
-        KeyParser.setupActionHandler("EditorPreviousWord", null, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_MASK));
-        KeyParser.setupActionHandler("EditorNextWord", null, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_MASK));
-        KeyParser.setupActionHandler("EditorScrollUp", null, KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_MASK));
-        KeyParser.setupActionHandler("EditorTextStart", null, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.CTRL_MASK));
-        KeyParser.setupActionHandler("EditorTextEnd", null, KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.CTRL_MASK));
-        KeyParser.setupActionHandler("EditorMoveToPageTop", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.CTRL_MASK));
-        KeyParser.setupActionHandler("EditorMoveToPageBottom", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.CTRL_MASK));
-
-        // All the Shift keys
-        KeyParser.setupActionHandler("EditorDownWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorLeftWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorRightWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorUpWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorLineStartWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorLineEndWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorPageUpWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorPageDownWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.SHIFT_MASK));
-
-        // All the Ctrl-Shift keys
-        KeyParser.setupActionHandler("EditorPreviousWordWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorNextWordWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorTextStartWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorTextEndWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorMoveToPageTopWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
-        KeyParser.setupActionHandler("EditorMoveToPageBottomWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
-
         KeyParser parser = KeyParser.getInstance();
 
         // ******************* Insert Mode Actions **********************
-        parser.registerAction(KeyParser.MAPPING_INSERT, "ClassNameCompletion", Command.INSERT,
-            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK)));
-        parser.registerAction(KeyParser.MAPPING_INSERT, "CodeCompletion", Command.INSERT, new Shortcut[] {
-            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_MASK)),
-            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK)),
-            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK))
-        });
-        parser.registerAction(KeyParser.MAPPING_INSERT, "InsertLiveTemplate", Command.INSERT,
-            new Shortcut(KeyStroke.getKeyStroke(']', KeyEvent.CTRL_MASK)));
+        parser.registerAction(KeyParser.MAPPING_INSERT, "VimClassNameCompletion", Command.INSERT);
+        parser.registerAction(KeyParser.MAPPING_INSERT, "VimCodeCompletion", Command.INSERT);
+        parser.registerAction(KeyParser.MAPPING_INSERT, "VimSmartTypeCompletion", Command.INSERT);
+        parser.registerAction(KeyParser.MAPPING_INSERT, "VimWordCompletion", Command.INSERT);
+        parser.registerAction(KeyParser.MAPPING_INSERT, "VimInsertLiveTemplate", Command.INSERT);
+
         parser.registerAction(KeyParser.MAPPING_INSERT, "VimEditorBackSpace", Command.INSERT, Command.FLAG_SAVE_STROKE | Command.FLAG_IS_BACKSPACE, new Shortcut[] {
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_H, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0))
@@ -157,8 +80,6 @@ public class RegisterActions
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_KP_UP, 0))
         });
-        parser.registerAction(KeyParser.MAPPING_INSERT, "SmartTypeCompletion", Command.INSERT,
-            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK)));
         parser.registerAction(KeyParser.MAPPING_INSERT, "VimInsertCharacterAboveCursor", Command.INSERT,
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_MASK)));
         parser.registerAction(KeyParser.MAPPING_INSERT, "VimInsertCharacterBelowCursor", Command.INSERT,
@@ -306,10 +227,8 @@ public class RegisterActions
 
         // ************************* Normal Mode Actions *************************
         // Copy/Paste Actions
-        parser.registerAction(KeyParser.MAPPING_NORMAL, "HelpTopics", Command.OTHER_READONLY, new Shortcut[] {
-            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0)),
-            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_HELP, 0))
-        });
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "HelpTopics", Command.OTHER_READONLY,
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0)));
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimCopyPutTextBeforeCursor", Command.PASTE,
             new Shortcut('P'));
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimCopyPutTextAfterCursor", Command.PASTE,
@@ -719,6 +638,13 @@ public class RegisterActions
         });
 
         // ********************** Various Mode Actions ************************
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimCommentByLineComment", Command.OTHER_READONLY);
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimCommentByBlockComment", Command.OTHER_READONLY);
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimSurroundWith", Command.OTHER_READONLY);
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimSurroundWithLiveTemplate", Command.OTHER_READONLY);
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimMoveStatementDown", Command.OTHER_READONLY);
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimMoveStatementUp", Command.OTHER_READONLY);
+
         parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimVisualToggleCharacterMode", Command.OTHER_READONLY, Command.FLAG_MOT_CHARACTERWISE,
             new Shortcut('v'));
         parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimVisualToggleLineMode", Command.OTHER_READONLY, Command.FLAG_MOT_LINEWISE,
@@ -772,6 +698,77 @@ public class RegisterActions
             KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SLASH, KeyEvent.CTRL_MASK),
             KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK)
         }));
+
+        // A few special keys that are not registered here but used by diagraphs.
+        parser.addMapping(KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_MASK));
+        parser.addMapping(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK));
+
+        // "Reserve" these keys so they don't work in IDEA. Eventually these may be valid plugin commands.
+        parser.registerAction(KeyParser.MAPPING_ALL, "VimNotImplementedHandler", Command.OTHER_READONLY, new Shortcut[] {
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK)),
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_MASK)),
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK)),
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK)),
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK)),
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK))
+        });
+
+        // Update many of the built-in IDEA actions with our key handlers.
+        parser.setupActionHandler("GenerateConstructor", "VimGenerateConstructor");
+        parser.setupActionHandler("GenerateGetter", "VimGenerateGetter");
+        parser.setupActionHandler("GenerateSetter", "VimGenerateSetter");
+        parser.setupActionHandler("GenerateGetterAndSetter", "VimGenerateGetterAndSetter");
+        parser.setupActionHandler("GenerateEquals", "VimGenerateEquals");
+
+        parser.setupActionHandler("AutoIndentLines", "VimAutoIndentVisual");
+        parser.setupActionHandler("ReformatCode", "VimReformatVisual");
+
+        // This group allows us to propagate the keystroke if action acts on something other than an editor
+        parser.setupActionHandler("EditorBackSpace", "VimEditorBackSpace", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0));
+        parser.setupActionHandler("EditorDelete", "VimEditorDelete", KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+        parser.setupActionHandler("EditorDown", "VimEditorDown", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
+        parser.setupActionHandler("EditorEnter", "VimEditorEnter", KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
+        parser.setupActionHandler("EditorEscape", "VimEditorEscape", KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+        parser.setupActionHandler("EditorLeft", "VimEditorLeft", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
+        parser.setupActionHandler("EditorLineStart", "VimEditorLineStart", KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
+        parser.setupActionHandler("EditorLineEnd", "VimEditorLineEnd", KeyStroke.getKeyStroke(KeyEvent.VK_END, 0));
+        parser.setupActionHandler("EditorPageUp", "VimEditorPageUp", KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0));
+        parser.setupActionHandler("EditorRight", "VimEditorRight", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
+        parser.setupActionHandler("EditorTab", "VimEditorTab", KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
+        parser.setupActionHandler("EditorToggleInsertState", "VimEditorToggleInsertState", KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
+        parser.setupActionHandler("EditorUp", "VimEditorUp", KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
+
+        // All the Alt keys
+
+        // All the Ctrl keys
+        parser.setupActionHandler("EditorDeleteToWordEnd", null, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, KeyEvent.CTRL_MASK));
+        parser.setupActionHandler("EditorDeleteToWordStart", null, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_MASK));
+        parser.setupActionHandler("EditorScrollDown", null, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_MASK));
+        parser.setupActionHandler("EditorPreviousWord", null, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_MASK));
+        parser.setupActionHandler("EditorNextWord", null, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_MASK));
+        parser.setupActionHandler("EditorScrollUp", null, KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_MASK));
+        parser.setupActionHandler("EditorTextStart", null, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.CTRL_MASK));
+        parser.setupActionHandler("EditorTextEnd", null, KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.CTRL_MASK));
+        parser.setupActionHandler("EditorMoveToPageTop", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.CTRL_MASK));
+        parser.setupActionHandler("EditorMoveToPageBottom", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.CTRL_MASK));
+
+        // All the Shift keys
+        parser.setupActionHandler("EditorDownWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorLeftWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorRightWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorUpWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorLineStartWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorLineEndWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorPageUpWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorPageDownWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.SHIFT_MASK));
+
+        // All the Ctrl-Shift keys
+        parser.setupActionHandler("EditorPreviousWordWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorNextWordWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorTextStartWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorTextEndWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorMoveToPageTopWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
+        parser.setupActionHandler("EditorMoveToPageBottomWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
     }
 
     private static RegisterActions instance;

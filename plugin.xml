@@ -176,8 +176,8 @@ Bug Fixes<br>
         <action id="VimFilterVisualLines" class="com.maddyhome.idea.vim.action.change.change.FilterVisualLinesAction" text="Filter Visual Lines"/>
         <action id="VimAutoIndentVisual" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Auto Indent Selection"/>
         <action id="VimReformatVisual" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Reformat Selection"/>
-        <action id="VimCommentBlockComment" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Block Comment"/>
-        <action id="VimCommentLineComment" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Line Comment"/>
+        <action id="VimCommentByBlockComment" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Block Comment"/>
+        <action id="VimCommentByLineComment" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Line Comment"/>
         <action id="VimSurroundWith" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Surround With"/>
         <action id="VimSurroundWithLiveTemplate" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Surround With Live Template"/>
         <action id="VimMoveStatementDown" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Move Statement Down"/>
@@ -239,9 +239,21 @@ Bug Fixes<br>
         <action id="VimResetMode" class="com.maddyhome.idea.vim.action.ResetModeAction" text="Reset Mode"/>
         <action id="VimRedo" class="com.maddyhome.idea.vim.action.change.RedoAction" text="Redo"/>
         <action id="VimUndo" class="com.maddyhome.idea.vim.action.change.UndoAction" text="Undo"/>
+        <action id="VimGenerateConstructor" class="com.maddyhome.idea.vim.action.TxActionWrapper" text="Generate Constructor"/>
+        <action id="VimGenerateGetter" class="com.maddyhome.idea.vim.action.TxActionWrapper" text="Generate Getter"/>
+        <action id="VimGenerateSetter" class="com.maddyhome.idea.vim.action.TxActionWrapper" text="Generate Setter"/>
+        <action id="VimGenerateGetterAndSetter" class="com.maddyhome.idea.vim.action.TxActionWrapper" text="Generate Getter and Setter"/>
+        <action id="VimGenerateEquals" class="com.maddyhome.idea.vim.action.TxActionWrapper" text="Generate Equals"/>
+        <action id="VimClassNameCompletion" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Class Name Completion"/>
+        <action id="VimCodeCompletion" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Code Completion"/>
+        <action id="VimSmartTypeCompletion" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Smart Type Completion"/>
+        <action id="VimWordCompletion" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Word Completion"/>
+        <action id="VimInsertLiveTemplate" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Insert Live Template"/>
+        <action id="VimHelpTopics" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Help Topics"/>
 
         <!-- Keys -->
         <action id="VimKeyHandler" class="com.maddyhome.idea.vim.action.key.KeyAction" text="Keys"/>
+        <action id="VimNotImplementedHandler" class="com.maddyhome.idea.vim.action.key.NotImplementedAction" text="NotImplemented"/>
         <action id="VimEditorBackSpace" class="com.maddyhome.idea.vim.action.key.BackSpaceAction" text="BackSpace"/>
         <action id="VimEditorDelete" class="com.maddyhome.idea.vim.action.key.DeleteAction" text="Delete"/>
         <action id="VimEditorDown" class="com.maddyhome.idea.vim.action.key.DownAction" text="Down"/>
