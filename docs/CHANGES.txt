@@ -1,6 +1,10 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
 @VERSION@ from 0.9.7
+New Features
+- Eliminated the need for a custom keymap. Enabling/Disabling the plugin via
+  the tools menu (or Ctrl-Alt-V) properly configures the required key settings.
+
 Bug Fixes
 - Fixed exiting of visual mode when executing commands such as Comment,
   Reformat, Surround With, and Auto-Indent.

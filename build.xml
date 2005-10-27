@@ -27,7 +27,6 @@
     <property name="classes" value="classes" />
     <property name="javadoc" value="docs/javadoc" />
     <property name="build" value="build" />
-    <property name="install" value="install" />
     <property name="dist" value="dist" />
     <!-- Update to your IntelliJ installtion -->
     <property name="idea.home" value="/opt/idea-3461" />
@@ -35,7 +34,7 @@
     <property name="project" value="IdeaVIM" />
     <!-- Update this prior to building a new distribution -->
     <property name="idea-version" value="5.x" />
-    <property name="version" value="0.9.8" />
+    <property name="version" value="0.10.1" />
 
     <path id="build.classpath">
         <pathelement path="${idea.home}/lib/extensions.jar" />
@@ -91,7 +90,6 @@
         <mkdir dir="${project}-${version}-${idea-version}"/>
         <copy todir="${project}-${version}-${idea-version}">
             <fileset dir="." includes="license/**"/>
-            <fileset dir="${install}" includes="**"/>
         </copy>
         <copy todir="${project}-${version}-${idea-version}/lib">
             <fileset dir="${build}" includes="*.jar"/>

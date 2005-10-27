@@ -8,8 +8,6 @@ Bugs to fix:
 
 Requested Functionality to add:
 
-- Eliminate need to custom key mappings.
-- Keymappings auto restored when toggling VIM Plugin on/off.
 - Show message after shifting lines with :< or :>
 - Visual Column mode
 - / and ? as command operators
