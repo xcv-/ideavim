@@ -264,10 +264,15 @@ public class KeyParser
         }
 
         registerAction(mapping, actName, cmdType, cmdFlags, (Shortcut[])shortcuts.toArray(new Shortcut[] {}));
+        KeyStroke firstStroke = null;
         for (int i = 0; i < shortcuts.size(); i++)
         {
             Shortcut cut = (Shortcut)shortcuts.get(i);
             mappings.remove(cut.getKeys()[0]);
+            if (i == 0)
+            {
+                firstStroke = cut.getKeys()[0];
+            }
         }
 
         ActionManager amgr = ActionManager.getInstance();
@@ -279,7 +284,7 @@ public class KeyParser
             daction.setOrigAction(iaction);
         }
 
-        setupActionHandler(ideaName, new PassThruDelegateAction());
+        setupActionHandler(ideaName, new PassThruDelegateAction(firstStroke));
     }
 
     /**

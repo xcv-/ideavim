@@ -11,6 +11,11 @@ import javax.swing.KeyStroke;
 
 public class PassThruDelegateAction extends AbstractDelegateAction
 {
+    public PassThruDelegateAction(KeyStroke stroke)
+    {
+        this.stroke = stroke;
+    }
+
     public void actionPerformed(AnActionEvent event)
     {
         final Editor editor = (Editor)event.getDataContext().getData(DataConstants.EDITOR);
@@ -23,5 +28,11 @@ public class PassThruDelegateAction extends AbstractDelegateAction
             KeyStroke key = KeyStroke.getKeyStrokeForEvent((KeyEvent)event.getInputEvent());
             KeyHandler.getInstance().handleKey(editor, key, event.getDataContext());
         }
+        else
+        {
+            KeyHandler.getInstance().handleKey(editor, stroke, event.getDataContext());
+        }
     }
+
+    private KeyStroke stroke;
 }
