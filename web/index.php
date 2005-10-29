@@ -98,6 +98,8 @@ Version 0.7.x is used with IDEA 4.0.x
 Version 0.8.x is used with IDEA 4.0.x and Pallada/IDEA 4.5.x
 <br>
 Version 0.9.x is used with IDEA 5.0.x
+<br>
+Version 0.10.x is used with IDEA 4.x and 5.0.x. Just use the one with the correct version suffix (-4x or -5x).
 
 <hr>
 
