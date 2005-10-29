@@ -181,7 +181,6 @@ public class KeyParser
 
     public void setupActionHandler(String ideaActName, String vimActName, KeyStroke stroke)
     {
-        // TODO - remove stroke/action from map
         ActionManager amgr = ActionManager.getInstance();
         AnAction action = amgr.getAction(ideaActName);
         if (action instanceof EditorAction)
@@ -440,7 +439,6 @@ public class KeyParser
         // Lets get the actual action for the supplied action name
         ActionManager aMgr = ActionManager.getInstance();
         AnAction action = aMgr.getAction(actName);
-        // TODO - create map of key to action from current keymap shortcuts
         if (action == null)
         {
             // Programmer error

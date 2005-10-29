@@ -5,11 +5,18 @@
     <vendor email="rick@maddyhome.com">Rick Maddy</vendor>
     <change-notes>
 <![CDATA[
+New Features<br>
+- Eliminated the need for a custom keymap. Enabling/Disabling the plugin via
+  the tools menu (or Ctrl-Alt-V) properly configures the required key settings.<br>
+- Integrate IDEA's "Clear Read-Only Status" dialog when trying to perform a
+  modification on a read-only file.<br>
+<br>
 Bug Fixes<br>
-- Fixed ze command - was one column off.<br>
-- Fixed scrolling with horizontal scroll bar. Regression from 0.9.5.<br>
-- Fixed :quit command. Now all forms of the command are recognized.<br>
-- Fixed internal error when opening an empty file.<br>
+- Fixed exiting of visual mode when executing commands such as Comment,
+  Reformat, Surround With, and Auto-Indent.<br>
+- Pressing Escape while in command mode will now clear highlights created with
+  IDEA with commands such as "Highlight Usages in File".<br>
+- Ctrl-D, Ctrl-U, zh, zLeft, zl, and zRight now work on read-only files.<br>
 ]]>
     </change-notes>
     <idea-version since-build="3461"/>
