@@ -106,6 +106,12 @@ public class UndoManager
         }
     }
 
+    public boolean hasChanges(Editor editor)
+    {
+        EditorUndoList list = getEditorUndoList(editor);
+        return list.size() > 0;
+    }
+
     public boolean undo(Editor editor, DataContext context)
     {
         logger.debug("undo");
