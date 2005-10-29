@@ -174,7 +174,7 @@ public class ProcessGroup extends AbstractActionGroup
                             {
                                 MorePanel.getInstance(editor).setVisible(true);
                             }
-                        });
+                        }, "ShowMorePanel", "ExCommand");
                     }
                 }
             });
