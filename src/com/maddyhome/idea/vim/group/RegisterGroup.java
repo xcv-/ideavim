@@ -28,6 +28,9 @@ import com.maddyhome.idea.vim.common.Register;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.StringHelper;
 import com.maddyhome.idea.vim.ui.ClipboardHandler;
+import org.jdom.CDATA;
+import org.jdom.Element;
+
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,8 +38,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.KeyStroke;
-import org.jdom.CDATA;
-import org.jdom.Element;
 
 /**
  * This group works with command associated with copying and pasting text
@@ -178,6 +179,7 @@ public class RegisterGroup extends AbstractActionGroup
                 Register t = (Register)registers.get(new Character(d));
                 if (t != null)
                 {
+                    t.rename((char)(d + 1));
                     registers.put(new Character((char)(d + 1)), t);
                 }
             }

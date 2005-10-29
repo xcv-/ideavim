@@ -13,6 +13,7 @@ Bug Fixes
 - Pressing Escape while in command mode will now clear highlights created with
   IDEA with commands such as "Highlight Usages in File".
 - Ctrl-D, Ctrl-U, zh, zLeft, zl, and zRight now work on read-only files.
+- Fixed register names displayed with the :register command.
 
 0.9.7 from 0.9.6
 Bug Fixes

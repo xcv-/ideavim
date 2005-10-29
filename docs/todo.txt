@@ -1,7 +1,6 @@
 Bugs to fix:
 
 - :dig doesn't bring up the window (it flashes a split second).
-- List of registers not always correct (numbers).
 - Toggling plugin doesn't restore proper order of shortcuts for actions.
 - Split text when typing fast after o command.
 - Replace mode - fix caret. Can't figure out how to keep block caret.
