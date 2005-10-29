@@ -30,16 +30,16 @@ import com.maddyhome.idea.vim.KeyHandler;
  */
 public class RunnableHelper
 {
-    public static void runReadCommand(Project project, Runnable cmd)
+    public static void runReadCommand(Project project, Runnable cmd, String name, Object groupId)
     {
         logger.debug("read command " + cmd);
-        CommandProcessor.getInstance().executeCommand(project, new ReadAction(cmd), "Foo", "Bar");
+        CommandProcessor.getInstance().executeCommand(project, new ReadAction(cmd), name, groupId);
     }
 
-    public static void runWriteCommand(Project project, Runnable cmd)
+    public static void runWriteCommand(Project project, Runnable cmd, String name, Object groupId)
     {
         logger.debug("write command " + cmd);
-        CommandProcessor.getInstance().executeCommand(project, new WriteAction(cmd), "Foo", "Bar");
+        CommandProcessor.getInstance().executeCommand(project, new WriteAction(cmd), name, groupId);
     }
 
     static class ReadAction implements Runnable
