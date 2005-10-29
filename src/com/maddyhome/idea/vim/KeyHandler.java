@@ -28,6 +28,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
@@ -35,6 +36,7 @@ import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.RegisterGroup;
 import com.maddyhome.idea.vim.helper.DigraphSequence;
 import com.maddyhome.idea.vim.helper.RunnableHelper;
+import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.key.ArgumentNode;
 import com.maddyhome.idea.vim.key.BranchNode;
 import com.maddyhome.idea.vim.key.CommandNode;
@@ -257,15 +259,16 @@ public class KeyHandler
                         if (cmdNode.getCmdType() == Command.MOTION)
                         {
                             // Create the motion command and add it to the stack
-                            Command cmd = new Command(count, cmdNode.getAction(), cmdNode.getCmdType(),
-                                cmdNode.getFlags());
+                            Command cmd = new Command(count, cmdNode.getActionId(), cmdNode.getAction(),
+                                cmdNode.getCmdType(), cmdNode.getFlags());
                             cmd.setKeys(keys);
                             currentCmd.push(cmd);
                         }
                         else if (cmdNode.getCmdType() == Command.RESET)
                         {
                             currentCmd.clear();
-                            Command cmd = new Command(1, cmdNode.getAction(), cmdNode.getCmdType(), cmdNode.getFlags());
+                            Command cmd = new Command(1, cmdNode.getActionId(), cmdNode.getAction(),
+                                cmdNode.getCmdType(), cmdNode.getFlags());
                             cmd.setKeys(keys);
                             currentCmd.push(cmd);
                         }
@@ -279,7 +282,8 @@ public class KeyHandler
                     else
                     {
                         // Create the command and add it to the stack
-                        Command cmd = new Command(count, cmdNode.getAction(), cmdNode.getCmdType(), cmdNode.getFlags());
+                        Command cmd = new Command(count, cmdNode.getActionId(), cmdNode.getAction(),
+                            cmdNode.getCmdType(), cmdNode.getFlags());
                         cmd.setKeys(keys);
                         currentCmd.push(cmd);
 
@@ -298,7 +302,7 @@ public class KeyHandler
                 {
                     // Create a new command based on what the user has typed so far, excluding this keystroke.
                     ArgumentNode arg = (ArgumentNode)node;
-                    Command cmd = new Command(count, arg.getAction(), arg.getCmdType(), arg.getFlags());
+                    Command cmd = new Command(count, arg.getActionId(), arg.getAction(), arg.getCmdType(), arg.getFlags());
                     cmd.setKeys(keys);
                     currentCmd.push(cmd);
                     // What argType of argument does this command expect?
@@ -380,9 +384,10 @@ public class KeyHandler
             break;
         }
 
-        // Do we have a fully entere command at this point? If so, lets execute it
+        // Do we have a fully entered command at this point? If so, lets execute it
         if (mode == STATE_READY)
         {
+            DelegateCommandListener.getInstance().setRunnable(null);
             // Let's go through the command stack and merge it all into one command. At this time there should never
             // be more than two commands on the stack - one is the actual command and the other would be a motion
             // command argument needed by the first command
@@ -423,24 +428,24 @@ public class KeyHandler
             lastWasBS = ((cmd.getFlags() & Command.FLAG_IS_BACKSPACE) != 0);
             logger.debug("lastWasBS=" + lastWasBS);
 
-            if (!editor.getDocument().isWritable() && !cmd.isReadType())
+            Project project = (Project)context.getData(DataConstants.PROJECT);
+            if (!editor.getDocument().isWritable() && !cmd.isReadType() &&
+                !FileDocumentManager.fileForDocumentCheckedOutSuccessfully(editor.getDocument(), project))
             {
                 logger.info("write command on read-only file");
-                editor.getDocument().fireReadOnlyModificationAttempt();
                 VimPlugin.indicateError();
                 reset();
             }
             else
             {
                 Runnable action = new ActionRunner(editor, context, cmd, key);
-                Project project = (Project)context.getData(DataConstants.PROJECT);
                 if (cmd.isWriteType())
                 {
-                    RunnableHelper.runWriteCommand(project, action);
+                    RunnableHelper.runWriteCommand(project, action, cmd.getActionId(), null);
                 }
                 else
                 {
-                    RunnableHelper.runReadCommand(project, action);
+                    RunnableHelper.runReadCommand(project, action, cmd.getActionId(), null);
                 }
             }
         }
@@ -532,6 +537,7 @@ public class KeyHandler
         lastChar = 0;
         lastWasBS = false;
         CommandGroups.getInstance().getRegister().resetRegister();
+        DelegateCommandListener.getInstance().setRunnable(null);
     }
 
     /**
