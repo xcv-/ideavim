@@ -30,16 +30,23 @@ public class CommandNode implements Node
     /**
      * Creates a command node for the key and action
      * @param key The final keystroke in this command
+     * @param actName The name of the action
      * @param action The action that executes this command
      * @param cmdType The type of the command
      * @param flags Any special flags needs by the command
      */
-    public CommandNode(KeyStroke key, AnAction action, int cmdType, int flags)
+    public CommandNode(KeyStroke key, String actName, AnAction action, int cmdType, int flags)
     {
         this.key = key;
+        this.actionId = actName;
         this.action = action;
         this.type = cmdType;
         this.flags = flags;
+    }
+
+    public String getActionId()
+    {
+        return actionId;
     }
 
     /**
@@ -83,6 +90,8 @@ public class CommandNode implements Node
         StringBuffer res = new StringBuffer();
         res.append("CommandNode[key=");
         res.append(key);
+        res.append(",actionId=");
+        res.append(actionId);
         res.append(",action=");
         res.append(action);
         res.append(",argType=");
@@ -101,6 +110,7 @@ public class CommandNode implements Node
 
         if (flags != node.flags) return false;
         if (type != node.type) return false;
+        if (!actionId.equals(node.actionId)) return false;
         if (!action.equals(node.action)) return false;
         if (!key.equals(node.key)) return false;
 
@@ -111,6 +121,7 @@ public class CommandNode implements Node
     {
         int result;
         result = key.hashCode();
+        result = 29 * result + actionId.hashCode();
         result = 29 * result + action.hashCode();
         result = 29 * result + type;
         result = 29 * result + flags;
@@ -119,6 +130,7 @@ public class CommandNode implements Node
 
     protected KeyStroke key;
     protected AnAction action;
+    protected String actionId;
     protected int type;
     protected int flags;
 }

@@ -57,6 +57,7 @@ public class Command
     public static final int FLAG_SEARCH_FWD = 1 << 16;
     public static final int FLAG_SEARCH_REV = 1 << 17;
 
+    public static final int FLAG_DELEGATE = 1 << 23;
     /** Special flag used for any mappings involving operators */
     public static final int FLAG_OP_PEND = 1 << 24;
     /** This command starts a multi-command undo transaction */
@@ -129,9 +130,9 @@ public class Command
      * @param type The type of the command
      * @param flags Any custom flags specific to this command
      */
-    public Command(int count, AnAction action, int type, int flags)
+    public Command(int count, String actionId, AnAction action, int type, int flags)
     {
-        this(count, action, type, flags, null);
+        this(count, actionId, action, type, flags, null);
     }
 
     /**
@@ -142,9 +143,10 @@ public class Command
      * @param flags Any custom flags specific to this command
      * @param arg The argument to this command
      */
-    public Command(int count, AnAction action, int type, int flags, Argument arg)
+    public Command(int count, String actionId, AnAction action, int type, int flags, Argument arg)
     {
         this.count = count;
+        this.actionId = actionId;
         this.action = action;
         this.type = type;
         this.flags = flags;
@@ -216,6 +218,16 @@ public class Command
         this.flags = flags;
     }
 
+    public String getActionId()
+    {
+        return actionId;
+    }
+
+    public void setActionId(String actionId)
+    {
+        this.actionId = actionId;
+    }
+
     /**
      * Gets the action to execute when the command is run
      * @return The command's action
@@ -267,6 +279,7 @@ public class Command
         StringBuffer res = new StringBuffer();
         res.append("Command {");
         res.append("count=").append(count);
+        res.append(",actionId=").append(actionId);
         res.append(",action=").append(action);
         res.append(",type=").append(type);
         res.append(",flags=").append(flags);
@@ -278,6 +291,7 @@ public class Command
     }
 
     private int count;
+    private String actionId;
     private AnAction action;
     private int type;
     private int flags;
