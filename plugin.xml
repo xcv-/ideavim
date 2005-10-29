@@ -1,10 +1,13 @@
 <idea-plugin url="http://sourceforge.net/projects/ideavim/">
     <name>@NAME@</name>
-    <description>VIM Emulator. This plugin provides key mappings in IDEA to emulate vi/vim/gvim. Please see the README file for key mapping installation. Required for a first time install.</description>
+    <description>VIM Emulator. This plugin provides key mappings in IDEA to emulate vi/vim/gvim.</description>
     <version>@VERSION@-@IDEA-VERSION@</version>
     <vendor email="rick@maddyhome.com">Rick Maddy</vendor>
     <change-notes>
 <![CDATA[
+<b>NOTE:</b> Please see the README file if upgrading to this version from an
+earlier version.<br>
+
 New Features<br>
 - Eliminated the need for a custom keymap. Enabling/Disabling the plugin via
   the tools menu (or Ctrl-Alt-V) properly configures the required key settings.<br>
