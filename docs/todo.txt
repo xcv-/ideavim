@@ -1,6 +1,7 @@
 Bugs to fix:
 
-- Fix "Surround With Live Template"
+- Mode "Code" menu don't work by clicking on them.
+- Cursor moves to wrong place after pressing enter in middle of line in insert mode.
 - Split text when typing fast after o command.
 - Replace mode - fix caret. Can't figure out how to keep block caret.
 - Repeating a last change doesn't include text inserted by IDEA using code

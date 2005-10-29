@@ -20,6 +20,7 @@ package com.maddyhome.idea.vim;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
@@ -47,6 +48,7 @@ import com.maddyhome.idea.vim.group.MarkGroup;
 import com.maddyhome.idea.vim.group.MotionGroup;
 import com.maddyhome.idea.vim.group.SearchGroup;
 import com.maddyhome.idea.vim.helper.ApiHelper;
+import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.helper.DocumentManager;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.key.RegisterActions;
@@ -187,6 +189,8 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
                 */
             }
         });
+
+        CommandProcessor.getInstance().addCommandListener(DelegateCommandListener.getInstance());
     }
 
     private void setupToolWindow(ToolWindow win)
