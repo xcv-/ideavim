@@ -242,6 +242,11 @@ public class KeyParser
      */
     public void registerAction(int mapping, String actName, int cmdType)
     {
+        registerAction(mapping, actName, cmdType, 0);
+    }
+
+    public void registerAction(int mapping, String actName, int cmdType, int cmdFlags)
+    {
         String ideaName = actName.substring(3);
 
         Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
@@ -258,7 +263,7 @@ public class KeyParser
             }
         }
 
-        registerAction(mapping, actName, cmdType, (Shortcut[])shortcuts.toArray(new Shortcut[] {}));
+        registerAction(mapping, actName, cmdType, cmdFlags, (Shortcut[])shortcuts.toArray(new Shortcut[] {}));
         for (int i = 0; i < shortcuts.size(); i++)
         {
             Shortcut cut = (Shortcut)shortcuts.get(i);
@@ -446,7 +451,7 @@ public class KeyParser
             // If this is the last keystroke in the shortcut, and there is no argument, add a command node
             if (last && argType == Argument.NONE)
             {
-                node = new CommandNode(key, action, cmdType, cmdFlags);
+                node = new CommandNode(key, actName, action, cmdType, cmdFlags);
             }
             // If this are more keystrokes in the shortcut or there is an argument, add a branch node
             else
@@ -460,7 +465,7 @@ public class KeyParser
         // If this is the last keystroke in the shortcut and we have an argument, add an argument node
         if (last && node instanceof BranchNode && argType != Argument.NONE)
         {
-            ArgumentNode arg = new ArgumentNode(action, cmdType, argType, cmdFlags);
+            ArgumentNode arg = new ArgumentNode(actName, action, cmdType, argType, cmdFlags);
             ((BranchNode)node).addChild(arg, BranchNode.ARGUMENT);
         }
 
