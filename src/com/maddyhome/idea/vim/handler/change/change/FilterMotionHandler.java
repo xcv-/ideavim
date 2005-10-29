@@ -59,7 +59,7 @@ public class FilterMotionHandler extends AbstractEditorActionHandler
             count = 1;
         }
 
-        Command command = new Command(count, null, 0, 0);
+        Command command = new Command(count, null, null, 0, 0);
         CommandGroups.getInstance().getProcess().startFilterCommand(editor, context, command);
 
         return true;
