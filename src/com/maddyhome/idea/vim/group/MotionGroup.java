@@ -925,9 +925,9 @@ public class MotionGroup extends AbstractActionGroup
         {
             int offset = EditorHelper.visualPostionToOffset(editor, new VisualPosition(newline, newcol));
             moveCaret(editor, context, offset);
+            
+            EditorData.setLastColumn(editor, col);
         }
-
-        EditorData.setLastColumn(editor, col);
     }
 
     public boolean scrollFullPage(Editor editor, DataContext context, int pages)
