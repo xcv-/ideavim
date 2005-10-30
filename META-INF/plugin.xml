@@ -2,7 +2,7 @@
     <name>@NAME@</name>
     <description>VIM Emulator. This plugin provides key mappings in IDEA to emulate vi/vim/gvim.</description>
     <version>@VERSION@-@IDEA-VERSION@</version>
-    <vendor email="rick@maddyhome.com">Rick Maddy</vendor>
+    <vendor email="rick@maddyhome.com" logo="/icons/logo.png">Rick Maddy</vendor>
     <change-notes>
 <![CDATA[
 <b>NOTE:</b> Please see the README file if upgrading to this version from an

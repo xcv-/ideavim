@@ -34,7 +34,7 @@
     <property name="project" value="IdeaVIM" />
     <!-- Update this prior to building a new distribution -->
     <property name="idea-version" value="5.x" />
-    <property name="version" value="0.10.1" />
+    <property name="version" value="0.10.2" />
 
     <path id="build.classpath">
         <pathelement path="${idea.home}/lib/extensions.jar" />
