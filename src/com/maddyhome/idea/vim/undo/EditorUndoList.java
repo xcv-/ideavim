@@ -104,6 +104,11 @@ public class EditorUndoList
         currentCommand = null;
     }
 
+    public int size()
+    {
+        return currentCommand == null ? 0 : currentCommand.size();
+    }
+
     public void addChange(DocumentChange change)
     {
         if (!inUndo && currentCommand != null)

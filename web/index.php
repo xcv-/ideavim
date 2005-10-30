@@ -14,7 +14,7 @@
 related files. However, it lacks one
 important feature - <code>vi</code> style commands for editing. I've been using <code>vi</code> and
 <a href="http://www.vim.org">VIM</a>
-for about 20 years. I'm used to it. I know the command keyboard shortcuts are cryptic and stange but I've been using
+for about 20 years. I'm used to it. I know the command keyboard shortcuts are cryptic and strange but I've been using
 it so long I just know how to use them and I find I am very efficient with them.
 </p>
 <p>
@@ -52,26 +52,35 @@ using IDEA in VIM Emulation mode:
     it the active keymap by pressing the <code>Set Active</code> button.</li>
 </ol>
 
-<h4>Idea Aurora/4.0.x and Pallada/4.5.x</h4>
+<h4>Idea Aurora/4.0.x, Pallada/4.5.x, and Irida/5.0.x</h4>
 
 <ol>
 <li>Use the plugin manager built into Idea to download and install the IdeaVIM
 plugin. This should be found under the Editor section.</li>
-<li>If this is the first time you have ever installed this plugin you must
-install the special VIM key mapping. Copy
-<code>&lt;IDEA_HOME&gt;/plugins/IdeaVIM/vim.xml</code> to
-<code>&lt;HOME&gt;/.IntelliJIdea/config/keymaps</code> where <code>HOME</code>
-is your home directory.
-Create the <code>keymaps</code> directory if it does not exist.
-</li>
-<li>Restart IDEA and then select the <code>Options|Keymaps</code> menu. Select the <code>vim</code> keymap and make
-    it the active keymap by pressing the <code>Set Active</code> button.</li>
 </ol>
 
 You only need to do these steps the first time you install the plugin. You will find a new menu under
-<code>Tools</code> named <code>VIM Emulator</code>. It should be checked by default. If this menu is not present you
-did not copy the jar file to the plugins directory. If the <code>vim</code> keymap was not present then you did not
-copy the <code>vim.xml</code> file to the correct directory.
+<code>Tools</code> named <code>VIM Emulator</code>. It should be checked by default. If this menu is not present
+plugin was not properly installed.
+
+<h3>Upgrade</h3>
+
+The following steps must be performed once the first time you ever upgrade the plugin to version 0.10.1 or greater
+from any version prior to 0.10.1:
+
+<ol>
+<li>Download the latest plugin via IDEA's plugin manager.</li>
+<li>Optionally restart IDEA.</li>
+<li>Select File|Settings.</li>
+<li>Select Keymap.</li>
+<li>Select the Default keymap (or other desired default keymap other than Vim).</li>
+<li>Press the Set Active button.</li>
+<li>Select the Vim keymap.</li>
+<li>Press the Delete button.</li>
+<li>Press the Yes button.</li>
+<li>Press the OK button.</li>
+<li>Restart IDEA.</li>
+</ol>
 
 <h3>Download</h3>
 
@@ -87,6 +96,10 @@ Version 0.6.x was used with Aurora.
 Version 0.7.x is used with IDEA 4.0.x
 <br>
 Version 0.8.x is used with IDEA 4.0.x and Pallada/IDEA 4.5.x
+<br>
+Version 0.9.x is used with IDEA 5.0.x
+<br>
+Version 0.10.x is used with IDEA 4.x and 5.0.x. Just use the one with the correct version suffix (-4x or -5x).
 
 <hr>
 

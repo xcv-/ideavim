@@ -1,6 +1,19 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.8.3
+@VERSION@ from 0.8.4
+New Features
+- Eliminated the need for a custom keymap. Enabling/Disabling the plugin via
+  the tools menu (or Ctrl-Alt-V) properly configures the required key settings.
+
+Bug Fixes
+- Fixed exiting of visual mode when executing commands such as Comment,
+  Reformat, Surround With, and Auto-Indent.
+- Pressing Escape while in command mode will now clear highlights created with
+  IDEA with commands such as "Highlight Usages in File".
+- Ctrl-D, Ctrl-U, zh, zLeft, zl, and zRight now work on read-only files.
+- Fixed register names displayed with the :register command.
+
+0.8.4 from 0.8.3
 Bug Fixes
 - You can now insert a real tab using <Ctrl-V><Tab>.
 - <Tab> now properly works as a character argument to commands such as f and t.

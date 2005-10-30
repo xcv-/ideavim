@@ -880,12 +880,8 @@ public class MotionGroup extends AbstractActionGroup
             sidescrolloff = width / 2;
         }
 
-        int col = EditorData.getLastColumn(editor);
         int vline = EditorHelper.getVisualLineAtTopOfScreen(editor);
         int cline = EditorHelper.getCurrentVisualLine(editor);
-        int vcol = EditorHelper.getVisualColumnAtLeftOfScreen(editor);
-        //int ccol = EditorHelper.getCurrentVisualColumn(editor);
-        int ccol = col;
         int newline = cline;
         if (cline < vline + scrolloff)
         {
@@ -895,6 +891,16 @@ public class MotionGroup extends AbstractActionGroup
         {
             newline = EditorHelper.normalizeVisualLine(editor, vline + height - scrolloff - 1);
         }
+        logger.debug("vline=" + vline + ", cline=" + cline + ", newline=" + newline);
+
+        int col = EditorHelper.getCurrentVisualColumn(editor);
+        int ocol = col;
+        if (col >= EditorHelper.getLineLength(editor) - 1)
+        {
+            col = EditorData.getLastColumn(editor);
+        }
+        int vcol = EditorHelper.getVisualColumnAtLeftOfScreen(editor);
+        int ccol = col;
         int newcol = ccol;
         if (ccol < vcol + sidescrolloff)
         {
@@ -904,6 +910,7 @@ public class MotionGroup extends AbstractActionGroup
         {
             newcol = vcol + width - sidescrolloff - 1;
         }
+        logger.debug("col=" + col + ", vcol=" + vcol + ", ccol=" + ccol + ", newcol=" + newcol);
 
         if (newline == cline && newcol != ccol)
         {
@@ -914,7 +921,7 @@ public class MotionGroup extends AbstractActionGroup
             CommandState.getInstance().getMode() == CommandState.MODE_INSERT ||
             CommandState.getInstance().getMode() == CommandState.MODE_REPLACE);
 
-        if (newline != cline || newcol != ccol)
+        if (newline != cline || newcol != ocol)
         {
             int offset = EditorHelper.visualPostionToOffset(editor, new VisualPosition(newline, newcol));
             moveCaret(editor, context, offset);
@@ -1738,14 +1745,20 @@ public class MotionGroup extends AbstractActionGroup
 
             logger.debug("old=" + visibleAreaEvent.getOldRectangle());
             logger.debug("new=" + visibleAreaEvent.getNewRectangle());
-            //if (visibleAreaEvent.getNewRectangle().y == visibleAreaEvent.getOldRectangle().y)
-            //{
-                //MotionGroup.scrollCaretIntoView(visibleAreaEvent.getEditor());
-            //}
-            //else
-            //{
+            /*
+            if (visibleAreaEvent.getNewRectangle().y == visibleAreaEvent.getOldRectangle().y)
+            {
+                MotionGroup.scrollCaretIntoView(visibleAreaEvent.getEditor());
+            }
+            else
+            {
                 MotionGroup.moveCaretToView(visibleAreaEvent.getEditor(), null);
-            //}
+            }
+            */
+            if (!visibleAreaEvent.getNewRectangle().equals(visibleAreaEvent.getOldRectangle()))
+            {
+                MotionGroup.moveCaretToView(visibleAreaEvent.getEditor(), null);
+            }
         }
 
         private static boolean ignore = false;

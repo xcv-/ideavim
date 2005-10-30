@@ -34,6 +34,7 @@ import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.RegisterGroup;
+import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.helper.DigraphSequence;
 import com.maddyhome.idea.vim.helper.RunnableHelper;
 import com.maddyhome.idea.vim.key.ArgumentNode;
@@ -125,6 +126,11 @@ public class KeyHandler
                 if (mode != STATE_COMMAND && count == 0 && currentArg == Argument.NONE && currentCmd.size() == 0 &&
                     CommandGroups.getInstance().getRegister().getCurrentRegister() == RegisterGroup.REGISTER_DEFAULT)
                 {
+                    if (key.getKeyCode() == KeyEvent.VK_ESCAPE)
+                    {
+                        KeyHandler.executeAction("VimEditorEscape", context);
+                        //getOriginalHandler().execute(editor, key.getKeyChar(), context);
+                    }
                     VimPlugin.indicateError();
                 }
 
@@ -253,15 +259,16 @@ public class KeyHandler
                         if (cmdNode.getCmdType() == Command.MOTION)
                         {
                             // Create the motion command and add it to the stack
-                            Command cmd = new Command(count, cmdNode.getAction(), cmdNode.getCmdType(),
-                                cmdNode.getFlags());
+                            Command cmd = new Command(count, cmdNode.getActionId(), cmdNode.getAction(),
+                                cmdNode.getCmdType(), cmdNode.getFlags());
                             cmd.setKeys(keys);
                             currentCmd.push(cmd);
                         }
                         else if (cmdNode.getCmdType() == Command.RESET)
                         {
                             currentCmd.clear();
-                            Command cmd = new Command(1, cmdNode.getAction(), cmdNode.getCmdType(), cmdNode.getFlags());
+                            Command cmd = new Command(1, cmdNode.getActionId(), cmdNode.getAction(),
+                                cmdNode.getCmdType(), cmdNode.getFlags());
                             cmd.setKeys(keys);
                             currentCmd.push(cmd);
                         }
@@ -275,7 +282,8 @@ public class KeyHandler
                     else
                     {
                         // Create the command and add it to the stack
-                        Command cmd = new Command(count, cmdNode.getAction(), cmdNode.getCmdType(), cmdNode.getFlags());
+                        Command cmd = new Command(count, cmdNode.getActionId(), cmdNode.getAction(),
+                            cmdNode.getCmdType(), cmdNode.getFlags());
                         cmd.setKeys(keys);
                         currentCmd.push(cmd);
 
@@ -294,7 +302,7 @@ public class KeyHandler
                 {
                     // Create a new command based on what the user has typed so far, excluding this keystroke.
                     ArgumentNode arg = (ArgumentNode)node;
-                    Command cmd = new Command(count, arg.getAction(), arg.getCmdType(), arg.getFlags());
+                    Command cmd = new Command(count, arg.getActionId(), arg.getAction(), arg.getCmdType(), arg.getFlags());
                     cmd.setKeys(keys);
                     currentCmd.push(cmd);
                     // What argType of argument does this command expect?
@@ -376,9 +384,10 @@ public class KeyHandler
             break;
         }
 
-        // Do we have a fully entere command at this point? If so, lets execute it
+        // Do we have a fully entered command at this point? If so, lets execute it
         if (mode == STATE_READY)
         {
+            DelegateCommandListener.getInstance().setRunnable(null);
             // Let's go through the command stack and merge it all into one command. At this time there should never
             // be more than two commands on the stack - one is the actual command and the other would be a motion
             // command argument needed by the first command
@@ -390,10 +399,12 @@ public class KeyHandler
                 cmd = top;
             }
 
+            logger.debug("cmd=" + cmd);
             // If we have a command and a motion command argument, both could possibly have their own counts. We
             // need to adjust the counts so the motion gets the product of both counts and the command's count gets
             // reset. Example 3c2w (change 2 words, three times) becomes c6w (change 6 words)
             Argument arg = cmd.getArgument();
+            logger.debug("arg=" + arg);
             if (arg != null && arg.getType() == Argument.MOTION)
             {
                 Command mot = arg.getMotion();
@@ -429,11 +440,11 @@ public class KeyHandler
                 Project project = (Project)context.getData(DataConstants.PROJECT);
                 if (cmd.isWriteType())
                 {
-                    RunnableHelper.runWriteCommand(project, action);
+                    RunnableHelper.runWriteCommand(project, action, cmd.getActionId(), null);
                 }
                 else
                 {
-                    RunnableHelper.runReadCommand(project, action);
+                    RunnableHelper.runReadCommand(project, action, cmd.getActionId(), null);
                 }
             }
         }
@@ -524,6 +535,7 @@ public class KeyHandler
         lastChar = 0;
         lastWasBS = false;
         CommandGroups.getInstance().getRegister().resetRegister();
+        DelegateCommandListener.getInstance().setRunnable(null);
     }
 
     /**

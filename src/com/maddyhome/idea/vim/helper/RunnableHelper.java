@@ -22,20 +22,24 @@ package com.maddyhome.idea.vim.helper;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.diagnostic.Logger;
+import com.maddyhome.idea.vim.KeyHandler;
 
 /**
  * This provides some helper methods to run code as a command and an application write action
  */
 public class RunnableHelper
 {
-    public static void runReadCommand(Project project, Runnable cmd)
+    public static void runReadCommand(Project project, Runnable cmd, String name, Object groupId)
     {
-        CommandProcessor.getInstance().executeCommand(project, new ReadAction(cmd), "Foo", "Bar");
+        logger.debug("read command " + cmd);
+        CommandProcessor.getInstance().executeCommand(project, new ReadAction(cmd), name, groupId);
     }
 
-    public static void runWriteCommand(Project project, Runnable cmd)
+    public static void runWriteCommand(Project project, Runnable cmd, String name, Object groupId)
     {
-        CommandProcessor.getInstance().executeCommand(project, new WriteAction(cmd), "Foo", "Bar");
+        logger.debug("write command " + cmd);
+        CommandProcessor.getInstance().executeCommand(project, new WriteAction(cmd), name, groupId);
     }
 
     static class ReadAction implements Runnable
@@ -69,4 +73,6 @@ public class RunnableHelper
     }
 
     private RunnableHelper() {}
+
+    private static Logger logger = Logger.getInstance(KeyHandler.class.getName());
 }

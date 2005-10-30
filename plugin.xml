@@ -1,30 +1,24 @@
 <idea-plugin url="http://sourceforge.net/projects/ideavim/">
     <name>@NAME@</name>
-    <description>VIM Emulator. This plugin provides key mappings in IDEA to emulate vi/vim/gvim. Please see the README file for key mapping installation. Required for a first time install.</description>
+    <description>VIM Emulator. This plugin provides key mappings in IDEA to emulate vi/vim/gvim.</description>
     <version>@VERSION@-@IDEA-VERSION@</version>
     <vendor email="rick@maddyhome.com">Rick Maddy</vendor>
     <change-notes>
 <![CDATA[
-Bug Fixes<br>
-- You can now insert a real tab using <Ctrl-V><Tab>.<br>
-- <Tab> now properly works as a character argument to commands such as f and t.<br>
-- Fixed Ctrl-E and Ctrl-Y when caret was at top/bottom of screen.<br>
-- Fixed various scrolling and caret movement so caret can appear on first or
-  last line of editor.<br>
-- Fixed playing back macros if preceded by a count greater than 1.<br>
-- Fixed internal error about "Assertion failed: cannot share data context
-  between Swing events"<br>
-- Updated installation notes for Mac<br>
-- Fixed :quit command. Now all forms of the command are recognized.<br>
-<br>
+<b>NOTE:</b> Please see the README file if upgrading to this version from an
+earlier version.<br>
+
 New Features<br>
-- Added support for scrolljump option.<br>
-- Added support for scrolloff option.<br>
-- Added support for sidescroll option.<br>
-- Added support for sidescrolloff option.<br>
-- Caret now stays in view when scrolling using the mouse wheel or scrollbars.<br>
-- Added support for the column scrolling commands zh, zhl, ze, zs, z<Left>, and
-  z<Right>.<br>
+- Eliminated the need for a custom keymap. Enabling/Disabling the plugin via
+  the tools menu (or Ctrl-Alt-V) properly configures the required key settings.<br>
+<br>
+Bug Fixes<br>
+- Fixed exiting of visual mode when executing commands such as Comment,
+  Reformat, Surround With, and Auto-Indent.<br>
+- Pressing Escape while in command mode will now clear highlights created with
+  IDEA with commands such as "Highlight Usages in File".<br>
+- Ctrl-D, Ctrl-U, zh, zLeft, zl, and zRight now work on read-only files.<br>
+- Fixed register names displayed with the :register command.<br>
 ]]>
     </change-notes>
     <idea-version since-build="1162"/>
@@ -189,8 +183,12 @@ New Features<br>
         <action id="VimFilterMotion" class="com.maddyhome.idea.vim.action.change.change.FilterMotionAction" text="Filter Lines"/>
         <action id="VimFilterCountLines" class="com.maddyhome.idea.vim.action.change.change.FilterCountLinesAction" text="Filter Lines"/>
         <action id="VimFilterVisualLines" class="com.maddyhome.idea.vim.action.change.change.FilterVisualLinesAction" text="Filter Visual Lines"/>
-        <action id="VimAutoIndentVisual" class="com.maddyhome.idea.vim.action.change.change.AutoIndentVisualAction" text="Auto Indent Selection"/>
-        <action id="VimReformatVisual" class="com.maddyhome.idea.vim.action.change.change.ReformatVisualAction" text="Reformat Selection"/>
+        <action id="VimAutoIndentVisual" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Auto Indent Selection"/>
+        <action id="VimReformatVisual" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Reformat Selection"/>
+        <action id="VimCommentByBlockComment" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Block Comment"/>
+        <action id="VimCommentByLineComment" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Line Comment"/>
+        <action id="VimSurroundWith" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Surround With"/>
+        <action id="VimSurroundWithLiveTemplate" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Surround With Live Template"/>
 
         <!-- Shift -->
         <action id="VimAutoIndentLines" class="com.maddyhome.idea.vim.action.change.shift.AutoIndentLinesAction" text="Auto Indent Lines"/>
@@ -248,9 +246,20 @@ New Features<br>
         <action id="VimResetMode" class="com.maddyhome.idea.vim.action.ResetModeAction" text="Reset Mode"/>
         <action id="VimRedo" class="com.maddyhome.idea.vim.action.change.RedoAction" text="Redo"/>
         <action id="VimUndo" class="com.maddyhome.idea.vim.action.change.UndoAction" text="Undo"/>
+        <action id="VimGenerateConstructor" class="com.maddyhome.idea.vim.action.TxActionWrapper" text="Generate Constructor"/>
+        <action id="VimGenerateGetter" class="com.maddyhome.idea.vim.action.TxActionWrapper" text="Generate Getter"/>
+        <action id="VimGenerateSetter" class="com.maddyhome.idea.vim.action.TxActionWrapper" text="Generate Setter"/>
+        <action id="VimGenerateGetterAndSetter" class="com.maddyhome.idea.vim.action.TxActionWrapper" text="Generate Getter and Setter"/>
+        <action id="VimGenerateEquals" class="com.maddyhome.idea.vim.action.TxActionWrapper" text="Generate Equals"/>
+        <action id="VimClassNameCompletion" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Class Name Completion"/>
+        <action id="VimCodeCompletion" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Code Completion"/>
+        <action id="VimSmartTypeCompletion" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Smart Type Completion"/>
+        <action id="VimInsertLiveTemplate" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Insert Live Template"/>
+        <action id="VimHelpTopics" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Help Topics"/>
 
         <!-- Keys -->
         <action id="VimKeyHandler" class="com.maddyhome.idea.vim.action.key.KeyAction" text="Keys"/>
+        <action id="VimNotImplementedHandler" class="com.maddyhome.idea.vim.action.key.NotImplementedAction" text="NotImplemented"/>
         <action id="VimEditorBackSpace" class="com.maddyhome.idea.vim.action.key.BackSpaceAction" text="BackSpace"/>
         <action id="VimEditorDelete" class="com.maddyhome.idea.vim.action.key.DeleteAction" text="Delete"/>
         <action id="VimEditorDown" class="com.maddyhome.idea.vim.action.key.DownAction" text="Down"/>

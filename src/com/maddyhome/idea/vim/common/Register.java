@@ -49,6 +49,11 @@ public class Register
         this.keys = keys;
     }
 
+    public void rename(char name)
+    {
+        this.name = name;
+    }
+
     /**
      * Gets the name the register is assigned to
      * @return The register name

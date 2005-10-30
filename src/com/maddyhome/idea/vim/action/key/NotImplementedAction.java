@@ -1,4 +1,4 @@
-package com.maddyhome.idea.vim.action.change.change;
+package com.maddyhome.idea.vim.action.key;
 
 /*
 * IdeaVim - A Vim emulator plugin for IntelliJ Idea
@@ -19,15 +19,16 @@ package com.maddyhome.idea.vim.action.change.change;
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.maddyhome.idea.vim.handler.change.change.ReformatVisualHandler;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.maddyhome.idea.vim.VimPlugin;
 
 /**
  */
-public class ReformatVisualAction extends EditorAction
+public class NotImplementedAction extends AnAction
 {
-    public ReformatVisualAction()
+    public void actionPerformed(AnActionEvent event)
     {
-        super(new ReformatVisualHandler());
+        VimPlugin.indicateError();
     }
 }

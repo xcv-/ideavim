@@ -24,42 +24,51 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
+import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.undo.UndoManager;
 
 /**
  *
  */
-public class TxActionWrapper extends AnAction
+public class TxActionWrapper extends AbstractDelegateAction
 {
+    public TxActionWrapper()
+    {
+    }
+
     public TxActionWrapper(AnAction origAction)
     {
-        this.origAction = origAction;
-        copyFrom(origAction);
-        logger.debug("origAction=" + origAction);
+        super(origAction);
     }
 
     public void actionPerformed(AnActionEvent event)
     {
         logger.debug("actionPerformed");
+
         final Editor editor = (Editor)event.getDataContext().getData(DataConstants.EDITOR);
-        boolean doTx = editor != null && !UndoManager.getInstance().inCommand(editor);
-        logger.debug("doTx = " + doTx);
-        if (doTx)
+        if (editor == null || !VimPlugin.isEnabled())
         {
-            UndoManager.getInstance().endCommand(editor);
-            UndoManager.getInstance().beginCommand(editor);
+            getOrigAction().actionPerformed(event);
         }
-
-        origAction.actionPerformed(event);
-
-        if (doTx)
+        else
         {
-            UndoManager.getInstance().endCommand(editor);
-            UndoManager.getInstance().beginCommand(editor);
+            boolean doTx = !UndoManager.getInstance().inCommand(editor);
+            logger.debug("doTx = " + doTx);
+            if (doTx)
+            {
+                UndoManager.getInstance().endCommand(editor);
+                UndoManager.getInstance().beginCommand(editor);
+            }
+
+            getOrigAction().actionPerformed(event);
+
+            if (doTx)
+            {
+                UndoManager.getInstance().endCommand(editor);
+                UndoManager.getInstance().beginCommand(editor);
+            }
         }
     }
-
-    private AnAction origAction;
 
     private static Logger logger = Logger.getInstance(TxActionWrapper.class.getName());
 }

@@ -21,13 +21,20 @@ package com.maddyhome.idea.vim.key;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.maddyhome.idea.vim.action.TxActionWrapper;
+import com.intellij.openapi.keymap.Keymap;
+import com.intellij.openapi.keymap.KeymapManager;
+import com.maddyhome.idea.vim.action.DelegateAction;
+import com.maddyhome.idea.vim.action.PassThruDelegateAction;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.handler.key.EditorKeyHandler;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import javax.swing.KeyStroke;
 
 /**
@@ -65,6 +72,7 @@ public class KeyParser
 
     /** Helper value for the typical key mapping that works in Normal, Visual, and Operator Pending modes */
     public static final int MAPPING_NVO = MAPPING_NORMAL | MAPPING_VISUAL | MAPPING_OP_PEND;
+    public static final int MAPPING_ALL = MAPPING_NVO | MAPPING_INSERT | MAPPING_CMD_LINE;
 
     /**
      * Returns the singleton instance of this key parser
@@ -80,17 +88,135 @@ public class KeyParser
         return instance;
     }
 
-    public static void setupActionHandler(String ideaActName)
+    /**
+     * This is called each time the plugin is enabled. This goes through the list of keystrokes that the plugin needs
+     * such as Ctrl-A through Ctrl-Z, F1, and others. Each keystroke is checks for existing IDEA actions using the
+     * keystroke and the keystroke is removed from the IDEA action. The keystroke is then added to the internal
+     * VimKeyHandler action.
+     */
+    public void setupShortcuts()
     {
-        ActionManager amgr = ActionManager.getInstance();
-        AnAction action = amgr.getAction(ideaActName);
-
-        amgr.unregisterAction(ideaActName);
-        TxActionWrapper taw = new TxActionWrapper(action);
-        amgr.registerAction(ideaActName, taw);
+        Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
+        // Loop through each of the keystrokes the plugin needs to take ownership of.
+        Iterator keys = mappings.keySet().iterator();
+        while (keys.hasNext())
+        {
+            KeyStroke keyStroke = (KeyStroke)keys.next();
+            // Get all the IDEA actions that use this keystroke. Could be 0 or more.
+            ArrayList actions = (ArrayList)mappings.get(keyStroke);
+            String[] ids = keymap.getActionIds(keyStroke);
+            // For each existing IDEA action we need to remove shortcut.
+            for (int i = 0; i < ids.length; i++)
+            {
+                String id = ids[i];
+                // Get the list of shortcuts for the IDEA action and find the one that matches the current keystroke
+                com.intellij.openapi.actionSystem.Shortcut[] cuts = keymap.getShortcuts(id);
+                for (int j = 0; j < cuts.length; j++)
+                {
+                    com.intellij.openapi.actionSystem.Shortcut cut = cuts[j];
+                    if (cut instanceof KeyboardShortcut)
+                    {
+                        if (((KeyboardShortcut)cut).getFirstKeyStroke().equals(keyStroke))
+                        {
+                            keymap.removeShortcut(id, cut);
+                            // Save off the position of the shortcut so it can be put back in the same place.
+                            actions.add(new KeyAction(id, j));
+                            keymap.addShortcut("VimKeyHandler", cut);
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    public static void setupActionHandler(String ideaActName, String vimActName, KeyStroke stroke)
+    /**
+     * This is called each time the plugin is disabled. This processes all the keystrokes originally removed from their
+     * original IDEA action and are put back into place.
+     */
+    public void resetShortcuts()
+    {
+        Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
+        // Get each of the hijacked keystrokes we stole from IDEA and put them back in their original place.
+        com.intellij.openapi.actionSystem.Shortcut[] cuts = keymap.getShortcuts("VimKeyHandler");
+        for (int i = 0; i < cuts.length; i++)
+        {
+            com.intellij.openapi.actionSystem.Shortcut cut = cuts[i];
+            if (cut instanceof KeyboardShortcut)
+            {
+                // Remove the shortcut from the special plugin handler
+                keymap.removeShortcut("VimKeyHandler", cut);
+                KeyboardShortcut ks = (KeyboardShortcut)cut;
+                KeyStroke keyStroke = ks.getFirstKeyStroke();
+                // Get the list of IDEA actions that originally had this keystroke - if any
+                ArrayList actions = (ArrayList)mappings.get(keyStroke);
+                for (int j = 0; j < actions.size(); j++)
+                {
+                    // Put back the removed shortcut. But we need to "insert" it in the same place it was so the menus
+                    // will show the shortcuts. Example - Undo has by default two shortcuts - Ctrl-Z and Alt-Backspace.
+                    // When the plugin is disabled the Undo menu shows Ctrl-Z. When the plugin is enabled we remove
+                    // Ctrl-Z and the Undo menu shows Alt-Backspace. When the plugin is disabled again, we need to be
+                    // sure Ctrl-Z is put back before Alt-Backspace or else the Undo menu will continue to show
+                    // Alt-Backspace even after we add back Ctrl-Z.
+                    KeyAction ka = (KeyAction)actions.get(j);
+                    com.intellij.openapi.actionSystem.Shortcut[] acuts = keymap.getShortcuts(ka.getActionId());
+                    keymap.removeAllActionShortcuts(ka.getActionId());
+                    for (int k = 0, l = 0; k < acuts.length + 1; k++)
+                    {
+                        if (k == ka.getKeyPos())
+                        {
+                            keymap.addShortcut(ka.getActionId(), cut);
+                        }
+                        else
+                        {
+                            keymap.addShortcut(ka.getActionId(), acuts[l++]);
+                        }
+                    }
+                }
+                actions.clear();
+            }
+        }
+    }
+
+    public void setupActionHandler(String ideaActName, String vimActName)
+    {
+        logger.debug("vimActName=" + vimActName);
+
+        ActionManager amgr = ActionManager.getInstance();
+        AnAction vaction = amgr.getAction(vimActName);
+        if (vaction instanceof DelegateAction)
+        {
+            amgr.unregisterAction(vimActName);
+        }
+        setupActionHandler(ideaActName, vaction);
+    }
+
+    public void setupActionHandler(String ideaActName, AnAction vaction)
+    {
+        logger.debug("ideaActName=" + ideaActName);
+
+        ActionManager amgr = ActionManager.getInstance();
+        AnAction iaction = amgr.getAction(ideaActName);
+        if (vaction instanceof DelegateAction)
+        {
+            DelegateAction daction = (DelegateAction)vaction;
+            daction.setOrigAction(iaction);
+
+            //Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
+            //com.intellij.openapi.actionSystem.Shortcut[] icuts = keymap.getShortcuts(ideaActName);
+            //keymap.removeAllActionShortcuts(ideaActName);
+
+            amgr.unregisterAction(ideaActName);
+
+            amgr.registerAction(ideaActName, vaction);
+
+            //for (int i = 0; i < icuts.length; i++)
+            //{
+            //    keymap.addShortcut(ideaActName, icuts[i]);
+            //}
+        }
+    }
+
+    public void setupActionHandler(String ideaActName, String vimActName, KeyStroke stroke)
     {
         ActionManager amgr = ActionManager.getInstance();
         AnAction action = amgr.getAction(ideaActName);
@@ -105,6 +231,16 @@ public class KeyParser
             }
 
             iaction.setupHandler(new EditorKeyHandler(handler, stroke));
+        }
+
+        mappings.remove(stroke);
+    }
+
+    public void addMapping(KeyStroke stroke)
+    {
+        if (!mappings.containsKey(stroke))
+        {
+            mappings.put(stroke, new ArrayList());
         }
     }
 
@@ -132,6 +268,59 @@ public class KeyParser
         }
 
         return res;
+    }
+
+    /**
+     * Registers the action
+     * @param mapping The set of mappings the shortcut is applicable to
+     * @param actName The action the shortcut will execute
+     * @param cmdType The type of the command
+     */
+    public void registerAction(int mapping, String actName, int cmdType)
+    {
+        registerAction(mapping, actName, cmdType, 0);
+    }
+
+    public void registerAction(int mapping, String actName, int cmdType, int cmdFlags)
+    {
+        String ideaName = actName.substring(3);
+
+        Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
+        com.intellij.openapi.actionSystem.Shortcut[] cuts = keymap.getShortcuts(ideaName);
+        ArrayList shortcuts = new ArrayList();
+        for (int j = 0; j < cuts.length; j++)
+        {
+            com.intellij.openapi.actionSystem.Shortcut cut = cuts[j];
+            if (cut instanceof KeyboardShortcut)
+            {
+                KeyStroke keyStroke = ((KeyboardShortcut)cut).getFirstKeyStroke();
+                Shortcut shortcut = new Shortcut(keyStroke);
+                shortcuts.add(shortcut);
+            }
+        }
+
+        registerAction(mapping, actName, cmdType, cmdFlags, (Shortcut[])shortcuts.toArray(new Shortcut[] {}));
+        KeyStroke firstStroke = null;
+        for (int i = 0; i < shortcuts.size(); i++)
+        {
+            Shortcut cut = (Shortcut)shortcuts.get(i);
+            mappings.remove(cut.getKeys()[0]);
+            if (i == 0)
+            {
+                firstStroke = cut.getKeys()[0];
+            }
+        }
+
+        ActionManager amgr = ActionManager.getInstance();
+        AnAction iaction = amgr.getAction(ideaName);
+        AnAction vaction = amgr.getAction(actName);
+        if (vaction instanceof DelegateAction)
+        {
+            DelegateAction daction = (DelegateAction)vaction;
+            daction.setOrigAction(iaction);
+        }
+
+        setupActionHandler(ideaName, new PassThruDelegateAction(firstStroke));
     }
 
     /**
@@ -292,6 +481,9 @@ public class KeyParser
             // Programmer error
             logger.error("Unknown action " + actName);
         }
+
+        addMapping(key);
+
         Node node = base.getChild(key);
         // Is this the first time we have seen this character at this point in the tree?
         if (node == null)
@@ -299,7 +491,7 @@ public class KeyParser
             // If this is the last keystroke in the shortcut, and there is no argument, add a command node
             if (last && argType == Argument.NONE)
             {
-                node = new CommandNode(key, action, cmdType, cmdFlags);
+                node = new CommandNode(key, actName, action, cmdType, cmdFlags);
             }
             // If this are more keystrokes in the shortcut or there is an argument, add a branch node
             else
@@ -313,7 +505,7 @@ public class KeyParser
         // If this is the last keystroke in the shortcut and we have an argument, add an argument node
         if (last && node instanceof BranchNode && argType != Argument.NONE)
         {
-            ArgumentNode arg = new ArgumentNode(action, cmdType, argType, cmdFlags);
+            ArgumentNode arg = new ArgumentNode(actName, action, cmdType, argType, cmdFlags);
             ((BranchNode)node).addChild(arg, BranchNode.ARGUMENT);
         }
 
@@ -332,7 +524,30 @@ public class KeyParser
         return res.toString();
     }
 
+    private static class KeyAction
+    {
+        public KeyAction(String actionId, int keyPos)
+        {
+            this.actionId = actionId;
+            this.keyPos = keyPos;
+        }
+
+        public String getActionId()
+        {
+            return actionId;
+        }
+
+        public int getKeyPos()
+        {
+            return keyPos;
+        }
+
+        private String actionId;
+        private int keyPos;
+    }
+
     private HashMap keyRoots = new HashMap();
+    private HashMap mappings = new HashMap();
 
     private static KeyParser instance;
 

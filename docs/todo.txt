@@ -2,7 +2,6 @@ Bugs to fix:
 
 - Split text when typing fast after o command.
 - Replace mode - fix caret. Can't figure out how to keep block caret.
-- Visual mode not exited after executing non-vim key command. See below.
 - Repeating a last change doesn't include text inserted by IDEA using code
   completion.
 
@@ -11,16 +10,3 @@ Requested Functionality to add:
 - Show message after shifting lines with :< or :>
 - Visual Column mode
 - / and ? as command operators
-
-o Visual mode not ended after edit command
-
- Visual mode is not ended when applying the 'comment
- block' editing action, as I think it should be.
-
- To repeat:
-
- v
- [select text]
- Ctrl-Shift-/
- [movement command]
-

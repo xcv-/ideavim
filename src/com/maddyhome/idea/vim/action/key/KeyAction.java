@@ -36,7 +36,6 @@ public class KeyAction extends AnAction
     {
         if (!VimPlugin.isEnabled())
         {
-            // TODO - popup dialog telling user to switch to other keymapping
             return;
         }
 

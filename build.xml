@@ -1,7 +1,7 @@
 <project name="IdeaVim" default="deploy" basedir=".">
     <!--
     * IdeaVim - A Vim emulator plugin for IntelliJ Idea
-    * Copyright (C) 2003-2004 Rick Maddy
+    * Copyright (C) 2003-2005 Rick Maddy
     *
     * This program is free software; you can redistribute it and/or
     * modify it under the terms of the GNU General Public License
@@ -27,7 +27,6 @@
     <property name="classes" value="classes" />
     <property name="javadoc" value="docs/javadoc" />
     <property name="build" value="build" />
-    <property name="install" value="install" />
     <property name="dist" value="dist" />
     <!-- Update to your IntelliJ installtion -->
     <property name="idea.home" value="/opt/idea-4.5.4" />
@@ -35,7 +34,7 @@
     <property name="project" value="IdeaVIM" />
     <!-- Update this prior to building a new distribution -->
     <property name="idea-version" value="4.x" />
-    <property name="version" value="0.8.4" />
+    <property name="version" value="0.10.1" />
 
     <path id="build.classpath">
         <pathelement path="${idea.home}/lib/idea.jar" />
@@ -56,7 +55,7 @@
 
     <target name="build" depends="clean.build" description="Compiles all source code and created plugin jar file" >
         <mkdir dir="${classes}"/>
-        <javac destdir="${classes}" debug="on" classpathref="build.classpath" >
+        <javac destdir="${classes}" debug="on" deprecation="on" classpathref="build.classpath" >
             <src path="${src}"/>
             <include name="com/maddyhome/idea/**" />
         </javac>
@@ -91,7 +90,6 @@
         <mkdir dir="${project}-${version}-${idea-version}"/>
         <copy todir="${project}-${version}-${idea-version}">
             <fileset dir="." includes="license/**"/>
-            <fileset dir="${install}" includes="**"/>
         </copy>
         <copy todir="${project}-${version}-${idea-version}/lib">
             <fileset dir="${build}" includes="*.jar"/>
