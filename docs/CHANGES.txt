@@ -4,6 +4,7 @@ History of changes for @NAME@ for IDEA @IDEA-VERSION@
 New Features
 - Support of visual blockwise mode using Ctrl-v.
 - Added the visual commands gp, gP, [p, ]p, [P, ]P, I, and A.
+- Display the VIM logo on the Quick Start page.
 
 Bug Fixes
 - Linewise visual yank now properly inserted linewise during a put.
@@ -15,6 +16,10 @@ Bug Fixes
 - Undoing a put required two undos instead of one. (Regression from 0.9.7).
 - Fixed various visual put issues.
 - Fixed cursor movements after yank commands.
+- Ensure smooth scrolling is turned off in editors. Many motion commands were
+  having problems if smooth scrolling was on as of 0.9.6.
+- Entering an invalid command while in visual mode now properly stays in
+  visual mode.
 
 0.10.1 from 0.9.7
 New Features

@@ -189,7 +189,7 @@ public class KeyHandler
                 else
                 {
                     // Oops - this isn't a valid character argument
-                    mode = STATE_ERROR;
+                    mode = STATE_BAD_COMMAND;
                 }
             }
             // If we are this far - sheesh, then the user must be entering a command or a non-single-character argument
@@ -275,7 +275,7 @@ public class KeyHandler
                         else
                         {
                             // Oops - this wasn't a motion command. The user goofed and typed something else
-                            mode = STATE_ERROR;
+                            mode = STATE_BAD_COMMAND;
                         }
                     }
                     // The user entered a valid command that doesn't take any arguments
@@ -305,7 +305,7 @@ public class KeyHandler
                     Command cmd = new Command(count, arg.getActionId(), arg.getAction(), arg.getCmdType(), arg.getFlags());
                     cmd.setKeys(keys);
                     currentCmd.push(cmd);
-                    // What argType of argument does this command expect?
+                    // What type of argument does this command expect?
                     switch (arg.getArgType())
                     {
                         case Argument.DIGRAPH:
@@ -327,7 +327,7 @@ public class KeyHandler
                             }
                             break;
                         default:
-                            // Oops - we aren't expecting any other argType of argument
+                            // Oops - we aren't expecting any other type of argument
                             mode = STATE_ERROR;
                     }
 
@@ -374,7 +374,7 @@ public class KeyHandler
                     // If we get here then the user has entered an unrecognized series of keystrokes
                     else
                     {
-                        mode = STATE_ERROR;
+                        mode = STATE_BAD_COMMAND;
                     }
 
                     lastChar = key.getKeyChar();
@@ -448,6 +448,11 @@ public class KeyHandler
                     RunnableHelper.runReadCommand(project, action, cmd.getActionId(), null);
                 }
             }
+        }
+        else if (mode == STATE_BAD_COMMAND)
+        {
+            VimPlugin.indicateError();
+            reset();
         }
         // We had some sort of error so reset the handler and let the user know (beep)
         else if (mode == STATE_ERROR)
@@ -614,6 +619,7 @@ public class KeyHandler
     private static final int STATE_COMMAND = 2;
     private static final int STATE_READY = 3;
     private static final int STATE_ERROR = 4;
+    private static final int STATE_BAD_COMMAND = 5;
 
     private static Logger logger = Logger.getInstance(KeyHandler.class.getName());
 }

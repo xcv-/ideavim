@@ -1,6 +1,5 @@
 Bugs to fix:
 
-- Invalid commands while in visual mode should beep and stay in visual mode.
 - Typing while in insert mode at cursor reaches end of screen, scroll causes cursor to move.
 - :dig doesn't bring up the window (it flashes a split second).
 - Split text when typing fast after o command.
