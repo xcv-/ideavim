@@ -1,6 +1,5 @@
 Bugs to fix:
 
-- Typing while in insert mode at cursor reaches end of screen, scroll causes cursor to move.
 - :dig doesn't bring up the window (it flashes a split second).
 - Split text when typing fast after o command.
 - Replace mode - fix caret. Can't figure out how to keep block caret.

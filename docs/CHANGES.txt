@@ -20,6 +20,8 @@ Bug Fixes
   having problems if smooth scrolling was on as of 0.9.6.
 - Entering an invalid command while in visual mode now properly stays in
   visual mode.
+- Typing text while in insert mode caused strange cursor position changes if
+  the cursor neared the right edge of the screen. (Regression from 0.9.6).
 
 0.10.1 from 0.9.7
 New Features

@@ -1751,6 +1751,12 @@ public class MotionGroup extends AbstractActionGroup
         {
             if (ignore) return;
 
+            if (CommandState.getInstance().getMode() == CommandState.MODE_INSERT ||
+                CommandState.getInstance().getMode() == CommandState.MODE_REPLACE)
+            {
+                return;
+            }
+
             logger.debug("old=" + visibleAreaEvent.getOldRectangle());
             logger.debug("new=" + visibleAreaEvent.getNewRectangle());
             /*
