@@ -2,7 +2,7 @@ History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
 @VERSION@ from 0.10.1
 New Features
-- Support of visual blockwise mode using Ctrl-v.
+- Support of visual blockwise mode using Ctrl-v or Ctrl-q.
 - Added the visual commands gp, gP, [p, ]p, [P, ]P, I, and A.
 - Display the VIM logo on the Quick Start page.
 

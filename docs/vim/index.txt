@@ -142,6 +142,7 @@ tag             char          note action in Normal mode        ~
 |CTRL-M|        CTRL-M>         1  same as <CR>
 |CTRL-N|        CTRL-N          1  same as "j"
 |CTRL-P|        CTRL-P          1  cursor N lines upward
+|CTRL-Q|        CTRL-Q             same as CTRL-V
 |CTRL-R|        CTRL-R          2  redo changes which were undone with 'u'
 |CTRL-U|        CTRL-U             scroll N lines Upwards (default: half a
                                    screen)
@@ -601,8 +602,9 @@ here are those that are different.
 tag             command       note action in Visual mode        ~
 ------------------------------------------------------------------------------
 |v_CTRL-\_CTRL-N| CTRL-\ CTRL-N    stop Visual mode
-|v_CTRL-V|      CTRL-V             make Visual mode blockwise or stop Visual
+|v_CTRL-Q|      CTRL-Q             make Visual mode blockwise or stop Visual
                                    mode
+|v_CTRL-V|      CTRL-V             same as CTRL-V
 |v_!|           !{filter}       2  filter the highlighted lines through the
                                    external command {filter}
 |v_:|           :                  start a command-line with the highlighted
