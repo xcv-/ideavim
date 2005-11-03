@@ -1445,10 +1445,13 @@ public class MotionGroup extends AbstractActionGroup
                     logger.debug("no prior visual range");
                     return false;
                 }
+                else
+                {
+                    logger.debug("last visual change: " + range);
+                }
                 mode = range.getType();
-                TextRange trange = calculateVisualRange(editor, context, range, count);
-                start = trange.getStartOffset();
-                end = trange.getEndOffset();
+                start = editor.getCaretModel().getOffset();
+                end = calculateVisualRange(editor, context, range, count);
             }
             else
             {
@@ -1472,7 +1475,7 @@ public class MotionGroup extends AbstractActionGroup
         return true;
     }
 
-    private TextRange calculateVisualRange(Editor editor, DataContext context, VisualChange range, int count)
+    private int calculateVisualRange(Editor editor, DataContext context, VisualChange range, int count)
     {
         int lines = range.getLines();
         int chars = range.getColumns();
@@ -1484,30 +1487,30 @@ public class MotionGroup extends AbstractActionGroup
         {
             chars *= count;
         }
-        int start = editor.getSelectionModel().getSelectionStart();
+        int start = editor.getCaretModel().getOffset();
         LogicalPosition sp = editor.offsetToLogicalPosition(start);
         int endLine = sp.line + lines - 1;
-        TextRange res;
+        int res;
         if (range.getType() == Command.FLAG_MOT_LINEWISE)
         {
-            res = new TextRange(start, moveCaretToLine(editor, context, endLine));
+            res = moveCaretToLine(editor, context, endLine);
         }
         else if (range.getType() == Command.FLAG_MOT_CHARACTERWISE)
         {
             if (lines > 1)
             {
-                res = new TextRange(start, moveCaretToLineStart(editor, endLine) +
-                    Math.min(EditorHelper.getLineLength(editor, endLine), chars));
+                res = moveCaretToLineStart(editor, endLine) +
+                    Math.min(EditorHelper.getLineLength(editor, endLine), chars);
             }
             else
             {
-                res = new TextRange(start, EditorHelper.normalizeOffset(editor, sp.line, start + chars - 1, false));
+                res = EditorHelper.normalizeOffset(editor, sp.line, start + chars - 1, false);
             }
         }
         else
         {
-            res = new TextRange(start, moveCaretToLineStart(editor, endLine) +
-                Math.min(EditorHelper.getLineLength(editor, endLine), chars));
+            int endcol = Math.min(EditorHelper.getLineLength(editor, endLine), sp.column + chars - 1);
+            res = editor.logicalPositionToOffset(new LogicalPosition(endLine, endcol));
         }
 
         return res;
@@ -1536,6 +1539,7 @@ public class MotionGroup extends AbstractActionGroup
 
     public VisualChange getVisualOperatorRange(Editor editor, int cmdFlags)
     {
+        logger.debug("vis op range");
         int start = visualStart;
         int end = visualEnd;
         if (start > end)
@@ -1547,6 +1551,8 @@ public class MotionGroup extends AbstractActionGroup
 
         start = EditorHelper.normalizeOffset(editor, start, false);
         end = EditorHelper.normalizeOffset(editor, end, false);
+        logger.debug("start=" + start);
+        logger.debug("end=" + end);
         LogicalPosition sp = editor.offsetToLogicalPosition(start);
         LogicalPosition ep = editor.offsetToLogicalPosition(end);
         int lines = ep.line - sp.line + 1;
@@ -1572,10 +1578,13 @@ public class MotionGroup extends AbstractActionGroup
         }
         else
         {
-            chars = ep.column;
+            chars = ep.column - sp.column + 1;
             type = Command.FLAG_MOT_BLOCKWISE;
         }
 
+        logger.debug("lines=" + lines);
+        logger.debug("chars=" + chars);
+        logger.debug("type=" + type);
         return new VisualChange(lines, chars, type);
     }
 

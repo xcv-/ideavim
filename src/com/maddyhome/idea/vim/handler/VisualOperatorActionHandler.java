@@ -55,7 +55,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
         }
         else
         {
-            runnable.start();
+            range = runnable.start();
         }
 
         boolean res = execute(editor, context, cmd, range);
@@ -86,7 +86,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
             this.res = res;
         }
 
-        public void start()
+        public TextRange start()
         {
             logger.debug("start");
             if (cmd == null || !cmd.isReadType())
@@ -94,15 +94,22 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                 UndoManager.getInstance().endCommand(editor);
                 UndoManager.getInstance().beginCommand(editor);
             }
+            boolean wasRepeat = false;
             if (CommandState.getInstance().getMode() == CommandState.MODE_REPEAT)
             {
+                wasRepeat = true;
                 CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 1, 0);
             }
 
+            TextRange res = null;
             if (CommandState.getInstance().getMode() == CommandState.MODE_VISUAL)
             {
-                change = CommandGroups.getInstance().getMotion().getVisualOperatorRange(editor,
-                    cmd == null ? Command.FLAG_MOT_LINEWISE : cmd.getFlags());
+                res = CommandGroups.getInstance().getMotion().getVisualRange(editor);
+                if (!wasRepeat)
+                {
+                    change = CommandGroups.getInstance().getMotion().getVisualOperatorRange(editor,
+                        cmd == null ? Command.FLAG_MOT_LINEWISE : cmd.getFlags());
+                }
                 logger.debug("change=" + change);
             }
 
@@ -120,6 +127,8 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                     CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 0, Command.FLAG_MOT_LINEWISE);
                 }
             }
+
+            return res;
         }
 
         public void finish()

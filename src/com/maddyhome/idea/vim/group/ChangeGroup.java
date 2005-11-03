@@ -381,11 +381,11 @@ public class ChangeGroup extends AbstractActionGroup
             // If this command doesn't allow repeating, set the count to 1
             if ((state.getCommand().getFlags() & Command.FLAG_NO_REPEAT) != 0)
             {
-                repeatInsert(editor, context, 1);
+                repeatInsert(editor, context, 1, false);
             }
             else
             {
-                repeatInsert(editor, context, state.getCommand().getCount());
+                repeatInsert(editor, context, state.getCommand().getCount(), false);
             }
             if (mode == CommandState.MODE_REPLACE)
             {
@@ -413,14 +413,16 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to insert into
      * @param context The data context
      * @param count The number of times to repeat the previous insert
+     * @param started
      */
-    private void repeatInsert(Editor editor, DataContext context, int count)
+    private void repeatInsert(Editor editor, DataContext context, int count, boolean started)
     {
-        int cpos = CommandGroups.getInstance().getMotion().moveCaretHorizontal(editor, -1, false);
+        int cpos;
         if (repeatLines > 0)
         {
             int vline = EditorHelper.getCurrentVisualLine(editor);
             int lline = EditorHelper.getCurrentLogicalLine(editor);
+            cpos = editor.logicalPositionToOffset(new LogicalPosition(vline, repeatColumn));
             for (int i = 0; i < repeatLines; i++)
             {
                 if (repeatAppend && EditorHelper.getVisualLineLength(editor, vline + i) < repeatColumn)
@@ -435,13 +437,14 @@ public class ChangeGroup extends AbstractActionGroup
                 if (EditorHelper.getVisualLineLength(editor, vline + i) >= repeatColumn)
                 {
                     editor.getCaretModel().moveToVisualPosition(new VisualPosition(vline + i, repeatColumn));
-                    repeatInsertText(editor, context, i == 0 ? count : count+1);
+                    repeatInsertText(editor, context, started ? (i == 0 ? count : count+1) : count);
                 }
             }
         }
         else
         {
             repeatInsertText(editor, context, count);
+            cpos = CommandGroups.getInstance().getMotion().moveCaretHorizontal(editor, -1, false);
         }
 
         repeatLines = 0;
@@ -505,7 +508,7 @@ public class ChangeGroup extends AbstractActionGroup
         //CommandGroups.getInstance().getRegister().storeKeys(lastStrokes, Command.FLAG_MOT_CHARACTERWISE, '.');
 
         // If the insert/replace command was preceded by a count, repeat again N - 1 times
-        repeatInsert(editor, context, cnt - 1);
+        repeatInsert(editor, context, cnt - 1, true);
 
         CommandGroups.getInstance().getMark().setMark(editor, context, '^', editor.getCaretModel().getOffset());
         CommandGroups.getInstance().getMark().setMark(editor, context, ']', editor.getCaretModel().getOffset());
