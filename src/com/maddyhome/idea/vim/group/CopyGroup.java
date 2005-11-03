@@ -58,7 +58,7 @@ public class CopyGroup extends AbstractActionGroup
     {
         TextRange range = MotionGroup.getMotionRange(editor, context, count, rawCount, argument, true, false);
 
-        return yankRange(editor, context, range, argument.getMotion().getFlags());
+        return yankRange(editor, context, range, argument.getMotion().getFlags(), true);
     }
 
     /**
@@ -75,7 +75,7 @@ public class CopyGroup extends AbstractActionGroup
             editor, count - 1, true) + 1, EditorHelper.getFileSize(editor));
         if (offset != -1)
         {
-            return yankRange(editor, context, new TextRange(start, offset), Command.FLAG_MOT_LINEWISE);
+            return yankRange(editor, context, new TextRange(start, offset), Command.FLAG_MOT_LINEWISE, false);
         }
 
         return false;
@@ -87,15 +87,19 @@ public class CopyGroup extends AbstractActionGroup
      * @param context The data context
      * @param range The range of text to yank
      * @param type The type of yank - characterwise or linewise
+     * @param moveCursor
      * @return true if able to yank the range, false if not
      */
-    public boolean yankRange(Editor editor, DataContext context, TextRange range, int type)
+    public boolean yankRange(Editor editor, DataContext context, TextRange range, int type, boolean moveCursor)
     {
         if (range != null)
         {
             logger.debug("yanking range: " + range);
             boolean res = CommandGroups.getInstance().getRegister().storeText(editor, context, range, type, false, true);
-            MotionGroup.moveCaret(editor, context, range.normalize().getStartOffset());
+            if (moveCursor)
+            {
+                MotionGroup.moveCaret(editor, context, range.normalize().getStartOffset());
+            }
 
             return res;
         }

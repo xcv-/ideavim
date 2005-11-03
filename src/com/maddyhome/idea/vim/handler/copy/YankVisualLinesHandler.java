@@ -38,14 +38,15 @@ public class YankVisualLinesHandler extends VisualOperatorActionHandler
         int mode = CommandState.getInstance().getSubMode();
         if (mode == Command.FLAG_MOT_BLOCKWISE)
         {
-            return CommandGroups.getInstance().getCopy().yankRange(editor, context, range, mode);
+            return CommandGroups.getInstance().getCopy().yankRange(editor, context, range, mode, true);
         }
         else
         {
             range = new TextRange(EditorHelper.getLineStartForOffset(editor, range.getStartOffset()),
                 EditorHelper.getLineEndForOffset(editor, range.getEndOffset()) + 1);
 
-            return CommandGroups.getInstance().getCopy().yankRange(editor, context, range, Command.FLAG_MOT_LINEWISE);
+            return CommandGroups.getInstance().getCopy().yankRange(editor, context, range, Command.FLAG_MOT_LINEWISE,
+                true);
         }
     }
 }
