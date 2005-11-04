@@ -36,7 +36,7 @@ public class RepeatChangeHandler extends AbstractEditorActionHandler
 {
     public boolean execute(Editor editor, DataContext context, Command command)
     {
-        CommandState state = CommandState.getInstance();
+        CommandState state = CommandState.getInstance(editor);
         Command cmd = state.getLastChangeCommand();
         if (cmd != null)
         {

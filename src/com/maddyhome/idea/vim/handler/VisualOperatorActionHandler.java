@@ -42,7 +42,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
         logger.debug("execute, cmd=" + cmd);
 
         TextRange range = null;
-        if (CommandState.getInstance().getMode() == CommandState.MODE_VISUAL)
+        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
         {
             range = CommandGroups.getInstance().getMotion().getVisualRange(editor);
             logger.debug("range=" + range);
@@ -95,14 +95,14 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                 UndoManager.getInstance().beginCommand(editor);
             }
             boolean wasRepeat = false;
-            if (CommandState.getInstance().getMode() == CommandState.MODE_REPEAT)
+            if (CommandState.getInstance(editor).getMode() == CommandState.MODE_REPEAT)
             {
                 wasRepeat = true;
                 CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 1, 0);
             }
 
             TextRange res = null;
-            if (CommandState.getInstance().getMode() == CommandState.MODE_VISUAL)
+            if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
             {
                 res = CommandGroups.getInstance().getMotion().getVisualRange(editor);
                 if (!wasRepeat)
@@ -121,7 +121,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
             }
             else if (cmd != null && (cmd.getFlags() & Command.FLAG_FORCE_LINEWISE) != 0)
             {
-                lastMode = CommandState.getInstance().getSubMode();
+                lastMode = CommandState.getInstance(editor).getSubMode();
                 if (lastMode != Command.FLAG_MOT_LINEWISE)
                 {
                     CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 0, Command.FLAG_MOT_LINEWISE);
@@ -164,7 +164,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                 }
                 if (cmd != null)
                 {
-                    CommandState.getInstance().saveLastChangeCommand(cmd);
+                    CommandState.getInstance(editor).saveLastChangeCommand(cmd);
                 }
             }
             else
@@ -178,7 +178,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
 
             if (cmd != null && (cmd.getFlags() & Command.FLAG_DELEGATE) != 0)
             {
-                KeyHandler.getInstance().reset();
+                KeyHandler.getInstance().reset(editor);
             }
         }
 

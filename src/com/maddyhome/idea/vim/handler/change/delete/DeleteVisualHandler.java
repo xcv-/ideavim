@@ -35,7 +35,7 @@ public class DeleteVisualHandler extends VisualOperatorActionHandler
 {
     protected boolean execute(Editor editor, DataContext context, Command cmd, TextRange range)
     {
-        int mode = CommandState.getInstance().getSubMode();
+        int mode = CommandState.getInstance(editor).getSubMode();
         if (mode == Command.FLAG_MOT_LINEWISE)
         {
             range = new TextRange(EditorHelper.getLineStartForOffset(editor, range.getStartOffset()),

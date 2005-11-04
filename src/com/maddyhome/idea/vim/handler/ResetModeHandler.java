@@ -32,7 +32,7 @@ public class ResetModeHandler extends EditorActionHandler
 {
     public void execute(Editor editor, DataContext context)
     {
-        CommandState.getInstance().reset();
-        KeyHandler.getInstance().fullReset();
+        CommandState.getInstance(editor).reset();
+        KeyHandler.getInstance().fullReset(editor);
     }
 }

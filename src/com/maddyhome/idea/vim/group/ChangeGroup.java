@@ -38,6 +38,8 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
@@ -79,14 +81,14 @@ public class ChangeGroup extends AbstractActionGroup
         EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryAdapter() {
             public void editorCreated(EditorFactoryEvent event)
             {
-                Editor editor = event.getEditor();
+                final Editor editor = event.getEditor();
                 editor.addEditorMouseListener(new EditorMouseAdapter() {
                     public void mouseClicked(EditorMouseEvent event)
                     {
                         if (!VimPlugin.isEnabled()) return;
 
-                        if (CommandState.getInstance().getMode() == CommandState.MODE_INSERT ||
-                            CommandState.getInstance().getMode() == CommandState.MODE_REPLACE)
+                        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_INSERT ||
+                            CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
                         {
                             clearStrokes(event.getEditor());
                         }
@@ -169,7 +171,7 @@ public class ChangeGroup extends AbstractActionGroup
             MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretToLineStart(editor));
             initInsert(editor, context, CommandState.MODE_INSERT);
             
-            CommandState state = CommandState.getInstance();
+            CommandState state = CommandState.getInstance(editor);
             if (state.getMode() != CommandState.MODE_REPEAT)
             {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -203,7 +205,7 @@ public class ChangeGroup extends AbstractActionGroup
         MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretToLineEnd(editor, true));
         initInsert(editor, context, CommandState.MODE_INSERT);
 
-        CommandState state = CommandState.getInstance();
+        CommandState state = CommandState.getInstance(editor);
         if (state.getMode() != CommandState.MODE_REPEAT)
         {
             SwingUtilities.invokeLater(new Runnable() {
@@ -366,7 +368,7 @@ public class ChangeGroup extends AbstractActionGroup
      */
     private void initInsert(Editor editor, DataContext context, int mode)
     {
-        CommandState state = CommandState.getInstance();
+        CommandState state = CommandState.getInstance(editor);
 
         insertStart = editor.getCaretModel().getOffset();
         CommandGroups.getInstance().getMark().setMark(editor, context, '[', insertStart);
@@ -491,7 +493,7 @@ public class ChangeGroup extends AbstractActionGroup
         logger.debug("processing escape");
         int cnt = lastInsert.getCount();
         // Turn off overwrite mode if we were in replace mode
-        if (CommandState.getInstance().getMode() == CommandState.MODE_REPLACE)
+        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
         {
             KeyHandler.executeAction("VimInsertReplaceToggle", context);
         }
@@ -512,9 +514,9 @@ public class ChangeGroup extends AbstractActionGroup
 
         CommandGroups.getInstance().getMark().setMark(editor, context, '^', editor.getCaretModel().getOffset());
         CommandGroups.getInstance().getMark().setMark(editor, context, ']', editor.getCaretModel().getOffset());
-        CommandState.getInstance().popState();
+        CommandState.getInstance(editor).popState();
 
-        if (!CommandState.inInsertMode())
+        if (!CommandState.inInsertMode(editor))
         {
             resetCursor(editor, false);
         }
@@ -531,12 +533,12 @@ public class ChangeGroup extends AbstractActionGroup
      */
     public void processEnter(Editor editor, DataContext context)
     {
-        if (CommandState.getInstance().getMode() == CommandState.MODE_REPLACE)
+        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
         {
             KeyHandler.executeAction("VimEditorToggleInsertState", context);
         }
         KeyHandler.executeAction("VimEditorEnter", context);
-        if (CommandState.getInstance().getMode() == CommandState.MODE_REPLACE)
+        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
         {
             KeyHandler.executeAction("VimEditorToggleInsertState", context);
         }
@@ -551,7 +553,7 @@ public class ChangeGroup extends AbstractActionGroup
     public void processInsert(Editor editor, DataContext context)
     {
         KeyHandler.executeAction("VimEditorToggleInsertState", context);
-        CommandState.getInstance().toggleInsertOverwrite();
+        CommandState.getInstance(editor).toggleInsertOverwrite();
         inInsert = !inInsert;
     }
 
@@ -563,7 +565,7 @@ public class ChangeGroup extends AbstractActionGroup
      */
     public void processSingleCommand(Editor editor, DataContext context)
     {
-        CommandState.getInstance().pushState(CommandState.MODE_COMMAND, CommandState.SUBMODE_SINGLE_COMMAND,
+        CommandState.getInstance(editor).pushState(CommandState.MODE_COMMAND, CommandState.SUBMODE_SINGLE_COMMAND,
             KeyParser.MAPPING_NORMAL);
         clearStrokes(editor);
     }
@@ -1346,8 +1348,8 @@ public class ChangeGroup extends AbstractActionGroup
     public void indentLines(Editor editor, DataContext context, int lines, int dir)
     {
         int cnt = 1;
-        if (CommandState.getInstance().getMode() == CommandState.MODE_INSERT ||
-            CommandState.getInstance().getMode() == CommandState.MODE_REPLACE)
+        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_INSERT ||
+            CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
         {
             if (strokes.size() > 0)
             {
@@ -1510,8 +1512,8 @@ public class ChangeGroup extends AbstractActionGroup
             }
         }
 
-        if (CommandState.getInstance().getMode() != CommandState.MODE_INSERT &&
-            CommandState.getInstance().getMode() != CommandState.MODE_REPLACE)
+        if (CommandState.getInstance(editor).getMode() != CommandState.MODE_INSERT &&
+            CommandState.getInstance(editor).getMode() != CommandState.MODE_REPLACE)
         {
             if (!range.isMultiple())
             {
@@ -1654,8 +1656,13 @@ public class ChangeGroup extends AbstractActionGroup
 
             logger.debug("selected file changed");
 
-            CommandState.getInstance().reset();
-            KeyHandler.getInstance().fullReset();
+            FileEditor fe = event.getOldEditor();
+            if (fe instanceof TextEditor)
+            {
+                Editor editor = ((TextEditor)event.getOldEditor()).getEditor();
+                CommandState.getInstance(editor).reset();
+                KeyHandler.getInstance().fullReset(editor);
+            }
 
             VirtualFile virtualFile = event.getOldFile();
             if (virtualFile != null)

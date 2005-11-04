@@ -544,6 +544,7 @@ public class EditorHelper
      */
     public static int getLineEndForOffset(Editor editor, int offset)
     {
+        logger.debug("editor=" + editor);
         LogicalPosition pos = editor.offsetToLogicalPosition(offset);
         return editor.getDocument().getLineEndOffset(pos.line);
     }

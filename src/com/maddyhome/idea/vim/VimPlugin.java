@@ -136,7 +136,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
 
                 if (VimPlugin.isEnabled())
                 {
-                    event.getEditor().getSettings().setBlockCursor(!CommandState.inInsertMode());
+                    event.getEditor().getSettings().setBlockCursor(!CommandState.inInsertMode(event.getEditor()));
                     event.getEditor().getSettings().setAnimatedScrolling(false);
                 }
 
@@ -327,7 +327,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
 
     public static void turnOnPlugin()
     {
-        KeyHandler.getInstance().fullReset();
+        KeyHandler.getInstance().fullReset(null);
         RegisterActions.getInstance().enable();
         setCursors(true);
         setSmoothScrolling(false);
@@ -335,7 +335,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
 
     public static void turnOffPlugin()
     {
-        KeyHandler.getInstance().fullReset();
+        KeyHandler.getInstance().fullReset(null);
         RegisterActions.getInstance().disable();
         setCursors(isBlockCursor);
         setSmoothScrolling(isSmoothScrolling);

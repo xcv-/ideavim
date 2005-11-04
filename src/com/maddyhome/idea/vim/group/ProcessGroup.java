@@ -79,15 +79,15 @@ public class ProcessGroup extends AbstractActionGroup
             label = "?";
         }
 
-        CommandState.getInstance().pushState(CommandState.MODE_EX_ENTRY, 0, KeyParser.MAPPING_CMD_LINE);
+        CommandState.getInstance(editor).pushState(CommandState.MODE_EX_ENTRY, 0, KeyParser.MAPPING_CMD_LINE);
         ExEntryPanel panel = ExEntryPanel.getInstance();
         panel.activate(editor, context, label, initText, cmd.getCount());
     }
 
     public void startExCommand(Editor editor, DataContext context, Command cmd)
     {
-        String initText = getRange(cmd);
-        CommandState.getInstance().pushState(CommandState.MODE_EX_ENTRY, 0, KeyParser.MAPPING_CMD_LINE);
+        String initText = getRange(editor, cmd);
+        CommandState.getInstance(editor).pushState(CommandState.MODE_EX_ENTRY, 0, KeyParser.MAPPING_CMD_LINE);
         ExEntryPanel panel = ExEntryPanel.getInstance();
         panel.activate(editor, context, ":", initText, 1);
     }
@@ -115,7 +115,7 @@ public class ProcessGroup extends AbstractActionGroup
         int flags = 0;
         try
         {
-            CommandState.getInstance().popState();
+            CommandState.getInstance(editor).popState();
             logger.debug("processing command");
             final String text = panel.getText();
             logger.debug("swing=" + SwingUtilities.isEventDispatchThread());
@@ -123,7 +123,7 @@ public class ProcessGroup extends AbstractActionGroup
             {
                 flags = CommandParser.getInstance().processCommand(editor, context, text, 1);
                 logger.debug("flags=" + flags);
-                if (CommandState.getInstance().getMode() == CommandState.MODE_VISUAL)
+                if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
                 {
                     CommandGroups.getInstance().getMotion().exitVisual(editor);
                 }
@@ -185,8 +185,8 @@ public class ProcessGroup extends AbstractActionGroup
 
     public boolean cancelExEntry(final Editor editor, final DataContext context)
     {
-        CommandState.getInstance().popState();
-        KeyHandler.getInstance().reset();
+        CommandState.getInstance(editor).popState();
+        KeyHandler.getInstance().reset(editor);
         ExEntryPanel panel = ExEntryPanel.getInstance();
         panel.deactivate(false);
         SwingUtilities.invokeLater(new Runnable() {
@@ -203,16 +203,16 @@ public class ProcessGroup extends AbstractActionGroup
 
     public void startFilterCommand(Editor editor, DataContext context, Command cmd)
     {
-        String initText = getRange(cmd) + "!";
-        CommandState.getInstance().pushState(CommandState.MODE_EX_ENTRY, 0, KeyParser.MAPPING_CMD_LINE);
+        String initText = getRange(editor, cmd) + "!";
+        CommandState.getInstance(editor).pushState(CommandState.MODE_EX_ENTRY, 0, KeyParser.MAPPING_CMD_LINE);
         ExEntryPanel panel = ExEntryPanel.getInstance();
         panel.activate(editor, context, ":", initText, 1);
     }
 
-    private String getRange(Command cmd)
+    private String getRange(Editor editor, Command cmd)
     {
         String initText = "";
-        if (CommandState.getInstance().getMode() == CommandState.MODE_VISUAL)
+        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
         {
             initText = "'<,'>";
         }

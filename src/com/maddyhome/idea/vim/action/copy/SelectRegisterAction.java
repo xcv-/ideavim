@@ -19,18 +19,16 @@ package com.maddyhome.idea.vim.action.copy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
-import com.maddyhome.idea.vim.action.AbstractCommandAction;
-import com.maddyhome.idea.vim.command.Command;
-import com.maddyhome.idea.vim.group.CommandGroups;
+import com.intellij.openapi.editor.actionSystem.EditorAction;
+import com.maddyhome.idea.vim.handler.copy.SelectRegisterHandler;
 
 /**
  *
  */
-public class SelectRegisterAction extends AbstractCommandAction
+public class SelectRegisterAction extends EditorAction
 {
-    protected boolean execute(DataContext context, Command cmd)
+    public SelectRegisterAction()
     {
-        return CommandGroups.getInstance().getRegister().selectRegister(cmd.getArgument().getCharacter());
+        super(new SelectRegisterHandler());
     }
 }

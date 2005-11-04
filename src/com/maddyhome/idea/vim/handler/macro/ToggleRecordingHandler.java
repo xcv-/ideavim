@@ -32,14 +32,14 @@ public class ToggleRecordingHandler extends AbstractEditorActionHandler
 {
     protected boolean execute(Editor editor, DataContext context, Command cmd)
     {
-        if (!CommandState.getInstance().isRecording())
+        if (!CommandState.getInstance(editor).isRecording())
         {
             char reg = cmd.getArgument().getCharacter();
-            return CommandGroups.getInstance().getRegister().startRecording(reg);
+            return CommandGroups.getInstance().getRegister().startRecording(editor, reg);
         }
         else
         {
-            CommandGroups.getInstance().getRegister().finishRecording();
+            CommandGroups.getInstance().getRegister().finishRecording(editor);
 
             return true;
         }

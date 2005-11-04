@@ -35,7 +35,7 @@ public abstract class TextObjectActionHandler extends AbstractEditorActionHandle
 {
     protected final boolean execute(Editor editor, DataContext context, Command cmd)
     {
-        if (CommandState.getInstance().getMode() == CommandState.MODE_VISUAL)
+        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
         {
             TextRange range = getRange(editor, context, cmd.getCount(), cmd.getRawCount(), cmd.getArgument());
             TextRange vr = CommandGroups.getInstance().getMotion().getRawVisualRange();
@@ -49,12 +49,12 @@ public abstract class TextObjectActionHandler extends AbstractEditorActionHandle
             }
 
             if ((cmd.getFlags() & Command.FLAG_MOT_LINEWISE) != 0 &&
-                CommandState.getInstance().getSubMode() != Command.FLAG_MOT_LINEWISE)
+                CommandState.getInstance(editor).getSubMode() != Command.FLAG_MOT_LINEWISE)
             {
                 CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 0, Command.FLAG_MOT_LINEWISE);
             }
             else if ((cmd.getFlags() & Command.FLAG_MOT_LINEWISE) == 0 &&
-                CommandState.getInstance().getSubMode() == Command.FLAG_MOT_LINEWISE)
+                CommandState.getInstance(editor).getSubMode() == Command.FLAG_MOT_LINEWISE)
             {
                 CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 0, Command.FLAG_MOT_CHARACTERWISE);
             }

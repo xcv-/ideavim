@@ -42,7 +42,7 @@ public abstract class AbstractEditorActionHandler extends EditorActionHandler
             return;
         }
 
-        CommandState state = CommandState.getInstance();
+        CommandState state = CommandState.getInstance(editor);
         Command cmd = state.getCommand();
         if (!execute(editor, context, cmd))
         {

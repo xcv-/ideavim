@@ -276,11 +276,11 @@ public class RegisterGroup extends AbstractActionGroup
         return res;
     }
 
-    public boolean startRecording(char register)
+    public boolean startRecording(Editor editor, char register)
     {
         if (RECORDABLE_REGISTER.indexOf(register) != -1)
         {
-            CommandState.getInstance().setRecording(true);
+            CommandState.getInstance(editor).setRecording(true);
             recordRegister = register;
             recordList = new ArrayList();
             return true;
@@ -307,7 +307,7 @@ public class RegisterGroup extends AbstractActionGroup
         }
     }
 
-    public void finishRecording()
+    public void finishRecording(Editor editor)
     {
         if (recordRegister != 0)
         {
@@ -326,7 +326,7 @@ public class RegisterGroup extends AbstractActionGroup
             {
                 reg.addKeys(recordList);
             }
-            CommandState.getInstance().setRecording(false);
+            CommandState.getInstance(editor).setRecording(false);
         }
 
         recordRegister = 0;

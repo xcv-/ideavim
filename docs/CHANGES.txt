@@ -22,6 +22,8 @@ Bug Fixes
   visual mode.
 - Typing text while in insert mode caused strange cursor position changes if
   the cursor neared the right edge of the screen. (Regression from 0.9.6).
+- Fixed internal error when right clicking on a visual selection and selecting
+  certain refactorings.
 
 0.10.1 from 0.9.7
 New Features

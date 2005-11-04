@@ -37,12 +37,12 @@ public class MotionLastColumnHandler extends MotionEditorActionHandler
     public int getOffset(Editor editor, DataContext context, int count, int rawCount, Argument argument)
     {
         boolean allow = false;
-        if (CommandState.getInstance().getMode() == CommandState.MODE_INSERT ||
-            CommandState.getInstance().getMode() == CommandState.MODE_REPLACE)
+        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_INSERT ||
+            CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
         {
             allow = true;
         }
-        else if (CommandState.getInstance().getMode() == CommandState.MODE_VISUAL)
+        else if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
         {
             BoundStringOption opt = (BoundStringOption)Options.getInstance().getOption("selection");
             if (!opt.getValue().equals("old"))

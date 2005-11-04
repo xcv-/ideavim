@@ -184,7 +184,7 @@ public class CopyGroup extends AbstractActionGroup
     public boolean putVisualRange(Editor editor, DataContext context, TextRange range, int count, boolean indent,
         boolean cursorAfter)
     {
-        int type = CommandState.getInstance().getSubMode();
+        int type = CommandState.getInstance(editor).getSubMode();
         Register reg = CommandGroups.getInstance().getRegister().getLastRegister();
         // Without this reset, the deleted text goes into the same register we just pasted from.
         CommandGroups.getInstance().getRegister().resetRegister();

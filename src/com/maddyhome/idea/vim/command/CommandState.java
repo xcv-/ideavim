@@ -20,7 +20,9 @@ package com.maddyhome.idea.vim.command;
  */
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.VimPlugin;
+import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.RegisterGroup;
 import com.maddyhome.idea.vim.key.KeyParser;
@@ -53,20 +55,28 @@ public class CommandState
     /**
      * Gets the command state singleton
      * @return The singleton instance
+     * @param editor
      */
-    public synchronized static CommandState getInstance()
+    public static CommandState getInstance(Editor editor)
     {
-        if (ourInstance == null)
+        if (editor == null)
         {
-            ourInstance = new CommandState();
+            return new CommandState();
         }
 
-        return ourInstance;
+        CommandState res = EditorData.getCommandState(editor);
+        if (res == null)
+        {
+            res = new CommandState();
+            EditorData.setCommandState(editor, res);
+        }
+
+        return res;
     }
 
-    public static boolean inInsertMode()
+    public static boolean inInsertMode(Editor editor)
     {
-        return (getInstance().getMode() == MODE_INSERT || getInstance().getMode() == MODE_REPLACE);
+        return (getInstance(editor).getMode() == MODE_INSERT || getInstance(editor).getMode() == MODE_REPLACE);
     }
 
     /**
@@ -393,8 +403,6 @@ public class CommandState
     private int flags;
     private char lastRegister = RegisterGroup.REGISTER_DEFAULT;
     private boolean isRecording = false;
-
-    private static CommandState ourInstance;
 
     private static Logger logger = Logger.getInstance(CommandState.class.getName());
 }

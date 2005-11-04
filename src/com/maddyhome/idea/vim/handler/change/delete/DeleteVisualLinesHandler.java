@@ -35,7 +35,7 @@ public class DeleteVisualLinesHandler extends VisualOperatorActionHandler
 {
     protected boolean execute(Editor editor, DataContext context, Command cmd, TextRange range)
     {
-        int mode = CommandState.getInstance().getSubMode();
+        int mode = CommandState.getInstance(editor).getSubMode();
         if (mode == Command.FLAG_MOT_BLOCKWISE)
         {
             return CommandGroups.getInstance().getChange().deleteRange(editor, context, range, mode, false);
