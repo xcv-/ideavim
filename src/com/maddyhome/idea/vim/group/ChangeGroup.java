@@ -427,7 +427,8 @@ public class ChangeGroup extends AbstractActionGroup
             cpos = editor.logicalPositionToOffset(new LogicalPosition(vline, repeatColumn));
             for (int i = 0; i < repeatLines; i++)
             {
-                if (repeatAppend && EditorHelper.getVisualLineLength(editor, vline + i) < repeatColumn)
+                if (repeatAppend && repeatColumn < MotionGroup.LAST_COLUMN &&
+                    EditorHelper.getVisualLineLength(editor, vline + i) < repeatColumn)
                 {
                     String pad = EditorHelper.pad(editor, lline + i, repeatColumn);
                     if (pad.length() > 0)
@@ -436,7 +437,13 @@ public class ChangeGroup extends AbstractActionGroup
                         insertText(editor, context, off, pad);
                     }
                 }
-                if (EditorHelper.getVisualLineLength(editor, vline + i) >= repeatColumn)
+                if (repeatColumn >= MotionGroup.LAST_COLUMN)
+                {
+                    editor.getCaretModel().moveToOffset(
+                        CommandGroups.getInstance().getMotion().moveCaretToLineEnd(editor, lline + i, true));
+                    repeatInsertText(editor, context, started ? (i == 0 ? count : count+1) : count);
+                }
+                else if (EditorHelper.getVisualLineLength(editor, vline + i) >= repeatColumn)
                 {
                     editor.getCaretModel().moveToVisualPosition(new VisualPosition(vline + i, repeatColumn));
                     repeatInsertText(editor, context, started ? (i == 0 ? count : count+1) : count);
@@ -1162,10 +1169,14 @@ public class ChangeGroup extends AbstractActionGroup
         else if (append)
         {
             col += range.getMaxLength();
+            if (EditorData.getLastColumn(editor) == MotionGroup.LAST_COLUMN)
+            {
+                col = MotionGroup.LAST_COLUMN;
+            }
         }
 
         int len = EditorHelper.getLineLength(editor, line);
-        if (len < col)
+        if (col < MotionGroup.LAST_COLUMN && len < col)
         {
             String pad = EditorHelper.pad(editor, line, col);
             int off = editor.getDocument().getLineEndOffset(line);
@@ -1208,6 +1219,10 @@ public class ChangeGroup extends AbstractActionGroup
         {
             lines = range.size();
             col = editor.offsetToLogicalPosition(range.getStartOffset()).column;
+            if (EditorData.getLastColumn(editor) == MotionGroup.LAST_COLUMN)
+            {
+                col = MotionGroup.LAST_COLUMN;
+            }
         }
         boolean after = range.getEndOffset() >= EditorHelper.getFileSize(editor);
         boolean res = deleteRange(editor, context, range, type, true);

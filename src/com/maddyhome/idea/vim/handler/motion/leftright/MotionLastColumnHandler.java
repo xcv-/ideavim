@@ -25,6 +25,7 @@ import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.group.MotionGroup;
 import com.maddyhome.idea.vim.handler.motion.MotionEditorActionHandler;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.option.BoundStringOption;
@@ -57,6 +58,6 @@ public class MotionLastColumnHandler extends MotionEditorActionHandler
 
     protected void postMove(Editor editor, DataContext context, Command cmd)
     {
-        EditorData.setLastColumn(editor, 9999);
+        EditorData.setLastColumn(editor, MotionGroup.LAST_COLUMN);
     }
 }

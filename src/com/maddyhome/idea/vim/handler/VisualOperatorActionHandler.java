@@ -28,6 +28,7 @@ import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.command.VisualChange;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.group.MotionGroup;
 import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.undo.UndoManager;
@@ -94,11 +95,17 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                 UndoManager.getInstance().endCommand(editor);
                 UndoManager.getInstance().beginCommand(editor);
             }
-            boolean wasRepeat = false;
+            wasRepeat = false;
             if (CommandState.getInstance(editor).getMode() == CommandState.MODE_REPEAT)
             {
                 wasRepeat = true;
+                lastColumn = EditorData.getLastColumn(editor);
+                VisualChange range = EditorData.getLastVisualOperatorRange(editor);
                 CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 1, 0);
+                if (range.getColumns() == MotionGroup.LAST_COLUMN)
+                {
+                    EditorData.setLastColumn(editor, MotionGroup.LAST_COLUMN);
+                }
             }
 
             TextRange res = null;
@@ -147,6 +154,10 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
             {
                 logger.debug("not multikey undo - exit visual");
                 CommandGroups.getInstance().getMotion().exitVisual(editor);
+                if (wasRepeat)
+                {
+                    EditorData.setLastColumn(editor, lastColumn);
+                }
             }
 
             if (res)
@@ -187,6 +198,8 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
         private DataContext context;
         private boolean res;
         private int lastMode;
+        private boolean wasRepeat;
+        private int lastColumn;
         VisualChange change = null;
     }
 

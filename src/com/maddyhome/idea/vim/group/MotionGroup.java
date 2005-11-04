@@ -78,6 +78,7 @@ public class MotionGroup extends AbstractActionGroup
     public static final int LAST_f = 2;
     public static final int LAST_T = 3;
     public static final int LAST_t = 4;
+    public static final int LAST_COLUMN = 9999;
 
     /**
      * Create the group
@@ -1582,6 +1583,10 @@ public class MotionGroup extends AbstractActionGroup
         else
         {
             chars = ep.column - sp.column + 1;
+            if (EditorData.getLastColumn(editor) == MotionGroup.LAST_COLUMN)
+            {
+                chars = MotionGroup.LAST_COLUMN;
+            }
             type = Command.FLAG_MOT_BLOCKWISE;
         }
 
@@ -1595,8 +1600,26 @@ public class MotionGroup extends AbstractActionGroup
     {
         if (ApiHelper.supportsBlockSelection() && editor.getSelectionModel().hasBlockSelection())
         {
-            return new TextRange(editor.getSelectionModel().getBlockSelectionStarts(),
+            TextRange res = new TextRange(editor.getSelectionModel().getBlockSelectionStarts(),
                 editor.getSelectionModel().getBlockSelectionEnds());
+            // If the last left/right motion was the $ command, simulate each line being selected to end-of-line
+            if (EditorData.getLastColumn(editor) >= MotionGroup.LAST_COLUMN)
+            {
+                int[] starts = res.getStartOffsets();
+                int[] ends = res.getEndOffsets();
+
+                for (int i = 0; i < starts.length; i++)
+                {
+                    if (ends[i] > starts[i])
+                    {
+                        ends[i] = EditorHelper.getLineEndForOffset(editor, starts[i]);
+                    }
+                }
+
+                res = new TextRange(starts, ends);
+            }
+
+            return res;
         }
         else
         {
