@@ -164,7 +164,7 @@ public class EditorHelper
     {
         int len = editor.getDocument().getLineCount();
         if (editor.getDocument().getTextLength() > 0 &&
-            editor.getDocument().getCharsSequence().charAt(editor.getDocument().getTextLength() - 1) == '\n')
+            EditorHelper.getDocumentChars(editor).charAt(editor.getDocument().getTextLength() - 1) == '\n')
         {
             len--;
         }
@@ -191,7 +191,7 @@ public class EditorHelper
     {
         Document doc = editor.getDocument();
         int len = doc.getTextLength();
-        if (!incEnd && len >= 1 && doc.getCharsSequence().charAt(len - 1) == '\n')
+        if (!incEnd && len >= 1 && EditorHelper.getDocumentChars(editor).charAt(len - 1) == '\n')
         {
             len--;
         }
@@ -415,7 +415,7 @@ public class EditorHelper
     {
         int start = getLineStartOffset(editor, lline);
         int end = getLineEndOffset(editor, lline, true);
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = end;
         for (int offset = start; offset < end; offset++)
         {
@@ -439,7 +439,7 @@ public class EditorHelper
         int start = getLineStartOffset(editor, lline);
         int end = getLeadingCharacterOffset(editor, lline);
 
-        return editor.getDocument().getCharsSequence().subSequence(start, end).toString();
+        return EditorHelper.getDocumentChars(editor).subSequence(start, end).toString();
     }
 
     /**
@@ -485,7 +485,7 @@ public class EditorHelper
      */
     public static String getText(Editor editor, int start, int end)
     {
-        return editor.getDocument().getCharsSequence().subSequence(start, end).toString();
+        return EditorHelper.getDocumentChars(editor).subSequence(start, end).toString();
     }
 
     public static String getText(Editor editor, TextRange range)
@@ -581,7 +581,7 @@ public class EditorHelper
     public static CharBuffer getLineBuffer(Editor editor, int lline)
     {
         int start = getLineStartOffset(editor, lline);
-        return CharBuffer.wrap(editor.getDocument().getCharsSequence(), start, start + getLineCharCount(editor, lline));
+        return CharBuffer.wrap(EditorHelper.getDocumentChars(editor), start, start + getLineCharCount(editor, lline));
     }
 
     public static String pad(Editor editor, int lline, int to)
@@ -602,6 +602,11 @@ public class EditorHelper
         }
 
         return res.toString();
+    }
+
+    public static CharSequence getDocumentChars(Editor editor)
+    {
+        return editor.getDocument().getCharsSequence();
     }
 
     private static final Logger logger = Logger.getInstance(EditorHelper.class.getName());

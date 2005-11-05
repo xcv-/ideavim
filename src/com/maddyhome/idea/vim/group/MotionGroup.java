@@ -1017,7 +1017,7 @@ public class MotionGroup extends AbstractActionGroup
     {
         int start = EditorHelper.getLineStartOffset(editor, lline);
         int end = EditorHelper.getLineEndOffset(editor, lline, true);
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = start;
         for (int offset = end; offset > start; offset--)
         {

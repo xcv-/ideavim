@@ -49,7 +49,7 @@ public class SearchHelper
             end = offset - 1;
         }
 
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         for (int i = start; i <= end; i++)
         {
             if (!Character.isWhitespace(chars.charAt(i)))
@@ -75,7 +75,7 @@ public class SearchHelper
         int res = -1;
         int line = EditorHelper.getCurrentLogicalLine(editor);
         int end = EditorHelper.getLineEndOffset(editor, line, true);
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
         int loc = -1;
         // Search the remainder of the current line for one of the candicate characters
@@ -153,7 +153,7 @@ public class SearchHelper
 
     public static int findNextCamelStart(Editor editor, int count)
     {
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
         int size = EditorHelper.getFileSize(editor);
 
@@ -207,7 +207,7 @@ public class SearchHelper
 
     public static int findNextCamelEnd(Editor editor, int count)
     {
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
         int size = EditorHelper.getFileSize(editor);
 
@@ -269,7 +269,7 @@ public class SearchHelper
      */
     public static int findNextWord(Editor editor, int count, boolean skipPunc)
     {
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
         int size = EditorHelper.getFileSize(editor);
 
@@ -375,7 +375,7 @@ public class SearchHelper
      */
     public static TextRange findWordUnderCursor(Editor editor)
     {
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int stop = EditorHelper.getLineEndOffset(editor, EditorHelper.getCurrentLogicalLine(editor), true);
 
         int pos = editor.getCaretModel().getOffset();
@@ -435,7 +435,7 @@ public class SearchHelper
         logger.debug("isBig=" + isBig);
         logger.debug("hasSelection=" + hasSelection);
 
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         //int min = EditorHelper.getLineStartOffset(editor, EditorHelper.getCurrentLogicalLine(editor));
         //int max = EditorHelper.getLineEndOffset(editor, EditorHelper.getCurrentLogicalLine(editor), true);
         int min = 0;
@@ -581,7 +581,7 @@ public class SearchHelper
      */
     public static int findNextWordEnd(Editor editor, int count, boolean skipPunc, boolean stayEnd)
     {
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
         int size = EditorHelper.getFileSize(editor);
 
@@ -726,7 +726,7 @@ public class SearchHelper
         int line = EditorHelper.getCurrentLogicalLine(editor);
         int start = EditorHelper.getLineStartOffset(editor, line);
         int end = EditorHelper.getLineEndOffset(editor, line, true);
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int found = 0;
         int step = count >= 0 ? 1 : -1;
         int pos = editor.getCaretModel().getOffset() + step;
@@ -756,7 +756,7 @@ public class SearchHelper
     public static int findNextParagraph(Editor editor, int count)
     {
         int offset = editor.getCaretModel().getOffset();
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int found = 0;
         int step = count >= 0 ? 1 : -1;
         int pos = offset;

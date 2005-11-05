@@ -234,7 +234,7 @@ public class ProcessGroup extends AbstractActionGroup
     public boolean executeFilter(Editor editor, DataContext context, TextRange range, String command) throws IOException
     {
         logger.debug("command=" + command);
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         StringReader car = new StringReader(chars.subSequence(range.getStartOffset(),
             range.getEndOffset()).toString());
         StringWriter sw = new StringWriter();

@@ -44,7 +44,7 @@ public class DumpLineHandler extends CommandHandler
     {
         LineRange range = cmd.getLineRange(editor, context, false);
 
-        CharSequence chars = editor.getDocument().getCharsSequence();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         for (int l = range.getStartLine(); l <= range.getEndLine(); l++)
         {
             int start = editor.getDocument().getLineStartOffset(l);
