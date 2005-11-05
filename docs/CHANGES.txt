@@ -24,6 +24,8 @@ Bug Fixes
   the cursor neared the right edge of the screen. (Regression from 0.9.6).
 - Fixed internal error when right clicking on a visual selection and selecting
   certain refactorings.
+- Ensure proper visual mode set when mouse dragging including in the line
+  number area.
 
 0.10.1 from 0.9.7
 New Features
@@ -126,7 +128,7 @@ New Features
   are based on the "General|Search result" color setting. (Not for 4.0.x)
 - Support for aw, aW, iw, and iW while in visual mode or as arguments to the
   y, gu, gU, g~, c, d, and ! commands.
-  
+
 Bug Fixes
 - e and E while on the last word of a file didn't work.
 - b and B while on the first word of a file didn't work.

@@ -31,6 +31,8 @@ Bug Fixes<br>
   the cursor neared the right edge of the screen. (Regression from 0.9.6).<br>
 - Fixed internal error when right clicking on a visual selection and selecting
   certain refactorings.<br>
+- Ensure proper visual mode set when mouse dragging including in the line
+  number area.<br>
 ]]>
     </change-notes>
     <idea-version since-build="@SINCE-VERSION@"/>

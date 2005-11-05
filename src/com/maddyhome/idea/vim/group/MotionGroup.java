@@ -98,37 +98,6 @@ public class MotionGroup extends AbstractActionGroup
     }
 
     /**
-     * Handles mouse drags by properly setting up visual mode based on the new selection
-     * @param editor The editor the mouse drag occured in
-     */
-    private void processMouseDrag(Editor editor)
-    {
-        // Mouse drags can only result in CHARWISE selection
-        // We want to move the mouse back one character to be consistence with how regular motion highlights text.
-        // Don't move the cursor if the user ended up selecting no characters.
-        // Once the cursor is set, save the current column.
-        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
-        {
-            CommandState.getInstance(editor).popState();
-        }
-
-        int offset = editor.getCaretModel().getOffset();
-        int start = editor.getSelectionModel().getSelectionStart();
-        logger.debug("offset=" + offset + ", start=" + start);
-        if (offset > start)
-        {
-            BoundStringOption opt = (BoundStringOption)Options.getInstance().getOption("selection");
-            if (!opt.getValue().equals("exclusive"))
-            {
-                logger.debug("moved cursor");
-                editor.getCaretModel().moveToOffset(offset - 1);
-            }
-        }
-        setVisualMode(editor, null, Command.FLAG_MOT_CHARACTERWISE);
-        EditorData.setLastColumn(editor, EditorHelper.getCurrentVisualColumn(editor));
-    }
-
-    /**
      * Process mouse clicks by setting/resetting visual mode. There are some strange scenerios to handle.
      * @param editor
      * @param event
@@ -209,6 +178,11 @@ public class MotionGroup extends AbstractActionGroup
      */
     private void processLineSelection(Editor editor, boolean update)
     {
+        if (ExEntryPanel.getInstance().isActive())
+        {
+            ExEntryPanel.getInstance().deactivate(false);
+        }
+
         if (update)
         {
             if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
@@ -225,6 +199,8 @@ public class MotionGroup extends AbstractActionGroup
 
             int start = editor.getSelectionModel().getSelectionStart();
             int end = editor.getSelectionModel().getSelectionEnd();
+            logger.debug("start=" + start);
+            logger.debug("end=" + end);
             editor.getSelectionModel().setSelection(start, end - 1);
 
             setVisualMode(editor, null, Command.FLAG_MOT_LINEWISE);
@@ -236,6 +212,50 @@ public class MotionGroup extends AbstractActionGroup
                 MotionGroup.moveCaret(editor, null, moveCaretVertical(editor, -1));
             }
         }
+    }
+
+    private void processMouseReleased(Editor editor, int mode, int startOff, int endOff)
+    {
+        if (ExEntryPanel.getInstance().isActive())
+        {
+            ExEntryPanel.getInstance().deactivate(false);
+        }
+
+        logger.debug("mouse released");
+        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
+        {
+            CommandState.getInstance(editor).popState();
+        }
+
+        int start = editor.getSelectionModel().getSelectionStart();
+        int end = editor.getSelectionModel().getSelectionEnd();
+        logger.debug("startOff=" + startOff);
+        logger.debug("endOff=" + endOff);
+        logger.debug("start=" + start);
+        logger.debug("end=" + end);
+
+        if (mode == Command.FLAG_MOT_LINEWISE)
+        {
+            end--;
+            endOff--;
+        }
+
+        if (end == startOff || end == endOff)
+        {
+            int t = start;
+            start = end;
+            end = t;
+
+            if (mode == Command.FLAG_MOT_CHARACTERWISE)
+            {
+                start--;
+            }
+        }
+
+        MotionGroup.moveCaret(editor, null, start);
+        toggleVisual(editor, null, 1, 0, mode);
+        MotionGroup.moveCaret(editor, null, end);
+        KeyHandler.getInstance().reset(editor);
     }
 
     public static int moveCaretToMotion(Editor editor, DataContext context, int count, int rawCount, Argument argument)
@@ -1834,8 +1854,23 @@ public class MotionGroup extends AbstractActionGroup
             if (!VimPlugin.isEnabled()) return;
 
             if (event.getArea() == EditorMouseEventArea.EDITING_AREA ||
-                event.getArea() == EditorMouseEventArea.LINE_NUMBERS_AREA)
+                event.getArea() != EditorMouseEventArea.ANNOTATIONS_AREA)
             {
+                if (dragEditor == null)
+                {
+                    if (event.getArea() == EditorMouseEventArea.EDITING_AREA)
+                    {
+                        mode = Command.FLAG_MOT_CHARACTERWISE;
+                    }
+                    else if (event.getArea() != EditorMouseEventArea.ANNOTATIONS_AREA)
+                    {
+                        mode = Command.FLAG_MOT_LINEWISE;
+                    }
+                    startOff = event.getEditor().getSelectionModel().getSelectionStart();
+                    endOff = event.getEditor().getSelectionModel().getSelectionEnd();
+                    logger.debug("startOff=" + startOff);
+                }
+
                 dragEditor = event.getEditor();
             }
         }
@@ -1854,7 +1889,7 @@ public class MotionGroup extends AbstractActionGroup
                 CommandGroups.getInstance().getMotion().processMouseClick(event.getEditor(), event.getMouseEvent());
                 event.consume();
             }
-            else if (event.getArea() == EditorMouseEventArea.LINE_NUMBERS_AREA)
+            else if (event.getArea() != EditorMouseEventArea.ANNOTATIONS_AREA)
             {
                 CommandGroups.getInstance().getMotion().processLineSelection(
                     event.getEditor(), event.getMouseEvent().getButton() == MouseEvent.BUTTON3);
@@ -1868,14 +1903,7 @@ public class MotionGroup extends AbstractActionGroup
 
             if (event.getEditor().equals(dragEditor))
             {
-                if (event.getArea() == EditorMouseEventArea.EDITING_AREA)
-                {
-                    CommandGroups.getInstance().getMotion().processMouseDrag(event.getEditor());
-                }
-                else if (event.getArea() == EditorMouseEventArea.LINE_NUMBERS_AREA)
-                {
-                    CommandGroups.getInstance().getMotion().processLineSelection(event.getEditor(), false);
-                }
+                CommandGroups.getInstance().getMotion().processMouseReleased(event.getEditor(), mode, startOff, endOff);
 
                 event.consume();
                 dragEditor = null;
@@ -1893,6 +1921,9 @@ public class MotionGroup extends AbstractActionGroup
         }
 
         private Editor dragEditor = null;
+        private int mode;
+        private int startOff;
+        private int endOff;
     }
 
     private int lastFTCmd = 0;
