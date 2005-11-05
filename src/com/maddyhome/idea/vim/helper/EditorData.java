@@ -29,6 +29,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.command.VisualChange;
 import com.maddyhome.idea.vim.command.VisualRange;
+import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.undo.UndoManager;
 
 import java.util.Collection;
@@ -151,6 +152,16 @@ public class EditorData
         editor.getDocument().putUserData(VISUAL_OP, range);
     }
 
+    public static CommandState getCommandState(Editor editor)
+    {
+        return (CommandState)editor.getUserData(COMMAND_STATE);
+    }
+
+    public static void setCommandState(Editor editor, CommandState state)
+    {
+        editor.putUserData(COMMAND_STATE, state);
+    }
+
     /**
      * Gets the project associated with the editor.
      * @param editor The editor to get the project for
@@ -218,6 +229,7 @@ public class EditorData
     private static final Key VISUAL_OP = new Key("lastVisualOp");
     private static final Key LAST_SEARCH = new Key("lastSearch");
     private static final Key LAST_HIGHLIGHTS = new Key("lastHighlights");
+    private static final Key COMMAND_STATE = new Key("commandState");
 
     private static Logger logger = Logger.getInstance(EditorData.class.getName());
 }

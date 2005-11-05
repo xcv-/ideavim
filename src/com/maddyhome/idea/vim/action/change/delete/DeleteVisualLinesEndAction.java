@@ -1,8 +1,6 @@
-package com.maddyhome.idea.vim.handler;
-
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,20 +17,17 @@ package com.maddyhome.idea.vim.handler;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.maddyhome.idea.vim.KeyHandler;
-import com.maddyhome.idea.vim.command.CommandState;
+package com.maddyhome.idea.vim.action.change.delete;
+
+import com.intellij.openapi.editor.actionSystem.EditorAction;
+import com.maddyhome.idea.vim.handler.change.delete.DeleteVisualLinesEndHandler;
 
 /**
- *
  */
-public class ResetModeHandler extends EditorActionHandler
+public class DeleteVisualLinesEndAction extends EditorAction
 {
-    public void execute(Editor editor, DataContext context)
+    public DeleteVisualLinesEndAction()
     {
-        CommandState.getInstance(editor).reset();
-        KeyHandler.getInstance().fullReset(editor);
+        super(new DeleteVisualLinesEndHandler());
     }
 }

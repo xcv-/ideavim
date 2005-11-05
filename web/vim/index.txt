@@ -95,9 +95,11 @@ tag             char          note action in Normal mode        ~
 |CTRL-M|        CTRL-M>         1  same as <CR>
 |CTRL-N|        CTRL-N          1  same as "j"
 |CTRL-P|        CTRL-P          1  cursor N lines upward
+|CTRL-Q|        CTRL-Q             same as CTRL-V
 |CTRL-R|        CTRL-R          2  redo changes which were undone with 'u'
 |CTRL-U|        CTRL-U             scroll N lines Upwards (default: half a
                                    screen)
+|CTRL-V|        CTRL-V             start blockwise Visual mode
 |CTRL-Y|        CTRL-Y             scroll N lines downwards
 |CTRL-\_CTRL-N| CTRL-\ CTRL-N      go to Normal mode (no-op)
 |<Space>|       <Space>         1  same as "l"
@@ -429,6 +431,9 @@ here are those that are different.
 tag             command       note action in Visual mode        ~
 ------------------------------------------------------------------------------
 |v_CTRL-\_CTRL-N| CTRL-\ CTRL-N    stop Visual mode
+|v_CTRL-Q|      CTRL-Q             same as CTRL-V
+|v_CTRL-V|      CTRL-V             make Visual mode blockwise or stop Visual
+                                   mode
 |v_!|           !{filter}       2  filter the highlighted lines through the
                                    external command {filter}
 |v_:|           :                  start a command-line with the highlighted
@@ -438,9 +443,13 @@ tag             command       note action in Visual mode        ~
 |v_=|           =               2  Reformat the highlighted lines
 |v_>|           >               2  shift the highlighted lines one
                                    'shiftwidth' right
+|v_b_A|         A               2  block mode: append same text in all lines,
+                                   after the highlighted area
 |v_C|           C               2  delete the highlighted lines and start
                                    insert
 |v_D|           D               2  delete the highlighted lines
+|v_b_I|         I               2  block mode: insert same text in all lines,
+                                   before the highlighted area
 |v_J|           J               2  join the highlighted lines
 |v_O|           O                  Move horizontally to other corner of area.
                 Q                  does not start Ex mode

@@ -42,7 +42,7 @@ public abstract class ChangeEditorActionHandler extends AbstractEditorActionHand
                 UndoManager.getInstance().endCommand(editor);
                 UndoManager.getInstance().beginCommand(editor);
             }
-            CommandState.getInstance().saveLastChangeCommand(cmd);
+            CommandState.getInstance(editor).saveLastChangeCommand(cmd);
         }
         else
         {

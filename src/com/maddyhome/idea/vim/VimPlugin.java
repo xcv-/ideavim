@@ -16,6 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
 package com.maddyhome.idea.vim;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -63,9 +64,9 @@ import javax.swing.ImageIcon;
 
 /**
  * This plugin attempts to emulate the keybinding and general functionality of Vim and gVim. See the supplied
- * documentation for a complete list of supported and unsupported Vim emulation. The code base contains some
- * debugging output that can be enabled in necessary.
- *
+ * documentation for a complete list of supported and unsupported Vim emulation. The code base contains some debugging
+ * output that can be enabled in necessary.
+ * <p/>
  * This is an application level plugin meaning that all open projects will share a common instance of the plugin.
  * Registers and marks are shared across open projects so you can copy and paste between files of different projects.
  *
@@ -83,6 +84,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
 
     /**
      * Supplies the name of the plugin
+     *
      * @return The plugin name
      */
     public String getComponentName()
@@ -125,14 +127,17 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
         }
         DocumentManager.getInstance().init();
 
-        EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryAdapter() {
+        EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryAdapter()
+        {
             public void editorCreated(EditorFactoryEvent event)
             {
                 isBlockCursor = event.getEditor().getSettings().isBlockCursor();
+                isSmoothScrolling = event.getEditor().getSettings().isAnimatedScrolling();
 
                 if (VimPlugin.isEnabled())
                 {
-                    event.getEditor().getSettings().setBlockCursor(!CommandState.inInsertMode());
+                    event.getEditor().getSettings().setBlockCursor(!CommandState.inInsertMode(event.getEditor()));
+                    event.getEditor().getSettings().setAnimatedScrolling(false);
                 }
 
                 EditorData.initializeEditor(event.getEditor());
@@ -141,22 +146,24 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
             public void editorReleased(EditorFactoryEvent event)
             {
                 EditorData.uninitializeEditor(event.getEditor());
+                event.getEditor().getSettings().setAnimatedScrolling(isSmoothScrolling);
             }
         });
 
         // Since the Vim plugin custom actions aren't available to the call to <code>initComponent()</code>
         // we need to force the generation of the key map when the first project is opened.
-        ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
+        ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter()
+        {
             public void projectOpened(Project project)
             {
                 if (actions == null)
                 {
-                actions = RegisterActions.getInstance();
+                    actions = RegisterActions.getInstance();
                     if (VimPlugin.isEnabled())
                     {
                         RegisterActions.getInstance().enable();
                     }
-                CommandParser.getInstance().registerHandlers();
+                    CommandParser.getInstance().registerHandlers();
                 }
 
                 FileEditorManager.getInstance(project).addFileEditorManagerListener(new ChangeGroup.InsertCheck());
@@ -230,8 +237,9 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
     /**
      * This is called by the framework to load custom configuration data. The data is stored in
      * <code>$HOME/.IntelliJIdea/config/options/other.xml</code> though this is handled by the openAPI.
-     * @param element The element specific to the Vim Plugin. All the plugin's custom state information is
-     *                children of this element.
+     *
+     * @param element The element specific to the Vim Plugin. All the plugin's custom state information is children of
+     * this element.
      * @throws InvalidDataException if any of the configuration data is invalid
      */
     public void readExternal(Element element) throws InvalidDataException
@@ -251,8 +259,9 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
     /**
      * This is called by the framework to store custom configuration data. The data is stored in
      * <code>$HOME/.IntelliJIdea/config/options/other.xml</code> though this is handled by the openAPI.
-     * @param element The element specific to the Vim Plugin. All the plugin's custom state information is
-     *                children of this element.
+     *
+     * @param element The element specific to the Vim Plugin. All the plugin's custom state information is children of
+     * this element.
      * @throws WriteExternalException if unable to save and of the configuration data
      */
     public void writeExternal(Element element) throws WriteExternalException
@@ -267,6 +276,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
 
     /**
      * Indicates whether the user has enabled or disabled the plugin
+     *
      * @return true if the Vim plugin is enabled, false if not
      */
     public static boolean isEnabled()
@@ -317,16 +327,18 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
 
     public static void turnOnPlugin()
     {
-        KeyHandler.getInstance().fullReset();
+        KeyHandler.getInstance().fullReset(null);
         RegisterActions.getInstance().enable();
         setCursors(true);
+        setSmoothScrolling(false);
     }
 
     public static void turnOffPlugin()
     {
-        KeyHandler.getInstance().fullReset();
+        KeyHandler.getInstance().fullReset(null);
         RegisterActions.getInstance().disable();
         setCursors(isBlockCursor);
+        setSmoothScrolling(isSmoothScrolling);
     }
 
     private static void setCursors(boolean isBlock)
@@ -338,14 +350,24 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
         }
     }
 
+    private static void setSmoothScrolling(boolean isOn)
+    {
+        Editor[] editors = EditorFactory.getInstance().getAllEditors();
+        for (int j = 0; j < editors.length; j++)
+        {
+            editors[j].getSettings().setAnimatedScrolling(isOn);
+        }
+    }
+
     /**
-     * This class is used to handle the Vim Plugin enabled/disabled toggle. This is most likely used as a menu
-     * option but could also be used as a toolbar item.
+     * This class is used to handle the Vim Plugin enabled/disabled toggle. This is most likely used as a menu option
+     * but could also be used as a toolbar item.
      */
     public static class VimPluginToggleAction extends ToggleAction
     {
         /**
          * Indicates if the toggle is on or off
+         *
          * @param event The event that triggered the action
          * @return true if the toggle is on, false if off
          */
@@ -356,6 +378,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
 
         /**
          * Specifies whether the toggle should be on or off
+         *
          * @param event The event that triggered the action
          * @param b The new state - true is on, false is off
          */
@@ -380,6 +403,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
     //private static HashMap toolWindows = new HashMap();
     private MarkGroup.MarkUpdater markUpdater = new MarkGroup.MarkUpdater();
     private static boolean isBlockCursor = false;
+    private static boolean isSmoothScrolling = false;
 
     private static boolean enabled = true;
     private static Logger logger = Logger.getInstance(VimPlugin.class.getName());

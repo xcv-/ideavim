@@ -3,6 +3,7 @@ package com.maddyhome.idea.vim.helper;
 import com.intellij.openapi.command.CommandAdapter;
 import com.intellij.openapi.command.CommandEvent;
 import com.intellij.openapi.diagnostic.Logger;
+import com.maddyhome.idea.vim.common.TextRange;
 
 public class DelegateCommandListener extends CommandAdapter
 {
@@ -56,7 +57,7 @@ public class DelegateCommandListener extends CommandAdapter
 
     public static interface StartFinishRunnable
     {
-        void start();
+        TextRange start();
         void finish();
     }
 

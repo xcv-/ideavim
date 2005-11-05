@@ -1,4 +1,4 @@
-package com.maddyhome.idea.vim.handler.copy;
+package com.maddyhome.idea.vim.handler.change.delete;
 
 /*
 * IdeaVim - A Vim emulator plugin for IntelliJ Idea
@@ -22,7 +22,6 @@ package com.maddyhome.idea.vim.handler.copy;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.command.Command;
-import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.handler.VisualOperatorActionHandler;
@@ -31,22 +30,33 @@ import com.maddyhome.idea.vim.helper.EditorHelper;
 /**
  *
  */
-public class YankVisualLinesHandler extends VisualOperatorActionHandler
+public class DeleteVisualLinesEndHandler extends VisualOperatorActionHandler
 {
     protected boolean execute(Editor editor, DataContext context, Command cmd, TextRange range)
     {
-        int mode = CommandState.getInstance(editor).getSubMode();
-        if (mode == Command.FLAG_MOT_BLOCKWISE)
+        if (range.isMultiple())
         {
-            return CommandGroups.getInstance().getCopy().yankRange(editor, context, range, mode, true);
+            int[] starts = range.getStartOffsets();
+            int[] ends = range.getEndOffsets();
+            for (int i = 0; i < starts.length; i++)
+            {
+                if (ends[i] > starts[i])
+                {
+                    ends[i] = EditorHelper.getLineEndForOffset(editor, starts[i]);
+                }
+            }
+
+            range = new TextRange(starts, ends);
+            return CommandGroups.getInstance().getChange().deleteRange(editor, context, range,
+                Command.FLAG_MOT_BLOCKWISE, false);
         }
         else
         {
             range = new TextRange(EditorHelper.getLineStartForOffset(editor, range.getStartOffset()),
                 EditorHelper.getLineEndForOffset(editor, range.getEndOffset()) + 1);
 
-            return CommandGroups.getInstance().getCopy().yankRange(editor, context, range, Command.FLAG_MOT_LINEWISE,
-                true);
+            return CommandGroups.getInstance().getChange().deleteRange(editor, context, range,
+                Command.FLAG_MOT_LINEWISE, false);
         }
     }
 }

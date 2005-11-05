@@ -8,5 +8,4 @@ Bugs to fix:
 Requested Functionality to add:
 
 - Show message after shifting lines with :< or :>
-- Visual Column mode
 - / and ? as command operators

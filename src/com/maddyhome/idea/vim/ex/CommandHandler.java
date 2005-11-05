@@ -213,7 +213,7 @@ public abstract class CommandHandler
             cmd.getRanges().setDefaultLine(1);
         }
 
-        CommandState.getInstance().setFlags(optFlags);
+        CommandState.getInstance(editor).setFlags(optFlags);
 
         if ((argFlags & WRITABLE) != 0)
         {

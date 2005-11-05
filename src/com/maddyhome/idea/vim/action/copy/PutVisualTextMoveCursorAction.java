@@ -1,8 +1,6 @@
-package com.maddyhome.idea.vim.action;
-
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,26 +17,17 @@ package com.maddyhome.idea.vim.action;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.maddyhome.idea.vim.VimPlugin;
-import com.maddyhome.idea.vim.command.Command;
-import com.maddyhome.idea.vim.command.CommandState;
+package com.maddyhome.idea.vim.action.copy;
+
+import com.intellij.openapi.editor.actionSystem.EditorAction;
+import com.maddyhome.idea.vim.handler.copy.PutVisualTextMoveCursorHandler;
 
 /**
  */
-public abstract class AbstractCommandAction extends AnAction
+public class PutVisualTextMoveCursorAction extends EditorAction
 {
-    public final void actionPerformed(AnActionEvent event)
+    public PutVisualTextMoveCursorAction()
     {
-        CommandState state = CommandState.getInstance();
-        Command cmd = state.getCommand();
-        if (!execute(event.getDataContext(), cmd))
-        {
-            VimPlugin.indicateError();
-        }
+        super(new PutVisualTextMoveCursorHandler());
     }
-
-    protected abstract boolean execute(DataContext context, Command cmd);
 }

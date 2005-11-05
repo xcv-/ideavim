@@ -163,9 +163,9 @@ public class RegisterActions
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_MASK)));
 
         // ************************* Visual Mode Actions **********************
-        parser.registerAction(KeyParser.MAPPING_VISUAL, "VimAutoIndentVisual", Command.CHANGE, Command.FLAG_MOT_LINEWISE,
+        parser.registerAction(KeyParser.MAPPING_VISUAL, "VimAutoIndentVisual", Command.CHANGE, Command.FLAG_MOT_LINEWISE | Command.FLAG_FORCE_LINEWISE,
             new Shortcut('='));
-        parser.registerAction(KeyParser.MAPPING_VISUAL, "VimReformatVisual", Command.CHANGE, Command.FLAG_MOT_LINEWISE,
+        parser.registerAction(KeyParser.MAPPING_VISUAL, "VimReformatVisual", Command.CHANGE, Command.FLAG_MOT_LINEWISE | Command.FLAG_FORCE_LINEWISE,
             new Shortcut("gq"));
         parser.registerAction(KeyParser.MAPPING_VISUAL, "VimChangeCaseLowerVisual", Command.CHANGE,
             new Shortcut('u'));
@@ -180,9 +180,11 @@ public class RegisterActions
         parser.registerAction(KeyParser.MAPPING_VISUAL, "VimChangeVisualCharacter", Command.CHANGE, Command.FLAG_ALLOW_DIGRAPH,
             new Shortcut('r'), Argument.DIGRAPH);
         parser.registerAction(KeyParser.MAPPING_VISUAL, "VimChangeVisualLines", Command.CHANGE, Command.FLAG_MOT_LINEWISE | Command.FLAG_MULTIKEY_UNDO, new Shortcut[] {
-            new Shortcut('C'),
             new Shortcut('R'),
             new Shortcut('S')
+        });
+        parser.registerAction(KeyParser.MAPPING_VISUAL, "VimChangeVisualLinesEnd", Command.CHANGE, Command.FLAG_MOT_LINEWISE | Command.FLAG_MULTIKEY_UNDO, new Shortcut[] {
+            new Shortcut('C')
         });
         parser.registerAction(KeyParser.MAPPING_VISUAL, "VimCopyYankVisual", Command.COPY,
             new Shortcut('y'));
@@ -197,8 +199,10 @@ public class RegisterActions
             new Shortcut('x'),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0))
         });
+        parser.registerAction(KeyParser.MAPPING_VISUAL, "VimDeleteVisualLinesEnd", Command.DELETE, Command.FLAG_MOT_LINEWISE, new Shortcut[] {
+            new Shortcut('D')
+        });
         parser.registerAction(KeyParser.MAPPING_VISUAL, "VimDeleteVisualLines", Command.DELETE, Command.FLAG_MOT_LINEWISE, new Shortcut[] {
-            new Shortcut('D'),
             new Shortcut('X')
         });
         parser.registerAction(KeyParser.MAPPING_VISUAL, "VimFilterVisualLines", Command.CHANGE, Command.FLAG_MOT_LINEWISE,
@@ -217,6 +221,20 @@ public class RegisterActions
             new Shortcut('P'),
             new Shortcut('p')
         });
+        parser.registerAction(KeyParser.MAPPING_VISUAL, "VimVisualPutTextMoveCursor", Command.PASTE, new Shortcut[] {
+            new Shortcut("gp"),
+            new Shortcut("gP")
+        });
+        parser.registerAction(KeyParser.MAPPING_VISUAL, "VimVisualPutTextNoIndent", Command.PASTE, new Shortcut[] {
+            new Shortcut("[p"),
+            new Shortcut("]p"),
+            new Shortcut("[P"),
+            new Shortcut("]P")
+        });
+        parser.registerAction(KeyParser.MAPPING_VISUAL, "VimVisualBlockInsert", Command.INSERT, Command.FLAG_MULTIKEY_UNDO,
+            new Shortcut('I'));
+        parser.registerAction(KeyParser.MAPPING_VISUAL, "VimVisualBlockAppend", Command.INSERT, Command.FLAG_MULTIKEY_UNDO,
+            new Shortcut('A'));
         parser.registerAction(KeyParser.MAPPING_VISUAL, "VimVisualSwapEnds", Command.OTHER_READONLY,
             new Shortcut('o'));
         parser.registerAction(KeyParser.MAPPING_VISUAL, "VimVisualSwapEndsBlock", Command.OTHER_READONLY,
@@ -637,10 +655,10 @@ public class RegisterActions
         });
 
         // ********************** Various Mode Actions ************************
-        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimCommentByLineComment", Command.CHANGE);
-        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimCommentByBlockComment", Command.CHANGE);
-        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimSurroundWith", Command.CHANGE, Command.FLAG_DELEGATE);
-        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimSurroundWithLiveTemplate", Command.CHANGE, Command.FLAG_DELEGATE);
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimCommentByLineComment", Command.CHANGE, Command.FLAG_MOT_LINEWISE | Command.FLAG_FORCE_LINEWISE);
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimCommentByBlockComment", Command.CHANGE, Command.FLAG_MOT_LINEWISE | Command.FLAG_FORCE_LINEWISE);
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimSurroundWith", Command.CHANGE, Command.FLAG_DELEGATE | Command.FLAG_MOT_LINEWISE | Command.FLAG_FORCE_LINEWISE);
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimSurroundWithLiveTemplate", Command.CHANGE, Command.FLAG_DELEGATE | Command.FLAG_MOT_LINEWISE | Command.FLAG_FORCE_LINEWISE);
 
         parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimVisualToggleCharacterMode", Command.OTHER_READONLY, Command.FLAG_MOT_CHARACTERWISE,
             new Shortcut('v'));
@@ -648,10 +666,10 @@ public class RegisterActions
             new Shortcut('V'));
         if (ApiHelper.supportsBlockSelection())
         {
-            /*
-            parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimVisualToggleBlockMode", Command.OTHER_READONLY, Command.FLAG_MOT_BLOCKWISE,
-                new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK)));
-            */
+            parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimVisualToggleBlockMode", Command.OTHER_READONLY, Command.FLAG_MOT_BLOCKWISE, new Shortcut[] {
+                new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK)),
+                new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK))
+            });
         }
         parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimMotionMark", Command.OTHER_READONLY,
             new Shortcut('m'), Argument.CHARACTER);

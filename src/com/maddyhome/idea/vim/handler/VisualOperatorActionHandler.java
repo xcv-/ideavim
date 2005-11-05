@@ -22,15 +22,16 @@ package com.maddyhome.idea.vim.handler;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
+import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.command.VisualChange;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.group.MotionGroup;
 import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.undo.UndoManager;
-import com.maddyhome.idea.vim.KeyHandler;
 
 /**
  *
@@ -42,7 +43,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
         logger.debug("execute, cmd=" + cmd);
 
         TextRange range = null;
-        if (CommandState.getInstance().getMode() == CommandState.MODE_VISUAL)
+        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
         {
             range = CommandGroups.getInstance().getMotion().getVisualRange(editor);
             logger.debug("range=" + range);
@@ -55,7 +56,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
         }
         else
         {
-            runnable.start();
+            range = runnable.start();
         }
 
         boolean res = execute(editor, context, cmd, range);
@@ -86,7 +87,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
             this.res = res;
         }
 
-        public void start()
+        public TextRange start()
         {
             logger.debug("start");
             if (cmd == null || !cmd.isReadType())
@@ -94,15 +95,28 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                 UndoManager.getInstance().endCommand(editor);
                 UndoManager.getInstance().beginCommand(editor);
             }
-            if (CommandState.getInstance().getMode() == CommandState.MODE_REPEAT)
+            wasRepeat = false;
+            if (CommandState.getInstance(editor).getMode() == CommandState.MODE_REPEAT)
             {
+                wasRepeat = true;
+                lastColumn = EditorData.getLastColumn(editor);
+                VisualChange range = EditorData.getLastVisualOperatorRange(editor);
                 CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 1, 0);
+                if (range.getColumns() == MotionGroup.LAST_COLUMN)
+                {
+                    EditorData.setLastColumn(editor, MotionGroup.LAST_COLUMN);
+                }
             }
 
-            if (CommandState.getInstance().getMode() == CommandState.MODE_VISUAL)
+            TextRange res = null;
+            if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
             {
-                change = CommandGroups.getInstance().getMotion().getVisualOperatorRange(editor,
-                    cmd == null ? Command.FLAG_MOT_LINEWISE : cmd.getFlags());
+                res = CommandGroups.getInstance().getMotion().getVisualRange(editor);
+                if (!wasRepeat)
+                {
+                    change = CommandGroups.getInstance().getMotion().getVisualOperatorRange(editor,
+                        cmd == null ? Command.FLAG_MOT_LINEWISE : cmd.getFlags());
+                }
                 logger.debug("change=" + change);
             }
 
@@ -112,16 +126,38 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                 logger.debug("multikey undo - exit visual");
                 CommandGroups.getInstance().getMotion().exitVisual(editor);
             }
+            else if (cmd != null && (cmd.getFlags() & Command.FLAG_FORCE_LINEWISE) != 0)
+            {
+                lastMode = CommandState.getInstance(editor).getSubMode();
+                if (lastMode != Command.FLAG_MOT_LINEWISE)
+                {
+                    CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 0, Command.FLAG_MOT_LINEWISE);
+                }
+            }
+
+            return res;
         }
 
         public void finish()
         {
             logger.debug("finish");
 
+            if (cmd != null && (cmd.getFlags() & Command.FLAG_FORCE_LINEWISE) != 0)
+            {
+                if (lastMode != Command.FLAG_MOT_LINEWISE)
+                {
+                    CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 0, lastMode);
+                }
+            }
+
             if (cmd == null || (cmd.getFlags() & Command.FLAG_MULTIKEY_UNDO) == 0)
             {
                 logger.debug("not multikey undo - exit visual");
                 CommandGroups.getInstance().getMotion().exitVisual(editor);
+                if (wasRepeat)
+                {
+                    EditorData.setLastColumn(editor, lastColumn);
+                }
             }
 
             if (res)
@@ -139,7 +175,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                 }
                 if (cmd != null)
                 {
-                    CommandState.getInstance().saveLastChangeCommand(cmd);
+                    CommandState.getInstance(editor).saveLastChangeCommand(cmd);
                 }
             }
             else
@@ -153,7 +189,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
 
             if (cmd != null && (cmd.getFlags() & Command.FLAG_DELEGATE) != 0)
             {
-                KeyHandler.getInstance().reset();
+                KeyHandler.getInstance().reset(editor);
             }
         }
 
@@ -161,6 +197,9 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
         private Editor editor;
         private DataContext context;
         private boolean res;
+        private int lastMode;
+        private boolean wasRepeat;
+        private int lastColumn;
         VisualChange change = null;
     }
 
