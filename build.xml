@@ -34,7 +34,8 @@
     <property name="project" value="IdeaVIM" />
     <!-- Update this prior to building a new distribution -->
     <property name="idea-version" value="5.x" />
-    <property name="version" value="0.10.2" />
+    <property name="version" value="0.10.2.x" />
+    <property name="since-version" value="3461" />
 
     <path id="build.classpath">
         <pathelement path="${idea.home}/lib/extensions.jar" />
@@ -65,6 +66,7 @@
                 <filter token="NAME" value="${project}" />
                 <filter token="VERSION" value="${version}" />
                 <filter token="IDEA-VERSION" value="${idea-version}" />
+                <filter token="SINCE-VERSION" value="${since-version}" />
             </filterset>
         </copy>
         <copy todir="${classes}">

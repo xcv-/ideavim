@@ -33,7 +33,7 @@ Bug Fixes<br>
   certain refactorings.<br>
 ]]>
     </change-notes>
-    <idea-version since-build="3461"/>
+    <idea-version since-build="@SINCE-VERSION@"/>
 
     <application-components>
         <component>
