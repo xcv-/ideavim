@@ -37,10 +37,8 @@ import com.intellij.openapi.editor.event.SelectionListener;
 import com.intellij.openapi.editor.event.VisibleAreaEvent;
 import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -386,7 +384,10 @@ public class MotionGroup extends AbstractActionGroup
             if (!mark.getFile().equals(vf))
             {
                 editor = selectEditor(editor, mark.getFile());
-                moveCaret(editor, context, moveCaretToLineStartSkipLeading(editor, line));
+                if (editor != null)
+                {
+                    moveCaret(editor, context, moveCaretToLineStartSkipLeading(editor, line));
+                }
 
                 return -2;
             }
@@ -429,7 +430,10 @@ public class MotionGroup extends AbstractActionGroup
             if (!vf.equals(mark.getFile()))
             {
                 editor = selectEditor(editor, mark.getFile());
-                moveCaret(editor, context, editor.logicalPositionToOffset(lp));
+                if (editor != null)
+                {
+                    moveCaret(editor, context, editor.logicalPositionToOffset(lp));
+                }
 
                 return -2;
             }
@@ -465,9 +469,8 @@ public class MotionGroup extends AbstractActionGroup
     private Editor selectEditor(Editor editor, VirtualFile file)
     {
         Project proj = EditorData.getProject(editor);
-        FileEditorManager fMgr = FileEditorManager.getInstance(proj);
-        //return fMgr.openFile(new OpenFileDescriptor(file), ScrollType.RELATIVE, true);
-        return fMgr.openTextEditor(new OpenFileDescriptor(proj, file), true);
+
+        return CommandGroups.getInstance().getFile().selectEditor(proj, file);
     }
 
     public int moveCaretToMatchingPair(Editor editor, DataContext context)
