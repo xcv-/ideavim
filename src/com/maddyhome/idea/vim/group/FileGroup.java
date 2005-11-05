@@ -28,7 +28,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -59,7 +58,7 @@ public class FileGroup extends AbstractActionGroup
             if (vf != null)
             {
                 FileEditorManager fem = FileEditorManager.getInstance(proj);
-                fem.openTextEditor(new OpenFileDescriptor(vf), true);
+                fem.openFile(vf, true);
 
                 return true;
             }
@@ -182,8 +181,7 @@ public class FileGroup extends AbstractActionGroup
             return false;
         }
 
-        //fem.openFile(new OpenFileDescriptor(editors[count]), ScrollType.RELATIVE, true);
-        fem.openTextEditor(new OpenFileDescriptor(editors[count]), true);
+        fem.openFile(editors[count], true);
 
         return true;
     }
@@ -205,8 +203,7 @@ public class FileGroup extends AbstractActionGroup
             {
                 int pos = (i + (count % editors.length) + editors.length) % editors.length;
 
-                //fem.openFile(new OpenFileDescriptor(editors[pos]), ScrollType.RELATIVE, true);
-                fem.openTextEditor(new OpenFileDescriptor(editors[pos]), true);
+                fem.openFile(editors[pos], true);
             }
         }
     }
@@ -221,7 +218,7 @@ public class FileGroup extends AbstractActionGroup
         VirtualFile vf = (VirtualFile)lastSelections.get(fem);
         if (vf != null)
         {
-            fem.openTextEditor(new OpenFileDescriptor(vf), true);
+            fem.openFile(vf, true);
         }
         else
         {
