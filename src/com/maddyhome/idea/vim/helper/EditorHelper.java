@@ -28,6 +28,7 @@ import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.vim.common.CharacterPosition;
 import com.maddyhome.idea.vim.common.TextRange;
 
@@ -607,6 +608,12 @@ public class EditorHelper
     public static CharSequence getDocumentChars(Editor editor)
     {
         return editor.getDocument().getCharsSequence(); // API change - don't merge
+    }
+
+    public static boolean canEdit(Project project, Editor editor)
+    {
+        return (editor.getDocument().isWritable() ||  // API change - don't merge
+            FileDocumentManager.fileForDocumentCheckedOutSuccessfully(editor.getDocument(), project));  // API change - don't merge
     }
 
     private static final Logger logger = Logger.getInstance(EditorHelper.class.getName());
