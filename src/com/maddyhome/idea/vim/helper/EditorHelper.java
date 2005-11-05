@@ -19,6 +19,7 @@ package com.maddyhome.idea.vim.helper;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -27,7 +28,6 @@ import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.diagnostic.Logger;
 import com.maddyhome.idea.vim.common.CharacterPosition;
 import com.maddyhome.idea.vim.common.TextRange;
 
@@ -606,7 +606,7 @@ public class EditorHelper
 
     public static CharSequence getDocumentChars(Editor editor)
     {
-        return editor.getDocument().getCharsSequence();
+        return editor.getDocument().getCharsSequence(); // API change - don't merge
     }
 
     private static final Logger logger = Logger.getInstance(EditorHelper.class.getName());

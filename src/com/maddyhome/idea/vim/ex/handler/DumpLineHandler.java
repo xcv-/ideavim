@@ -27,6 +27,7 @@ import com.maddyhome.idea.vim.ex.CommandName;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.ex.ExException;
 import com.maddyhome.idea.vim.ex.LineRange;
+import com.maddyhome.idea.vim.helper.EditorHelper;
 
 /**
  *
