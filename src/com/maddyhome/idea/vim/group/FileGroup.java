@@ -28,6 +28,8 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -224,6 +226,21 @@ public class FileGroup extends AbstractActionGroup
         {
             VimPlugin.indicateError();
         }
+    }
+
+    public Editor selectEditor(Project project, VirtualFile file)
+    {
+        FileEditorManager fMgr = FileEditorManager.getInstance(project);
+        FileEditor[] feditors = fMgr.openFile(file, true);
+        if (feditors != null && feditors.length > 0)
+        {
+            if (feditors[0] instanceof TextEditor)
+            {
+                return ((TextEditor)feditors[0]).getEditor();
+            }
+        }
+
+        return null;
     }
 
     /**
