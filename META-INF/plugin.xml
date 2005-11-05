@@ -19,17 +19,19 @@ Bug Fixes<br>
 - Fix persistence of registers. Whitespace was getting normalized out.<br>
 - Fixed visual mode character change.<br>
 - No longer update "delete" registers when joining lines or shifting text.<br>
-- Undoing a put required two undos instead of one. (Regression from 0.9.7).<br>
+- Undoing a put required two undos instead of one. (Regression from 0.8.4).<br>
 - Fixed various visual put issues.<br>
 - Fixed cursor movements after yank commands.<br>
 - Ensure smooth scrolling is turned off in editors. Many motion commands were
-  having problems if smooth scrolling was on as of 0.9.6.<br>
+  having problems if smooth scrolling was on as of 0.8.3.<br>
 - Entering an invalid command while in visual mode now properly stays in
   visual mode.<br>
 - Typing text while in insert mode caused strange cursor position changes if
-  the cursor neared the right edge of the screen. (Regression from 0.9.6).<br>
+  the cursor neared the right edge of the screen. (Regression from 0.8.3).<br>
 - Fixed internal error when right clicking on a visual selection and selecting
   certain refactorings.<br>
+- Ensure proper visual mode set when mouse dragging including in the line
+  number area.<br>
 ]]>
     </change-notes>
     <idea-version since-build="@SINCE-VERSION@"/>
