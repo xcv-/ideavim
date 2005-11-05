@@ -33,6 +33,7 @@ import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.ex.CommandParser;
 import com.maddyhome.idea.vim.ex.ExException;
 import com.maddyhome.idea.vim.helper.EditorData;
+import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.RunnableHelper;
 import com.maddyhome.idea.vim.key.KeyParser;
 import com.maddyhome.idea.vim.ui.ExEntryPanel;
@@ -41,11 +42,11 @@ import com.maddyhome.idea.vim.ui.MorePanel;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.CharArrayReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import javax.swing.KeyStroke;
@@ -234,9 +235,9 @@ public class ProcessGroup extends AbstractActionGroup
     public boolean executeFilter(Editor editor, DataContext context, TextRange range, String command) throws IOException
     {
         logger.debug("command=" + command);
-        char[] chars = editor.getDocument().getChars();
-        CharArrayReader car = new CharArrayReader(chars, range.getStartOffset(),
-            range.getEndOffset() - range.getStartOffset());
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
+        StringReader car = new StringReader(chars.subSequence(range.getStartOffset(),
+            range.getEndOffset()).toString());
         StringWriter sw = new StringWriter();
 
         logger.debug("about to create filter");

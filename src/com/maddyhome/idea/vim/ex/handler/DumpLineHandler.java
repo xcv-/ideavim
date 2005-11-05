@@ -27,6 +27,7 @@ import com.maddyhome.idea.vim.ex.CommandName;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.ex.ExException;
 import com.maddyhome.idea.vim.ex.LineRange;
+import com.maddyhome.idea.vim.helper.EditorHelper;
 
 /**
  *
@@ -44,7 +45,7 @@ public class DumpLineHandler extends CommandHandler
     {
         LineRange range = cmd.getLineRange(editor, context, false);
 
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         for (int l = range.getStartLine(); l <= range.getEndLine(); l++)
         {
             int start = editor.getDocument().getLineStartOffset(l);
@@ -53,7 +54,7 @@ public class DumpLineHandler extends CommandHandler
 
             for (int i = start; i <= end; i++)
             {
-                logger.debug("Offset " + i + ", char=" + chars[i] + ", lp=" + editor.offsetToLogicalPosition(i) +
+                logger.debug("Offset " + i + ", char=" + chars.charAt(i) + ", lp=" + editor.offsetToLogicalPosition(i) +
                     ", vp=" + editor.offsetToVisualPosition(i));
             }
         }

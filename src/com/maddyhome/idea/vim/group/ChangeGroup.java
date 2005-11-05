@@ -301,7 +301,7 @@ public class ChangeGroup extends AbstractActionGroup
         if (vp.column < len)
         {
             int offset = EditorHelper.visualPostionToOffset(editor, vp);
-            char ch = editor.getDocument().getChars()[offset];
+            char ch = EditorHelper.getDocumentChars(editor).charAt(offset);
             processKey(editor, context, KeyStroke.getKeyStroke(ch));
             res = true;
         }
@@ -822,9 +822,9 @@ public class ChangeGroup extends AbstractActionGroup
         }
 
         // This is a kludge for dw, dW, and d[w. Without this kludge, an extra newline is deleted when it shouldn't be.
-        String text = new String(editor.getDocument().getChars(), range.getStartOffset(),
-            range.getEndOffset() - range.getStartOffset());
-        if (text.indexOf('\n') >= 0 && !(range.getStartOffset() == 0 || editor.getDocument().getChars()[range.getStartOffset() - 1] == '\n'))
+        String text = EditorHelper.getDocumentChars(editor).subSequence(range.getStartOffset(),
+            range.getEndOffset()).toString();
+        if (text.indexOf('\n') >= 0 && !(range.getStartOffset() == 0 || EditorHelper.getDocumentChars(editor).charAt(range.getStartOffset() - 1) == '\n'))
         {
             String id = ActionManager.getInstance().getId(argument.getMotion().getAction());
             logger.debug("action id=" + id);
@@ -997,14 +997,14 @@ public class ChangeGroup extends AbstractActionGroup
         }
         */
 
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int[] starts = range.getStartOffsets();
         int[] ends = range.getEndOffsets();
         for (int j = ends.length - 1; j >= 0; j--)
         {
             for (int i = starts[j]; i < ends[j]; i++)
             {
-                if (i < chars.length && '\n' != chars[i])
+                if (i < chars.length() && '\n' != chars.charAt(i))
                 {
                     replaceText(editor, context, i, i + 1, Character.toString(ch));
                 }
@@ -1088,7 +1088,7 @@ public class ChangeGroup extends AbstractActionGroup
         if (id.equals("VimMotionWordRight"))
         {
             if (EditorHelper.getFileSize(editor) > 0 &&
-                !Character.isWhitespace(editor.getDocument().getChars()[editor.getCaretModel().getOffset()]))
+                !Character.isWhitespace(EditorHelper.getDocumentChars(editor).charAt(editor.getCaretModel().getOffset())))
             {
                 kludge = true;
                 argument.getMotion().setAction(ActionManager.getInstance().getAction("VimMotionWordEndRight"));
@@ -1098,7 +1098,7 @@ public class ChangeGroup extends AbstractActionGroup
         else if (id.equals("VimMotionBigWordRight"))
         {
             if (EditorHelper.getFileSize(editor) > 0 &&
-                !Character.isWhitespace(editor.getDocument().getChars()[editor.getCaretModel().getOffset()]))
+                !Character.isWhitespace(EditorHelper.getDocumentChars(editor).charAt(editor.getCaretModel().getOffset())))
             {
                 kludge = true;
                 skipPunc = true;
@@ -1109,7 +1109,7 @@ public class ChangeGroup extends AbstractActionGroup
         else if (id.equals("VimMotionCamelRight"))
         {
             if (EditorHelper.getFileSize(editor) > 0 &&
-                !Character.isWhitespace(editor.getDocument().getChars()[editor.getCaretModel().getOffset()]))
+                !Character.isWhitespace(EditorHelper.getDocumentChars(editor).charAt(editor.getCaretModel().getOffset())))
             {
                 kludge = true;
                 argument.getMotion().setAction(ActionManager.getInstance().getAction("VimMotionCamelEndRight"));
@@ -1122,8 +1122,8 @@ public class ChangeGroup extends AbstractActionGroup
             int pos = editor.getCaretModel().getOffset();
             int size = EditorHelper.getFileSize(editor);
             int cnt = count * argument.getMotion().getCount();
-            int pos1 = SearchHelper.findNextWordEnd(editor.getDocument().getChars(), pos, size, cnt, skipPunc, false, false);
-            int pos2 = SearchHelper.findNextWordEnd(editor.getDocument().getChars(), pos1, size, -cnt, skipPunc, false, false);
+            int pos1 = SearchHelper.findNextWordEnd(EditorHelper.getDocumentChars(editor), pos, size, cnt, skipPunc, false, false);
+            int pos2 = SearchHelper.findNextWordEnd(EditorHelper.getDocumentChars(editor), pos1, size, -cnt, skipPunc, false, false);
             logger.debug("pos=" + pos);
             logger.debug("pos1=" + pos1);
             logger.debug("pos2=" + pos2);
@@ -1339,16 +1339,16 @@ public class ChangeGroup extends AbstractActionGroup
             start = t;
         }
 
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         for (int i = start; i < end; i++)
         {
-            if (i >= chars.length)
+            if (i >= chars.length())
             {
                 break;
             }
 
-            char ch = CharacterHelper.changeCase(chars[i], type);
-            if (ch != chars[i])
+            char ch = CharacterHelper.changeCase(chars.charAt(i), type);
+            if (ch != chars.charAt(i))
             {
                 replaceText(editor, context, i, i + 1, Character.toString(ch));
             }
@@ -1463,7 +1463,7 @@ public class ChangeGroup extends AbstractActionGroup
             else
             {
                 // Left shift blockwise selection
-                char[] chars = editor.getDocument().getChars();
+                CharSequence chars = EditorHelper.getDocumentChars(editor);
                 for (int l = sline; l <= eline; l++)
                 {
                     int len = EditorHelper.getLineLength(editor, l);
@@ -1476,7 +1476,7 @@ public class ChangeGroup extends AbstractActionGroup
                         int pos;
                         for (pos = wsoff; pos <= weoff; pos++)
                         {
-                            if (CharacterHelper.charType(chars[pos], false) != CharacterHelper.TYPE_SPACE)
+                            if (CharacterHelper.charType(chars.charAt(pos), false) != CharacterHelper.TYPE_SPACE)
                             {
                                 break;
                             }

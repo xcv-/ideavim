@@ -123,6 +123,13 @@ public class EditorHelper
         }
     }
 
+    /*
+    public static int getMaximumLineLength(Editor editor)
+    {
+        int width = editor.getScrollingModel().
+    }
+    */
+
     /**
      * Gets the number of characters on the specified visual line. This will be different than the number of visual
      * characters if there are "real" tabs in the line.
@@ -157,7 +164,7 @@ public class EditorHelper
     {
         int len = editor.getDocument().getLineCount();
         if (editor.getDocument().getTextLength() > 0 &&
-            editor.getDocument().getChars()[editor.getDocument().getTextLength() - 1] == '\n')
+            EditorHelper.getDocumentChars(editor).charAt(editor.getDocument().getTextLength() - 1) == '\n')
         {
             len--;
         }
@@ -184,7 +191,7 @@ public class EditorHelper
     {
         Document doc = editor.getDocument();
         int len = doc.getTextLength();
-        if (!incEnd && len >= 1 && doc.getChars()[len - 1] == '\n')
+        if (!incEnd && len >= 1 && EditorHelper.getDocumentChars(editor).charAt(len - 1) == '\n')
         {
             len--;
         }
@@ -408,16 +415,16 @@ public class EditorHelper
     {
         int start = getLineStartOffset(editor, lline);
         int end = getLineEndOffset(editor, lline, true);
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = end;
         for (int offset = start; offset < end; offset++)
         {
-            if (offset >= chars.length)
+            if (offset >= chars.length())
             {
                 break;
             }
 
-            if (!Character.isWhitespace(chars[offset]))
+            if (!Character.isWhitespace(chars.charAt(offset)))
             {
                 pos = offset;
                 break;
@@ -432,7 +439,7 @@ public class EditorHelper
         int start = getLineStartOffset(editor, lline);
         int end = getLeadingCharacterOffset(editor, lline);
 
-        return new String(editor.getDocument().getChars(), start, end - start);
+        return EditorHelper.getDocumentChars(editor).subSequence(start, end).toString();
     }
 
     /**
@@ -478,7 +485,7 @@ public class EditorHelper
      */
     public static String getText(Editor editor, int start, int end)
     {
-        return new String(editor.getDocument().getChars(), start, end - start);
+        return EditorHelper.getDocumentChars(editor).subSequence(start, end).toString();
     }
 
     public static String getText(Editor editor, TextRange range)
@@ -573,8 +580,8 @@ public class EditorHelper
 
     public static CharBuffer getLineBuffer(Editor editor, int lline)
     {
-        return CharBuffer.wrap(editor.getDocument().getChars(), getLineStartOffset(editor, lline),
-            getLineCharCount(editor, lline));
+        int start = getLineStartOffset(editor, lline);
+        return CharBuffer.wrap(EditorHelper.getDocumentChars(editor), start, start + getLineCharCount(editor, lline));
     }
 
     public static String pad(Editor editor, int lline, int to)
@@ -595,6 +602,11 @@ public class EditorHelper
         }
 
         return res.toString();
+    }
+
+    public static CharSequence getDocumentChars(Editor editor)
+    {
+        return CharBuffer.wrap(editor.getDocument().getChars()); // API change - don't merge
     }
 
     private static final Logger logger = Logger.getInstance(EditorHelper.class.getName());

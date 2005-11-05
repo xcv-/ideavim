@@ -56,7 +56,7 @@ public class TextRange
     {
         return starts.length;
     }
-
+    
     public int getStartOffset()
     {
         return starts[0];

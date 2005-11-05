@@ -59,6 +59,7 @@ public class RegisterActions
         parser.registerAction(KeyParser.MAPPING_INSERT, "VimClassNameCompletion", Command.INSERT);
         parser.registerAction(KeyParser.MAPPING_INSERT, "VimCodeCompletion", Command.INSERT);
         parser.registerAction(KeyParser.MAPPING_INSERT, "VimSmartTypeCompletion", Command.INSERT);
+        parser.registerAction(KeyParser.MAPPING_INSERT, "VimWordCompletion", Command.INSERT);
         parser.registerAction(KeyParser.MAPPING_INSERT, "VimInsertLiveTemplate", Command.INSERT);
 
         parser.registerAction(KeyParser.MAPPING_INSERT, "VimEditorBackSpace", Command.INSERT, Command.FLAG_SAVE_STROKE | Command.FLAG_IS_BACKSPACE, new Shortcut[] {
@@ -659,6 +660,8 @@ public class RegisterActions
         parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimCommentByBlockComment", Command.CHANGE, Command.FLAG_MOT_LINEWISE | Command.FLAG_FORCE_LINEWISE);
         parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimSurroundWith", Command.CHANGE, Command.FLAG_DELEGATE | Command.FLAG_MOT_LINEWISE | Command.FLAG_FORCE_LINEWISE);
         parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimSurroundWithLiveTemplate", Command.CHANGE, Command.FLAG_DELEGATE | Command.FLAG_MOT_LINEWISE | Command.FLAG_FORCE_LINEWISE);
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimMoveStatementDown", Command.CHANGE, Command.FLAG_MOT_LINEWISE | Command.FLAG_FORCE_LINEWISE);
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimMoveStatementUp", Command.CHANGE, Command.FLAG_MOT_LINEWISE | Command.FLAG_FORCE_LINEWISE);
 
         parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimVisualToggleCharacterMode", Command.OTHER_READONLY, Command.FLAG_MOT_CHARACTERWISE,
             new Shortcut('v'));

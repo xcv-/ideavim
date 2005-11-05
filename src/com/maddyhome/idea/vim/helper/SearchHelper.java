@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.helper;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2004 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,10 +49,10 @@ public class SearchHelper
             end = offset - 1;
         }
 
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         for (int i = start; i <= end; i++)
         {
-            if (!Character.isWhitespace(chars[i]))
+            if (!Character.isWhitespace(chars.charAt(i)))
             {
                 return true;
             }
@@ -75,13 +75,13 @@ public class SearchHelper
         int res = -1;
         int line = EditorHelper.getCurrentLogicalLine(editor);
         int end = EditorHelper.getLineEndOffset(editor, line, true);
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
         int loc = -1;
         // Search the remainder of the current line for one of the candicate characters
         while (pos < end)
         {
-            loc = getPairChars().indexOf(chars[pos]);
+            loc = getPairChars().indexOf(chars.charAt(pos));
             if (loc >= 0)
             {
                 break;
@@ -102,10 +102,10 @@ public class SearchHelper
             int stack = 0;
             pos += dir;
             // Search to start or end of file, as appropriate
-            while (pos >= 0 && pos < chars.length)
+            while (pos >= 0 && pos < chars.length())
             {
                 // If we found a match and we're not in a string...
-                if (chars[pos] == match && !inString)
+                if (chars.charAt(pos) == match && !inString)
                 {
                     // We found our match
                     if (stack == 0)
@@ -120,26 +120,26 @@ public class SearchHelper
                     }
                 }
                 // We found another character like our original - belongs to another pair
-                else if (chars[pos] == found && !inString)
+                else if (chars.charAt(pos) == found && !inString)
                 {
                     stack++;
                 }
                 // We found the start/end of a string
-                else if (chars[pos] == '"' && (pos == 0 || chars[pos - 1] != '\\'))
+                else if (chars.charAt(pos) == '"' && (pos == 0 || chars.charAt(pos - 1) != '\\'))
                 {
                     inString = !inString;
                 }
                 // We found character literal - skip it
-                else if (chars[pos] == '\'')
+                else if (chars.charAt(pos) == '\'')
                 {
                     int tmp = pos + 2 * dir;
-                    if (tmp < chars.length && chars[tmp] == '\'')
+                    if (tmp < chars.length() && chars.charAt(tmp) == '\'')
                     {
                         pos = tmp;
                     }
                 }
                 // End of line - mark not in a string any more (in case we started in the middle of one
-                else if (chars[pos] == '\n')
+                else if (chars.charAt(pos) == '\n')
                 {
                     inString = false;
                 }
@@ -153,7 +153,7 @@ public class SearchHelper
 
     public static int findNextCamelStart(Editor editor, int count)
     {
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
         int size = EditorHelper.getFileSize(editor);
 
@@ -168,26 +168,26 @@ public class SearchHelper
         pos += step;
         while (pos >= 0 && pos < size && found < Math.abs(count))
         {
-            if (Character.isUpperCase(chars[pos]))
+            if (Character.isUpperCase(chars.charAt(pos)))
             {
-                if ((pos == 0 || !Character.isUpperCase(chars[pos - 1])) ||
-                    (pos == size - 1 || Character.isLowerCase(chars[pos + 1])))
+                if ((pos == 0 || !Character.isUpperCase(chars.charAt(pos - 1))) ||
+                    (pos == size - 1 || Character.isLowerCase(chars.charAt(pos + 1))))
                 {
                     res = pos;
                     found++;
                 }
             }
-            else if (Character.isLowerCase(chars[pos]))
+            else if (Character.isLowerCase(chars.charAt(pos)))
             {
-                if (pos == 0 || !Character.isLetter(chars[pos - 1]))
+                if (pos == 0 || !Character.isLetter(chars.charAt(pos - 1)))
                 {
                     res = pos;
                     found++;
                 }
             }
-            else if (Character.isDigit(chars[pos]))
+            else if (Character.isDigit(chars.charAt(pos)))
             {
-                if (pos == 0 || !Character.isDigit(chars[pos - 1]))
+                if (pos == 0 || !Character.isDigit(chars.charAt(pos - 1)))
                 {
                     res = pos;
                     found++;
@@ -207,7 +207,7 @@ public class SearchHelper
 
     public static int findNextCamelEnd(Editor editor, int count)
     {
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
         int size = EditorHelper.getFileSize(editor);
 
@@ -222,26 +222,26 @@ public class SearchHelper
         pos += step;
         while (pos >= 0 && pos < size && found < Math.abs(count))
         {
-            if (Character.isUpperCase(chars[pos]))
+            if (Character.isUpperCase(chars.charAt(pos)))
             {
-                if (pos == size - 1 || !Character.isLetter(chars[pos + 1]) ||
-                    (Character.isUpperCase(chars[pos + 1]) && pos <= size - 2 && Character.isLowerCase(chars[pos + 2])))
+                if (pos == size - 1 || !Character.isLetter(chars.charAt(pos + 1)) ||
+                    (Character.isUpperCase(chars.charAt(pos + 1)) && pos <= size - 2 && Character.isLowerCase(chars.charAt(pos + 2))))
                 {
                     res = pos;
                     found++;
                 }
             }
-            else if (Character.isLowerCase(chars[pos]))
+            else if (Character.isLowerCase(chars.charAt(pos)))
             {
-                if (pos == size - 1 || !Character.isLowerCase(chars[pos + 1]))
+                if (pos == size - 1 || !Character.isLowerCase(chars.charAt(pos + 1)))
                 {
                     res = pos;
                     found++;
                 }
             }
-            else if (Character.isDigit(chars[pos]))
+            else if (Character.isDigit(chars.charAt(pos)))
             {
-                if (pos == size - 1 || !Character.isDigit(chars[pos + 1]))
+                if (pos == size - 1 || !Character.isDigit(chars.charAt(pos + 1)))
                 {
                     res = pos;
                     found++;
@@ -269,14 +269,14 @@ public class SearchHelper
      */
     public static int findNextWord(Editor editor, int count, boolean skipPunc)
     {
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
         int size = EditorHelper.getFileSize(editor);
 
         return findNextWord(chars, pos, size, count, skipPunc, false);
     }
 
-    public static int findNextWord(char[] chars, int pos, int size, int count, boolean skipPunc, boolean spaceWords)
+    public static int findNextWord(CharSequence chars, int pos, int size, int count, boolean skipPunc, boolean spaceWords)
     {
         int step = count >= 0 ? 1 : -1;
         count = Math.abs(count);
@@ -294,17 +294,17 @@ public class SearchHelper
         return res;
     }
 
-    private static int findNextWordOne(char[] chars, int pos, int size, int step, boolean skipPunc, boolean spaceWords)
+    private static int findNextWordOne(CharSequence chars, int pos, int size, int step, boolean skipPunc, boolean spaceWords)
     {
         boolean found = false;
         // For back searches, skip any current whitespace so we start at the end of a word
         if (step < 0 && pos > 0)
         {
-            if (CharacterHelper.charType(chars[pos - 1], skipPunc) == CharacterHelper.TYPE_SPACE && !spaceWords)
+            if (CharacterHelper.charType(chars.charAt(pos - 1), skipPunc) == CharacterHelper.TYPE_SPACE && !spaceWords)
             {
                 pos = skipSpace(chars, pos - 1, step, size) + 1;
             }
-            if (CharacterHelper.charType(chars[pos], skipPunc) != CharacterHelper.charType(chars[pos - 1], skipPunc))
+            if (CharacterHelper.charType(chars.charAt(pos), skipPunc) != CharacterHelper.charType(chars.charAt(pos - 1), skipPunc))
             {
                 pos += step;
             }
@@ -315,16 +315,16 @@ public class SearchHelper
             return pos;
         }
 
-        int type = CharacterHelper.charType(chars[pos], skipPunc);
+        int type = CharacterHelper.charType(chars.charAt(pos), skipPunc);
         if (type == CharacterHelper.TYPE_SPACE && step < 0 && pos > 0 && !spaceWords)
         {
-            type = CharacterHelper.charType(chars[pos - 1], skipPunc);
+            type = CharacterHelper.charType(chars.charAt(pos - 1), skipPunc);
         }
         
         pos += step;
         while (pos >= 0 && pos < size && !found)
         {
-            int newType = CharacterHelper.charType(chars[pos], skipPunc);
+            int newType = CharacterHelper.charType(chars.charAt(pos), skipPunc);
             if (newType != type)
             {
                 if (newType == CharacterHelper.TYPE_SPACE && step >= 0 && !spaceWords)
@@ -341,7 +341,7 @@ public class SearchHelper
                     res = pos;
                 }
 
-                type = CharacterHelper.charType(chars[res], skipPunc);
+                type = CharacterHelper.charType(chars.charAt(res), skipPunc);
                 found = true;
             }
 
@@ -375,7 +375,7 @@ public class SearchHelper
      */
     public static TextRange findWordUnderCursor(Editor editor)
     {
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int stop = EditorHelper.getLineEndOffset(editor, EditorHelper.getCurrentLogicalLine(editor), true);
 
         int pos = editor.getCaretModel().getOffset();
@@ -384,11 +384,11 @@ public class SearchHelper
         for (int i = 0; i < 2; i++)
         {
             start = pos;
-            int type = CharacterHelper.charType(chars[start], false);
+            int type = CharacterHelper.charType(chars.charAt(start), false);
             if (type == types[i])
             {
                 // Search back for start of word
-                while (start > 0 && CharacterHelper.charType(chars[start - 1], false) == types[i])
+                while (start > 0 && CharacterHelper.charType(chars.charAt(start - 1), false) == types[i])
                 {
                     start--;
                 }
@@ -396,7 +396,7 @@ public class SearchHelper
             else
             {
                 // Search forward for start of word
-                while (start < stop && CharacterHelper.charType(chars[start], false) != types[i])
+                while (start < stop && CharacterHelper.charType(chars.charAt(start), false) != types[i])
                 {
                     start++;
                 }
@@ -415,7 +415,7 @@ public class SearchHelper
 
         int end = start;
         // Special case 1 character words because 'findNextWordEnd' returns one to many chars
-        if (start < stop && CharacterHelper.charType(chars[start + 1], false) != CharacterHelper.TYPE_CHAR)
+        if (start < stop && CharacterHelper.charType(chars.charAt(start + 1), false) != CharacterHelper.TYPE_CHAR)
         {
             end = start + 1;
         }
@@ -435,7 +435,7 @@ public class SearchHelper
         logger.debug("isBig=" + isBig);
         logger.debug("hasSelection=" + hasSelection);
 
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         //int min = EditorHelper.getLineStartOffset(editor, EditorHelper.getCurrentLogicalLine(editor));
         //int max = EditorHelper.getLineEndOffset(editor, EditorHelper.getCurrentLogicalLine(editor), true);
         int min = 0;
@@ -445,10 +445,10 @@ public class SearchHelper
         logger.debug("max=" + max);
 
         int pos = editor.getCaretModel().getOffset();
-        boolean startSpace = CharacterHelper.charType(chars[pos], isBig) == CharacterHelper.TYPE_SPACE;
+        boolean startSpace = CharacterHelper.charType(chars.charAt(pos), isBig) == CharacterHelper.TYPE_SPACE;
         // Find word start
         boolean onWordStart = pos == min ||
-            CharacterHelper.charType(chars[pos - 1], isBig) != CharacterHelper.charType(chars[pos], isBig);
+            CharacterHelper.charType(chars.charAt(pos - 1), isBig) != CharacterHelper.charType(chars.charAt(pos), isBig);
         int start = pos;
 
         logger.debug("pos=" + pos);
@@ -472,7 +472,7 @@ public class SearchHelper
 
         // Find word end
         boolean onWordEnd = pos == max ||
-            CharacterHelper.charType(chars[pos + 1], isBig) != CharacterHelper.charType(chars[pos], isBig);
+            CharacterHelper.charType(chars.charAt(pos + 1), isBig) != CharacterHelper.charType(chars.charAt(pos), isBig);
 
         logger.debug("onWordEnd=" + onWordEnd);
 
@@ -503,7 +503,7 @@ public class SearchHelper
             }
             if (firstEnd < max)
             {
-                if (CharacterHelper.charType(chars[firstEnd + 1], false) != CharacterHelper.TYPE_SPACE)
+                if (CharacterHelper.charType(chars.charAt(firstEnd + 1), false) != CharacterHelper.TYPE_SPACE)
                 {
                     goBack = true;
                 }
@@ -513,7 +513,7 @@ public class SearchHelper
         {
             if (pos > min)
             {
-                if (CharacterHelper.charType(chars[pos - 1], false) != CharacterHelper.TYPE_SPACE)
+                if (CharacterHelper.charType(chars.charAt(pos - 1), false) != CharacterHelper.TYPE_SPACE)
                 {
                     goBack = true;
                 }
@@ -530,7 +530,7 @@ public class SearchHelper
             }
             if (firstEnd < max)
             {
-                if (CharacterHelper.charType(chars[firstEnd + 1], false) != CharacterHelper.TYPE_SPACE)
+                if (CharacterHelper.charType(chars.charAt(firstEnd + 1), false) != CharacterHelper.TYPE_SPACE)
                 {
                     goForward = true;
                 }
@@ -540,7 +540,7 @@ public class SearchHelper
         {
             if (end < max)
             {
-                if (CharacterHelper.charType(chars[end + 1], !isBig) != CharacterHelper.charType(chars[end], !isBig))
+                if (CharacterHelper.charType(chars.charAt(end + 1), !isBig) != CharacterHelper.charType(chars.charAt(end), !isBig))
                 {
                     goForward = true;
                 }
@@ -552,14 +552,14 @@ public class SearchHelper
 
         if (goForward)
         {
-            while (end < max && CharacterHelper.charType(chars[end + 1], false) == CharacterHelper.TYPE_SPACE)
+            while (end < max && CharacterHelper.charType(chars.charAt(end + 1), false) == CharacterHelper.TYPE_SPACE)
             {
                 end++;
             }
         }
         if (goBack)
         {
-            while (start > min && CharacterHelper.charType(chars[start - 1], false) == CharacterHelper.TYPE_SPACE)
+            while (start > min && CharacterHelper.charType(chars.charAt(start - 1), false) == CharacterHelper.TYPE_SPACE)
             {
                 start--;
             }
@@ -581,14 +581,14 @@ public class SearchHelper
      */
     public static int findNextWordEnd(Editor editor, int count, boolean skipPunc, boolean stayEnd)
     {
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
         int size = EditorHelper.getFileSize(editor);
 
         return findNextWordEnd(chars, pos, size, count, skipPunc, stayEnd, false);
     }
 
-    public static int findNextWordEnd(char[] chars, int pos, int size, int count, boolean skipPunc, boolean stayEnd,
+    public static int findNextWordEnd(CharSequence chars, int pos, int size, int count, boolean skipPunc, boolean stayEnd,
         boolean spaceWords)
     {
         int step = count >= 0 ? 1 : -1;
@@ -607,7 +607,7 @@ public class SearchHelper
         return res;
     }
 
-    private static int findNextWordEndOne(char[] chars, int pos, int size, int step, boolean skipPunc, boolean stayEnd,
+    private static int findNextWordEndOne(CharSequence chars, int pos, int size, int step, boolean skipPunc, boolean stayEnd,
         boolean spaceWords)
     {
         boolean found = false;
@@ -624,11 +624,11 @@ public class SearchHelper
                 pos = skipSpace(chars, pos, step, size);
             }
             */
-            if (CharacterHelper.charType(chars[pos + 1], skipPunc) == CharacterHelper.TYPE_SPACE && !spaceWords)
+            if (CharacterHelper.charType(chars.charAt(pos + 1), skipPunc) == CharacterHelper.TYPE_SPACE && !spaceWords)
             {
                 pos = skipSpace(chars, pos + 1, step, size) - 1;
             }
-            if (CharacterHelper.charType(chars[pos], skipPunc) != CharacterHelper.charType(chars[pos + 1], skipPunc))
+            if (CharacterHelper.charType(chars.charAt(pos), skipPunc) != CharacterHelper.charType(chars.charAt(pos + 1), skipPunc))
             {
                 pos += step;
             }
@@ -638,16 +638,16 @@ public class SearchHelper
         {
             return pos;
         }
-        int type = CharacterHelper.charType(chars[pos], skipPunc);
+        int type = CharacterHelper.charType(chars.charAt(pos), skipPunc);
         if (type == CharacterHelper.TYPE_SPACE && step >= 0 && pos < size - 1 && !spaceWords)
         {
-            type = CharacterHelper.charType(chars[pos + 1], skipPunc);
+            type = CharacterHelper.charType(chars.charAt(pos + 1), skipPunc);
         }
 
         pos += step;
         while (pos >= 0 && pos < size && !found)
         {
-            int newType = CharacterHelper.charType(chars[pos], skipPunc);
+            int newType = CharacterHelper.charType(chars.charAt(pos), skipPunc);
             if (newType != type)
             {
                 if (step >= 0)
@@ -698,11 +698,11 @@ public class SearchHelper
      * @param size The size of the document
      * @return The new position. This will be the first non-whitespace character found
      */
-    public static int skipSpace(char[] chars, int offset, int step, int size)
+    public static int skipSpace(CharSequence chars, int offset, int step, int size)
     {
         while (offset >= 0 && offset < size)
         {
-            if (CharacterHelper.charType(chars[offset], false) != CharacterHelper.TYPE_SPACE)
+            if (CharacterHelper.charType(chars.charAt(offset), false) != CharacterHelper.TYPE_SPACE)
             {
                 break;
             }
@@ -726,13 +726,13 @@ public class SearchHelper
         int line = EditorHelper.getCurrentLogicalLine(editor);
         int start = EditorHelper.getLineStartOffset(editor, line);
         int end = EditorHelper.getLineEndOffset(editor, line, true);
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int found = 0;
         int step = count >= 0 ? 1 : -1;
         int pos = editor.getCaretModel().getOffset() + step;
-        while (pos >= start && pos < end && pos >= 0 && pos < chars.length)
+        while (pos >= start && pos < end && pos >= 0 && pos < chars.length())
         {
-            if (chars[pos] == ch)
+            if (chars.charAt(pos) == ch)
             {
                 found++;
                 if (found == Math.abs(count))
@@ -756,16 +756,16 @@ public class SearchHelper
     public static int findNextParagraph(Editor editor, int count)
     {
         int offset = editor.getCaretModel().getOffset();
-        char[] chars = editor.getDocument().getChars();
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
         int found = 0;
         int step = count >= 0 ? 1 : -1;
         int pos = offset;
         int res = offset;
         int cnt = 0;
         pos = skipNewlines(chars, pos, step);
-        while (pos >= 0 && pos < chars.length && found < Math.abs(count))
+        while (pos >= 0 && pos < chars.length() && found < Math.abs(count))
         {
-            if (chars[pos] == '\n')
+            if (chars.charAt(pos) == '\n')
             {
                 cnt++;
                 if (cnt == 2)
@@ -789,18 +789,18 @@ public class SearchHelper
             {
                 res = 0;
             }
-            else if (pos >= chars.length)
+            else if (pos >= chars.length())
             {
-                res = chars.length - 1;
+                res = chars.length() - 1;
             }
         }
 
         return res;
     }
 
-    private static int skipNewlines(char[] chars, int offset, int step)
+    private static int skipNewlines(CharSequence chars, int offset, int step)
     {
-        while (offset >= 0 && offset < chars.length && chars[offset] == '\n')
+        while (offset >= 0 && offset < chars.length() && chars.charAt(offset) == '\n')
         {
             offset += step;
         }
