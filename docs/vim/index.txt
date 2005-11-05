@@ -99,10 +99,6 @@ tag             char            action  ~
 |i_CTRL-G_k|    CTRL-G CTRL-K   line up, to column where inserting started
 |i_CTRL-G_k|    CTRL-G k        line up, to column where inserting started
 |i_CTRL-G_k|    CTRL-G <Up>     line up, to column where inserting started
-|i_CTRL-N|      CTRL-N          find next match for keyword in front of the
-                                cursor
-|i_CTRL-P|      CTRL-P          find previous match for keyword in front of
-                                the cursor
 |i_CTRL-R_CTRL-R| CTRL-R CTRL-R {0-9a-z"%#*:=}
 insert the contents of a register literally
 |i_CTRL-R_CTRL-O| CTRL-R CTRL-O {0-9a-z"%#*:=}
@@ -114,7 +110,6 @@ and fix indent.
 |i_CTRL-V|      CTRL-V {char}   insert next non-digit literally
 |i_^_CTRL-D|    ^ CTRL-D        delete all indent in the current line, restore
                                 it in the next line
-|i_CTRL-]|      CTRL-]          trigger abbreviation
 
 ==============================================================================
 2. Normal mode                                          *normal-index*

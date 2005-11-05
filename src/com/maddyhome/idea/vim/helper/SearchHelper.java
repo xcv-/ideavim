@@ -320,7 +320,7 @@ public class SearchHelper
         {
             type = CharacterHelper.charType(chars.charAt(pos - 1), skipPunc);
         }
-        
+
         pos += step;
         while (pos >= 0 && pos < size && !found)
         {
@@ -567,7 +567,7 @@ public class SearchHelper
 
         logger.debug("start=" + start);
         logger.debug("end=" + end);
-        
+
         return new TextRange(start, end);
     }
 

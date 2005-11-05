@@ -1,23 +1,5 @@
 package com.maddyhome.idea.vim.group;
 
-import com.intellij.openapi.actionSystem.DataConstants;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
-import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.maddyhome.idea.vim.KeyHandler;
-import com.maddyhome.idea.vim.VimPlugin;
-import com.maddyhome.idea.vim.helper.EditorData;
-import java.util.HashMap;
-
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
  * Copyright (C) 2003-2005 Rick Maddy
@@ -36,6 +18,25 @@ import java.util.HashMap;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import com.intellij.openapi.actionSystem.DataConstants;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.maddyhome.idea.vim.KeyHandler;
+import com.maddyhome.idea.vim.VimPlugin;
+import com.maddyhome.idea.vim.helper.EditorData;
+
+import java.util.HashMap;
 
 /**
  *

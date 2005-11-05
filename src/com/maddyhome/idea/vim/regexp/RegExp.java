@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.regexp;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,133 +25,6 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.MessageHelper;
 import com.maddyhome.idea.vim.helper.Msg;
-
-/*
- * NOTICE:
- *
- * This code was translated, by hand, into Java from the original Vim 6.1
- * source code with some minor changes here and there.
- */
-
-/*
- * Handling of regular expressions: vim_regcomp(), vim_regexec(), vim_regsub()
- *
- * NOTICE:
- *
- * This is NOT the original regular expression code as written by Henry
- * Spencer.  This code has been modified specifically for use with the VIM
- * editor, and should not be used separately from Vim.  If you want a good
- * regular expression library, get the original code.  The copyright notice
- * that follows is from the original.
- *
- * END NOTICE
- *
- *      Copyright (c) 1986 by University of Toronto.
- *      Written by Henry Spencer.  Not derived from licensed software.
- *
- *      Permission is granted to anyone to use this software for any
- *      purpose on any computer system, and to redistribute it freely,
- *      subject to the following restrictions:
- *
- *      1. The author is not responsible for the consequences of use of
- *              this software, no matter how awful, even if they arise
- *              from defects in it.
- *
- *      2. The origin of this software must not be misrepresented, either
- *              by explicit claim or by omission.
- *
- *      3. Altered versions must be plainly marked as such, and must not
- *              be misrepresented as being the original software.
- *
- * Beware that some of this code is subtly aware of the way operator
- * precedence is structured in regular expressions.  Serious changes in
- * regular-expression syntax might require a total rethink.
- *
- * Changes have been made by Tony Andrews, Olaf 'Rhialto' Seibert, Robert Webb
- * and Bram Moolenaar.
- * Named character class support added by Walter Briscoe (1998 Jul 01)
- */
-
-/*
- * The "internal use only" fields in regexp.h are present to pass info from
- * compile to execute that permits the execute phase to run lots faster on
- * simple cases.  They are:
- *
- * regstart     char that must begin a match; NUL if none obvious; Can be a
- *              multi-byte character.
- * reganch      is the match anchored (at beginning-of-line only)?
- * regmust      string (pointer into program) that match must include, or null
- * regmlen      length of regmust string
- * regflags     RF_ values or'ed together
- *
- * Regstart and reganch permit very fast decisions on suitable starting points
- * for a match, cutting down the work a lot.  Regmust permits fast rejection
- * of lines that cannot possibly match.  The regmust tests are costly enough
- * that vim_regcomp() supplies a regmust only if the r.e. contains something
- * potentially expensive (at present, the only such thing detected is * or +
- * at the start of the r.e., which can involve a lot of backup).  Regmlen is
- * supplied because the test in vim_regexec() needs it and vim_regcomp() is
- * computing it anyway.
- */
-
-/*
- * Structure for regexp "program".  This is essentially a linear encoding
- * of a nondeterministic finite-state machine (aka syntax charts or
- * "railroad normal form" in parsing technology).  Each node is an opcode
- * plus a "next" pointer, possibly plus an operand.  "Next" pointers of
- * all nodes except BRANCH and BRACES_COMPLEX implement concatenation; a "next"
- * pointer with a BRANCH on both ends of it is connecting two alternatives.
- * (Here we have one of the subtle syntax dependencies: an individual BRANCH
- * (as opposed to a collection of them) is never concatenated with anything
- * because of operator precedence).  The "next" pointer of a BRACES_COMPLEX
- * node points to the node after the stuff to be repeated.  The operand of some
- * types of node is a literal string; for others, it is a node leading into a
- * sub-FSM.  In particular, the operand of a BRANCH node is the first node of
- * the branch.  (NB this is *not* a tree structure: the tail of the branch
- * connects to the thing following the set of BRANCHes.)
- *
- * pattern      is coded like:
- *
- *                        +-----------------+
- *                        |                 V
- * <aa>\|<bb>   BRANCH <aa> BRANCH <bb> --> END
- *                   |      ^    |          ^
- *                   +------+    +----------+
- *
- *
- *                     +------------------+
- *                     V                  |
- * <aa>*        BRANCH BRANCH <aa> --> BACK BRANCH --> NOTHING --> END
- *                   |      |               ^                      ^
- *                   |      +---------------+                      |
- *                   +---------------------------------------------+
- *
- *
- *                                      +-------------------------+
- *                                      V                         |
- * <aa>\{}      BRANCH BRACE_LIMITS --> BRACE_COMPLEX <aa> --> BACK  END
- *                   |                              |                ^
- *                   |                              +----------------+
- *                   +-----------------------------------------------+
- *
- *
- * <aa>\@!<bb>  BRANCH NOMATCH <aa> --> END  <bb> --> END
- *                   |       |                ^       ^
- *                   |       +----------------+       |
- *                   +--------------------------------+
- *
- *                                                    +---------+
- *                                                    |         V
- * \z[abc]      BRANCH BRANCH  a  BRANCH  b  BRANCH  c  BRANCH  NOTHING --> END
- *                   |      |          |          |     ^                   ^
- *                   |      |          |          +-----+                   |
- *                   |      |          +----------------+                   |
- *                   |      +---------------------------+                   |
- *                   +------------------------------------------------------+
- *
- * They all start with a BRANCH for "\|" alternaties, even when there is only
- * one alternative.
- */
 
 public class RegExp
 {

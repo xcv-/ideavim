@@ -1,12 +1,8 @@
 package com.maddyhome.idea.vim.common;
 
-import com.maddyhome.idea.vim.helper.StringHelper;
-import java.util.Comparator;
-import java.util.List;
-
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +18,11 @@ import java.util.List;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import com.maddyhome.idea.vim.helper.StringHelper;
+
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Represents a register.

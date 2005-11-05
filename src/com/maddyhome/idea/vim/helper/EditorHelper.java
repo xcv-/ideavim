@@ -129,7 +129,7 @@ public class EditorHelper
         int width = editor.getScrollingModel().
     }
     */
-    
+
     /**
      * Gets the number of characters on the specified visual line. This will be different than the number of visual
      * characters if there are "real" tabs in the line.
@@ -407,7 +407,7 @@ public class EditorHelper
     public static int normalizeOffset(Editor editor, int offset, boolean allowEnd)
     {
         int lline = editor.offsetToLogicalPosition(offset).line;
-        
+
         return normalizeOffset(editor, lline, offset, allowEnd);
     }
 
