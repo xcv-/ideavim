@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.option;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2004 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,10 +22,11 @@ package com.maddyhome.idea.vim.option;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.VimPlugin;
+import com.maddyhome.idea.vim.helper.ApiHelper;
 import com.maddyhome.idea.vim.helper.MessageHelper;
 import com.maddyhome.idea.vim.helper.Msg;
-import com.maddyhome.idea.vim.helper.ApiHelper;
 import com.maddyhome.idea.vim.ui.MorePanel;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -158,7 +159,7 @@ public class Options
         else if (args.equals("all&"))
         {
             resetAllOptions();
-            
+
             return true;
         }
 

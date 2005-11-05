@@ -9,16 +9,28 @@
 earlier version.<br>
 
 New Features<br>
-- Eliminated the need for a custom keymap. Enabling/Disabling the plugin via
-  the tools menu (or Ctrl-Alt-V) properly configures the required key settings.<br>
+- Support of visual blockwise mode using Ctrl-v or Ctrl-q.<br>
+- Added the visual commands gp, gP, [p, ]p, [P, ]P, I, and A.<br>
+- Display the VIM logo on the Quick Start page.<br>
 <br>
 Bug Fixes<br>
-- Fixed exiting of visual mode when executing commands such as Comment,
-  Reformat, Surround With, and Auto-Indent.<br>
-- Pressing Escape while in command mode will now clear highlights created with
-  IDEA with commands such as "Highlight Usages in File".<br>
-- Ctrl-D, Ctrl-U, zh, zLeft, zl, and zRight now work on read-only files.<br>
-- Fixed register names displayed with the :register command.<br>
+- Linewise visual yank now properly inserted linewise during a put.<br>
+- Leading/trailing spaces no longer trimmed from registers when displaying with
+  :reg command.<br>
+- Fix persistence of registers. Whitespace was getting normalized out.<br>
+- Fixed visual mode character change.<br>
+- No longer update "delete" registers when joining lines or shifting text.<br>
+- Undoing a put required two undos instead of one. (Regression from 0.9.7).<br>
+- Fixed various visual put issues.<br>
+- Fixed cursor movements after yank commands.<br>
+- Ensure smooth scrolling is turned off in editors. Many motion commands were
+  having problems if smooth scrolling was on as of 0.9.6.<br>
+- Entering an invalid command while in visual mode now properly stays in
+  visual mode.<br>
+- Typing text while in insert mode caused strange cursor position changes if
+  the cursor neared the right edge of the screen. (Regression from 0.9.6).<br>
+- Fixed internal error when right clicking on a visual selection and selecting
+  certain refactorings.<br>
 ]]>
     </change-notes>
     <idea-version since-build="1162"/>
@@ -193,6 +205,8 @@ Bug Fixes<br>
         <action id="VimCommentByLineComment" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Line Comment"/>
         <action id="VimSurroundWith" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Surround With"/>
         <action id="VimSurroundWithLiveTemplate" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Surround With Live Template"/>
+        <action id="VimMoveStatementDown" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Move Statement Down"/>
+        <action id="VimMoveStatementUp" class="com.maddyhome.idea.vim.action.visual.VisualOperatorDelegateAction" text="Move Statement Up"/>
 
         <!-- Shift -->
         <action id="VimAutoIndentLines" class="com.maddyhome.idea.vim.action.change.shift.AutoIndentLinesAction" text="Auto Indent Lines"/>
@@ -260,6 +274,7 @@ Bug Fixes<br>
         <action id="VimClassNameCompletion" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Class Name Completion"/>
         <action id="VimCodeCompletion" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Code Completion"/>
         <action id="VimSmartTypeCompletion" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Smart Type Completion"/>
+        <action id="VimWordCompletion" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Word Completion"/>
         <action id="VimInsertLiveTemplate" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Insert Live Template"/>
         <action id="VimHelpTopics" class="com.maddyhome.idea.vim.action.OriginalDelegateAction" text="Help Topics"/>
 

@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.ui;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2004 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -62,7 +62,7 @@ public class ExEntryPanel extends JPanel
     private ExEntryPanel()
     {
         setBorder(BorderFactory.createEtchedBorder());
-        
+
         Font font = new Font("Monospaced", Font.PLAIN, 12);
         label = new JLabel(" ");
         label.setFont(font);
@@ -184,7 +184,7 @@ public class ExEntryPanel extends JPanel
     {
         return entry;
     }
-    
+
     /**
      * Turns off the ex entry field and puts the focus back to the original component
      * @param changeFocus true if focus should be put back, false if not

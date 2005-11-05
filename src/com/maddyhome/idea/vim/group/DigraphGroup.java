@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.group;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2004 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,8 +24,8 @@ import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.ui.MorePanel;
 
 import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.Iterator;
+import java.util.TreeMap;
 
 public class DigraphGroup extends AbstractActionGroup
 {

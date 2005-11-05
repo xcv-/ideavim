@@ -1,7 +1,8 @@
 package com.maddyhome.idea.vim.common;
+
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2004 Rick Maddy
+ * Copyright (C) 2003-2005 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,7 +57,7 @@ public class TextRange
     {
         return starts.length;
     }
-    
+
     public int getStartOffset()
     {
         return starts[0];
