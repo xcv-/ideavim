@@ -27,7 +27,6 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.command.Command;
@@ -36,6 +35,7 @@ import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.RegisterGroup;
 import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.helper.DigraphSequence;
+import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.RunnableHelper;
 import com.maddyhome.idea.vim.key.ArgumentNode;
 import com.maddyhome.idea.vim.key.BranchNode;
@@ -429,14 +429,7 @@ public class KeyHandler
             logger.debug("lastWasBS=" + lastWasBS);
 
             Project project = (Project)context.getData(DataConstants.PROJECT);
-            if (!editor.getDocument().isWritable() && !cmd.isReadType() &&
-                !FileDocumentManager.fileForDocumentCheckedOutSuccessfully(editor.getDocument(), project))
-            {
-                logger.info("write command on read-only file");
-                VimPlugin.indicateError();
-                reset(editor);
-            }
-            else
+            if (cmd.isReadType() || EditorHelper.canEdit(project, editor))
             {
                 Runnable action = new ActionRunner(editor, context, cmd, key);
                 if (cmd.isWriteType())
@@ -447,6 +440,12 @@ public class KeyHandler
                 {
                     RunnableHelper.runReadCommand(project, action, cmd.getActionId(), null);
                 }
+            }
+            else
+            {
+                logger.info("write command on read-only file");
+                VimPlugin.indicateError();
+                reset(editor);
             }
         }
         else if (mode == STATE_BAD_COMMAND)
@@ -502,8 +501,13 @@ public class KeyHandler
         // What is "place"? Leave it the empty string for now.
         // Is the template presentation sufficient?
         // What are the modifiers? Is zero OK?
-        action.actionPerformed(new AnActionEvent(null, context, "", action.getTemplatePresentation(),
-            ActionManager.getInstance(), 0));
+        action.actionPerformed(new AnActionEvent(
+            null,
+            context,
+            "",
+            action.getTemplatePresentation(),
+            ActionManager.getInstance(), // API change - don't merge
+            0));
     }
 
     /**
