@@ -286,6 +286,12 @@ public class KeyParser
     public void registerAction(int mapping, String actName, int cmdType, int cmdFlags)
     {
         String ideaName = actName.substring(3);
+        ActionManager amgr = ActionManager.getInstance();
+        if (amgr.getAction(ideaName) == null)
+        {
+            logger.info("No registered action " + ideaName);
+            return;
+        }
 
         Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
         com.intellij.openapi.actionSystem.Shortcut[] cuts = keymap.getShortcuts(ideaName);
@@ -313,7 +319,6 @@ public class KeyParser
             }
         }
 
-        ActionManager amgr = ActionManager.getInstance();
         AnAction iaction = amgr.getAction(ideaName);
         AnAction vaction = amgr.getAction(actName);
         if (vaction instanceof DelegateAction)
