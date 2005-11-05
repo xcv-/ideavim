@@ -22,6 +22,7 @@ package com.maddyhome.idea.vim.group;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -29,15 +30,11 @@ import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.HighlighterTargetArea;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.common.CharacterPosition;
@@ -755,7 +752,8 @@ public class SearchGroup extends AbstractActionGroup
         Project[] projects = ProjectManager.getInstance().getOpenProjects();
         for (int i = 0; i < projects.length; i++)
         {
-            FileEditor[] editors = FileEditorManager.getInstance(projects[i]).getSelectedEditors();
+            Editor current = FileEditorManager.getInstance(projects[i]).getSelectedTextEditor();
+            Editor[] editors = current == null ? null : EditorFactory.getInstance().getEditors(current.getDocument(), projects[i]);
             if (editors == null)
             {
                 continue;
@@ -763,32 +761,28 @@ public class SearchGroup extends AbstractActionGroup
 
             for (int j = 0; j < editors.length; j++)
             {
-                if (editors[j] instanceof TextEditor)
+                Editor editor = editors[j];
+                String els = EditorData.getLastSearch(editor);
+                if (!showSearchHighlight)
                 {
-                    Editor editor = ((TextEditor)editors[j]).getEditor();
-
-                    String els = EditorData.getLastSearch(editor);
-                    if (!showSearchHighlight)
-                    {
-                        removeSearchHighlight(editor);
-
-                        continue;
-                    }
-                    else if (lastSearch != null && lastSearch.equals(els))
-                    {
-                        continue;
-                    }
-                    else if (lastSearch == null)
-                    {
-                        continue;
-                    }
-
                     removeSearchHighlight(editor);
 
-                    highlightSearchLines(editor, noSmartCase, 0, -1);
-
-                    EditorData.setLastSearch(editor, lastSearch);
+                    continue;
                 }
+                else if (lastSearch != null && lastSearch.equals(els))
+                {
+                    continue;
+                }
+                else if (lastSearch == null)
+                {
+                    continue;
+                }
+
+                removeSearchHighlight(editor);
+
+                highlightSearchLines(editor, noSmartCase, 0, -1);
+
+                EditorData.setLastSearch(editor, lastSearch);
             }
         }
     }
@@ -1507,45 +1501,40 @@ public class SearchGroup extends AbstractActionGroup
             }
 
             Project[] projs = ProjectManager.getInstance().getOpenProjects();
-            VirtualFile vf = FileDocumentManager.getInstance().getFile(event.getDocument());
             for (int i = 0; i < projs.length; i++)
             {
-                FileEditorManager fem = FileEditorManager.getInstance(projs[i]);
-                FileEditor[] fes = fem.getEditors(vf);
-                for (int j = 0; j < fes.length; j++)
+                Editor[] editors = EditorFactory.getInstance().getEditors(event.getDocument(), projs[i]);
+                for (int j = 0; j < editors.length; j++)
                 {
-                    if (fes[j] instanceof TextEditor)
+                    Editor editor = editors[j];
+                    Collection hls = EditorData.getLastHighlights(editor);
+                    if (hls == null)
                     {
-                        Editor editor = ((TextEditor)fes[j]).getEditor();
-                        Collection hls = EditorData.getLastHighlights(editor);
-                        if (hls == null)
-                        {
-                            continue;
-                        }
-
-                        int soff = event.getOffset();
-                        int eoff = soff + event.getNewLength();
-
-                        logger.debug("hls=" + hls);
-                        logger.debug("event=" + event);
-                        Iterator iter = hls.iterator();
-                        while (iter.hasNext())
-                        {
-                            RangeHighlighter rh = (RangeHighlighter)iter.next();
-                            if (!rh.isValid() || (eoff >= rh.getStartOffset() && soff <= rh.getEndOffset()))
-                            {
-                                iter.remove();
-                                editor.getMarkupModel().removeHighlighter(rh);
-                            }
-                        }
-
-                        int sl = editor.offsetToLogicalPosition(soff).line;
-                        int el = editor.offsetToLogicalPosition(eoff).line;
-                        logger.debug("sl=" + sl + ", el=" + el);
-                        CommandGroups.getInstance().getSearch().highlightSearchLines(editor, false, sl, el);
-                        hls = EditorData.getLastHighlights(editor);
-                        logger.debug("hls=" + hls);
+                        continue;
                     }
+
+                    int soff = event.getOffset();
+                    int eoff = soff + event.getNewLength();
+
+                    logger.debug("hls=" + hls);
+                    logger.debug("event=" + event);
+                    Iterator iter = hls.iterator();
+                    while (iter.hasNext())
+                    {
+                        RangeHighlighter rh = (RangeHighlighter)iter.next();
+                        if (!rh.isValid() || (eoff >= rh.getStartOffset() && soff <= rh.getEndOffset()))
+                        {
+                            iter.remove();
+                            editor.getMarkupModel().removeHighlighter(rh);
+                        }
+                    }
+
+                    int sl = editor.offsetToLogicalPosition(soff).line;
+                    int el = editor.offsetToLogicalPosition(eoff).line;
+                    logger.debug("sl=" + sl + ", el=" + el);
+                    CommandGroups.getInstance().getSearch().highlightSearchLines(editor, false, sl, el);
+                    hls = EditorData.getLastHighlights(editor);
+                    logger.debug("hls=" + hls);
                 }
             }
         }
