@@ -1,4 +1,3 @@
-
 package com.maddyhome.idea.vim;
 
 /*
@@ -36,6 +35,7 @@ import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.RegisterGroup;
 import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.helper.DigraphSequence;
+import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.RunnableHelper;
 import com.maddyhome.idea.vim.key.ArgumentNode;
 import com.maddyhome.idea.vim.key.BranchNode;
@@ -428,16 +428,10 @@ public class KeyHandler
             lastWasBS = ((cmd.getFlags() & Command.FLAG_IS_BACKSPACE) != 0);
             logger.debug("lastWasBS=" + lastWasBS);
 
-            if (!editor.getDocument().isWritable() && !cmd.isReadType())
-            {
-                editor.getDocument().fireReadOnlyModificationAttempt();
-                VimPlugin.indicateError();
-                reset(editor);
-            }
-            else
+            Project project = (Project)context.getData(DataConstants.PROJECT);
+            if (cmd.isReadType() || EditorHelper.canEdit(project, editor))
             {
                 Runnable action = new ActionRunner(editor, context, cmd, key);
-                Project project = (Project)context.getData(DataConstants.PROJECT);
                 if (cmd.isWriteType())
                 {
                     RunnableHelper.runWriteCommand(project, action, cmd.getActionId(), null);
@@ -446,6 +440,12 @@ public class KeyHandler
                 {
                     RunnableHelper.runReadCommand(project, action, cmd.getActionId(), null);
                 }
+            }
+            else
+            {
+                logger.info("write command on read-only file");
+                VimPlugin.indicateError();
+                reset(editor);
             }
         }
         else if (mode == STATE_BAD_COMMAND)
@@ -501,7 +501,12 @@ public class KeyHandler
         // What is "place"? Leave it the empty string for now.
         // Is the template presentation sufficient?
         // What are the modifiers? Is zero OK?
-        action.actionPerformed(new AnActionEvent(null, context, "", action.getTemplatePresentation(), 0));
+        action.actionPerformed(new AnActionEvent(
+            null,
+            context,
+            "",
+            action.getTemplatePresentation(),
+            0));
     }
 
     /**
