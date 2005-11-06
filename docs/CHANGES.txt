@@ -1,6 +1,12 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.10.1
+@VERSION@ from 0.10.2
+Bug Fixes
+- The keys Enter, Tab, and Escape now properly work in dialog boxes and other
+  entry fields as long as you aren't in insert or replace mode within a given
+  input field.
+
+0.10.2 from 0.10.1
 New Features
 - Support of visual blockwise mode using Ctrl-v or Ctrl-q.
 - Added the visual commands gp, gP, [p, ]p, [P, ]P, I, and A.
