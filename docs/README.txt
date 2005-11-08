@@ -18,7 +18,7 @@ steps should be completed to perform the upgrade:
 2) Optionally restart IDEA.
 3) Select File|Settings.
 4) Select Keymap.
-5) Select the Default keymap (or other desired default keymap other than Vim).
+5) Select the Default keymap (or other desired keymap other than Vim).
 6) Press the Set Active button.
 7) Select the Vim keymap.
 8) Press the Delete button.
@@ -69,6 +69,20 @@ make the tooltip go away whether in Insert or Normal mode. The only way to make
 the tooltip disappear is to move the caret outside of the parameter area of
 the method call. (I would love to receive solutions for both of these issues.)
 
+Dialog Boxes
+
+Many dialog boxes in IDEA contain single line entry fields. Many of these fields
+are actually one line editors and you must use VIM keystrokes in these fields.
+If you change a value by entering insert/replace mode you must press escape to
+complete the changes. You must try to avoid making changes that result in the
+value getting split into multiple lines.
+
+To abort a dialog box you can press Escape. If you are in insert/replace mode
+you will need to press Escape twice - once to exit insert mode, the other to
+abort the dialog. You can tab between fields normally unless you are in
+insert/replace mode. Enter will perform its default behavior unless you are in
+insert/replace mode.
+
 Menu Changes
 
 In order to emulate the keystrokes used by VIM, several of the default hotkeys
@@ -81,9 +95,9 @@ File
 Edit
      Undo                     Ctrl-Z              u
      Redo                     Ctrl-Shift-Z        Ctrl-R
-     Cut                      Ctrl-X              "+x
-     Copy                     Ctrl-C              "+y
-     Paste                    Ctrl-V              "+P
+     Cut                      Ctrl-X              "+x or Shift-Delete
+     Copy                     Ctrl-C              "+y or Ctrl-Insert
+     Paste                    Ctrl-V              "+P or Shift-Insert
      Select All               Ctrl-A              ggVG
 
 Search
@@ -94,20 +108,19 @@ Search
 
 View
      Quick JavaDoc            Ctrl-Q              K
-     Parameter Info           Ctrl-P              Ctrl-Shift-P
+     Parameter Info           Ctrl-P              <None>
      Swap Panels              Ctrl-U              <None>
      Recent Files...          Ctrl-E              <None>
-     Type Hierarchy           Ctrl-H              Ctrl-Alt-Shift-H
 
 Goto
-     Class...                 Ctrl-N              Alt-Shift-N
+     Class...                 Ctrl-N              :class
      Line...                  Ctrl-G              G
      Declaration              Ctrl-B              gd
-     Super Method             Ctrl-U              Ctrl-Shift-U
+     Super Method             Ctrl-U              <None>
 
 Code
-     Override Methods...      Ctrl-O              Ctrl-Shift-O
-     Implement Methods...     Ctrl-I              Ctrl-Shift-I
+     Override Methods...      Ctrl-O              <None>
+     Implement Methods...     Ctrl-I              <None>
      Complete Code                                (Only in Insert mode)
           Basic               Ctrl-Space          Ctrl-Space
           Smart Type          Ctrl-Shift-Space    Ctrl-Shift-Space

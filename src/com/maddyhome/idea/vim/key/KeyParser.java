@@ -96,24 +96,31 @@ public class KeyParser
      */
     public void setupShortcuts()
     {
+        logger.debug("setupShortcuts");
+        logger.debug("mappings=" + mappings);
+
         Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
         // Loop through each of the keystrokes the plugin needs to take ownership of.
         Iterator keys = mappings.keySet().iterator();
         while (keys.hasNext())
         {
             KeyStroke keyStroke = (KeyStroke)keys.next();
+            logger.debug("keyStroke=" + keyStroke);
             // Get all the IDEA actions that use this keystroke. Could be 0 or more.
             ArrayList actions = (ArrayList)mappings.get(keyStroke);
+            logger.debug("actions=" + actions);
             String[] ids = keymap.getActionIds(keyStroke);
             // For each existing IDEA action we need to remove shortcut.
             for (int i = 0; i < ids.length; i++)
             {
                 String id = ids[i];
+                logger.debug("id=" + id);
                 // Get the list of shortcuts for the IDEA action and find the one that matches the current keystroke
                 com.intellij.openapi.actionSystem.Shortcut[] cuts = keymap.getShortcuts(id);
                 for (int j = 0; j < cuts.length; j++)
                 {
                     com.intellij.openapi.actionSystem.Shortcut cut = cuts[j];
+                    logger.debug("cut=" + cut.getClass().getName());
                     if (cut instanceof KeyboardShortcut)
                     {
                         if (((KeyboardShortcut)cut).getFirstKeyStroke().equals(keyStroke))
@@ -122,6 +129,7 @@ public class KeyParser
                             // Save off the position of the shortcut so it can be put back in the same place.
                             actions.add(new KeyAction(id, j));
                             keymap.addShortcut("VimKeyHandler", cut);
+                            logger.debug("removed " + cut.getClass().getName() + " from " + id + " and added to VimKeyHandler");
                         }
                     }
                 }
@@ -220,10 +228,17 @@ public class KeyParser
 
     public void setupActionHandler(String ideaActName, String vimActName, KeyStroke stroke)
     {
+        setupActionHandler(ideaActName, vimActName, stroke, false);
+    }
+
+    public void setupActionHandler(String ideaActName, String vimActName, KeyStroke stroke, boolean special)
+    {
+        logger.debug("setupActionHandler for " + ideaActName + " and " + vimActName + " for " + stroke);
         ActionManager amgr = ActionManager.getInstance();
         AnAction action = amgr.getAction(ideaActName);
         if (action instanceof EditorAction)
         {
+            logger.debug(ideaActName + " is an EditorAction");
             EditorAction iaction = (EditorAction)action;
             EditorActionHandler handler = iaction.getHandler();
             if (vimActName != null)
@@ -232,7 +247,7 @@ public class KeyParser
                 vaction.setupHandler(handler);
             }
 
-            iaction.setupHandler(new EditorKeyHandler(handler, stroke));
+            iaction.setupHandler(new EditorKeyHandler(handler, stroke, special));
         }
 
         mappings.remove(stroke);

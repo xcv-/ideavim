@@ -19,11 +19,14 @@ package com.maddyhome.idea.vim.handler.key;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
+import com.maddyhome.idea.vim.command.CommandState;
 
 import javax.swing.KeyStroke;
 
@@ -34,24 +37,34 @@ public class EditorKeyHandler extends EditorActionHandler
 {
     public EditorKeyHandler(EditorActionHandler origHandler, KeyStroke stroke)
     {
+        this(origHandler, stroke, false);
+    }
+
+    public EditorKeyHandler(EditorActionHandler origHandler, KeyStroke stroke, boolean special)
+    {
         this.origHandler = origHandler;
         this.stroke = stroke;
+        this.special = special;
     }
 
     public void execute(Editor editor, DataContext context)
     {
-        if (editor == null || !VimPlugin.isEnabled())
+        if (isEnabled(editor, context))
         {
-            original(editor, context);
+            handle(editor, context);
         }
         else
         {
-            handle(editor, context);
+            original(editor, context);
         }
     }
 
     protected void original(Editor editor, DataContext context)
     {
+        logger.debug("original for " + stroke);
+        logger.debug("original is " + origHandler.getClass().getName());
+        logger.debug("editor viewer=" + editor.isViewer());
+        logger.debug("project=" + context.getData(DataConstants.PROJECT));
         origHandler.execute(editor, context);
     }
 
@@ -60,6 +73,39 @@ public class EditorKeyHandler extends EditorActionHandler
         KeyHandler.getInstance().handleKey(editor, stroke, context);
     }
 
+    public boolean isEnabled(Editor editor, DataContext dataContext)
+    {
+        boolean res = true;
+        if (editor == null || !VimPlugin.isEnabled())
+        {
+            logger.debug("no editor or disabled");
+            res = origHandler.isEnabled(editor, dataContext);
+        }
+        else if (dataContext.getData(DataConstants.VIRTUAL_FILE) == null)
+        {
+            logger.debug("no file");
+            if (!special)
+            {
+                logger.debug("not special");
+                res = origHandler.isEnabled(editor, dataContext);
+            }
+            else
+            {
+                int mode = CommandState.getInstance(editor).getMode();
+                if (mode != CommandState.MODE_INSERT && mode != CommandState.MODE_REPLACE)
+                {
+                    logger.debug("not insert or replace");
+                    res = origHandler.isEnabled(editor, dataContext);
+                }
+            }
+        }
+
+        return res;
+    }
+
     protected EditorActionHandler origHandler;
     protected KeyStroke stroke;
+    protected boolean special;
+
+    private static Logger logger = Logger.getInstance(EditorKeyHandler.class.getName());
 }

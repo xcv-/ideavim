@@ -414,7 +414,12 @@ public class EditorHelper
 
     public static int getLeadingCharacterOffset(Editor editor, int lline)
     {
-        int start = getLineStartOffset(editor, lline);
+        return getLeadingCharacterOffset(editor, lline, 0);
+    }
+
+    public static int getLeadingCharacterOffset(Editor editor, int lline, int col)
+    {
+        int start = getLineStartOffset(editor, lline) + col;
         int end = getLineEndOffset(editor, lline, true);
         CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = end;
