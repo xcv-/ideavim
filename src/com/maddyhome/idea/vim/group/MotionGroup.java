@@ -1107,6 +1107,25 @@ public class MotionGroup extends AbstractActionGroup
         return moveCaretToLineStart(editor, EditorHelper.visualLineToLogicalLine(editor, line));
     }
 
+    public int moveCaretToLineScreenStart(Editor editor)
+    {
+        int col = EditorHelper.getVisualColumnAtLeftOfScreen(editor);
+        return moveCaretToColumn(editor, col);
+    }
+
+    public int moveCaretToLineScreenStartSkipLeading(Editor editor)
+    {
+        int col = EditorHelper.getVisualColumnAtLeftOfScreen(editor);
+        int lline = EditorHelper.getCurrentLogicalLine(editor);
+        return EditorHelper.getLeadingCharacterOffset(editor, lline, col);
+    }
+
+    public int moveCaretToLineScreenEnd(Editor editor)
+    {
+        int col = EditorHelper.getVisualColumnAtLeftOfScreen(editor) + EditorHelper.getScreenWidth(editor) - 1;
+        return moveCaretToColumn(editor, col);
+    }
+
     public int moveCaretHorizontalWrap(Editor editor, int count)
     {
         // FIX - allows cursor over newlines

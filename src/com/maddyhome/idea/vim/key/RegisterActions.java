@@ -434,12 +434,16 @@ public class RegisterActions
             new Shortcut('_'));
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionFirstColumn", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE, new Shortcut[] {
             new Shortcut('0'),
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0))
+        });
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionFirstScreenColumn", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE, new Shortcut[] {
             new Shortcut("g0"),
-            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0)),
             new Shortcut(new KeyStroke[] { KeyStroke.getKeyStroke('g'), KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0) })
         });
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionFirstNonSpace", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE, new Shortcut[] {
-            new Shortcut('^'),
+            new Shortcut('^')
+        });
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionFirstScreenNonSpace", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE, new Shortcut[] {
             new Shortcut("g^")
         });
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionFirstScreenLine", Command.MOTION, Command.FLAG_MOT_LINEWISE | Command.FLAG_SAVE_JUMP, new Shortcut[] {
@@ -456,8 +460,10 @@ public class RegisterActions
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.CTRL_MASK)));
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionLastColumn", Command.MOTION, Command.FLAG_MOT_INCLUSIVE, new Shortcut[] {
             new Shortcut('$'),
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0))
+        });
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionLastScreenColumn", Command.MOTION, Command.FLAG_MOT_INCLUSIVE, new Shortcut[] {
             new Shortcut("g$"),
-            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0)),
             new Shortcut(new KeyStroke[] { KeyStroke.getKeyStroke('g'), KeyStroke.getKeyStroke(KeyEvent.VK_END, 0) })
         });
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionLastMatchChar", Command.MOTION,

@@ -5,6 +5,7 @@ Bug Fixes
 - The Enter, Tab, and Escape keys now work properly in dialog boxes and other
   entry fields as long as you aren't in insert or replace mode within a given
   input field.
+- g0, g$, g^, g<Home>, and g<End> now properly move with the screen boundary.
 
 0.10.2 from 0.10.1
 New Features

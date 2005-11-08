@@ -11,7 +11,8 @@ version prior to 0.10.1.<br>
 Bug Fixes<br>
 - The keys Enter, Tab, and Escape now properly work in dialog boxes and other
   entry fields as long as you aren't in insert or replace mode within a given
-  input field.
+  input field.<br>
+- g0, g$, g^, g&lt;Home&gt;, and g&lt;End&gt; now properly move with the screen boundary.</br>
 ]]>
     </change-notes>
     <idea-version since-build="@SINCE-VERSION@"/>
@@ -35,8 +36,11 @@ Bug Fixes<br>
         <!-- Left/Right -->
         <action id="VimMotionColumn" class="com.maddyhome.idea.vim.action.motion.leftright.MotionColumnAction" text="Move to Column"/>
         <action id="VimMotionFirstColumn" class="com.maddyhome.idea.vim.action.motion.leftright.MotionFirstColumnAction" text="Start of Line"/>
+        <action id="VimMotionFirstScreenColumn" class="com.maddyhome.idea.vim.action.motion.leftright.MotionFirstScreenColumnAction" text="Start of Screen Line"/>
         <action id="VimMotionFirstNonSpace" class="com.maddyhome.idea.vim.action.motion.leftright.MotionFirstNonSpaceAction" text="First Character of Line"/>
+        <action id="VimMotionFirstScreenNonSpace" class="com.maddyhome.idea.vim.action.motion.leftright.MotionFirstScreenNonSpaceAction" text="First Character of Screen Line"/>
         <action id="VimMotionLastColumn" class="com.maddyhome.idea.vim.action.motion.leftright.MotionLastColumnAction" text="End of Line"/>
+        <action id="VimMotionLastScreenColumn" class="com.maddyhome.idea.vim.action.motion.leftright.MotionLastScreenColumnAction" text="End of Screen Line"/>
         <action id="VimMotionLastMatchChar" class="com.maddyhome.idea.vim.action.motion.leftright.MotionLastMatchCharAction" text="Repeat Last Character Match"/>
         <action id="VimMotionLastMatchCharReverse" class="com.maddyhome.idea.vim.action.motion.leftright.MotionLastMatchCharReverseAction" text="Repeat Last Character Match in Reverse"/>
         <action id="VimMotionLastNonSpace" class="com.maddyhome.idea.vim.action.motion.leftright.MotionLastNonSpaceAction" text="Last Character of Line"/>
