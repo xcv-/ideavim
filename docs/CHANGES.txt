@@ -2,7 +2,7 @@ History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
 @VERSION@ from 0.10.2
 Bug Fixes
-- The keys Enter, Tab, and Escape now properly work in dialog boxes and other
+- The Enter, Tab, and Escape keys now work properly in dialog boxes and other
   entry fields as long as you aren't in insert or replace mode within a given
   input field.
 

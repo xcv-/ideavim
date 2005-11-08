@@ -1,5 +1,6 @@
 Bugs to fix:
 
+- g^, g0, g$, g<Home>, g<End> should work on screen, not whole line.
 - :dig doesn't bring up the window (it flashes a split second).
 - Split text when typing fast after o command.
 - Replace mode - fix caret. Can't figure out how to keep block caret.
@@ -8,5 +9,6 @@ Bugs to fix:
 
 Requested Functionality to add:
 
+- Add Config GUI to choose IDEA vs. VIM function for keystrokes
 - Show message after shifting lines with :< or :>
 - / and ? as command operators

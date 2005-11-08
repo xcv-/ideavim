@@ -261,7 +261,7 @@ Bug Fixes<br>
 
         <!-- Keys -->
         <action id="VimKeyHandler" class="com.maddyhome.idea.vim.action.key.KeyAction" text="Keys"/>
-        <action id="VimNotImplementedHandler" class="com.maddyhome.idea.vim.action.key.NotImplementedAction" text="NotImplemented"/>
+        <action id="VimNotImplementedHandler" class="com.maddyhome.idea.vim.action.key.NotImplementedAction" text="Reserved For Future Use"/>
         <action id="VimEditorBackSpace" class="com.maddyhome.idea.vim.action.key.BackSpaceAction" text="BackSpace"/>
         <action id="VimEditorDelete" class="com.maddyhome.idea.vim.action.key.DeleteAction" text="Delete"/>
         <action id="VimEditorDown" class="com.maddyhome.idea.vim.action.key.DownAction" text="Down"/>
