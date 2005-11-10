@@ -31,10 +31,13 @@ import com.maddyhome.idea.vim.action.DelegateAction;
 import com.maddyhome.idea.vim.action.PassThruDelegateAction;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.handler.key.EditorKeyHandler;
+import org.jdom.Element;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.HashSet;
+import java.util.List;
 import javax.swing.KeyStroke;
 
 /**
@@ -88,6 +91,29 @@ public class KeyParser
         return instance;
     }
 
+    public void init()
+    {
+        logger.debug("init");
+        keymap = KeymapManager.getInstance().getActiveKeymap();
+        Iterator keys = conflicts.keySet().iterator();
+        while (keys.hasNext())
+        {
+            KeyStroke keyStroke = (KeyStroke)keys.next();
+            logger.debug("keyStroke=" + keyStroke);
+            // Get all the IDEA actions that use this keystroke. Could be 0 or more.
+            KeyConflict conf = (KeyConflict)conflicts.get(keyStroke);
+            conf.getIdeaActions().clear();
+            String[] ids = keymap.getActionIds(keyStroke);
+            for (int i = 0; i < ids.length; i++)
+            {
+                String id = ids[i];
+                conf.addIdeaAction(id);
+            }
+        }
+
+        logger.debug("initial conflicts=" + conflicts);
+    }
+
     /**
      * This is called each time the plugin is enabled. This goes through the list of keystrokes that the plugin needs
      * such as Ctrl-A through Ctrl-Z, F1, and others. Each keystroke is checks for existing IDEA actions using the
@@ -97,17 +123,18 @@ public class KeyParser
     public void setupShortcuts()
     {
         logger.debug("setupShortcuts");
-        logger.debug("mappings=" + mappings);
+        logger.debug("conflicts=" + conflicts);
 
-        Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
+        keymap = KeymapManager.getInstance().getActiveKeymap();
         // Loop through each of the keystrokes the plugin needs to take ownership of.
-        Iterator keys = mappings.keySet().iterator();
+        Iterator keys = conflicts.keySet().iterator();
         while (keys.hasNext())
         {
             KeyStroke keyStroke = (KeyStroke)keys.next();
             logger.debug("keyStroke=" + keyStroke);
             // Get all the IDEA actions that use this keystroke. Could be 0 or more.
-            ArrayList actions = (ArrayList)mappings.get(keyStroke);
+            KeyConflict conf = (KeyConflict)conflicts.get(keyStroke);
+            HashMap actions = (HashMap)conf.getIdeaActions();
             logger.debug("actions=" + actions);
             String[] ids = keymap.getActionIds(keyStroke);
             // For each existing IDEA action we need to remove shortcut.
@@ -127,14 +154,16 @@ public class KeyParser
                         {
                             keymap.removeShortcut(id, cut);
                             // Save off the position of the shortcut so it can be put back in the same place.
-                            actions.add(new KeyAction(id, j));
+                            conf.putIdeaAction(id, j);
+                            // TODO - add this cut once
                             keymap.addShortcut("VimKeyHandler", cut);
-                            logger.debug("removed " + cut.getClass().getName() + " from " + id + " and added to VimKeyHandler");
+                            logger.debug("removed " + cut.getClass().getName() + " from " + id + " at " + j + " and added to VimKeyHandler");
                         }
                     }
                 }
             }
         }
+        logger.debug("setup conflicts=" + conflicts);
     }
 
     /**
@@ -143,7 +172,7 @@ public class KeyParser
      */
     public void resetShortcuts()
     {
-        Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
+        logger.debug("resetShortcuts");
         // Get each of the hijacked keystrokes we stole from IDEA and put them back in their original place.
         com.intellij.openapi.actionSystem.Shortcut[] cuts = keymap.getShortcuts("VimKeyHandler");
         for (int i = 0; i < cuts.length; i++)
@@ -155,34 +184,42 @@ public class KeyParser
                 keymap.removeShortcut("VimKeyHandler", cut);
                 KeyboardShortcut ks = (KeyboardShortcut)cut;
                 KeyStroke keyStroke = ks.getFirstKeyStroke();
+                logger.debug("keyStroke=" + keyStroke);
                 // Get the list of IDEA actions that originally had this keystroke - if any
-                ArrayList actions = (ArrayList)mappings.get(keyStroke);
-                for (int j = 0; j < actions.size(); j++)
+                KeyConflict conf = (KeyConflict)conflicts.get(keyStroke);
+                HashMap actions = conf.getIdeaActions();
+                Iterator iter = actions.keySet().iterator();
+                while (iter.hasNext())
                 {
+                    String actionId = (String)iter.next();
+                    int keyPos = ((Integer)actions.get(actionId)).intValue();
+                    logger.debug("actionId=" + actionId);
+                    logger.debug("keyPos=" + keyPos);
+                    conf.resetIdeaAction(actionId);
                     // Put back the removed shortcut. But we need to "insert" it in the same place it was so the menus
                     // will show the shortcuts. Example - Undo has by default two shortcuts - Ctrl-Z and Alt-Backspace.
                     // When the plugin is disabled the Undo menu shows Ctrl-Z. When the plugin is enabled we remove
                     // Ctrl-Z and the Undo menu shows Alt-Backspace. When the plugin is disabled again, we need to be
                     // sure Ctrl-Z is put back before Alt-Backspace or else the Undo menu will continue to show
                     // Alt-Backspace even after we add back Ctrl-Z.
-                    KeyAction ka = (KeyAction)actions.get(j);
-                    com.intellij.openapi.actionSystem.Shortcut[] acuts = keymap.getShortcuts(ka.getActionId());
-                    keymap.removeAllActionShortcuts(ka.getActionId());
+                    com.intellij.openapi.actionSystem.Shortcut[] acuts = keymap.getShortcuts(actionId);
+                    logger.debug("There are " + acuts.length + " shortcuts");
+                    keymap.removeAllActionShortcuts(actionId);
                     for (int k = 0, l = 0; k < acuts.length + 1; k++)
                     {
-                        if (k == ka.getKeyPos())
+                        if (k == keyPos)
                         {
-                            keymap.addShortcut(ka.getActionId(), cut);
+                            keymap.addShortcut(actionId, cut);
                         }
                         else
                         {
-                            keymap.addShortcut(ka.getActionId(), acuts[l++]);
+                            keymap.addShortcut(actionId, acuts[l++]);
                         }
                     }
                 }
-                actions.clear();
             }
         }
+        logger.debug("reset conflicts=" + conflicts);
     }
 
     public void setupActionHandler(String ideaActName, String vimActName)
@@ -250,14 +287,28 @@ public class KeyParser
             iaction.setupHandler(new EditorKeyHandler(handler, stroke, special));
         }
 
-        mappings.remove(stroke);
+        removePossibleConflict(stroke);
     }
 
-    public void addMapping(KeyStroke stroke)
+    public void removePossibleConflict(KeyStroke stroke)
     {
-        if (!mappings.containsKey(stroke))
+        if (conflicts.containsKey(stroke))
         {
-            mappings.put(stroke, new ArrayList());
+            conflicts.remove(stroke);
+        }
+    }
+    public void addPossibleConflict(KeyStroke stroke, String pluginActionId)
+    {
+        if (!conflicts.containsKey(stroke))
+        {
+            KeyConflict conf = new KeyConflict(stroke);
+            conf.addPlguinAction(pluginActionId);
+            if (ideaWins.contains(stroke))
+            {
+                conf.setPluginWins(false);
+            }
+
+            conflicts.put(stroke, conf);
         }
     }
 
@@ -267,6 +318,7 @@ public class KeyParser
     private KeyParser()
     {
         logger.debug("KeyParser ctr");
+        keymap = KeymapManager.getInstance().getActiveKeymap();
     }
 
     /**
@@ -327,7 +379,7 @@ public class KeyParser
         for (int i = 0; i < shortcuts.size(); i++)
         {
             Shortcut cut = (Shortcut)shortcuts.get(i);
-            mappings.remove(cut.getKeys()[0]);
+            removePossibleConflict(cut.getKeys()[0]);
             if (i == 0)
             {
                 firstStroke = cut.getKeys()[0];
@@ -504,7 +556,7 @@ public class KeyParser
             logger.error("Unknown action " + actName);
         }
 
-        addMapping(key);
+        addPossibleConflict(key, actName);
 
         Node node = base.getChild(key);
         // Is this the first time we have seen this character at this point in the tree?
@@ -546,6 +598,46 @@ public class KeyParser
         return res.toString();
     }
 
+    public void readData(Element element)
+    {
+        Element confElem = element.getChild("conflicts");
+        if (confElem != null)
+        {
+            List keyList = confElem.getChildren("keys");
+            for (int i = 0; i < keyList.size(); i++)
+            {
+                ideaWins.add(KeyStroke.getKeyStroke((String)keyList.get(i)));
+            }
+        }
+
+        if (firstRead && !conflicts.isEmpty())
+        {
+            Iterator iter = ideaWins.iterator();
+            while (iter.hasNext())
+            {
+                KeyStroke key = (KeyStroke)iter.next();
+
+                KeyConflict conf = (KeyConflict)conflicts.get(key);
+                conf.setPluginWins(false);
+            }
+        }
+
+        firstRead = false;
+    }
+
+    public void saveData(Element element)
+    {
+        Element confElem = new Element("conflicts");
+        Iterator iter = ideaWins.iterator();
+        while (iter.hasNext())
+        {
+            KeyStroke key = (KeyStroke)iter.next();
+            Element keyElem = new Element("keys", key.toString());
+            confElem.addContent(keyElem);
+        }
+        element.addContent(confElem);
+    }
+
     private static class KeyAction
     {
         public KeyAction(String actionId, int keyPos)
@@ -569,7 +661,10 @@ public class KeyParser
     }
 
     private HashMap keyRoots = new HashMap();
-    private HashMap mappings = new HashMap();
+    private HashMap conflicts = new HashMap();
+    private HashSet ideaWins = new HashSet();
+    private boolean firstRead;
+    private Keymap keymap;
 
     private static KeyParser instance;
 

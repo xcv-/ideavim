@@ -724,7 +724,7 @@ public class RegisterActions
         }));
 
         // A few special keys that are not registered here but used by diagraphs.
-        parser.addMapping(KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_MASK));
+        parser.addPossibleConflict(KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_MASK), "VimDigraphEntry");
 
         // "Reserve" these keys so they don't work in IDEA. Eventually these may be valid plugin commands.
         parser.registerAction(KeyParser.MAPPING_ALL, "VimNotImplementedHandler", Command.OTHER_READONLY, new Shortcut[] {
@@ -793,6 +793,8 @@ public class RegisterActions
         parser.setupActionHandler("EditorTextEndWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
         parser.setupActionHandler("EditorMoveToPageTopWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
         parser.setupActionHandler("EditorMoveToPageBottomWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
+
+        parser.init();
     }
 
     private static RegisterActions instance;

@@ -53,6 +53,7 @@ import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.helper.DocumentManager;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.key.RegisterActions;
+import com.maddyhome.idea.vim.key.KeyParser;
 import com.maddyhome.idea.vim.option.Options;
 import com.maddyhome.idea.vim.ui.MorePanel;
 import com.maddyhome.idea.vim.undo.UndoManager;
@@ -254,6 +255,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
         }
 
         CommandGroups.getInstance().readData(element);
+        KeyParser.getInstance().readData(element);
     }
 
     /**
@@ -272,6 +274,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
         element.addContent(elem);
 
         CommandGroups.getInstance().saveData(element);
+        KeyParser.getInstance().saveData(element);
     }
 
     /**

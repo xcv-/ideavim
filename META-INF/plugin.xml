@@ -280,5 +280,6 @@ Bug Fixes<br>
         <action id="VimEditorTab" class="com.maddyhome.idea.vim.action.key.TabAction" text="Tab"/>
         <action id="VimEditorToggleInsertState" class="com.maddyhome.idea.vim.action.key.ToggleInsertStateAction" text="Insert/Overwrite"/>
         <action id="VimEditorUp" class="com.maddyhome.idea.vim.action.key.UpAction" text="Up"/>
+        <action id="VimDigraphEntry" class="com.maddyhome.idea.vim.action.key.KeyAction" text="Digraph Entry"/>
     </actions>
 </idea-plugin>
