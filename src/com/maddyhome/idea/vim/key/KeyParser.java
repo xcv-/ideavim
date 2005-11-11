@@ -19,9 +19,7 @@ package com.maddyhome.idea.vim.key;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.KeyboardShortcut;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
@@ -35,8 +33,8 @@ import org.jdom.Element;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.KeyStroke;
 
@@ -134,10 +132,14 @@ public class KeyParser
             logger.debug("keyStroke=" + keyStroke);
             // Get all the IDEA actions that use this keystroke. Could be 0 or more.
             KeyConflict conf = (KeyConflict)conflicts.get(keyStroke);
+
+            if (!conf.isPluginWins()) continue;
+
             HashMap actions = (HashMap)conf.getIdeaActions();
             logger.debug("actions=" + actions);
             String[] ids = keymap.getActionIds(keyStroke);
             // For each existing IDEA action we need to remove shortcut.
+            boolean added = false;
             for (int i = 0; i < ids.length; i++)
             {
                 String id = ids[i];
@@ -155,14 +157,20 @@ public class KeyParser
                             keymap.removeShortcut(id, cut);
                             // Save off the position of the shortcut so it can be put back in the same place.
                             conf.putIdeaAction(id, j);
-                            // TODO - add this cut once
-                            keymap.addShortcut("VimKeyHandler", cut);
+                            if (!added)
+                            {
+                                keymap.addShortcut("VimKeyHandler", cut);
+                                added = true;
+                            }
                             logger.debug("removed " + cut.getClass().getName() + " from " + id + " at " + j + " and added to VimKeyHandler");
                         }
                     }
                 }
             }
         }
+
+        keymap.addShortcutChangeListener(keymapListener);
+
         logger.debug("setup conflicts=" + conflicts);
     }
 
@@ -173,6 +181,9 @@ public class KeyParser
     public void resetShortcuts()
     {
         logger.debug("resetShortcuts");
+
+        keymap.removeShortcutChangeListener(keymapListener);
+
         // Get each of the hijacked keystrokes we stole from IDEA and put them back in their original place.
         com.intellij.openapi.actionSystem.Shortcut[] cuts = keymap.getShortcuts("VimKeyHandler");
         for (int i = 0; i < cuts.length; i++)
@@ -180,46 +191,53 @@ public class KeyParser
             com.intellij.openapi.actionSystem.Shortcut cut = cuts[i];
             if (cut instanceof KeyboardShortcut)
             {
-                // Remove the shortcut from the special plugin handler
-                keymap.removeShortcut("VimKeyHandler", cut);
                 KeyboardShortcut ks = (KeyboardShortcut)cut;
                 KeyStroke keyStroke = ks.getFirstKeyStroke();
                 logger.debug("keyStroke=" + keyStroke);
                 // Get the list of IDEA actions that originally had this keystroke - if any
                 KeyConflict conf = (KeyConflict)conflicts.get(keyStroke);
-                HashMap actions = conf.getIdeaActions();
-                Iterator iter = actions.keySet().iterator();
-                while (iter.hasNext())
+                resetConflict(conf, cut);
+            }
+        }
+
+        logger.debug("reset conflicts=" + conflicts);
+    }
+
+    private void resetConflict(KeyConflict conf, com.intellij.openapi.actionSystem.Shortcut cut)
+    {
+        // Remove the shortcut from the special plugin handler
+        keymap.removeShortcut("VimKeyHandler", cut);
+
+        HashMap actions = conf.getIdeaActions();
+        Iterator iter = actions.keySet().iterator();
+        while (iter.hasNext())
+        {
+            String actionId = (String)iter.next();
+            int keyPos = ((Integer)actions.get(actionId)).intValue();
+            logger.debug("actionId=" + actionId);
+            logger.debug("keyPos=" + keyPos);
+            conf.resetIdeaAction(actionId);
+            // Put back the removed shortcut. But we need to "insert" it in the same place it was so the menus
+            // will show the shortcuts. Example - Undo has by default two shortcuts - Ctrl-Z and Alt-Backspace.
+            // When the plugin is disabled the Undo menu shows Ctrl-Z. When the plugin is enabled we remove
+            // Ctrl-Z and the Undo menu shows Alt-Backspace. When the plugin is disabled again, we need to be
+            // sure Ctrl-Z is put back before Alt-Backspace or else the Undo menu will continue to show
+            // Alt-Backspace even after we add back Ctrl-Z.
+            com.intellij.openapi.actionSystem.Shortcut[] acuts = keymap.getShortcuts(actionId);
+            logger.debug("There are " + acuts.length + " shortcuts");
+            keymap.removeAllActionShortcuts(actionId);
+            for (int k = 0, l = 0; k < acuts.length + 1; k++)
+            {
+                if (k == keyPos)
                 {
-                    String actionId = (String)iter.next();
-                    int keyPos = ((Integer)actions.get(actionId)).intValue();
-                    logger.debug("actionId=" + actionId);
-                    logger.debug("keyPos=" + keyPos);
-                    conf.resetIdeaAction(actionId);
-                    // Put back the removed shortcut. But we need to "insert" it in the same place it was so the menus
-                    // will show the shortcuts. Example - Undo has by default two shortcuts - Ctrl-Z and Alt-Backspace.
-                    // When the plugin is disabled the Undo menu shows Ctrl-Z. When the plugin is enabled we remove
-                    // Ctrl-Z and the Undo menu shows Alt-Backspace. When the plugin is disabled again, we need to be
-                    // sure Ctrl-Z is put back before Alt-Backspace or else the Undo menu will continue to show
-                    // Alt-Backspace even after we add back Ctrl-Z.
-                    com.intellij.openapi.actionSystem.Shortcut[] acuts = keymap.getShortcuts(actionId);
-                    logger.debug("There are " + acuts.length + " shortcuts");
-                    keymap.removeAllActionShortcuts(actionId);
-                    for (int k = 0, l = 0; k < acuts.length + 1; k++)
-                    {
-                        if (k == keyPos)
-                        {
-                            keymap.addShortcut(actionId, cut);
-                        }
-                        else
-                        {
-                            keymap.addShortcut(actionId, acuts[l++]);
-                        }
-                    }
+                    keymap.addShortcut(actionId, cut);
+                }
+                else
+                {
+                    keymap.addShortcut(actionId, acuts[l++]);
                 }
             }
         }
-        logger.debug("reset conflicts=" + conflicts);
     }
 
     public void setupActionHandler(String ideaActName, String vimActName)
@@ -638,26 +656,100 @@ public class KeyParser
         element.addContent(confElem);
     }
 
-    private static class KeyAction
+    private class KeyChangeListener implements Keymap.Listener
     {
-        public KeyAction(String actionId, int keyPos)
+        // Possible changes: (1 or more)
+        // 1) User removed a shortcut that was never a conflict.
+        //    Nothing to do or even check on this - who cares.
+        //
+        // 2) User removed a shortcut that was a conflict.
+        //    Remove the action from the conflict list for the key.
+        //
+        // 3) User put back a shortcut removed by this plugin on same action.
+        //    This only happens if previous setting was for plugin to win so change key to 'idea wins' and reset
+        //    conflict. Shortcut will already be on idea action. May or may not still be on 'VimKeyHandler'. Put
+        //    shortcut back on any other idea actions that used it too.
+        //
+        // 4) User added a shortcut to a different action and shortcut was a conflict.
+        //    If key is currently 'idea wins' then simply add shortcut to key's list of conflicts.
+        //    If key is currently 'plugin wins' then put shortcut reset conflict. Change key to 'idea wins'.
+        //    Shortcut will already be on new idea action. May or may not still be on 'VimKeyHandler'. Add
+        //    action to key's list of conflicts.
+        //
+        // 5) User added a shortcut to a different action and shortcut is now a conflict.
+        //    No prior idea actions used this key. Add action to key's list of conflicts. Mark key as 'idea wins'.
+        //    Action will already have shortcut. Need to remove shortcut from 'VimKeyHandler' (may already be gone).
+        //
+        // 6) User added a shortcut to a different action and shortcut still isn't a conflict.
+        //    Nothing to do.
+        public void onShortcutChanged(String actionId)
         {
-            this.actionId = actionId;
-            this.keyPos = keyPos;
-        }
+            // Get the newly updated list of shortcuts for this action
+            com.intellij.openapi.actionSystem.Shortcut[] cuts = keymap.getShortcuts(actionId);
 
-        public String getActionId()
-        {
-            return actionId;
-        }
+            // Check the current master conflict list to see if there is a conflict for a key no longer associated
+            // with this action.
+            Iterator iter = conflicts.keySet().iterator();
+            while (iter.hasNext())
+            {
+                KeyStroke key = (KeyStroke)iter.next();
+                KeyConflict conf = (KeyConflict)conflicts.get(key);
+                // We found a key with this action
+                if (conf.getIdeaActions().containsKey(actionId))
+                {
+                    boolean found = false;
+                    // Now check to see if any of the new shortcuts are already known about.
+                    for (int i = 0; i < cuts.length; i++)
+                    {
+                        com.intellij.openapi.actionSystem.Shortcut cut = cuts[i];
+                        if (cut instanceof KeyboardShortcut)
+                        {
+                            // OK - we already knew about this shortcut
+                            if (((KeyboardShortcut)cut).getFirstKeyStroke().equals(key))
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    // This key isn't listed anymore. The user must have removed it as part of this change
+                    // so we need to remove it from our conflict list. That should be all. What ever other
+                    // conflict may exist for this key can stay as is.
+                    if (!found)
+                    {
+                        conf.removeIdeaAction(actionId);
+                    }
+                }
+            }
 
-        public int getKeyPos()
-        {
-            return keyPos;
-        }
+            // Now we need to go through each of the shortcuts in the updated list.
+            for (int i = 0; i < cuts.length; i++)
+            {
+                com.intellij.openapi.actionSystem.Shortcut cut = cuts[i];
+                if (cut instanceof KeyboardShortcut)
+                {
+                    KeyStroke key = ((KeyboardShortcut)cut).getFirstKeyStroke();
+                    KeyConflict conf = (KeyConflict)conflicts.get(key);
+                    // This is a new conflict that didn't exist for this action before
+                    if (!conf.getIdeaActions().containsKey(actionId))
+                    {
+                        // Assume that the user wants this new shortcut to override what ever it normally does
+                        // in the plugin (otherwise they wouldn't have added it to the Idea action).
+                        // First thing is to reset the shortcut by restoring the shortcut to any and all Idea
+                        // actions we took it away from.
+                        if (conf.isPluginWins())
+                        {
+                            resetConflict(conf, cut);
+                        }
 
-        private String actionId;
-        private int keyPos;
+                        // Add this as a new action for the key and mark it as Idea winning over the plugin.
+                        conf.addIdeaAction(actionId);
+                        conf.setPluginWins(false);
+                        ideaWins.add(key);
+                    }
+                }
+            }
+        }
     }
 
     private HashMap keyRoots = new HashMap();
@@ -665,6 +757,7 @@ public class KeyParser
     private HashSet ideaWins = new HashSet();
     private boolean firstRead;
     private Keymap keymap;
+    private KeyChangeListener keymapListener = new KeyChangeListener();
 
     private static KeyParser instance;
 
