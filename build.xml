@@ -60,6 +60,13 @@
             <src path="${src}"/>
             <include name="com/maddyhome/idea/**" />
         </javac>
+        <antcall target="copy"/>
+        <mkdir dir="${build}"/>
+        <jar basedir="${classes}" jarfile="${build}/${project}.jar" compress="yes"/>
+    </target>
+
+    <target name="copy">
+        <mkdir dir="${classes}"/>
         <mkdir dir="${classes}/META-INF"/>
         <copy file="META-INF/plugin.xml" todir="${classes}/META-INF">
             <filterset>
@@ -75,8 +82,6 @@
         <copy todir="${classes}">
             <fileset dir="${resources}"/>
         </copy>
-        <mkdir dir="${build}"/>
-        <jar basedir="${classes}" jarfile="${build}/${project}.jar" compress="yes"/>
     </target>
 
     <target name="deploy" depends="build" description="Copies plugin to IntelliJ plugin directory" >

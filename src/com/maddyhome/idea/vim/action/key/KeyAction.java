@@ -22,7 +22,9 @@ package com.maddyhome.idea.vim.action.key;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataConstants;
+import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.diagnostic.Logger;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
 
@@ -52,4 +54,12 @@ public class KeyAction extends AnAction
             }
         }
     }
+
+    protected void setShortcutSet(ShortcutSet shortcutSet)
+    {
+        logger.debug("setShortcutSet=" + shortcutSet);
+        super.setShortcutSet(shortcutSet);
+    }
+
+    private static Logger logger = Logger.getInstance(KeyAction.class.getName());
 }

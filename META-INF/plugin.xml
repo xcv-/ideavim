@@ -2,7 +2,7 @@
     <name>@NAME@</name>
     <description>VIM Emulator. This plugin provides key mappings in IDEA to emulate vi/vim/gvim.</description>
     <version>@VERSION@-@IDEA-VERSION@</version>
-    <vendor email="rick@maddyhome.com" logo="/icons/logo.png">Rick Maddy</vendor>
+    <vendor email="rick@maddyhome.com" logo="/icons/vim16x16.png">Rick Maddy</vendor>
     <change-notes>
 <![CDATA[
 <b>NOTE:</b> Please see the README file if upgrading to this version from a
@@ -266,7 +266,7 @@ Bug Fixes<br>
         <!-- Keys -->
         <action id="VimKeyHandler" class="com.maddyhome.idea.vim.action.key.KeyAction" text="Keys"/>
         <action id="VimNotImplementedHandler" class="com.maddyhome.idea.vim.action.key.NotImplementedAction" text="Reserved For Future Use"/>
-        <action id="VimEditorBackSpace" class="com.maddyhome.idea.vim.action.key.BackSpaceAction" text="BackSpace"/>
+        <action id="VimEditorBackSpace" class="com.maddyhome.idea.vim.action.key.BackSpaceAction" text="Backspace"/>
         <action id="VimEditorDelete" class="com.maddyhome.idea.vim.action.key.DeleteAction" text="Delete"/>
         <action id="VimEditorDown" class="com.maddyhome.idea.vim.action.key.DownAction" text="Down"/>
         <action id="VimEditorEnter" class="com.maddyhome.idea.vim.action.key.EnterAction" text="Enter"/>

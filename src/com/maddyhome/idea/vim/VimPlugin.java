@@ -31,6 +31,8 @@ import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
@@ -38,8 +40,9 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizable;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.wm.StatusBar;
-import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.WindowManager;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ApplicationAdapter;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.ex.CommandParser;
 import com.maddyhome.idea.vim.group.ChangeGroup;
@@ -52,16 +55,18 @@ import com.maddyhome.idea.vim.helper.ApiHelper;
 import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.helper.DocumentManager;
 import com.maddyhome.idea.vim.helper.EditorData;
-import com.maddyhome.idea.vim.key.RegisterActions;
 import com.maddyhome.idea.vim.key.KeyParser;
+import com.maddyhome.idea.vim.key.RegisterActions;
 import com.maddyhome.idea.vim.option.Options;
 import com.maddyhome.idea.vim.ui.MorePanel;
+import com.maddyhome.idea.vim.ui.VimSettingsPanel;
 import com.maddyhome.idea.vim.undo.UndoManager;
 import org.jdom.Element;
 
 import java.awt.Toolkit;
-import java.net.URL;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 
 /**
  * This plugin attempts to emulate the keybinding and general functionality of Vim and gVim. See the supplied
@@ -73,7 +78,7 @@ import javax.swing.ImageIcon;
  *
  * @version 0.1
  */
-public class VimPlugin implements ApplicationComponent, JDOMExternalizable
+public class VimPlugin implements ApplicationComponent, JDOMExternalizable, Configurable
 {
     /**
      * Creates the Vim Plugin
@@ -81,6 +86,19 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
     public VimPlugin()
     {
         logger.debug("VimPlugin ctr");
+
+        java.net.URL resource = getClass().getResource("/icons/vim32x32.png");
+        if (resource != null)
+        {
+            icon = new ImageIcon(resource);
+        }
+
+        instance = this;
+    }
+
+    public static VimPlugin getInstance()
+    {
+        return instance;
     }
 
     /**
@@ -99,8 +117,6 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
     public void initComponent()
     {
         logger.debug("initComponent");
-        // It appears that custom actions listed in plugin.xml are not registered with the ActionManager until
-        // after this method returns :(
 
         EditorActionManager manager = EditorActionManager.getInstance();
         TypedAction action = manager.getTypedAction();
@@ -111,6 +127,8 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
 
         // Add some listeners so we can handle special events
         setupListeners();
+
+        getActions();
 
         logger.debug("done");
     }
@@ -157,16 +175,6 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
         {
             public void projectOpened(Project project)
             {
-                if (actions == null)
-                {
-                    actions = RegisterActions.getInstance();
-                    if (VimPlugin.isEnabled())
-                    {
-                        RegisterActions.getInstance().enable();
-                    }
-                    CommandParser.getInstance().registerHandlers();
-                }
-
                 FileEditorManager.getInstance(project).addFileEditorManagerListener(new ChangeGroup.InsertCheck());
                 FileEditorManager.getInstance(project).addFileEditorManagerListener(new MotionGroup.MotionEditorChange());
                 FileEditorManager.getInstance(project).addFileEditorManagerListener(new MorePanel.MoreEditorChangeListener());
@@ -199,28 +207,23 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
         });
 
         CommandProcessor.getInstance().addCommandListener(DelegateCommandListener.getInstance());
-    }
 
-    private void setupToolWindow(ToolWindow win)
-    {
-        win.setTitle("");
-        URL url = getClass().getClassLoader().getResource("icons/logo.png");
-        ImageIcon icon = new ImageIcon(url);
-        win.setIcon(icon);
+        ApplicationManager.getApplication().addApplicationListener(new ApplicationAdapter() {
+            public void applicationExiting()
+            {
+                logger.debug("application exiting");
+            }
 
-        /*
-        win.setType(ToolWindowType.DOCKED, null);
-        if (isEnabled())
-        {
-            win.setAutoHide(false);
-            win.show(null);
-        }
-        else
-        {
-            win.setAutoHide(true);
-            win.hide(null);
-        }
-        */
+            public void writeActionStarted(Object action)
+            {
+                logger.debug("writeActionStarted=" + action);
+            }
+
+            public void writeActionFinished(Object action)
+            {
+                logger.debug("writeActionFinished=" + action);
+            }
+        });
     }
 
     /**
@@ -229,6 +232,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
     public void disposeComponent()
     {
         logger.debug("disposeComponent");
+        setEnabled(false);
         EditorActionManager manager = EditorActionManager.getInstance();
         TypedAction action = manager.getTypedAction();
         action.setupHandler(vimHandler.getOriginalTypedHandler());
@@ -268,6 +272,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
      */
     public void writeExternal(Element element) throws WriteExternalException
     {
+        logger.debug("writeExternal");
         // Save whether the plugin is enabled or not
         Element elem = new Element("state");
         elem.setAttribute("enabled", Boolean.toString(enabled));
@@ -284,7 +289,22 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
      */
     public static boolean isEnabled()
     {
-        return enabled;
+        return getInstance().enabled;
+    }
+
+    public static void setEnabled(boolean set)
+    {
+        if (!set)
+        {
+            getInstance().turnOffPlugin();
+        }
+
+        getInstance().enabled = set;
+
+        if (set)
+        {
+            getInstance().turnOnPlugin();
+        }
     }
 
     /**
@@ -328,7 +348,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
         }
     }
 
-    public static void turnOnPlugin()
+    public void turnOnPlugin()
     {
         KeyHandler.getInstance().fullReset(null);
         RegisterActions.getInstance().enable();
@@ -336,7 +356,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
         setSmoothScrolling(false);
     }
 
-    public static void turnOffPlugin()
+    public void turnOffPlugin()
     {
         KeyHandler.getInstance().fullReset(null);
         RegisterActions.getInstance().disable();
@@ -344,7 +364,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
         setSmoothScrolling(isSmoothScrolling);
     }
 
-    private static void setCursors(boolean isBlock)
+    private void setCursors(boolean isBlock)
     {
         Editor[] editors = EditorFactory.getInstance().getAllEditors();
         for (int j = 0; j < editors.length; j++)
@@ -353,13 +373,100 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
         }
     }
 
-    private static void setSmoothScrolling(boolean isOn)
+    private void setSmoothScrolling(boolean isOn)
     {
         Editor[] editors = EditorFactory.getInstance().getAllEditors();
         for (int j = 0; j < editors.length; j++)
         {
             editors[j].getSettings().setAnimatedScrolling(isOn);
         }
+    }
+
+    public String getDisplayName()
+    {
+        return "Vim";
+    }
+
+    public Icon getIcon()
+    {
+        return icon;
+    }
+
+    public String getHelpTopic()
+    {
+        return null;
+    }
+
+    public JComponent createComponent()
+    {
+        if (settingsPanel == null)
+        {
+            settingsPanel = new VimSettingsPanel();
+        }
+
+        return settingsPanel.getMainComponent();
+    }
+
+    public boolean isModified()
+    {
+        if (settingsPanel != null)
+        {
+            return settingsPanel.isModified(getSettings());
+        }
+
+        return false;
+    }
+
+    public void apply() throws ConfigurationException
+    {
+        VimSettings set = settingsPanel.getOptions();
+        if (set.isEnabled() != VimPlugin.isEnabled())
+        {
+            VimPlugin.setEnabled(set.isEnabled());
+        }
+
+        KeyParser.getInstance().setChoices(set.getChoices());
+
+        settings = set;
+    }
+
+    public void reset()
+    {
+        if (settingsPanel != null)
+        {
+            settingsPanel.setOptions(getSettings(), KeyParser.getInstance().getConflicts());
+        }
+    }
+
+    public VimSettings getSettings()
+    {
+        if (settings == null)
+        {
+            settings = new VimSettings();
+            settings.setChoices(KeyParser.getInstance().getChoices());
+        }
+        settings.setEnabled(isEnabled());
+
+        return settings;
+    }
+
+    private RegisterActions getActions()
+    {
+        if (actions == null)
+        {
+            actions = RegisterActions.getInstance();
+            if (VimPlugin.isEnabled())
+            {
+                actions.enable();
+            }
+            CommandParser.getInstance().registerHandlers();
+        }
+
+        return actions;
+    }
+
+    public void disposeUIResources()
+    {
     }
 
     /**
@@ -376,7 +483,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
          */
         public boolean isSelected(AnActionEvent event)
         {
-            return enabled;
+            return VimPlugin.isEnabled();
         }
 
         /**
@@ -387,27 +494,19 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable
          */
         public void setSelected(AnActionEvent event, boolean b)
         {
-            if (!b)
-            {
-                turnOffPlugin();
-            }
-
-            enabled = b;
-
-            if (b)
-            {
-                turnOnPlugin();
-            }
+            VimPlugin.setEnabled(b);
         }
     }
 
+    private static VimPlugin instance;
     private VimTypedActionHandler vimHandler;
     private RegisterActions actions;
-    //private static HashMap toolWindows = new HashMap();
-    private MarkGroup.MarkUpdater markUpdater = new MarkGroup.MarkUpdater();
-    private static boolean isBlockCursor = false;
-    private static boolean isSmoothScrolling = false;
+    private boolean isBlockCursor = false;
+    private boolean isSmoothScrolling = false;
+    private ImageIcon icon;
+    private VimSettingsPanel settingsPanel;
+    private VimSettings settings;
 
-    private static boolean enabled = true;
+    private boolean enabled = true;
     private static Logger logger = Logger.getInstance(VimPlugin.class.getName());
 }

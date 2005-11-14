@@ -43,12 +43,20 @@ public class RegisterActions
 
     public void enable()
     {
-        KeyParser.getInstance().setupShortcuts();
+        if (!enabled)
+        {
+            KeyParser.getInstance().setupShortcuts();
+            enabled = true;
+        }
     }
 
     public void disable()
     {
-        KeyParser.getInstance().resetShortcuts();
+        if (enabled)
+        {
+            KeyParser.getInstance().resetShortcuts();
+            enabled = false;
+        }
     }
 
     private RegisterActions()
@@ -730,7 +738,6 @@ public class RegisterActions
         parser.registerAction(KeyParser.MAPPING_ALL, "VimNotImplementedHandler", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_MASK)),
-            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK))
@@ -793,9 +800,9 @@ public class RegisterActions
         parser.setupActionHandler("EditorTextEndWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_END, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
         parser.setupActionHandler("EditorMoveToPageTopWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
         parser.setupActionHandler("EditorMoveToPageBottomWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
-
-        parser.init();
     }
+
+    private boolean enabled = false;
 
     private static RegisterActions instance;
 }

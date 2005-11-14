@@ -81,7 +81,7 @@ public class KeyConflict
         return pluginActions;
     }
 
-    public void addPlguinAction(String action)
+    public void addPluginAction(String action)
     {
         pluginActions.add(action);
     }
