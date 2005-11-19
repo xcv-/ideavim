@@ -5,14 +5,14 @@
     <vendor email="rick@maddyhome.com" logo="/icons/vim16x16.png">Rick Maddy</vendor>
     <change-notes>
 <![CDATA[
-<b>NOTE:</b> Please see the README file if upgrading to this version from a
-version prior to 0.10.1.<br>
+<b>NOTE:</b> Please see the README file if upgrading to this version from
+version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 
-Bug Fixes<br>
-- The keys Enter, Tab, and Escape now properly work in dialog boxes and other
-  entry fields as long as you aren't in insert or replace mode within a given
-  input field.<br>
-- g0, g$, g^, g&lt;Home&gt;, and g&lt;End&gt; now properly move with the screen boundary.</br>
+New Features<br>
+- Put back the need for the custom keymap Vim. Too many people wanted to turn
+  off some Vim keystrokes and "give" them back to IDEA. The current OpenAPI
+  doesn't allow me to provide sufficient fuctionality without the custom
+  keymap.<br>
 ]]>
     </change-notes>
     <idea-version since-build="@SINCE-VERSION@"/>
