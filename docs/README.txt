@@ -9,33 +9,38 @@ Installation
 
 Use IDEA's plugin manager to install the latest version of the plugin.
 
-First Time Upgrade from any version of @NAME@ prior to 0.10.1
+First Time Installation or Upgrade from 0.10.1 to 0.10.3
 
-The custom keymap isn't needed anymore and should be removed. The following
-steps should be completed to perform the upgrade:
+UNIX/Linux
 
-1) Download the latest plugin via IDEA's plugin manager.
-2) Optionally restart IDEA.
-3) Select File|Settings.
-4) Select Keymap.
-5) Select the Default keymap (or other desired keymap other than Vim).
-6) Press the Set Active button.
-7) Select the Vim keymap.
-8) Press the Delete button.
-9) Press the Yes button.
-10) Press the OK button.
-11) Restart IDEA.
+Copy Vim.xml from the plugin to $HOME/.IntelliJIdea50/config/keymaps. You will
+have to create the keymaps directory if it doesn't exist.
+
+Mac/OSX
+
+Copy Vim.xml from the plugin to ~/Library/Preferences/IntelliJIDEA50/keymaps.
+You will have to create the keymaps directory if it doesn't exist.
+
+Windows
+
+Copy Vim.xml from the plugin to
+C:\Documents and Settings\<user>\.IntelliJIdea50\config\keymaps.
+You will have to create the keymaps directory if it doesn't exist.
 
 Starting
 
 Once the files have been installed into their proper locations, start IDEA
-normally and then perform the following step. This only needs to be done the
+normally and then perform the following steps. These only need to be done the
 first time:
 
 1) Select the "Tools" menu. There should be a new menu option labeled
    "VIM Emulator". This should have a checkmark next to it. If not, please
    select this menu to check it. If this menu option is not available, the
-   plugin was not installed properly.
+   plugin is not installed.
+2) Select the "Options|Keymaps" menu. There should be a new keymap labeled "Vim"
+   listed in the top listbox. If there is no such keymap listed you did not
+   install the Vim.xml file in the proper location. Please highlight "Vim" and
+   click on the "Set Active" button. Click "OK" to save these changes.
 
 At this point you must use VIM keystrokes in all editors.
 
@@ -43,8 +48,9 @@ At this point you must use VIM keystrokes in all editors.
 Disabling the @NAME@ Plugin
 
 If you wish to disable the plugin, select the "Tools|VIM Emulator" menu so
-it is unchecked. All keyboard shortcuts will return to their normal, non-VIM
-settings.
+it is unchecked. You must also select "Options|Keymaps" and make a keymap other
+than "Vim" the active keymap. At this point IDEA will work with it's regular
+keyboard shortcuts.
 
 
 Changes to IDEA

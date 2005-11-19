@@ -34,7 +34,6 @@ import com.maddyhome.idea.vim.handler.key.EditorKeyHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import javax.swing.KeyStroke;
 
 /**
@@ -94,6 +93,7 @@ public class KeyParser
      * keystroke and the keystroke is removed from the IDEA action. The keystroke is then added to the internal
      * VimKeyHandler action.
      */
+    /*
     public void setupShortcuts()
     {
         logger.debug("setupShortcuts");
@@ -136,11 +136,13 @@ public class KeyParser
             }
         }
     }
+    */
 
     /**
      * This is called each time the plugin is disabled. This processes all the keystrokes originally removed from their
      * original IDEA action and are put back into place.
      */
+    /*
     public void resetShortcuts()
     {
         Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
@@ -183,7 +185,7 @@ public class KeyParser
                 actions.clear();
             }
         }
-    }
+    */
 
     public void setupActionHandler(String ideaActName, String vimActName)
     {
@@ -250,9 +252,10 @@ public class KeyParser
             iaction.setupHandler(new EditorKeyHandler(handler, stroke, special));
         }
 
-        mappings.remove(stroke);
+        //removePossibleConflict(stroke);
     }
 
+    /*
     public void addMapping(KeyStroke stroke)
     {
         if (!mappings.containsKey(stroke))
@@ -260,6 +263,7 @@ public class KeyParser
             mappings.put(stroke, new ArrayList());
         }
     }
+    */
 
     /**
      * Creates the key parser
@@ -327,7 +331,7 @@ public class KeyParser
         for (int i = 0; i < shortcuts.size(); i++)
         {
             Shortcut cut = (Shortcut)shortcuts.get(i);
-            mappings.remove(cut.getKeys()[0]);
+            //removePossibleConflict(cut.getKeys()[0]);
             if (i == 0)
             {
                 firstStroke = cut.getKeys()[0];
@@ -504,7 +508,7 @@ public class KeyParser
             logger.error("Unknown action " + actName);
         }
 
-        addMapping(key);
+        //addPossibleConflict(key, actName);
 
         Node node = base.getChild(key);
         // Is this the first time we have seen this character at this point in the tree?
@@ -546,6 +550,7 @@ public class KeyParser
         return res.toString();
     }
 
+    /*
     private static class KeyAction
     {
         public KeyAction(String actionId, int keyPos)
@@ -567,9 +572,10 @@ public class KeyParser
         private String actionId;
         private int keyPos;
     }
+    */
 
     private HashMap keyRoots = new HashMap();
-    private HashMap mappings = new HashMap();
+    //private HashMap mappings = new HashMap();
 
     private static KeyParser instance;
 

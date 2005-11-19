@@ -45,10 +45,10 @@ using IDEA in VIM Emulation mode:
 <li>Copy <code>IdeaVIM.jar</code> to the plugins directory. This is at <code>&lt;IDEA_HOME&gt;/plugins</code> where
     <code>IDEA_HOME</code> is IDEA installation directory. Newer versions of the Aurora builds should use the
     plugin manager to download the latest version of the plugin.</li>
-<li>Copy <code>vim.xml</code> to <code>&lt;HOME&gt;/.IntelliJIdea/config/keymaps</code> where <code>HOME</code>
+<li>Copy <code>Vim.xml</code> to <code>&lt;HOME&gt;/.IntelliJIdea/config/keymaps</code> where <code>HOME</code>
     is your home directory on Unix or <code>C:\Documents&nbsp;and&nbsp;Settings\&lt;user&gt;</code> on Windows.
     Create the <code>keymaps</code> directory if it does not exist.</li>
-<li>Restart IDEA and then select the <code>Options|Keymaps</code> menu. Select the <code>vim</code> keymap and make
+<li>Restart IDEA and then select the <code>Options|Keymaps</code> menu. Select the <code>Vim</code> keymap and make
     it the active keymap by pressing the <code>Set Active</code> button.</li>
 </ol>
 
@@ -57,30 +57,20 @@ using IDEA in VIM Emulation mode:
 <ol>
 <li>Use the plugin manager built into Idea to download and install the IdeaVIM
 plugin. This should be found under the Editor section.</li>
+<li>If this is the first time you have ever installed this plugin you must
+install the special VIM key mapping. Copy
+<code>&lt;IDEA_HOME&gt;/plugins/IdeaVIM/Vim.xml</code> to
+<code>&lt;HOME&gt;/.IntelliJIdea/config/keymaps</code> where <code>HOME</code>
+is your home directory.
+Create the <code>keymaps</code> directory if it does not exist.
+</li>
+<li>Restart IDEA and then select the <code>Options|Keymaps</code> menu. Select the <code>Vim</code> keymap and make
+    it the active keymap by pressing the <code>Set Active</code> button.</li>
 </ol>
 
 You only need to do these steps the first time you install the plugin. You will find a new menu under
 <code>Tools</code> named <code>VIM Emulator</code>. It should be checked by default. If this menu is not present
 plugin was not properly installed.
-
-<h3>Upgrade</h3>
-
-The following steps must be performed once the first time you ever upgrade the plugin to version 0.10.1 or greater
-from any version prior to 0.10.1:
-
-<ol>
-<li>Download the latest plugin via IDEA's plugin manager.</li>
-<li>Optionally restart IDEA.</li>
-<li>Select File|Settings.</li>
-<li>Select Keymap.</li>
-<li>Select the Default keymap (or other desired default keymap other than Vim).</li>
-<li>Press the Set Active button.</li>
-<li>Select the Vim keymap.</li>
-<li>Press the Delete button.</li>
-<li>Press the Yes button.</li>
-<li>Press the OK button.</li>
-<li>Restart IDEA.</li>
-</ol>
 
 <h3>Download</h3>
 

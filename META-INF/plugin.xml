@@ -2,17 +2,17 @@
     <name>@NAME@</name>
     <description>VIM Emulator. This plugin provides key mappings in IDEA to emulate vi/vim/gvim.</description>
     <version>@VERSION@-@IDEA-VERSION@</version>
-    <vendor email="rick@maddyhome.com" logo="/icons/logo.png">Rick Maddy</vendor>
+    <vendor email="rick@maddyhome.com" logo="/icons/vim16x16.png">Rick Maddy</vendor>
     <change-notes>
 <![CDATA[
-<b>NOTE:</b> Please see the README file if upgrading to this version from a
-version prior to 0.10.1.<br>
+<b>NOTE:</b> Please see the README file if upgrading to this version from
+version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 
-Bug Fixes<br>
-- The keys Enter, Tab, and Escape now properly work in dialog boxes and other
-  entry fields as long as you aren't in insert or replace mode within a given
-  input field.<br>
-- g0, g$, g^, g&lt;Home&gt;, and g&lt;End&gt; now properly move with the screen boundary.</br>
+New Features<br>
+- Put back the need for the custom keymap Vim. Too many people wanted to turn
+  off some Vim keystrokes and "give" them back to IDEA. The current OpenAPI
+  doesn't allow me to provide sufficient fuctionality without the custom
+  keymap.<br>
 ]]>
     </change-notes>
     <idea-version since-build="@SINCE-VERSION@"/>
@@ -266,7 +266,7 @@ Bug Fixes<br>
         <!-- Keys -->
         <action id="VimKeyHandler" class="com.maddyhome.idea.vim.action.key.KeyAction" text="Keys"/>
         <action id="VimNotImplementedHandler" class="com.maddyhome.idea.vim.action.key.NotImplementedAction" text="Reserved For Future Use"/>
-        <action id="VimEditorBackSpace" class="com.maddyhome.idea.vim.action.key.BackSpaceAction" text="BackSpace"/>
+        <action id="VimEditorBackSpace" class="com.maddyhome.idea.vim.action.key.BackSpaceAction" text="Backspace"/>
         <action id="VimEditorDelete" class="com.maddyhome.idea.vim.action.key.DeleteAction" text="Delete"/>
         <action id="VimEditorDown" class="com.maddyhome.idea.vim.action.key.DownAction" text="Down"/>
         <action id="VimEditorEnter" class="com.maddyhome.idea.vim.action.key.EnterAction" text="Enter"/>
@@ -280,5 +280,6 @@ Bug Fixes<br>
         <action id="VimEditorTab" class="com.maddyhome.idea.vim.action.key.TabAction" text="Tab"/>
         <action id="VimEditorToggleInsertState" class="com.maddyhome.idea.vim.action.key.ToggleInsertStateAction" text="Insert/Overwrite"/>
         <action id="VimEditorUp" class="com.maddyhome.idea.vim.action.key.UpAction" text="Up"/>
+        <action id="VimDigraphEntry" class="com.maddyhome.idea.vim.action.key.KeyAction" text="Digraph Entry"/>
     </actions>
 </idea-plugin>

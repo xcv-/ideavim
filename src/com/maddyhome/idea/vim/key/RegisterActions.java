@@ -41,6 +41,7 @@ public class RegisterActions
         return instance;
     }
 
+    /*
     public void enable()
     {
         KeyParser.getInstance().setupShortcuts();
@@ -50,6 +51,8 @@ public class RegisterActions
     {
         KeyParser.getInstance().resetShortcuts();
     }
+    }
+    */
 
     private RegisterActions()
     {
@@ -724,13 +727,12 @@ public class RegisterActions
         }));
 
         // A few special keys that are not registered here but used by diagraphs.
-        parser.addMapping(KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_MASK));
+        //parser.addPossibleConflict(KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_MASK), "VimDigraphEntry");
 
         // "Reserve" these keys so they don't work in IDEA. Eventually these may be valid plugin commands.
         parser.registerAction(KeyParser.MAPPING_ALL, "VimNotImplementedHandler", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_MASK)),
-            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK))
