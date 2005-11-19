@@ -41,6 +41,7 @@ public class RegisterActions
         return instance;
     }
 
+    /*
     public void enable()
     {
         if (!enabled)
@@ -58,6 +59,7 @@ public class RegisterActions
             enabled = false;
         }
     }
+    */
 
     private RegisterActions()
     {
@@ -732,7 +734,7 @@ public class RegisterActions
         }));
 
         // A few special keys that are not registered here but used by diagraphs.
-        parser.addPossibleConflict(KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_MASK), "VimDigraphEntry");
+        //parser.addPossibleConflict(KeyStroke.getKeyStroke(KeyEvent.VK_K, KeyEvent.CTRL_MASK), "VimDigraphEntry");
 
         // "Reserve" these keys so they don't work in IDEA. Eventually these may be valid plugin commands.
         parser.registerAction(KeyParser.MAPPING_ALL, "VimNotImplementedHandler", Command.OTHER_READONLY, new Shortcut[] {
@@ -802,7 +804,7 @@ public class RegisterActions
         parser.setupActionHandler("EditorMoveToPageBottomWithSelection", null, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK));
     }
 
-    private boolean enabled = false;
+    //private boolean enabled = false;
 
     private static RegisterActions instance;
 }

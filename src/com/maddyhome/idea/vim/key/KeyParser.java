@@ -19,7 +19,9 @@ package com.maddyhome.idea.vim.key;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.KeyboardShortcut;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
@@ -29,15 +31,9 @@ import com.maddyhome.idea.vim.action.DelegateAction;
 import com.maddyhome.idea.vim.action.PassThruDelegateAction;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.handler.key.EditorKeyHandler;
-import org.jdom.Element;
-import org.jdom.Attribute;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 /**
@@ -97,6 +93,7 @@ public class KeyParser
      * keystroke and the keystroke is removed from the IDEA action. The keystroke is then added to the internal
      * VimKeyHandler action.
      */
+    /*
     public void setupShortcuts()
     {
         logger.debug("setupShortcuts");
@@ -157,11 +154,13 @@ public class KeyParser
             }
         }
     }
+    */
 
     /**
      * This is called each time the plugin is disabled. This processes all the keystrokes originally removed from their
      * original IDEA action and are put back into place.
      */
+    /*
     public void resetShortcuts()
     {
         logger.debug("resetShortcuts");
@@ -226,6 +225,7 @@ public class KeyParser
             }
         }
     }
+    */
 
     public void setupActionHandler(String ideaActName, String vimActName)
     {
@@ -292,9 +292,10 @@ public class KeyParser
             iaction.setupHandler(new EditorKeyHandler(handler, stroke, special));
         }
 
-        removePossibleConflict(stroke);
+        //removePossibleConflict(stroke);
     }
 
+    /*
     public void removePossibleConflict(KeyStroke stroke)
     {
         if (conflicts.containsKey(stroke))
@@ -329,6 +330,7 @@ public class KeyParser
             conf.addPluginAction(pluginActionId);
         }
     }
+    */
 
     /**
      * Creates the key parser
@@ -336,7 +338,7 @@ public class KeyParser
     private KeyParser()
     {
         logger.debug("KeyParser ctr");
-        keymap = KeymapManager.getInstance().getActiveKeymap();
+        //keymap = KeymapManager.getInstance().getActiveKeymap();
     }
 
     /**
@@ -397,7 +399,7 @@ public class KeyParser
         for (int i = 0; i < shortcuts.size(); i++)
         {
             Shortcut cut = (Shortcut)shortcuts.get(i);
-            removePossibleConflict(cut.getKeys()[0]);
+            //removePossibleConflict(cut.getKeys()[0]);
             if (i == 0)
             {
                 firstStroke = cut.getKeys()[0];
@@ -574,7 +576,7 @@ public class KeyParser
             logger.error("Unknown action " + actName);
         }
 
-        addPossibleConflict(key, actName);
+        //addPossibleConflict(key, actName);
 
         Node node = base.getChild(key);
         // Is this the first time we have seen this character at this point in the tree?
@@ -616,6 +618,7 @@ public class KeyParser
         return res.toString();
     }
 
+    /*
     public void setChoices(HashSet choices)
     {
         keymap.removeShortcutChangeListener(keymapListener);
@@ -816,6 +819,7 @@ public class KeyParser
 
         element.addContent(originals);
     }
+    */
 
     /**
      * Unfortunately this isn't called when the user makes a shortcut change using the Keymap Settings dialog.
@@ -941,13 +945,13 @@ public class KeyParser
     }
 
     private HashMap keyRoots = new HashMap();
-    private HashMap conflicts = new HashMap();
-    private HashSet ideaWins = new HashSet();
-    private Keymap keymap;
-    private KeyChangeListener keymapListener = new KeyChangeListener();
+    //private HashMap conflicts = new HashMap();
+    //private HashSet ideaWins = new HashSet();
+    //private Keymap keymap;
+    //private KeyChangeListener keymapListener = new KeyChangeListener();
 
     private static KeyParser instance;
 
     private static Logger logger = Logger.getInstance(KeyParser.class.getName());
-    private static final String KEY_HANDLER = "VimKeyHandler";
+    //private static final String KEY_HANDLER = "VimKeyHandler";
 }

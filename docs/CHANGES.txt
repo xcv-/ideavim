@@ -1,6 +1,13 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.10.2
+@VERSION@ from 0.10.3
+New Features
+- Put back the need for the custom keymap Vim. Too many people wanted to turn
+  off some Vim keystrokes and "give" them back to IDEA. The current OpenAPI
+  doesn't allow me to provide sufficient fuctionality without the custom
+  keymap.
+
+0.10.3 from 0.10.2
 Bug Fixes
 - The Enter, Tab, and Escape keys now work properly in dialog boxes and other
   entry fields as long as you aren't in insert or replace mode within a given
