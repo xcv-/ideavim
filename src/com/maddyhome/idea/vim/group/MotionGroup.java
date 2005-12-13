@@ -1908,7 +1908,7 @@ public class MotionGroup extends AbstractActionGroup
                 CommandGroups.getInstance().getMotion().processMouseClick(event.getEditor(), event.getMouseEvent());
                 event.consume();
             }
-            else if (event.getArea() != EditorMouseEventArea.ANNOTATIONS_AREA)
+            else if (event.getArea() != EditorMouseEventArea.ANNOTATIONS_AREA && event.getArea() != EditorMouseEventArea.FOLDING_OUTLINE_AREA)
             {
                 CommandGroups.getInstance().getMotion().processLineSelection(
                     event.getEditor(), event.getMouseEvent().getButton() == MouseEvent.BUTTON3);

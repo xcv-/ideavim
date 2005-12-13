@@ -3,6 +3,7 @@ History of changes for @NAME@ for IDEA @IDEA-VERSION@
 @VERSION@ from 0.10.4
 Bug Fixes
 - Restored ability to yank visual range into a register. Broken in 0.10.2.
+- Clicking on a fold region doesn't turn on visual mode anymore.
 
 0.10.4 from 0.10.3
 New Features
