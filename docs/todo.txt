@@ -1,6 +1,5 @@
 Bugs to fix:
 
-- Page Foward/back doesn't work properly near ends of file.
 - . doesn't work across files anymore
 - :dig doesn't bring up the window (it flashes a split second).
 - Split text when typing fast after o command.

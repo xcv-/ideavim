@@ -988,9 +988,8 @@ public class MotionGroup extends AbstractActionGroup
 
             return true;
         }
-        else if (moved || partial)
+        else if (moved && !partial)
         {
-            // TODO - not working for Ctrl-D/U when partial or no movement.
             int vline = Math.abs(tline - newline) % height + 1;
             if (pages < 0)
             {
@@ -1000,8 +999,24 @@ public class MotionGroup extends AbstractActionGroup
 
             return true;
         }
+        else if (partial)
+        {
+            int cline = EditorHelper.getCurrentVisualLine(editor);
+            int vline = cline + pages * height;
+            vline = EditorHelper.normalizeVisualLine(editor, vline);
+            if (cline == vline)
+            {
+                return false;
+            }
+
+            int lline = editor.visualToLogicalPosition(new VisualPosition(vline, 0)).line;
+            moveCaret(editor, context, moveCaretToLineStartSkipLeading(editor, lline));
+
+            return true;
+        }
         else
         {
+            moveCaret(editor, context, moveCaretToLineStartSkipLeading(editor));
             return false;
         }
     }
