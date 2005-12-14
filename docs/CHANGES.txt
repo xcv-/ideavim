@@ -5,6 +5,7 @@ Bug Fixes
 - Restored ability to yank visual range into a register. Broken in 0.10.2.
 - Clicking on a fold region doesn't turn on visual mode anymore.
 - Fixed cursor motion for Ctrl-F/B and Ctrl-D/U when near file start/end.
+- Restored ability to repeat commands across files. Broken in 0.10.2.
 
 0.10.4 from 0.10.3
 New Features
