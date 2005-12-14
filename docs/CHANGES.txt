@@ -6,6 +6,7 @@ Bug Fixes
 - Clicking on a fold region doesn't turn on visual mode anymore.
 - Fixed cursor motion for Ctrl-F/B and Ctrl-D/U when near file start/end.
 - Restored ability to repeat commands across files. Broken in 0.10.2.
+- Don't consume mouse click events so other plugins can process the events.
 
 0.10.4 from 0.10.3
 New Features

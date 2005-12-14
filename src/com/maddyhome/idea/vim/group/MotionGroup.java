@@ -1948,13 +1948,13 @@ public class MotionGroup extends AbstractActionGroup
             if (event.getArea() == EditorMouseEventArea.EDITING_AREA)
             {
                 CommandGroups.getInstance().getMotion().processMouseClick(event.getEditor(), event.getMouseEvent());
-                event.consume();
+                //event.consume();
             }
             else if (event.getArea() != EditorMouseEventArea.ANNOTATIONS_AREA && event.getArea() != EditorMouseEventArea.FOLDING_OUTLINE_AREA)
             {
                 CommandGroups.getInstance().getMotion().processLineSelection(
                     event.getEditor(), event.getMouseEvent().getButton() == MouseEvent.BUTTON3);
-                event.consume();
+                //event.consume();
             }
         }
 
@@ -1966,7 +1966,7 @@ public class MotionGroup extends AbstractActionGroup
             {
                 CommandGroups.getInstance().getMotion().processMouseReleased(event.getEditor(), mode, startOff, endOff);
 
-                event.consume();
+                //event.consume();
                 dragEditor = null;
             }
         }
