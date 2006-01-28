@@ -1,5 +1,5 @@
 <idea-plugin url="http://sourceforge.net/projects/ideavim/">
-    <name>IdeaVim</name>
+    <name>IdeaVIM</name>
     <description>VIM Emulator. This plugin provides key mappings in IDEA to emulate vi/vim/gvim.</description>
     <version>@VERSION@-@IDEA-VERSION@</version>
     <vendor email="rick@maddyhome.com" logo="/icons/vim16x16.png">Rick Maddy</vendor>

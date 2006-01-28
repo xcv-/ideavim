@@ -27,6 +27,7 @@
     <property name="classes" value="classes" />
     <property name="javadoc" value="docs/javadoc" />
     <property name="build" value="build" />
+    <property name="install" value="install" />
     <property name="dist" value="dist" />
     <!-- Update to your IntelliJ installtion -->
     <property name="idea.home" value="/opt/idea-5.0.2" />
@@ -97,6 +98,7 @@
         <mkdir dir="${project}-${version}-${idea-version}"/>
         <copy todir="${project}-${version}-${idea-version}">
             <fileset dir="." includes="license/**"/>
+            <fileset dir="${install}" includes="**"/>
         </copy>
         <copy todir="${project}-${version}-${idea-version}/lib">
             <fileset dir="${build}" includes="*.jar"/>
