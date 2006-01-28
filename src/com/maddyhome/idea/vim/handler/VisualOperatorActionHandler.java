@@ -131,7 +131,8 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                 lastMode = CommandState.getInstance(editor).getSubMode();
                 if (lastMode != Command.FLAG_MOT_LINEWISE)
                 {
-                    CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 0, Command.FLAG_MOT_LINEWISE);
+                    CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 0,
+                        Command.FLAG_MOT_LINEWISE);
                 }
             }
 
@@ -150,7 +151,8 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                 }
             }
 
-            if (cmd == null || (cmd.getFlags() & Command.FLAG_MULTIKEY_UNDO) == 0)
+            if (cmd == null || ((cmd.getFlags() & Command.FLAG_MULTIKEY_UNDO) == 0 &&
+                (cmd.getFlags() & Command.FLAG_EXPECT_MORE) == 0))
             {
                 logger.debug("not multikey undo - exit visual");
                 CommandGroups.getInstance().getMotion().exitVisual(editor);

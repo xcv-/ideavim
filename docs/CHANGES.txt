@@ -1,6 +1,15 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.10.3
+@VERSION@ from 0.10.4
+Bug Fixes
+- Restored ability to yank visual range into a register. Broken in 0.10.2.
+- Clicking on a fold region doesn't turn on visual mode anymore.
+- Fixed cursor motion for Ctrl-F/B and Ctrl-D/U when near file start/end.
+- Restored ability to repeat commands across files. Broken in 0.10.2.
+- Don't consume mouse click events so other plugins can process the events.
+- Fix ability to set breakpoints by clicking next to line numbers.
+
+0.10.4 from 0.10.3
 New Features
 - Put back the need for the custom keymap Vim. Too many people wanted to turn
   off some Vim keystrokes and "give" them back to IDEA. The current OpenAPI

@@ -8,11 +8,13 @@
 <b>NOTE:</b> Please see the README file if upgrading to this version from
 version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 
-New Features<br>
-- Put back the need for the custom keymap Vim. Too many people wanted to turn
-  off some Vim keystrokes and "give" them back to IDEA. The current OpenAPI
-  doesn't allow me to provide sufficient fuctionality without the custom
-  keymap.<br>
+Bug Fixes<br>
+- Restored ability to yank visual range into a register. Broken in 0.10.2.<br>
+- Clicking on a fold region doesn't turn on visual mode anymore.<br>
+- Fixed cursor motion for Ctrl-F/B and Ctrl-D/U when near file start/end.<br>
+- Restored ability to repeat commands across files. Broken in 0.10.2.<br>
+- Don't consume mouse click events so other plugins can process the events.<br>
+- Fix ability to set breakpoints by clicking next to line numbers.<br>
 ]]>
     </change-notes>
     <idea-version since-build="@SINCE-VERSION@"/>

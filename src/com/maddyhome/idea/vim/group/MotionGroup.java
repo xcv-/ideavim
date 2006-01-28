@@ -862,7 +862,7 @@ public class MotionGroup extends AbstractActionGroup
             scroll.set(count);
         }
 
-        return scrollPage(editor, context, dir, count, EditorHelper.getCurrentVisualScreenLine(editor));
+        return scrollPage(editor, context, dir, count, EditorHelper.getCurrentVisualScreenLine(editor), true);
     }
 
     public boolean scrollColumn(Editor editor, DataContext context, int columns)
@@ -962,32 +962,74 @@ public class MotionGroup extends AbstractActionGroup
         int height = EditorHelper.getScreenHeight(editor);
         int line = pages > 0 ? 1 : height;
 
-        return scrollPage(editor, context, pages, height - 2, line);
+        return scrollPage(editor, context, pages, height - 2, line, false);
     }
 
-    public boolean scrollPage(Editor editor, DataContext context, int pages, int height, int line)
+    public boolean scrollPage(Editor editor, DataContext context, int pages, int height, int line, boolean partial)
     {
         logger.debug("scrollPage(" + pages + ")");
         int tline = EditorHelper.getVisualLineAtTopOfScreen(editor);
+        /*
         if ((tline == 0 && pages < 0) || (tline == EditorHelper.getVisualLineCount(editor) - 1 && pages > 0))
         {
             return false;
         }
+        */
 
-        tline = EditorHelper.normalizeVisualLine(editor, tline + pages * height);
+        int newline = tline + pages * height;
+        int topline = EditorHelper.normalizeVisualLine(editor, newline);
 
-        scrollLineToTopOfScreen(editor, tline);
+        boolean moved = scrollLineToTopOfScreen(editor, topline);
+        tline = EditorHelper.getVisualLineAtTopOfScreen(editor);
 
-        moveCaret(editor, context, moveCaretToScreenLine(editor, line));
+        if (moved && topline == newline && topline == tline)
+        {
+            moveCaret(editor, context, moveCaretToScreenLine(editor, line));
 
-        return true;
+            return true;
+        }
+        else if (moved && !partial)
+        {
+            int vline = Math.abs(tline - newline) % height + 1;
+            if (pages < 0)
+            {
+                vline = height - vline + 3;
+            }
+            moveCaret(editor, context, moveCaretToScreenLine(editor, vline));
+
+            return true;
+        }
+        else if (partial)
+        {
+            int cline = EditorHelper.getCurrentVisualLine(editor);
+            int vline = cline + pages * height;
+            vline = EditorHelper.normalizeVisualLine(editor, vline);
+            if (cline == vline)
+            {
+                return false;
+            }
+
+            int lline = editor.visualToLogicalPosition(new VisualPosition(vline, 0)).line;
+            moveCaret(editor, context, moveCaretToLineStartSkipLeading(editor, lline));
+
+            return true;
+        }
+        else
+        {
+            moveCaret(editor, context, moveCaretToLineStartSkipLeading(editor));
+            return false;
+        }
     }
 
-    private static void scrollLineToTopOfScreen(Editor editor, int vline)
+    private static boolean scrollLineToTopOfScreen(Editor editor, int vline)
     {
         EditorScrollHandler.ignoreChanges(true);
-        editor.getScrollingModel().scrollVertically(vline * editor.getLineHeight());
+        int pos = vline * editor.getLineHeight();
+        int vpos = editor.getScrollingModel().getVerticalScrollOffset();
+        editor.getScrollingModel().scrollVertically(pos);
         EditorScrollHandler.ignoreChanges(false);
+
+        return vpos != editor.getScrollingModel().getVerticalScrollOffset();
     }
 
     private static void scrollColumnToLeftOfScreen(Editor editor, int vcol)
@@ -1906,13 +1948,13 @@ public class MotionGroup extends AbstractActionGroup
             if (event.getArea() == EditorMouseEventArea.EDITING_AREA)
             {
                 CommandGroups.getInstance().getMotion().processMouseClick(event.getEditor(), event.getMouseEvent());
-                event.consume();
+                //event.consume();
             }
-            else if (event.getArea() != EditorMouseEventArea.ANNOTATIONS_AREA)
+            else if (event.getArea() == EditorMouseEventArea.LINE_NUMBERS_AREA)
             {
                 CommandGroups.getInstance().getMotion().processLineSelection(
                     event.getEditor(), event.getMouseEvent().getButton() == MouseEvent.BUTTON3);
-                event.consume();
+                //event.consume();
             }
         }
 
@@ -1924,7 +1966,7 @@ public class MotionGroup extends AbstractActionGroup
             {
                 CommandGroups.getInstance().getMotion().processMouseReleased(event.getEditor(), mode, startOff, endOff);
 
-                event.consume();
+                //event.consume();
                 dragEditor = null;
             }
         }

@@ -168,7 +168,7 @@ public class CommandState
 
     private String getStatusString(int pos)
     {
-        State state = null;
+        State state;
         if (pos >= 0 && pos < modes.size())
         {
             state = (State)modes.get(pos);
@@ -399,10 +399,11 @@ public class CommandState
     private Stack modes = new Stack();
     private State defaultState = new State(MODE_COMMAND, 0, KeyParser.MAPPING_NORMAL);
     private Command command;
-    private Command lastChange;
     private int flags;
-    private char lastRegister = RegisterGroup.REGISTER_DEFAULT;
     private boolean isRecording = false;
+
+    private static Command lastChange = null;
+    private static char lastRegister = RegisterGroup.REGISTER_DEFAULT;
 
     private static Logger logger = Logger.getInstance(CommandState.class.getName());
 }
