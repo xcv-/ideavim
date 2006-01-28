@@ -7,6 +7,7 @@ Bug Fixes
 - Fixed cursor motion for Ctrl-F/B and Ctrl-D/U when near file start/end.
 - Restored ability to repeat commands across files. Broken in 0.10.2.
 - Don't consume mouse click events so other plugins can process the events.
+- Fix ability to set breakpoints by clicking next to line numbers.
 
 0.10.4 from 0.10.3
 New Features

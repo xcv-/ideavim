@@ -59,8 +59,9 @@ using IDEA in VIM Emulation mode:
 plugin. This should be found under the Editor section.</li>
 <li>If this is the first time you have ever installed this plugin you must
 install the special VIM key mapping. Copy
-<code>&lt;IDEA_HOME&gt;/plugins/IdeaVIM/Vim.xml</code> to
-<code>&lt;HOME&gt;/.IntelliJIdea/config/keymaps</code> where <code>HOME</code>
+<code>&lt;IDEA_HOME&gt;/plugins/IdeaVIM/Vim.xml</code> or
+<code>&lt;HOME&gt;/.IntelliJIdea50/config/plugins/IdeaVIM/Vim.xml</code> to
+<code>&lt;HOME&gt;/.IntelliJIdea[50]/config/keymaps</code> where <code>HOME</code>
 is your home directory.
 Create the <code>keymaps</code> directory if it does not exist.
 </li>
@@ -70,7 +71,11 @@ Create the <code>keymaps</code> directory if it does not exist.
 
 You only need to do these steps the first time you install the plugin. You will find a new menu under
 <code>Tools</code> named <code>VIM Emulator</code>. It should be checked by default. If this menu is not present
-plugin was not properly installed.
+the plugin was not properly installed.
+
+<h3>Upgrade</h3>
+
+Users upgrading from 0.10.1, 0.10.2, or 0.10.3 must reinstall the Vim key mapping.
 
 <h3>Download</h3>
 
