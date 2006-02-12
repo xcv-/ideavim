@@ -31,11 +31,12 @@
     <property name="dist" value="dist" />
     <!-- Update to your IntelliJ installtion -->
     <property name="idea.home" value="/opt/idea-5.0.2" />
+    <property name="compiler.build" value="javac1.4"/>
 
     <property name="project" value="IdeaVIM" />
     <!-- Update this prior to building a new distribution -->
     <property name="idea-version" value="5.x" />
-    <property name="version" value="0.10.5a" />
+    <property name="version" value="0.10.5b" />
     <property name="since-version" value="3461" />
 
     <path id="build.classpath">
