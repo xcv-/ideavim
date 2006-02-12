@@ -9,12 +9,7 @@
 version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 
 Bug Fixes<br>
-- Restored ability to yank visual range into a register. Broken in 0.10.2.<br>
-- Clicking on a fold region doesn't turn on visual mode anymore.<br>
-- Fixed cursor motion for Ctrl-F/B and Ctrl-D/U when near file start/end.<br>
-- Restored ability to repeat commands across files. Broken in 0.10.2.<br>
-- Don't consume mouse click events so other plugins can process the events.<br>
-- Fix ability to set breakpoints by clicking next to line numbers.<br>
+- Removed the various Code Completion keyboard shortcuts from Vim keymapping.<br>
 ]]>
     </change-notes>
     <idea-version since-build="@SINCE-VERSION@"/>
