@@ -66,6 +66,15 @@ public class StringHelper
             char ch = text.charAt(i);
             switch (ch)
             {
+                case '!':
+                    res.append("&#33;");
+                    break;
+                case '[':
+                    res.append("&#91;");
+                    break;
+                case ']':
+                    res.append("&#93;");
+                    break;
                 case ' ':
                     res.append("&#32;");
                     break;
@@ -107,6 +116,21 @@ public class StringHelper
                         if (entity.equals("&#32;"))
                         {
                             newch = ' ';
+                        }
+                        else if (entity.equals("&#33;"))
+                        {
+                            newch = '!';
+                            i = semi;
+                        }
+                        else if (entity.equals("&#91;"))
+                        {
+                            newch = '[';
+                            i = semi;
+                        }
+                        else if (entity.equals("&#93;"))
+                        {
+                            newch = ']';
+                            i = semi;
                         }
                         else if (entity.equals("&amp;"))
                         {

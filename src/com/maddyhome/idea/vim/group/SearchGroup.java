@@ -1350,35 +1350,35 @@ public class SearchGroup extends AbstractActionGroup
         if (lastSearch != null)
         {
             Element text = new Element("last-search");
-            CDATA data = new CDATA(/*CDATA.normalizeString*/(lastSearch));
+            CDATA data = new CDATA(/*CDATA.normalizeString*/StringHelper.entities(lastSearch));
             text.addContent(data);
             search.addContent(text);
         }
         if (lastOffset != null)
         {
             Element text = new Element("last-offset");
-            CDATA data = new CDATA(/*CDATA.normalizeString*/(lastOffset));
+            CDATA data = new CDATA(/*CDATA.normalizeString*/StringHelper.entities(lastOffset));
             text.addContent(data);
             search.addContent(text);
         }
         if (lastPattern != null)
         {
             Element text = new Element("last-pattern");
-            CDATA data = new CDATA(/*CDATA.normalizeString*/(lastPattern));
+            CDATA data = new CDATA(/*CDATA.normalizeString*/StringHelper.entities(lastPattern));
             text.addContent(data);
             search.addContent(text);
         }
         if (lastReplace != null)
         {
             Element text = new Element("last-replace");
-            CDATA data = new CDATA(/*CDATA.normalizeString*/(lastReplace));
+            CDATA data = new CDATA(/*CDATA.normalizeString*/StringHelper.entities(lastReplace));
             text.addContent(data);
             search.addContent(text);
         }
         if (lastSubstitute != null)
         {
             Element text = new Element("last-substitute");
-            CDATA data = new CDATA(/*CDATA.normalizeString*/(lastSubstitute));
+            CDATA data = new CDATA(/*CDATA.normalizeString*/StringHelper.entities(lastSubstitute));
             text.addContent(data);
             search.addContent(text);
         }
@@ -1413,35 +1413,35 @@ public class SearchGroup extends AbstractActionGroup
             ;
         }
         {
-            lastSearch = search.getChildText/*Normalize*/("last-search");
+            lastSearch = StringHelper.unentities(search.getChildText/*Normalize*/("last-search"));
         }
         if (search.getChild("last-offset") != null)
         {
             ;
         }
         {
-            lastOffset = search.getChildText/*Normalize*/("last-offset");
+            lastOffset = StringHelper.unentities(search.getChildText/*Normalize*/("last-offset"));
         }
         if (search.getChild("last-pattern") != null)
         {
             ;
         }
         {
-            lastPattern = search.getChildText/*Normalize*/("last-pattern");
+            lastPattern = StringHelper.unentities(search.getChildText/*Normalize*/("last-pattern"));
         }
         if (search.getChild("last-replace") != null)
         {
             ;
         }
         {
-            lastReplace = search.getChildText/*Normalize*/("last-replace");
+            lastReplace = StringHelper.unentities(search.getChildText/*Normalize*/("last-replace"));
         }
         if (search.getChild("last-substitute") != null)
         {
             ;
         }
         {
-            lastSubstitute = search.getChildText/*Normalize*/("last-substitute");
+            lastSubstitute = StringHelper.unentities(search.getChildText/*Normalize*/("last-substitute"));
         }
 
         Element dir = search.getChild("last-dir");
