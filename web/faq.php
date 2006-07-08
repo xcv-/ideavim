@@ -47,7 +47,7 @@ Everything is installed properly but I just can't seem to enter VIM commands
 </dt>
 <dd>
 Select the <code>Tools</code> menu and make sure the menu <code>VIM Emulator</code> has a checkmark next to it. Also
-select the <code>Options|Keymaps</code> menu and make sure the "vIm" keymap says "active" next to it. If not, select
+select the <code>Options|Keymaps</code> menu and make sure the "Vim" keymap says "active" next to it. If not, select
 the "Vim" keymap and press the <code>Set Active</code> button.
 </dd>
 <dt>

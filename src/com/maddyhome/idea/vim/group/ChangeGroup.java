@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.group;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2005 Rick Maddy
+ * Copyright (C) 2003-2006 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1023,6 +1023,13 @@ public class ChangeGroup extends AbstractActionGroup
      */
     public boolean changeCharacters(Editor editor, DataContext context, int count)
     {
+        int len = EditorHelper.getLineLength(editor);
+        int col = EditorHelper.getCurrentLogicalColumn(editor);
+        if (col + count >= len)
+        {
+            return changeEndOfLine(editor, context, 1);
+        }
+
         boolean res = deleteCharacter(editor, context, count);
         if (res)
         {

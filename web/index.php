@@ -55,15 +55,48 @@ using IDEA in VIM Emulation mode:
 <h4>Idea Aurora/4.0.x, Pallada/4.5.x, and Irida/5.0.x</h4>
 
 <ol>
-<li>Use the plugin manager built into Idea to download and install the IdeaVIM
-plugin. This should be found under the Editor section.</li>
-<li>If this is the first time you have ever installed this plugin you must
-install the special VIM key mapping. Copy
-<code>&lt;IDEA_HOME&gt;/plugins/IdeaVIM/Vim.xml</code> or
-<code>&lt;HOME&gt;/.IntelliJIdea50/config/plugins/IdeaVIM/Vim.xml</code> to
-<code>&lt;HOME&gt;/.IntelliJIdea[50]/config/keymaps</code> where <code>HOME</code>
-is your home directory.
-Create the <code>keymaps</code> directory if it does not exist.
+<li>
+    Use the plugin manager built into Idea to download and install the IdeaVIM
+    plugin. This should be found under the Editor section.
+</li>
+<li>
+    If this is the first time you have ever installed this plugin you must
+    install the special VIM key mapping. Copy:
+    <br>
+    <br>
+    <code>&lt;IDEA_HOME&gt;/plugins/IdeaVIM/Vim.xml</code> or
+    <code>&lt;PLUGIN_HOME&gt;/IdeaVIM/Vim.xml</code> to
+    <code>&lt;CONFIG_HOME&gt;/keymaps</code>
+    <br>
+    <br>
+    where <code>HOME</code>
+    is your home directory, <code>PLUGIN_HOME</code> is where plugins are stored, and
+    <code>CONFIG_HOME</code> is where IntelliJ stores its configuration. The table below
+    describes these values for various platforms.
+    <br>
+    <br>
+    <table border="1" cellpadding="2">
+        <tr>
+            <th>Variable</th>
+            <th>Windows</th>
+            <th>Linux</th>
+            <th>Mac</th>
+        </tr>
+        <tr>
+            <td>PLUGIN_HOME</td>
+            <td>%HOME%\.IntelliJIdea[50]\config/plugins</td>
+            <td>$HOME/.IntelliJIdea[50]/config/plugins</td>
+            <td>$HOME/Library/Application Support/IntelliJIDEA[50]</td>
+        </tr>
+        <tr>
+            <td>CONFIG_HOME</td>
+            <td>%HOME%\.IntelliJIdea[50]\config</td>
+            <td>$HOME/.IntelliJIdea[50]/config</td>
+            <td>$HOME/Preferences/IntelliJIDEA[50]</td>
+        </tr>
+    </table>
+    <br>
+    Create the <code>keymaps</code> directory if it does not exist.
 </li>
 <li>Restart IDEA and then select the <code>Options|Keymaps</code> menu. Select the <code>Vim</code> keymap and make
     it the active keymap by pressing the <code>Set Active</code> button.</li>
@@ -88,11 +121,11 @@ Version 0.4.x was used with IDEA 3.x.
 <br>
 Version 0.6.x was used with Aurora.
 <br>
-Version 0.7.x is used with IDEA 4.0.x
+Version 0.7.x was used with IDEA 4.0.x
 <br>
-Version 0.8.x is used with IDEA 4.0.x and Pallada/IDEA 4.5.x
+Version 0.8.x was used with IDEA 4.0.x and Pallada/IDEA 4.5.x
 <br>
-Version 0.9.x is used with IDEA 5.0.x
+Version 0.9.x was used with IDEA 5.0.x
 <br>
 Version 0.10.x is used with IDEA 4.x and 5.0.x. Just use the one with the correct version suffix (-4x or -5x).
 

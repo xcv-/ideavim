@@ -3,6 +3,7 @@ History of changes for @NAME@ for IDEA @IDEA-VERSION@
 @VERSION@ from 0.10.5
 Bug Fixes
 - Removed the various Code Completion keyboard shortcuts from Vim keymapping.
+- Fixed s command when changing end-of-line (cursor was one character off).
 
 0.10.5 from 0.10.4
 Bug Fixes

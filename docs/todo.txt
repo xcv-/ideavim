@@ -1,5 +1,8 @@
 Bugs to fix:
 
+- c in dialog causes exception.
+- Fix implementation of S so no newline required.
+- Exceptions when editing xml file with CDATA section in it.
 - Ctrl-/ doesn't move the cursor down a line after commenting the line.
 - Searches are very slow on big files.
 - :dig doesn't bring up the window (it flashes a split second).

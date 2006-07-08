@@ -30,7 +30,8 @@
     <property name="install" value="install" />
     <property name="dist" value="dist" />
     <!-- Update to your IntelliJ installtion -->
-    <property name="idea.home" value="/opt/idea-5.0.2" />
+    <property name="idea.home" value="/Applications/IntelliJ IDEA 5.1.2.app" />
+    <property name="plugin.home" value="${user.home}/Library/Application Support/IntelliJIDEA50" />
     <property name="compiler.build" value="javac1.4"/>
 
     <property name="project" value="IdeaVIM" />
@@ -87,8 +88,8 @@
     </target>
 
     <target name="deploy" depends="build" description="Copies plugin to IntelliJ plugin directory" >
-        <mkdir dir="${idea.home}/plugins/IdeaVIM/lib"/>
-        <copy file="${build}/${project}.jar" todir="${user.home}/.IntelliJIdea50/config/plugins/IdeaVIM/lib" />
+        <mkdir dir="${plugin.home}/IdeaVIM/lib"/>
+        <copy file="${build}/${project}.jar" todir="${plugin.home}/IdeaVIM/lib" />
     </target>
 
     <target name="dist" depends="dist-src, dist-bin" description="Creates the src and bin distribution files" />
