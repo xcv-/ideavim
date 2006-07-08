@@ -171,21 +171,24 @@ public class ChangeGroup extends AbstractActionGroup
             MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretToLineStart(editor));
             initInsert(editor, context, CommandState.MODE_INSERT);
 
-            CommandState state = CommandState.getInstance(editor);
-            if (state.getMode() != CommandState.MODE_REPEAT)
+            if (!editor.isOneLineMode())
             {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run()
-                    {
-                        KeyHandler.getInstance().handleKey(editor, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), context);
-                        MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretVertical(editor, -1));
-                    }
-                });
-            }
-            else
-            {
-                //KeyHandler.executeAction("VimEditorEnter", context);
-                MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretVertical(editor, -1));
+                CommandState state = CommandState.getInstance(editor);
+                if (state.getMode() != CommandState.MODE_REPEAT)
+                {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run()
+                        {
+                            KeyHandler.getInstance().handleKey(editor, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), context);
+                            MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretVertical(editor, -1));
+                        }
+                    });
+                }
+                else
+                {
+                    //KeyHandler.executeAction("VimEditorEnter", context);
+                    MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretVertical(editor, -1));
+                }
             }
         }
         else

@@ -1,7 +1,7 @@
 Bugs to fix:
 
+- Disable commands not appropriate for one-line editors in dialogs.
 - c in dialog causes exception.
-- Fix implementation of S so no newline required.
 - Ctrl-/ doesn't move the cursor down a line after commenting the line.
 - Searches are very slow on big files.
 - :dig doesn't bring up the window (it flashes a split second).
