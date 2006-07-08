@@ -543,6 +543,11 @@ public class ChangeGroup extends AbstractActionGroup
      */
     public void processEnter(Editor editor, DataContext context)
     {
+        if (editor.isOneLineMode())
+        {
+            return;
+        }
+
         if (CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
         {
             KeyHandler.executeAction("VimEditorToggleInsertState", context);

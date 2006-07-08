@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.group;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2005 Rick Maddy
+ * Copyright (C) 2003-2006 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -122,6 +122,11 @@ public class CopyGroup extends AbstractActionGroup
         Register reg = CommandGroups.getInstance().getRegister().getLastRegister();
         if (reg != null)
         {
+            if ((reg.getType() & Command.FLAG_MOT_LINEWISE) != 0 && editor.isOneLineMode())
+            {
+                return false;
+            }
+
             int pos = 0;
             // If a linewise put the text is inserted before the current line.
             if ((reg.getType() & Command.FLAG_MOT_LINEWISE) != 0)
@@ -155,6 +160,11 @@ public class CopyGroup extends AbstractActionGroup
         Register reg = CommandGroups.getInstance().getRegister().getLastRegister();
         if (reg != null)
         {
+            if ((reg.getType() & Command.FLAG_MOT_LINEWISE) != 0 && editor.isOneLineMode())
+            {
+                return false;
+            }
+
             int pos = 0;
             // If a linewise paste, the text is inserted after the current line.
             if ((reg.getType() & Command.FLAG_MOT_LINEWISE) != 0)
@@ -190,6 +200,11 @@ public class CopyGroup extends AbstractActionGroup
         CommandGroups.getInstance().getRegister().resetRegister();
         if (reg != null)
         {
+            if ((reg.getType() & Command.FLAG_MOT_LINEWISE) != 0 && editor.isOneLineMode())
+            {
+                return false;
+            }
+
             int start = range.getStartOffset();
             logger.debug("start=" + start);
             int end = range.getEndOffset();
@@ -260,6 +275,12 @@ public class CopyGroup extends AbstractActionGroup
         logger.debug("offset=" + offset);
         logger.debug("type=" + type);
         logger.debug("mode=" + mode);
+
+        if ((mode & Command.FLAG_MOT_LINEWISE) != 0 && editor.isOneLineMode())
+        {
+            return;
+        }
+
         // Don't indent if this there isn't anything about a linewise selection or register
         if (indent && (type & Command.FLAG_MOT_LINEWISE) == 0 && (mode & Command.FLAG_MOT_LINEWISE) == 0)
         {

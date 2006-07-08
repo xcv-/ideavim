@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.handler.change.delete;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2005 Rick Maddy
+ * Copyright (C) 2003-2006 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,6 +31,11 @@ public class DeleteJoinLinesSpacesHandler extends ChangeEditorActionHandler
 {
     public boolean execute(Editor editor, DataContext context, int count, int rawCount, Argument argument)
     {
+        if (editor.isOneLineMode())
+        {
+            return false;
+        }
+
         return CommandGroups.getInstance().getChange().deleteJoinLines(editor, context, count, true);
     }
 }

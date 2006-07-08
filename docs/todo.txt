@@ -1,6 +1,6 @@
 Bugs to fix:
 
-- Disable commands not appropriate for one-line editors in dialogs.
+- Undo doesn't work in dialog editors.
 - c in dialog causes exception.
 - Ctrl-/ doesn't move the cursor down a line after commenting the line.
 - Searches are very slow on big files.
