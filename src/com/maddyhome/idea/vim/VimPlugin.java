@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2005 Rick Maddy
+ * Copyright (C) 2003-2006 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -153,6 +153,10 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
                 }
 
                 EditorData.initializeEditor(event.getEditor());
+                if (EditorData.getVirtualFile(event.getEditor()) == null)
+                {
+                    DocumentManager.getInstance().addListeners(event.getEditor().getDocument());
+                }
             }
 
             public void editorReleased(EditorFactoryEvent event)

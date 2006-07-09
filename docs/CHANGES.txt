@@ -7,6 +7,7 @@ Bug Fixes
 - Fixed internal errors when working with text containing XML CDATA sections.
 - Disabled multi-line commands when working in one-line editors in dialogs.
 - Fixed trouble getting into change or insert mode in editors in dialogs.
+- Enabled undo/redo in editors in dialogs.
 
 0.10.5 from 0.10.4
 Bug Fixes
