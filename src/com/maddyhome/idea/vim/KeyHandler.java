@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2005 Rick Maddy
+ * Copyright (C) 2003-2006 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,7 +42,6 @@ import com.maddyhome.idea.vim.key.BranchNode;
 import com.maddyhome.idea.vim.key.CommandNode;
 import com.maddyhome.idea.vim.key.KeyParser;
 import com.maddyhome.idea.vim.key.Node;
-import com.maddyhome.idea.vim.key.ParentNode;
 import com.maddyhome.idea.vim.option.Options;
 
 import java.awt.event.KeyEvent;
@@ -111,14 +110,15 @@ public class KeyHandler
     public void handleKey(Editor editor, KeyStroke key, DataContext context)
     {
         logger.debug("handleKey " + key);
-        boolean isRecording = CommandState.getInstance(editor).isRecording();
+        CommandState editorState = CommandState.getInstance(editor);
+        boolean isRecording = editorState.isRecording();
         boolean shouldRecord = true;
         for (int loop = 0; loop < 2; loop++)
         {
             // If this is a "regular" character keystroke, get the character
             char chKey = key.getKeyChar() == KeyEvent.CHAR_UNDEFINED ? 0 : key.getKeyChar();
 
-            if ((CommandState.getInstance(editor).getMode() == CommandState.MODE_COMMAND || mode == STATE_COMMAND) &&
+            if ((editorState.getMode() == CommandState.MODE_COMMAND || mode == STATE_COMMAND) &&
                 (key.getKeyCode() == KeyEvent.VK_ESCAPE ||
                     (key.getKeyCode() == KeyEvent.VK_C && (key.getModifiers() & KeyEvent.CTRL_MASK) != 0) ||
                     (key.getKeyCode() == '[' && (key.getModifiers() & KeyEvent.CTRL_MASK) != 0)))
@@ -138,8 +138,8 @@ public class KeyHandler
             }
             // At this point the user must be typing in a command. Most commands can be preceeded by a number. Let's
             // check if a number can be entered at this point, and if so, did the user send us a digit.
-            else if ((CommandState.getInstance(editor).getMode() == CommandState.MODE_COMMAND ||
-                CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL) &&
+            else if ((editorState.getMode() == CommandState.MODE_COMMAND ||
+                editorState.getMode() == CommandState.MODE_VISUAL) &&
                 mode == STATE_NEW_COMMAND && currentArg != Argument.CHARACTER && currentArg != Argument.DIGRAPH &&
                 Character.isDigit(chKey) &&
                 (count != 0 || chKey != '0'))
@@ -149,8 +149,8 @@ public class KeyHandler
                 logger.debug("count now " + count);
             }
             // Pressing delete while entering a count "removes" the last digit entered
-            else if ((CommandState.getInstance(editor).getMode() == CommandState.MODE_COMMAND ||
-                CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL) &&
+            else if ((editorState.getMode() == CommandState.MODE_COMMAND ||
+                editorState.getMode() == CommandState.MODE_VISUAL) &&
                 mode == STATE_NEW_COMMAND && currentArg != Argument.CHARACTER && currentArg != Argument.DIGRAPH &&
                 key.getKeyCode() == KeyEvent.VK_DELETE && count != 0)
             {
@@ -202,7 +202,7 @@ public class KeyHandler
 
                 // Ask the key/action tree if this is an appropriate key at this point in the command and if so,
                 // return the node matching this keystroke
-                Node node = currentNode.getChild(key);
+                Node node = editorState.getCurrentNode().getChild(key);
 
                 if (digraph == null && !(node instanceof CommandNode) && DigraphSequence.isDigraphStart(key))
                 {
@@ -236,10 +236,10 @@ public class KeyHandler
                 {
                     // Flag that we aren't allowing any more count digits
                     mode = STATE_COMMAND;
-                    currentNode = (BranchNode)node;
-                    if (CommandState.getInstance(editor).isRecording())
+                    editorState.setCurrentNode((BranchNode)node);
+                    if (editorState.isRecording())
                     {
-                        ArgumentNode arg = (ArgumentNode)((BranchNode)currentNode).getArgumentNode();
+                        ArgumentNode arg = (ArgumentNode)((BranchNode)editorState.getCurrentNode()).getArgumentNode();
                         if (arg != null && (arg.getFlags() & Command.FLAG_NO_ARG_RECORDING) != 0)
                         {
                             handleKey(editor, KeyStroke.getKeyStroke(' '), context);
@@ -321,8 +321,7 @@ public class KeyHandler
                             if ((arg.getFlags() & Command.FLAG_OP_PEND) != 0)
                             {
                                 //CommandState.getInstance().setMappingMode(KeyParser.MAPPING_OP_PEND);
-                                CommandState state = CommandState.getInstance(editor);
-                                CommandState.getInstance(editor).pushState(state.getMode(), state.getSubMode(),
+                                editorState.pushState(editorState.getMode(), editorState.getSubMode(),
                                     KeyParser.MAPPING_OP_PEND);
                             }
                             break;
@@ -356,15 +355,15 @@ public class KeyHandler
                     }
 
                     // If we are in insert/replace mode send this key in for processing
-                    if (CommandState.getInstance(editor).getMode() == CommandState.MODE_INSERT ||
-                        CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
+                    if (editorState.getMode() == CommandState.MODE_INSERT ||
+                        editorState.getMode() == CommandState.MODE_REPLACE)
                     {
                         if (!CommandGroups.getInstance().getChange().processKey(editor, context, key))
                         {
                             shouldRecord = false;
                         }
                     }
-                    else if (CommandState.getInstance(editor).getMappingMode() == KeyParser.MAPPING_CMD_LINE)
+                    else if (editorState.getMappingMode() == KeyParser.MAPPING_CMD_LINE)
                     {
                         if (!CommandGroups.getInstance().getProcess().processExKey(editor, context, key, true))
                         {
@@ -416,14 +415,14 @@ public class KeyHandler
             }
 
             // If we were in "operator pending" mode, reset back to normal mode.
-            if (CommandState.getInstance(editor).getMappingMode() == KeyParser.MAPPING_OP_PEND)
+            if (editorState.getMappingMode() == KeyParser.MAPPING_OP_PEND)
             {
                 //CommandState.getInstance().setMappingMode(KeyParser.MAPPING_NORMAL);
-                CommandState.getInstance(editor).popState();
+                editorState.popState();
             }
 
             // Save off the command we are about to execute
-            CommandState.getInstance(editor).setCommand(cmd);
+            editorState.setCommand(cmd);
 
             lastWasBS = ((cmd.getFlags() & Command.FLAG_IS_BACKSPACE) != 0);
             logger.debug("lastWasBS=" + lastWasBS);
@@ -519,7 +518,8 @@ public class KeyHandler
     {
         count = 0;
         keys = new ArrayList();
-        currentNode = KeyParser.getInstance().getKeyRoot(CommandState.getInstance(editor).getMappingMode());
+        CommandState editorState = CommandState.getInstance(editor);
+        editorState.setCurrentNode(KeyParser.getInstance().getKeyRoot(editorState.getMappingMode()));
         logger.debug("partialReset");
     }
 
@@ -567,11 +567,12 @@ public class KeyHandler
 
         public void run()
         {
-            boolean wasRecording = CommandState.getInstance(editor).isRecording();
+            CommandState editorState = CommandState.getInstance(editor);
+            boolean wasRecording = editorState.isRecording();
 
             executeAction(cmd.getAction(), context);
-            if (CommandState.getInstance(editor).getMode() == CommandState.MODE_INSERT ||
-                CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
+            if (editorState.getMode() == CommandState.MODE_INSERT ||
+                editorState.getMode() == CommandState.MODE_REPLACE)
             {
                 CommandGroups.getInstance().getChange().processCommand(editor, context, cmd);
             }
@@ -589,15 +590,15 @@ public class KeyHandler
             // mode we were in. This handles commands in those modes that temporarily allow us to execute normal
             // mode commands. An exception is if this command should leave us in the temporary mode such as
             // "select register"
-            if (CommandState.getInstance(editor).getSubMode() == CommandState.SUBMODE_SINGLE_COMMAND &&
+            if (editorState.getSubMode() == CommandState.SUBMODE_SINGLE_COMMAND &&
                 (cmd.getFlags() & Command.FLAG_EXPECT_MORE) == 0)
             {
-                CommandState.getInstance(editor).popState();
+                editorState.popState();
             }
 
             KeyHandler.getInstance().reset(editor);
 
-            if (wasRecording && CommandState.getInstance(editor).isRecording())
+            if (wasRecording && editorState.isRecording())
             {
                 CommandGroups.getInstance().getRegister().addKeyStroke(key);
             }
@@ -612,7 +613,6 @@ public class KeyHandler
     private int count;
     private ArrayList keys;
     private int mode;
-    private ParentNode currentNode;
     private Stack currentCmd = new Stack();
     private int currentArg;
     private TypedActionHandler origHandler;

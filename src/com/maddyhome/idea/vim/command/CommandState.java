@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.command;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2005 Rick Maddy
+ * Copyright (C) 2003-2006 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,6 +26,7 @@ import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.RegisterGroup;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.key.KeyParser;
+import com.maddyhome.idea.vim.key.ParentNode;
 import com.maddyhome.idea.vim.option.Options;
 
 import java.util.Stack;
@@ -314,6 +315,16 @@ public class CommandState
         updateStatus();
     }
 
+    public ParentNode getCurrentNode()
+    {
+        return currentNode;
+    }
+
+    public void setCurrentNode(ParentNode currentNode)
+    {
+        this.currentNode = currentNode;
+    }
+
     private State currentState()
     {
         if (modes.size() > 0)
@@ -401,6 +412,8 @@ public class CommandState
     private Command command;
     private int flags;
     private boolean isRecording = false;
+
+    private ParentNode currentNode = KeyParser.getInstance().getKeyRoot(getMappingMode());
 
     private static Command lastChange = null;
     private static char lastRegister = RegisterGroup.REGISTER_DEFAULT;

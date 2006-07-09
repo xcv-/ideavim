@@ -1,7 +1,6 @@
 Bugs to fix:
 
 - Undo doesn't work in dialog editors.
-- c in dialog causes exception.
 - Ctrl-/ doesn't move the cursor down a line after commenting the line.
 - Searches are very slow on big files.
 - :dig doesn't bring up the window (it flashes a split second).

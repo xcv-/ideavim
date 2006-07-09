@@ -5,6 +5,8 @@ Bug Fixes
 - Removed the various Code Completion keyboard shortcuts from Vim keymapping.
 - Fixed s command when changing end-of-line (cursor was one character off).
 - Fixed internal errors when working with text containing XML CDATA sections.
+- Disabled multi-line commands when working in one-line editors in dialogs.
+- Fixed trouble getting into change or insert mode in editors in dialogs.
 
 0.10.5 from 0.10.4
 Bug Fixes
