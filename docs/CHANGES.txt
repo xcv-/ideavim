@@ -3,17 +3,18 @@ History of changes for @NAME@ for IDEA @IDEA-VERSION@
 @VERSION@ from 0.10.5
 Bug Fixes
 - Removed the various Code Completion keyboard shortcuts from Vim keymapping.
-- Fixed s command when changing end-of-line (cursor was one character off).
+- Fixed s command when changing end-of-line (caret was one character off).
 - Fixed internal errors when working with text containing XML CDATA sections.
 - Disabled multi-line commands when working in one-line editors in dialogs.
 - Fixed trouble getting into change or insert mode in editors in dialogs.
 - Enabled undo/redo in editors in dialogs.
+- Ctrl-/ with no selection now moves caret to next line after adding comment.
 
 0.10.5 from 0.10.4
 Bug Fixes
 - Restored ability to yank visual range into a register. Broken in 0.10.2.
 - Clicking on a fold region doesn't turn on visual mode anymore.
-- Fixed cursor motion for Ctrl-F/B and Ctrl-D/U when near file start/end.
+- Fixed caret motion for Ctrl-F/B and Ctrl-D/U when near file start/end.
 - Restored ability to repeat commands across files. Broken in 0.10.2.
 - Don't consume mouse click events so other plugins can process the events.
 - Fix ability to set breakpoints by clicking next to line numbers.
@@ -47,13 +48,13 @@ Bug Fixes
 - No longer update "delete" registers when joining lines or shifting text.
 - Undoing a put required two undos instead of one. (Regression from 0.9.7).
 - Fixed various visual put issues.
-- Fixed cursor movements after yank commands.
+- Fixed caret movements after yank commands.
 - Ensure smooth scrolling is turned off in editors. Many motion commands were
   having problems if smooth scrolling was on as of 0.9.6.
 - Entering an invalid command while in visual mode now properly stays in
   visual mode.
-- Typing text while in insert mode caused strange cursor position changes if
-  the cursor neared the right edge of the screen. (Regression from 0.9.6).
+- Typing text while in insert mode caused strange caret position changes if
+  the caret neared the right edge of the screen. (Regression from 0.9.6).
 - Fixed internal error when right clicking on a visual selection and selecting
   certain refactorings.
 - Ensure proper visual mode set when mouse dragging including in the line

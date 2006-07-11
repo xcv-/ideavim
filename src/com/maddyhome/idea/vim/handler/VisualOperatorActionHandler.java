@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.handler;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2005 Rick Maddy
+ * Copyright (C) 2003-2006 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -129,7 +129,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
             else if (cmd != null && (cmd.getFlags() & Command.FLAG_FORCE_LINEWISE) != 0)
             {
                 lastMode = CommandState.getInstance(editor).getSubMode();
-                if (lastMode != Command.FLAG_MOT_LINEWISE)
+                if (lastMode != Command.FLAG_MOT_LINEWISE && (cmd.getFlags() & Command.FLAG_FORCE_VISUAL) != 0)
                 {
                     CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 0,
                         Command.FLAG_MOT_LINEWISE);
@@ -145,7 +145,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
 
             if (cmd != null && (cmd.getFlags() & Command.FLAG_FORCE_LINEWISE) != 0)
             {
-                if (lastMode != Command.FLAG_MOT_LINEWISE)
+                if (lastMode != Command.FLAG_MOT_LINEWISE && (cmd.getFlags() & Command.FLAG_FORCE_VISUAL) != 0)
                 {
                     CommandGroups.getInstance().getMotion().toggleVisual(editor, context, 1, 0, lastMode);
                 }
@@ -155,7 +155,10 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                 (cmd.getFlags() & Command.FLAG_EXPECT_MORE) == 0))
             {
                 logger.debug("not multikey undo - exit visual");
-                CommandGroups.getInstance().getMotion().exitVisual(editor);
+                if ((cmd.getFlags() & Command.FLAG_KEEP_VISUAL) == 0)
+                {
+                    CommandGroups.getInstance().getMotion().exitVisual(editor);
+                }
                 if (wasRepeat)
                 {
                     EditorData.setLastColumn(editor, lastColumn);

@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.command;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2005 Rick Maddy
+ * Copyright (C) 2003-2006 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,6 +57,8 @@ public class Command
     public static final int FLAG_SEARCH_FWD = 1 << 16;
     public static final int FLAG_SEARCH_REV = 1 << 17;
 
+    public static final int FLAG_KEEP_VISUAL = 1 << 20;
+    public static final int FLAG_FORCE_VISUAL = 1 << 21;
     public static final int FLAG_FORCE_LINEWISE = 1 << 22;
     public static final int FLAG_DELEGATE = 1 << 23;
     /** Special flag used for any mappings involving operators */
