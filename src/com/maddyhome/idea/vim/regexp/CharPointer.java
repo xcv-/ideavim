@@ -251,6 +251,17 @@ public class CharPointer
             return null;
         }
 
+        int len = seq.length();
+        for (int i = pointer; i < len; i++)
+        {
+            if (seq.charAt(i) == c)
+            {
+                return ref(i - pointer);
+            }
+        }
+        return null;
+
+        /*
         String str = seq.subSequence(pointer, pointer + strlen()).toString();
         int pos = str.indexOf(c);
         if (pos != -1)
@@ -261,6 +272,7 @@ public class CharPointer
         {
             return null;
         }
+        */
     }
 
     public boolean isNul()
@@ -346,4 +358,5 @@ public class CharPointer
     private CharSequence seq;
     private int pointer;
     private boolean readonly = true;
+    private boolean noNullCheck = true;
 }

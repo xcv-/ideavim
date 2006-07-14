@@ -381,10 +381,11 @@ public class SearchGroup extends AbstractActionGroup
         int searchcol = 0;
         boolean firstMatch = true;
         boolean got_quit = false;
+        int lcount = EditorHelper.getLineCount(editor);
         for (int lnum = line1; lnum <= line2 && !got_quit;)
         {
             CharacterPosition newpos = null;
-            int nmatch = sp.vim_regexec_multi(regmatch, editor, lnum, searchcol);
+            int nmatch = sp.vim_regexec_multi(regmatch, editor, lcount, lnum, searchcol);
             found = nmatch > 0;
             if (found)
             {
@@ -742,7 +743,7 @@ public class SearchGroup extends AbstractActionGroup
         highlightSearch(noSmartCase);
     }
 
-    private void highlightSearch(boolean noSmartCase)
+    private void highlightSearch(final boolean noSmartCase)
     {
         if (!ApiHelper.supportsColorSchemes())
         {
@@ -761,7 +762,7 @@ public class SearchGroup extends AbstractActionGroup
 
             for (int j = 0; j < editors.length; j++)
             {
-                Editor editor = editors[j];
+                final Editor editor = editors[j];
                 String els = EditorData.getLastSearch(editor);
                 if (!showSearchHighlight)
                 {
@@ -779,8 +780,7 @@ public class SearchGroup extends AbstractActionGroup
                 }
 
                 removeSearchHighlight(editor);
-
-                highlightSearchLines(editor, noSmartCase, 0, -1);
+                highlightSearchLines(editor, 0, -1, lastSearch, shouldIgnoreCase(lastSearch, noSmartCase));
 
                 EditorData.setLastSearch(editor, lastSearch);
             }
@@ -788,6 +788,11 @@ public class SearchGroup extends AbstractActionGroup
     }
 
     private void highlightSearchLines(Editor editor, boolean noSmartCase, int startLine, int endLine)
+    {
+        highlightSearchLines(editor, startLine, endLine, lastSearch, shouldIgnoreCase(lastSearch, noSmartCase));
+    }
+
+    private static void highlightSearchLines(Editor editor, int startLine, int endLine, String text, boolean ic)
     {
         if (!ApiHelper.supportsColorSchemes())
         {
@@ -808,20 +813,21 @@ public class SearchGroup extends AbstractActionGroup
         RegExp sp;
         RegExp.regmmatch_T regmatch = new RegExp.regmmatch_T();
         sp = new RegExp();
-        regmatch.regprog = sp.vim_regcomp(lastSearch, 1);
+        regmatch.regprog = sp.vim_regcomp(text, 1);
         if (regmatch.regprog == null)
         {
             return;
         }
 
-        regmatch.rmm_ic = shouldIgnoreCase(lastSearch, noSmartCase);
+        regmatch.rmm_ic = ic;
 
         boolean found = true;
         int searchcol = 0;
+        int lcount = EditorHelper.getLineCount(editor);
         for (int lnum = line1; lnum <= line2;)
         {
             CharacterPosition newpos = null;
-            int nmatch = sp.vim_regexec_multi(regmatch, editor, lnum, searchcol);
+            int nmatch = sp.vim_regexec_multi(regmatch, editor, lcount, lnum, searchcol);
             found = nmatch > 0;
             if (found)
             {
@@ -834,7 +840,7 @@ public class SearchGroup extends AbstractActionGroup
 
                 RangeHighlighter rh = highlightMatch(editor, startoff, endoff);
                 rh.setErrorStripeMarkColor(color.getBackgroundColor());
-                rh.setErrorStripeTooltip(lastSearch);
+                rh.setErrorStripeTooltip(text);
                 hls.add(rh);
 
                 lnum += nmatch - 1;
@@ -1055,6 +1061,7 @@ public class SearchGroup extends AbstractActionGroup
                 lnum = pos.lnum;
             }
 
+            int lcount = EditorHelper.getLineCount(editor);
             for (loop = 0; loop <= 1; ++loop)   /* loop twice if 'wrapscan' set */
             {
                 if (!wholeFile)
@@ -1068,7 +1075,7 @@ public class SearchGroup extends AbstractActionGroup
                     * Look for a match somewhere in the line.
                     */
                     first_lnum = lnum;
-                    nmatched = sp.vim_regexec_multi(regmatch, editor, lnum, 0);
+                    nmatched = sp.vim_regexec_multi(regmatch, editor, lcount, lnum, 0);
                     if (nmatched > 0)
                     {
                         /* match may actually be in another line when using \zs */
@@ -1106,7 +1113,7 @@ public class SearchGroup extends AbstractActionGroup
                                     ++matchcol;
                                 }
                                 if (ptr.charAt(matchcol) == '\u0000' ||
-                                    (nmatched = sp.vim_regexec_multi(regmatch, editor, lnum, matchcol)) == 0)
+                                    (nmatched = sp.vim_regexec_multi(regmatch, editor, lcount, lnum, matchcol)) == 0)
                                 {
                                     match_ok = false;
                                     break;
@@ -1166,7 +1173,7 @@ public class SearchGroup extends AbstractActionGroup
                                     ++matchcol;
                                 }
                                 if (ptr.charAt(matchcol) == '\u0000' ||
-                                    (nmatched = sp.vim_regexec_multi(regmatch, editor, lnum, matchcol)) == 0)
+                                    (nmatched = sp.vim_regexec_multi(regmatch, editor, lcount, lnum, matchcol)) == 0)
                                 {
                                     break;
                                 }
@@ -1289,7 +1296,7 @@ public class SearchGroup extends AbstractActionGroup
         }
     }
 
-    private RangeHighlighter highlightMatch(Editor editor, int start, int end)
+    private static RangeHighlighter highlightMatch(Editor editor, int start, int end)
     {
         if (!ApiHelper.supportsColorSchemes())
         {
@@ -1312,7 +1319,7 @@ public class SearchGroup extends AbstractActionGroup
         updateHighlight();
     }
 
-    private void removeSearchHighlight(Editor editor)
+    private static void removeSearchHighlight(Editor editor)
     {
         if (!ApiHelper.supportsColorSchemes())
         {

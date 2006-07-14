@@ -2292,7 +2292,7 @@ public class RegExp
      * Return zero if there is no match.  Return number of lines contained in the
      * match otherwise.
      */
-    public int vim_regexec_multi(regmmatch_T rmp, /*win_T win,*/ Editor buf, int lnum, int col)
+    public int vim_regexec_multi(regmmatch_T rmp, /*win_T win,*/ Editor buf, int lcount, int lnum, int col)
 
     /* window in which to search or null */
     /* buffer in which to search */
@@ -2307,7 +2307,7 @@ public class RegExp
         reg_buf = buf;
         //reg_win = win;
         reg_firstlnum = lnum;
-        reg_maxline = EditorHelper.getLineCount(reg_buf) - lnum;
+        reg_maxline = lcount - lnum;
         ireg_ic = rmp.rmm_ic;
 
         /* Need to switch to buffer "buf" to make vim_iswordc() work. */
