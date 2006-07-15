@@ -38,6 +38,7 @@
     <property name="idea-version" value="5.x" />
     <property name="version" value="0.10.6" />
     <property name="since-version" value="3461" />
+    <property name="compiler.build" value="javac14" />
 
     <path id="build.classpath">
         <pathelement path="${idea.home}/lib/extensions.jar" />
@@ -47,7 +48,6 @@
     </path>
 
     <target name="clean.build">
-        <delete dir="${classes}"/>
         <delete dir="${build}"/>
     </target>
 

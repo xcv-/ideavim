@@ -1417,36 +1417,21 @@ public class SearchGroup extends AbstractActionGroup
 
         if (search.getChild("last-search") != null)
         {
-            ;
-        }
-        {
             lastSearch = StringHelper.unentities(search.getChildText/*Normalize*/("last-search"));
         }
         if (search.getChild("last-offset") != null)
-        {
-            ;
-        }
         {
             lastOffset = StringHelper.unentities(search.getChildText/*Normalize*/("last-offset"));
         }
         if (search.getChild("last-pattern") != null)
         {
-            ;
-        }
-        {
             lastPattern = StringHelper.unentities(search.getChildText/*Normalize*/("last-pattern"));
         }
         if (search.getChild("last-replace") != null)
         {
-            ;
-        }
-        {
             lastReplace = StringHelper.unentities(search.getChildText/*Normalize*/("last-replace"));
         }
         if (search.getChild("last-substitute") != null)
-        {
-            ;
-        }
         {
             lastSubstitute = StringHelper.unentities(search.getChildText/*Normalize*/("last-substitute"));
         }

@@ -18,6 +18,11 @@ Bug Fixes<br>
 - Ctrl-/ with no selection now moves caret to next line after adding comment.<br>
 ]]>
     </change-notes>
+
+<!--
+    <helpset file="help.jar" path="/VimHelp.hs"/>
+-->
+
     <idea-version since-build="@SINCE-VERSION@"/>
 
     <application-components>
