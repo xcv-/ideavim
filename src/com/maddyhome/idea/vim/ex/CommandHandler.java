@@ -202,6 +202,12 @@ public abstract class CommandHandler
             throw new NoRangeAllowedException();
         }
 
+        if ((argFlags & RANGE_REQUIRED) != 0 && cmd.getRanges().size() == 0)
+        {
+            MessageHelper.EMSG(Msg.e_rangereq);
+            throw new MissingRangeException();
+        }
+
         // Argument required
         if ((argFlags & ARGUMENT_REQUIRED) != 0 && cmd.getArgument().length() == 0)
         {
@@ -274,10 +280,6 @@ public abstract class CommandHandler
                     {
                         //MessageHelper.EMSG(e.getMessage());
                         VimPlugin.indicateError();
-                        res = false;
-                    }
-                    finally
-                    {
                     }
             //    }
             //});

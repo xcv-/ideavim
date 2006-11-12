@@ -40,7 +40,7 @@ public class CmdFilterHandler extends CommandHandler
 {
     public CmdFilterHandler()
     {
-        super("!", "", RANGE_OPTIONAL | ARGUMENT_OPTIONAL | WRITABLE);
+        super("!", "", RANGE_REQUIRED | ARGUMENT_OPTIONAL | WRITABLE);
     }
 
     public boolean execute(Editor editor, DataContext context, ExCommand cmd) throws ExException
@@ -50,13 +50,7 @@ public class CmdFilterHandler extends CommandHandler
         Ranges ranges = cmd.getRanges();
         if (ranges.size() == 0)
         {
-            // Command
-            String command = cmd.getArgument();
-            if (command.equals("!"))
-            {
-                // repeat last command
-            }
-
+            // Need some range
             return false;
         }
         else
@@ -73,7 +67,7 @@ public class CmdFilterHandler extends CommandHandler
                     return false;
                 }
 
-                command.replaceAll("!", last);
+                command = command.replaceAll("!", last);
 
             }
 

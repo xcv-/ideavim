@@ -5,6 +5,7 @@ Bug Fixes
 - Avoid AssertionError with DocumentListeners.
 - n, N, #, *, g#, and g* now properly work as arguments to the d and c commands.
 - Better handle invalid ex command ranges.
+- Fixed !! and :!, and :!! commands.
 
 Enhancements
 - :edit now supports opening files outside of project roots. Can use ~ for home

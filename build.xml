@@ -51,12 +51,16 @@
         <delete dir="${build}"/>
     </target>
 
-    <target name="clean" depends="clean.build" description="Removes all generated files" >
+    <target name="clean.classes">
+        <delete dir="${classes}"/>
+    </target>
+
+    <target name="clean" depends="clean.build,clean.classes" description="Removes all generated files" >
         <delete dir="${javadoc}"/>
         <delete dir="${project}"/>
     </target>
 
-    <target name="build" depends="clean.build" description="Compiles all source code and created plugin jar file" >
+    <target name="build" depends="clean.build,clean.classes" description="Compiles all source code and created plugin jar file" >
         <mkdir dir="${classes}"/>
         <javac destdir="${classes}" debug="on" deprecation="on" classpathref="build.classpath" source="1.4" target="1.4" >
             <src path="${src}"/>

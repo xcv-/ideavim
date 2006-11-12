@@ -315,7 +315,7 @@ public class CommandParser
                         break;
                     case STATE_COMMAND: // Reading the actual command name
                         // For commands that start with a non-letter, treat other non-letter characters as part of
-                        // the argument except for < or >
+                        // the argument except for !, <, or >
                         if (Character.isLetter(ch) ||
                             (command.length() == 0 && "~<>@=#*&!".indexOf(ch) >= 0) ||
                             (command.length() > 0 && ch == command.charAt(command.length() - 1) &&
@@ -323,7 +323,7 @@ public class CommandParser
                         {
                             command.append(ch);
                             reprocess = false;
-                            if (!Character.isLetter(ch) && "<>".indexOf(ch) == 0)
+                            if (!Character.isLetter(ch) && "<>".indexOf(ch) < 0)
                             {
                                 state = STATE_CMD_ARG;
                             }

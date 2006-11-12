@@ -21,9 +21,7 @@ Requested Functionality to add:
 - :write doesn't support a range or arguments
 - Escape not working in :ex
 - Support :global
-- Support no space between ! and command on :! commands
-- !! command not working
-- :! not supported (no range on :!)
 - Support gf
 - Ctrl-w and Ctrl-u in insert mode flaky near end of line or end of file
 - Support Ctrl-A and Ctrl-X (add and substract)
+- Support Ctrl-P while in insert mode
