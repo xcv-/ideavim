@@ -89,7 +89,14 @@ public class DocumentManager
         Iterator iter = docListeners.iterator();
         while (iter.hasNext())
         {
-            doc.addDocumentListener((DocumentListener)iter.next());
+            try
+            {
+                doc.addDocumentListener((DocumentListener)iter.next());
+            }
+            catch (AssertionError e)
+            {
+                // Ignore - I have no way to avoid adding a listenter twice.
+            }
         }
     }
 
