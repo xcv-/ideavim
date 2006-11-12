@@ -1,6 +1,11 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.10.5
+@VERSION@ from 0.10.6
+Bug Fixes
+- Avoid AssertionError with DocumentListeners.
+- n, N, #, *, g#, and g* now properly work as arguments to the d and c commands.
+
+0.10.6 from 0.10.5
 Bug Fixes
 - Removed the various Code Completion keyboard shortcuts from Vim keymapping.
 - Fixed s command when changing end-of-line (caret was one character off).

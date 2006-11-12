@@ -19,13 +19,13 @@ package com.maddyhome.idea.vim.action.motion.search;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import com.maddyhome.idea.vim.action.motion.MotionEditorAction;
 import com.maddyhome.idea.vim.handler.motion.search.SearchWordBackwardHandler;
 
 /**
  *
  */
-public class SearchWordBackwardAction extends EditorAction
+public class SearchWordBackwardAction extends MotionEditorAction
 {
     public SearchWordBackwardAction()
     {
