@@ -17,9 +17,7 @@
     <keyboard-shortcut first-keystroke="alt BACK_SPACE" />
   </action>
   <action id="CheckinProject" />
-  <action id="ClassNameCompletion" />
   <action id="ClearCase.CheckInProject" />
-  <action id="CodeCompletion" />
   <action id="CommanderSwapPanels" />
   <action id="ContextHelp" />
   <action id="EditorBackSpace">
@@ -111,7 +109,6 @@
   <action id="RecentFiles" />
   <action id="Replace" />
   <action id="SaveAll" />
-  <action id="SmartTypeCompletion" />
   <action id="Starteam.CheckinProject" />
   <action id="Subversion.CommitProject" />
   <action id="ToggleBookmark2" />
