@@ -18,7 +18,6 @@ Requested Functionality to add:
 - Support incsearch option
 - Support CTRL-O, CTRL-I, :jumps
 - Support U (line undo)
-- Modify FileGroup.openFile to support ~ in filename, and files outside roots
 - :write doesn't support a range or arguments
 - Escape not working in :ex
 - Support :global

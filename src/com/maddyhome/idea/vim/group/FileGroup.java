@@ -25,18 +25,22 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.helper.EditorData;
 
+import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -50,25 +54,64 @@ public class FileGroup extends AbstractActionGroup
 
     public boolean openFile(String filename, DataContext context)
     {
+        logger.debug("openFile(" + filename + ")");
         Project proj = (Project)context.getData(DataConstants.PROJECT);
-        ProjectRootManager prm = ProjectRootManager.getInstance(proj);
-        VirtualFile[] roots = prm.getContentRoots();
-        for (int i = 0; i < roots.length; i++)
-        {
-            logger.debug("root[" + i + "] = " + roots[i].getPath());
-            VirtualFile vf = findFile(roots[i], filename);
-            if (vf != null)
-            {
-                FileEditorManager fem = FileEditorManager.getInstance(proj);
-                fem.openFile(vf, true);
 
-                return true;
+        VirtualFile found = null;
+        if (filename.length() > 2 && filename.charAt(0) == '~' && filename.charAt(1) == File.separatorChar)
+        {
+            logger.debug("home dir file");
+            String homefile = filename.substring(2);
+            String dir = System.getProperty("user.home");
+            logger.debug("looking for " + homefile + " in " + dir);
+            found = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(dir, homefile));
+        }
+        else
+        {
+            ProjectRootManager prm = ProjectRootManager.getInstance(proj);
+            VirtualFile[] roots = prm.getContentRoots();
+            for (int i = 0; i < roots.length; i++)
+            {
+                logger.debug("root[" + i + "] = " + roots[i].getPath());
+                found = findFile(roots[i], filename);
+                if (found != null)
+                {
+                    break;
+                }
+            }
+
+            if (found == null)
+            {
+                found = LocalFileSystem.getInstance().findFileByIoFile(new File(filename));
             }
         }
 
-        VimPlugin.showMessage("Unable to find " + filename);
+        if (found != null)
+        {
+            logger.debug("found file: " + found);
+            // Can't open a file unless it has a known file type. The next call will return the known type.
+            // If unknown, IDEA will prompt the user to pick a type.
+            FileType type = FileTypeManager.getInstance().getKnownFileTypeOrAssociate(found);
+            if (type != null)
+            {
+                FileEditorManager fem = FileEditorManager.getInstance(proj);
+                fem.openFile(found, true);
 
-        return false;
+                return true;
+            }
+            else
+            {
+                // There was no type and user didn't pick one. Don't open the file
+                // Return true here because we found the file but the user canceled by not picking a type.
+                return true;
+            }
+        }
+        else
+        {
+            VimPlugin.showMessage("Unable to find " + filename);
+
+            return false;
+        }
     }
 
     private VirtualFile findFile(VirtualFile root, String filename)
@@ -101,6 +144,7 @@ public class FileGroup extends AbstractActionGroup
 
     /**
      * Close the current editor
+     *
      * @param context The data context
      */
     public void closeFile(Editor editor, DataContext context)
@@ -120,6 +164,7 @@ public class FileGroup extends AbstractActionGroup
 
     /**
      * Close all editors except for the current editor
+     *
      * @param context The data context
      */
     public void closeAllButCurrent(DataContext context)
@@ -129,6 +174,7 @@ public class FileGroup extends AbstractActionGroup
 
     /**
      * Close all editors
+     *
      * @param context The data context
      */
     public void closeAllFiles(DataContext context)
@@ -138,6 +184,7 @@ public class FileGroup extends AbstractActionGroup
 
     /**
      * Saves specific file in the project
+     *
      * @param context The data context
      */
     public void saveFile(Editor editor, DataContext context)
@@ -147,6 +194,7 @@ public class FileGroup extends AbstractActionGroup
 
     /**
      * Saves all files in the project
+     *
      * @param context The data context
      */
     public void saveFiles(DataContext context)
@@ -166,6 +214,7 @@ public class FileGroup extends AbstractActionGroup
 
     /**
      * Selects then next or previous editor
+     *
      * @param count
      * @param context
      */
@@ -190,6 +239,7 @@ public class FileGroup extends AbstractActionGroup
 
     /**
      * Selects then next or previous editor
+     *
      * @param count
      * @param context
      */
@@ -251,6 +301,7 @@ public class FileGroup extends AbstractActionGroup
         /**
          * The user has changed the editor they are working with - exit insert/replace mode, and complete any
          * appropriate repeat.
+         *
          * @param event
          */
         public void selectionChanged(FileEditorManagerEvent event)
