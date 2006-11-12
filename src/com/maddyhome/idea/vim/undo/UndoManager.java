@@ -121,6 +121,15 @@ public class UndoManager
         return res;
     }
 
+    public boolean undoLine(Editor editor, DataContext context)
+    {
+        logger.debug("undoLine");
+        EditorUndoList list = getEditorUndoList(editor);
+        boolean res = list.undoLine(editor, context);
+        logger.debug("undo: list=" + list);
+        return res;
+    }
+
     public boolean redo(Editor editor, DataContext context)
     {
         EditorUndoList list = getEditorUndoList(editor);
@@ -154,7 +163,7 @@ public class UndoManager
 
     private EditorUndoList addEditorUndoList(Editor editor)
     {
-        EditorUndoList res = null;
+        EditorUndoList res;
         HashSet tors = (HashSet)documents.get(editor.getDocument());
         if (tors == null)
         {

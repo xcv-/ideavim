@@ -43,6 +43,16 @@ public class UndoCommand
         endOffset = editor.getCaretModel().getOffset();
     }
 
+    public boolean isOneLine()
+    {
+        return false; // TODO
+    }
+
+    public int getLine()
+    {
+        return -1; // TODO
+    }
+
     public void addChange(DocumentChange change)
     {
         logger.debug("new change");
@@ -82,14 +92,13 @@ public class UndoCommand
 
     public String toString()
     {
-        StringBuffer res = new StringBuffer();
-        res.append("UndoCommand[");
-        res.append("startOffset=" + startOffset);
-        res.append(", endOffset=" + endOffset);
-        res.append(", changes=" + changes);
-        res.append("]");
-
-        return res.toString();
+        final StringBuffer sb = new StringBuffer();
+        sb.append("UndoCommand");
+        sb.append("{startOffset=").append(startOffset);
+        sb.append(", endOffset=").append(endOffset);
+        sb.append(", changes=").append(changes);
+        sb.append('}');
+        return sb.toString();
     }
 
     public int size()

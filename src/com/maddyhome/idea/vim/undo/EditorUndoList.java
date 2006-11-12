@@ -172,6 +172,45 @@ public class EditorUndoList
         return false;
     }
 
+    public boolean undoLine(Editor editor, DataContext context)
+    {
+        if (pointer == 0 && getMaxUndos() == 0)
+        {
+            return redo(editor, context);
+        }
+
+        if (pointer > 0)
+        {
+            int lastLine = -1;
+
+            pointer--;
+            UndoCommand cmd = (UndoCommand)undos.get(pointer);
+            logger.debug("undo command " + pointer);
+            while (cmd.isOneLine() && (lastLine == -1 || cmd.getLine() == lastLine))
+            {
+                lastLine = cmd.getLine();
+
+                inUndo = true;
+                cmd.undo(editor, context);
+                inUndo = false;
+
+                if (pointer > 0)
+                {
+                    pointer--;
+                    cmd = (UndoCommand)undos.get(pointer);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     private int getMaxUndos()
     {
         return ((NumberOption)Options.getInstance().getOption("undolevels")).value();
@@ -181,8 +220,8 @@ public class EditorUndoList
     {
         StringBuffer res = new StringBuffer();
         res.append("EditorUndoList[");
-        res.append("pointer=" + pointer);
-        res.append(", undos=" + undos);
+        res.append("pointer=").append(pointer);
+        res.append(", undos=").append(undos);
         res.append("]");
 
         return res.toString();
