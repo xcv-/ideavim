@@ -101,9 +101,21 @@ public class ExTextField extends JTextField
                 }
                 break;
             case KeyEvent.KEY_RELEASED:
-                if (e.getKeyChar() != KeyEvent.VK_UNDEFINED && e.getModifiers() != 0)
+                if (e.getKeyChar() != KeyEvent.VK_UNDEFINED)
                 {
-                    keep = true;
+                    if (e.getModifiers() != 0)
+                    {
+                        keep = true;
+                    }
+                    else
+                    {
+                        switch(e.getKeyCode())
+                        {
+                            case KeyEvent.VK_ESCAPE:
+                                KeyHandler.getInstance().handleKey(editor, KeyStroke.getKeyStroke((char)27), context);
+                                e.consume();
+                        }
+                    }
                 }
                 break;
         }

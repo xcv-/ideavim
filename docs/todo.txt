@@ -19,7 +19,6 @@ Requested Functionality to add:
 - Support CTRL-O, CTRL-I, :jumps
 - Support U (line undo)
 - :write doesn't support a range or arguments
-- Escape not working in :ex
 - Support :global
 - Support gf
 - Ctrl-w and Ctrl-u in insert mode flaky near end of line or end of file
