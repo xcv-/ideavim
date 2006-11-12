@@ -208,7 +208,7 @@ public class CommandParser
         String command = res.getCommand();
 
         // If there is no command, just a range, use the 'goto line' handler
-        CommandHandler handler = null;
+        CommandHandler handler;
         if (command.length() == 0)
         {
             handler = new GotoLineHandler();
@@ -501,6 +501,13 @@ public class CommandParser
                         break;
                     case STATE_RANGE_DONE: // We have hit the end of a range - process it
                         Range[] range = AbstractRange.createRange(location.toString(), offsetTotal, move);
+                        if (range == null)
+                        {
+                            error = MessageHelper.getMsg(Msg.e_badrange, Character.toString(ch));
+                            state = STATE_ERROR;
+                            reprocess = false;
+                            break;
+                        }
                         ranges.addRange(range);
                         // Could there be more ranges - nope - at end, start command
                         if (ch == ':' || ch == '\n')

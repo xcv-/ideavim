@@ -81,9 +81,11 @@ public abstract class AbstractRange implements Range
             }
             catch (NumberFormatException e)
             {
+                // Ignore - we'll send back bad range later.
             }
         }
 
+        // User entered an invalid range.
         return null;
     }
 
@@ -132,11 +134,12 @@ public abstract class AbstractRange implements Range
 
     public String toString()
     {
-        StringBuffer res = new StringBuffer();
-        res.append("offset=" + offset);
-        res.append(", move=" + move);
-
-        return res.toString();
+        final StringBuffer sb = new StringBuffer();
+        sb.append("AbstractRange");
+        sb.append("{offset=").append(offset);
+        sb.append(", move=").append(move);
+        sb.append('}');
+        return sb.toString();
     }
 
     /**
