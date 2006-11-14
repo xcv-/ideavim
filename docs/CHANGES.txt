@@ -1,6 +1,11 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
 @VERSION@ from 0.10.6
+New Features
+- Implemented Vim help. The :help command can be used to bring up help on any
+  Vim command. The argument to :help must be a specific tag found in the help
+  system. None of the Vim wildcarding is supported.
+
 Bug Fixes
 - Avoid AssertionError with DocumentListeners.
 - n, N, #, *, g#, and g* now properly work as arguments to the d and c commands.
