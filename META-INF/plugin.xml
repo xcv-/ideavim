@@ -8,14 +8,21 @@
 <b>NOTE:</b> Please see the README file if upgrading to this version from
 version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 
+New Features<br>
+- Implemented Vim help. The :help command can be used to bring up help on any
+  Vim command. The argument to :help must be a specific tag found in the help
+  system. None of the Vim wildcarding is supported.<br>
+<br>
 Bug Fixes<br>
-- Removed the various Code Completion keyboard shortcuts from Vim keymapping.<br>
-- Fixed s command when changing end-of-line (caret was one character off).<br>
-- Fixed internal errors when working with text containing XML CDATA sections.<br>
-- Disabled multi-line commands when working in one-line editors in dialogs.<br>
-- Fixed trouble getting into change or insert mode in editors in dialogs.<br>
-- Enabled undo/redo in editors in dialogs.<br>
-- Ctrl-/ with no selection now moves caret to next line after adding comment.<br>
+- Avoid AssertionError with DocumentListeners.<br>
+- n, N, #, *, g#, and g* now properly work as arguments to the d and c commands.<br>
+- Better handle invalid ex command ranges.<br>
+- Fixed !! and :!, and :!! commands.<br>
+- Escape works again while entering an ex command.<br>
+<br>
+Enhancements<br>
+- :edit now supports opening files outside of project roots. Can use ~ for home
+  directory.<br>
 ]]>
     </change-notes>
 
