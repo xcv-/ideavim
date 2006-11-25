@@ -33,14 +33,12 @@ public class HelpHandler extends CommandHandler
 {
     public HelpHandler()
     {
-        super("h", "elp", ARGUMENT_OPTIONAL);
+        super("h", "elp", ARGUMENT_OPTIONAL | DONT_REOPEN);
     }
 
     public boolean execute(Editor editor, DataContext context, ExCommand cmd) throws ExException
     {
-        //KeyHandler.executeAction("HelpTopics", context);
         String key = cmd.getArgument();
-        // TODO - escape key (see perl script)
         if (key.length() == 0)
         {
             key = "help.txt";
