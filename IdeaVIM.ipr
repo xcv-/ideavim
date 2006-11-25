@@ -265,7 +265,7 @@
       <module fileurl="file://$PROJECT_DIR$/IdeaVim.iml" filepath="$PROJECT_DIR$/IdeaVim.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="false" project-jdk-name="1.4" />
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="false" project-jdk-name="IDEA 5.1.2" />
   <component name="ProjectRunConfigurationManager" />
   <component name="RmicSettings">
     <option name="IS_EANABLED" value="false" />
