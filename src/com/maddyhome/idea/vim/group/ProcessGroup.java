@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.group;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2005 Rick Maddy
+ * Copyright (C) 2003-2006 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,7 +39,6 @@ import com.maddyhome.idea.vim.key.KeyParser;
 import com.maddyhome.idea.vim.ui.ExEntryPanel;
 import com.maddyhome.idea.vim.ui.MorePanel;
 
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -66,23 +65,31 @@ public class ProcessGroup extends AbstractActionGroup
         return lastCommand;
     }
 
-    public void startSearchCommand(Editor editor, DataContext context, Command cmd)
+    public void startSearchCommand(Editor editor, DataContext context, int count, char leader)
     {
         String initText = "";
-        int flags = cmd.getFlags();
-        String label = "";
-        if ((flags & Command.FLAG_SEARCH_FWD) != 0)
-        {
-            label = "/";
-        }
-        else if ((flags & Command.FLAG_SEARCH_REV) != 0)
-        {
-            label = "?";
-        }
+        String label = "" + leader;
 
-        CommandState.getInstance(editor).pushState(CommandState.MODE_EX_ENTRY, 0, KeyParser.MAPPING_CMD_LINE);
+        //CommandState.getInstance(editor).pushState(CommandState.MODE_EX_ENTRY, 0, KeyParser.MAPPING_CMD_LINE);
         ExEntryPanel panel = ExEntryPanel.getInstance();
-        panel.activate(editor, context, label, initText, cmd.getCount());
+        panel.activate(editor, context, label, initText, count);
+    }
+
+    public String endSearchCommand(final Editor editor, DataContext context)
+    {
+        ExEntryPanel panel = ExEntryPanel.getInstance();
+        panel.deactivate(false);
+
+        final Project project = (Project)context.getData(DataConstants.PROJECT);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run()
+            {
+                FileEditorManager.getInstance(project).openFile(EditorData.getVirtualFile(editor), true);
+            }
+        });
+
+        record(editor, panel.getText());
+        return panel.getText();
     }
 
     public void startExCommand(Editor editor, DataContext context, Command cmd)
@@ -95,6 +102,25 @@ public class ProcessGroup extends AbstractActionGroup
 
     public boolean processExKey(Editor editor, DataContext context, KeyStroke stroke, boolean charOnly)
     {
+        // This will only get called if somehow the key focus ended up in the editor while the ex entry window
+        // is open. So I'll put focus back in the editor and process the key.
+
+        ExEntryPanel panel = ExEntryPanel.getInstance();
+        if (panel.isActive())
+        {
+            panel.requestFocus();
+            panel.handleKey(stroke);
+
+            return true;
+        }
+        else
+        {
+            CommandState.getInstance(editor).popState();
+            KeyHandler.getInstance().reset(editor);
+            return false;
+        }
+
+        /*
         if (!charOnly || stroke.getKeyChar() != KeyEvent.CHAR_UNDEFINED && ExEntryPanel.getInstance().isActive())
         {
             ExEntryPanel panel = ExEntryPanel.getInstance();
@@ -106,6 +132,7 @@ public class ProcessGroup extends AbstractActionGroup
         {
             return false;
         }
+        */
     }
 
     public boolean processExEntry(final Editor editor, final DataContext context)
@@ -119,6 +146,7 @@ public class ProcessGroup extends AbstractActionGroup
             CommandState.getInstance(editor).popState();
             logger.debug("processing command");
             final String text = panel.getText();
+            record(editor, text);
             logger.debug("swing=" + SwingUtilities.isEventDispatchThread());
             if (panel.getLabel().equals(":"))
             {
@@ -155,6 +183,7 @@ public class ProcessGroup extends AbstractActionGroup
         finally
         {
             final int flg = flags;
+            final Project project = (Project)context.getData(DataConstants.PROJECT);
             SwingUtilities.invokeLater(new Runnable() {
                 public void run()
                 {
@@ -163,14 +192,13 @@ public class ProcessGroup extends AbstractActionGroup
                     // version 1050.
                     if ((flg & CommandParser.RES_DONT_REOPEN) == 0)
                     {
-                        FileEditorManager.getInstance((Project)context.getData(DataConstants.PROJECT)).openFile(
-                            EditorData.getVirtualFile(editor), true);
+                        FileEditorManager.getInstance(project).openFile(EditorData.getVirtualFile(editor), true);
                     }
 
                     // If the result of the ex command is to display the "more" panel, show it here.
                     if ((flg & CommandParser.RES_MORE_PANEL) != 0)
                     {
-                        RunnableHelper.runReadCommand((Project)context.getData(DataConstants.PROJECT), new Runnable() {
+                        RunnableHelper.runReadCommand(project, new Runnable() {
                             public void run()
                             {
                                 MorePanel.getInstance(editor).setVisible(true);
@@ -200,6 +228,14 @@ public class ProcessGroup extends AbstractActionGroup
         });
 
         return true;
+    }
+
+    private void record(Editor editor, String text)
+    {
+        if (CommandState.getInstance(editor).isRecording())
+        {
+            CommandGroups.getInstance().getRegister().addText(text);
+        }
     }
 
     public void startFilterCommand(Editor editor, DataContext context, Command cmd)

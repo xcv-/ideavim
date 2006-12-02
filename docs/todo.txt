@@ -12,9 +12,7 @@ Requested Functionality to add:
 - Add Config GUI to choose IDEA vs. VIM function for keystrokes
 - Support Select mode
 - Show message after shifting lines with :< or :>
-- / and ? as command operators
 - Backspace in Replace mode deletes instead of restoring
-- Support command line history/editing
 - Support incsearch option
 - Support CTRL-O, CTRL-I, :jumps
 - Support U (line undo)
