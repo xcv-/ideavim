@@ -8,7 +8,7 @@ New Features
 - Added support for command line editing including history.
 
 Bug Fixes
-- Fixed packaging of help system so help actual works.
+- Fixed packaging of help system so help actually works.
 - Handle failed assertion errors when adding a document listener.
 
 0.11.1 from 0.10.6
