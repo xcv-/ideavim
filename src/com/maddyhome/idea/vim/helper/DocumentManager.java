@@ -97,6 +97,10 @@ public class DocumentManager
             {
                 // Ignore - I have no way to avoid adding a listenter twice.
             }
+            catch (Throwable e)
+            {
+                // Ignore - I have no way to avoid adding a listenter twice.
+            }
         }
     }
 

@@ -185,7 +185,10 @@
             <fileset dir="${install}" includes="**"/>
         </copy>
         <copy todir="${project}-${version}-${idea-version}/lib">
-            <fileset dir="${build}" includes="*.jar"/>
+            <fileset dir="${build}" includes="*.jar" excludes="help.jar"/>
+        </copy>
+        <copy todir="${project}-${version}-${idea-version}/help">
+            <fileset dir="${build}" includes="help.jar"/>
         </copy>
         <copy todir="${project}-${version}-${idea-version}/docs">
             <filterset>

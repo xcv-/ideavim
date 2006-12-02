@@ -7,6 +7,10 @@ New Features
 - Added support for :history command.
 - Added support for command line editing including history.
 
+Bug Fixes
+- Fixed packaging of help system so help actual works.
+- Handle failed assertion errors when adding a document listener.
+
 0.11.1 from 0.10.6
 New Features
 - Implemented Vim help. The :help command can be used to bring up help on any
