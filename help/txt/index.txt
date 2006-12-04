@@ -197,9 +197,7 @@ note: 1 = cursor movement command; 2 = can be undone/redone
 tag             char          note action in Normal mode        ~
 ------------------------------------------------------------------------------
                 CTRL-@             not used
-<!--
 |CTRL-A|        CTRL-A          2  add N to number at/after cursor
--->
 |CTRL-B|        CTRL-B          1  scroll N screens Backwards
 <!--
 |CTRL-C|        CTRL-C             interrupt current (search) command
@@ -241,8 +239,8 @@ tag             char          note action in Normal mode        ~
 |CTRL-V|        CTRL-V             start blockwise Visual mode
 <!--
 |CTRL-W|        CTRL-W {char}      window commands, see |CTRL-W|
-|CTRL-X|        CTRL-X          2  subtract N from number at/after cursor
 -->
+|CTRL-X|        CTRL-X          2  subtract N from number at/after cursor
 |CTRL-Y|        CTRL-Y             scroll N lines downwards
 <!--
 |CTRL-Z|        CTRL-Z             suspend program (or start new shell)

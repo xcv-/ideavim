@@ -4060,6 +4060,7 @@ A jump table for the options with a short description can be found at |Q_op|.
         Only for GUI, MS-DOS, Win32 and Unix with xterm.  Defines the maximum
         time in msec between two mouse clicks for the second click to be
         recognized as a multi click.
+-->
 
                                                         *'nrformats'* *'nf'*
 'nrformats' 'nf'        string  (default "octal,hex")
@@ -4079,6 +4080,7 @@ A jump table for the options with a short description can be found at |Q_op|.
         Numbers which simply begin with a digit in the range 1-9 are always
         considered decimal.  This also happens for numbers that are not
         recognized as octal or hex.
+<!--
 
                                 *'number'* *'nu'* *'nonumber'* *'nonu'*
 'number' 'nu'           boolean (default off)

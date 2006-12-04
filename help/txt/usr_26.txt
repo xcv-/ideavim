@@ -46,8 +46,6 @@ is.  Then use ":s/2000/2001/g" to make the second change.
 ==============================================================================
 *26.2*  Add and subtract
 
-This information does not apply to @NAME@.
-<!--
 When repeating the change of one number into another, you often have a fixed
 offset.  In the example above, one was added to each year.  Instead of typing
 a substitute command for each year that appears, the CTRL-A command can be
@@ -101,7 +99,6 @@ octal, use this: >
         :set nrformats-=octal
 
 The CTRL-X command does subtraction in a similar way.
--->
 
 ==============================================================================
 *26.3*  Making a change in many files

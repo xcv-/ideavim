@@ -299,6 +299,10 @@ public class RegisterActions
             new Shortcut("cc"),
             new Shortcut('S')
         });
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeNumberInc", Command.CHANGE,
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_MASK)));
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeNumberDec", Command.CHANGE,
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK)));
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeMotion", Command.CHANGE, Command.FLAG_OP_PEND | Command.FLAG_MULTIKEY_UNDO,
             new Shortcut('c'), Argument.MOTION);
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeReplace", Command.CHANGE, Command.FLAG_MULTIKEY_UNDO,

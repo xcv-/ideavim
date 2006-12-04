@@ -556,6 +556,7 @@ public class Options
         //addOption(new ToggleOption("incsearch", "is", false));
         addOption(new ListOption("matchpairs", "mps", new String[] { "(:)", "{:}", "[:]" }, ".:."));
         addOption(new ToggleOption("more", "more", true));
+        addOption(new BoundListOption("nrformats", "nf", new String[] { "octal", "hex" }, new String[] { "octal", "hex", "alpha" }));
         addOption(new NumberOption("scroll", "scr", 0));
         addOption(new NumberOption("scrolljump", "sj", 1));
         addOption(new NumberOption("scrolloff", "so", 0));

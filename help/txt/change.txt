@@ -361,7 +361,6 @@ g??                     Rot13 encode current line.
 
 -->
 
-<!--
 Adding and subtracting ~
                                                         *CTRL-A*
 CTRL-A                  Add [count] to the number or alphabetic character at
@@ -404,7 +403,6 @@ steps to make a numbered list.
 7. <count>@a - repeat the yank, put and increment <count> times
 
 
--->
 SHIFTING LINES LEFT OR RIGHT                            *shift-left-right*
 
                                                         *<*

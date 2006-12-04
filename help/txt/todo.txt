@@ -32,6 +32,5 @@
 - Support :global
 - Support gf
 - Ctrl-w and Ctrl-u in insert mode flaky near end of line or end of file
-- Support Ctrl-A and Ctrl-X (add and substract)
 - Support all the other Vim commands that make sense under IDEA.
 

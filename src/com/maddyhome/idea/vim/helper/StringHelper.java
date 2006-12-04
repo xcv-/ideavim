@@ -29,6 +29,18 @@ import javax.swing.KeyStroke;
  */
 public class StringHelper
 {
+    public static String pad(String text, int len, char ch)
+    {
+        int l = text.length();
+        StringBuffer res = new StringBuffer(text);
+        for (int i = l; i < len; i++)
+        {
+            res.insert(0, ch);
+        }
+
+        return res.toString();
+    }
+
     public static String escape(String text)
     {
         StringBuffer res = new StringBuffer(text.length());

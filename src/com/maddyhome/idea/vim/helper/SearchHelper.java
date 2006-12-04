@@ -367,6 +367,181 @@ public class SearchHelper
         return res;
     }
 
+    public static TextRange findNumberUnderCursor(Editor editor, boolean alpha, boolean hex, boolean octal)
+    {
+        int lline = EditorHelper.getCurrentLogicalLine(editor);
+        String text = EditorHelper.getLineText(editor, lline).toLowerCase();
+        int offset = EditorHelper.getLineStartOffset(editor, lline);
+        int pos = editor.getCaretModel().getOffset() - offset;
+
+        logger.debug("lline=" + lline);
+        logger.debug("text=" + text);
+        logger.debug("offset=" + offset);
+        logger.debug("pos=" + pos);
+
+        while (true)
+        {
+            // Skip over current whitespace if any
+            while (pos < text.length() && !isNumberChar(text.charAt(pos), alpha, hex, octal, true))
+            {
+                pos++;
+            }
+
+            logger.debug("pos=" + pos);
+            if (pos >= text.length())
+            {
+                logger.debug("no number char on line");
+                return null;
+            }
+
+            boolean isHexChar = "abcdefABCDEF".indexOf(text.charAt(pos)) >= 0;
+
+            if (hex)
+            {
+                if (text.charAt(pos) == '0' && pos < text.length() - 1 && "xX".indexOf(text.charAt(pos + 1)) >= 0)
+                {
+                    pos += 2;
+                }
+                else if ("xX".indexOf(text.charAt(pos)) >= 0 && pos > 0 && text.charAt(pos - 1) == '0')
+                {
+                    pos++;
+                }
+
+                logger.debug("checking hex");
+                int end = pos;
+                for (; end < text.length(); end++)
+                {
+                    if (!isNumberChar(text.charAt(end), false, true, false, false))
+                    {
+                        end--;
+                        break;
+                    }
+                }
+
+                int start = pos;
+                for (; start >= 0; start--)
+                {
+                    if (!isNumberChar(text.charAt(start), false, true, false, false))
+                    {
+                        start++;
+                        break;
+                    }
+                }
+                if (start == -1) start = 0;
+
+                if (start >= 2 && text.substring(start - 2, start).toLowerCase().equals("0x"))
+                {
+                    logger.debug("found hex");
+                    return new TextRange(start - 2 + offset, end + offset + 1);
+                }
+
+                if (!isHexChar || alpha)
+                {
+                    break;
+                }
+                else
+                {
+                    pos++;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (octal)
+        {
+            logger.debug("checking octal");
+            int end = pos;
+            for (; end < text.length(); end++)
+            {
+                if (!isNumberChar(text.charAt(end), false, false, true, false))
+                {
+                    end--;
+                    break;
+                }
+            }
+
+            int start = pos;
+            for (; start >= 0; start--)
+            {
+                if (!isNumberChar(text.charAt(start), false, false, true, false))
+                {
+                    start++;
+                    break;
+                }
+            }
+            if (start == -1) start = 0;
+
+            if (text.charAt(start) == '0' && end > start)
+            {
+                logger.debug("found octal");
+                return new TextRange(start + offset, end + offset + 1);
+            }
+        }
+
+        if (alpha)
+        {
+            logger.debug("checking alpha for " + text.charAt(pos));
+            if (isNumberChar(text.charAt(pos), true, false, false, false))
+            {
+                logger.debug("found alpha at " + pos);
+                return new TextRange(pos + offset, pos + offset + 1);
+            }
+        }
+
+        int end = pos;
+        for (; end < text.length(); end++)
+        {
+            if (!isNumberChar(text.charAt(end), false, false, false, true))
+            {
+                end--;
+                break;
+            }
+        }
+
+        int start = pos;
+        for (; start >= 0; start--)
+        {
+            if (!isNumberChar(text.charAt(start), false, false, false, true))
+            {
+                start++;
+                break;
+            }
+        }
+        if (start == -1) start = 0;
+
+        if (start > 0 && text.charAt(start - 1) == '-')
+        {
+            start--;
+        }
+
+        return new TextRange(start + offset, end + offset + 1);
+    }
+
+    private static boolean isNumberChar(char ch, boolean alpha, boolean hex, boolean octal, boolean decimal)
+    {
+        if (alpha && ((ch >='a' && ch <='z') || (ch >='A' && ch <= 'Z')))
+        {
+            return true;
+        }
+        else if (octal && (ch >= '0' && ch <= '7'))
+        {
+            return true;
+        }
+        else if (hex && ((ch >= '0' && ch <= '9') || "abcdefABCDEF".indexOf(ch) >= 0))
+        {
+            return true;
+        }
+        else if (decimal && (ch >= '0' && ch <= '9'))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Find the word under the cursor or the next word to the right of the cursor on the current line.
      *

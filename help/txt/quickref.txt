@@ -428,10 +428,8 @@ In Insert or Command-line mode:
                            with {motion}
 -->
 
-<!--
 |CTRL-A|  N  CTRL-A     add N to the number at or after the cursor
 |CTRL-X|  N  CTRL-X     subtract N from the number at or after the cursor
--->
 
 |<|       N  <{motion}  move the lines that are moved over with {motion} one
                            shiftwidth left
@@ -822,7 +820,9 @@ Short explanation of each option:               *option-list*
 |'mousemodel'|    |'mousem'| changes meaning of mouse buttons
 |'mouseshape'|    |'mouses'| shape of the mouse pointer in different modes
 |'mousetime'|     |'mouset'| max time between mouse double-click
+-->
 |'nrformats'|     |'nf'|     number formats recognized for CTRL-A command
+<!--
 |'number'|        |'nu'|     print the line number in front of each line
 |'osfiletype'|    |'oft'|    operating system-specific filetype information
 |'paragraphs'|    |'para'|   nroff macros that separate paragraphs

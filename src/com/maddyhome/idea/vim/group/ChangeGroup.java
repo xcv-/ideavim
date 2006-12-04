@@ -48,6 +48,8 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
+import com.maddyhome.idea.vim.option.BoundListOption;
+import com.maddyhome.idea.vim.option.Options;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
@@ -57,6 +59,7 @@ import com.maddyhome.idea.vim.helper.CharacterHelper;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.SearchHelper;
+import com.maddyhome.idea.vim.helper.StringHelper;
 import com.maddyhome.idea.vim.key.KeyParser;
 import com.maddyhome.idea.vim.undo.UndoManager;
 
@@ -1658,6 +1661,110 @@ public class ChangeGroup extends AbstractActionGroup
         }
     }
 
+    public boolean changeNumber(Editor editor, DataContext context, int count)
+    {
+        BoundListOption nf = (BoundListOption)Options.getInstance().getOption("nrformats");
+        boolean alpha = nf.contains("alpha");
+        boolean hex = nf.contains("hex");
+        boolean octal = nf.contains("octal");
+
+        TextRange range = SearchHelper.findNumberUnderCursor(editor, alpha, hex, octal);
+        if (range == null)
+        {
+            logger.debug("no number on line");
+            return false;
+        }
+        else
+        {
+            logger.debug("found range " + range);
+            String text = EditorHelper.getText(editor, range);
+            logger.debug("text=" + text);
+            String number = text;
+            if (text.length() == 0)
+            {
+                return false;
+            }
+
+            char ch = text.charAt(0);
+            if (hex && text.toLowerCase().startsWith("0x"))
+            {
+                for (int i = text.length() - 1; i >= 2; i--)
+                {
+                    int index = "abcdefABCDEF".indexOf(text.charAt(i));
+                    if (index >= 0)
+                    {
+                        lastLower = index < 6;
+                        break;
+                    }
+                }
+
+                int num = (int)Long.parseLong(text.substring(2), 16);
+                num += count;
+                number = Integer.toHexString(num);
+                number = StringHelper.pad(number, text.length() - 2, '0');
+
+                if (!lastLower)
+                {
+                    number = number.toUpperCase();
+                }
+
+                number = text.substring(0, 2) + number;
+            }
+            else if (octal && text.startsWith("0") && text.length() > 1)
+            {
+                int num = (int)Long.parseLong(text, 8);
+                num += count;
+                number = Integer.toOctalString(num);
+                number = "0" + StringHelper.pad(number, text.length() - 1, '0');
+            }
+            else if (alpha && ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')))
+            {
+                ch += count;
+                if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'))
+                {
+                    number = "" + ch;
+                }
+            }
+            else if (ch == '-' || (ch >= '0' && ch <= '9'))
+            {
+                boolean pad = ch == '0';
+                int len = text.length();
+                if (ch == '-' && text.charAt(1) == '0')
+                {
+                    pad = true;
+                    len--;
+                }
+
+                int num = Integer.parseInt(text);
+                num += count;
+                number = Integer.toString(num);
+
+                if (!octal && pad)
+                {
+                    boolean neg = false;
+                    if (number.charAt(0) == '-')
+                    {
+                        neg = true;
+                        number = number.substring(1);
+                    }
+                    number = StringHelper.pad(number, len, '0');
+                    if (neg)
+                    {
+                        number = "-" + number;
+                    }
+                }
+            }
+
+            if (!text.equals(number))
+            {
+                replaceText(editor, context, range.getStartOffset(), range.getEndOffset(), number);
+                editor.getCaretModel().moveToOffset(range.getStartOffset() + number.length() - 1);
+            }
+
+            return true;
+        }
+    }
+
     /**
      * This class listens for editor tab changes so any insert/replace modes that need to be reset can be
      */
@@ -1711,6 +1818,7 @@ public class ChangeGroup extends AbstractActionGroup
     private int repeatLines;
     private int repeatColumn;
     private boolean repeatAppend;
+    private boolean lastLower = true;
 
     private static Logger logger = Logger.getInstance(ChangeGroup.class.getName());
 }
