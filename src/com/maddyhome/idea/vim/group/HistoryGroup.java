@@ -55,7 +55,7 @@ public class HistoryGroup extends AbstractActionGroup
 
     public List getEntries(String key, int first, int last)
     {
-        HistoryBlock block = (HistoryBlock)histories.get(key);
+        HistoryBlock block = blocks(key);
 
         ArrayList entries = block.getEntries();
         ArrayList res = new ArrayList();
@@ -246,7 +246,6 @@ public class HistoryGroup extends AbstractActionGroup
         }
 
         private ArrayList entries = new ArrayList();
-        private int pointer;
         private int counter;
     }
 
