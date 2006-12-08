@@ -11,6 +11,9 @@ version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 New Features<br>
 - Support for nrformats option.<br>
 - Support for Ctrl-A and Ctrl-X.<br>
+<br>
+Bug Fixes<br>
+- Fixed NPE when using any ex command (:, /, or ?).<br>
 ]]>
     </change-notes>
 

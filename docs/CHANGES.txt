@@ -5,6 +5,9 @@ New Features
 - Support for nrformats option.
 - Support for Ctrl-A and Ctrl-X.
 
+Bug Fixes
+- Fixed NPE when using any ex command (:, /, or ?).
+
 0.11.2 from 0.11.1
 New Features
 - / and ? can now be used as motion operators after such commands as d and c.
