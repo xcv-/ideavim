@@ -7,13 +7,11 @@
 <![CDATA[
 <b>NOTE:</b> Please see the README file if upgrading to this version from
 version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
-
-New Features<br>
-- Support for nrformats option.<br>
-- Support for Ctrl-A and Ctrl-X.<br>
 <br>
 Bug Fixes<br>
-- Fixed NPE when using any ex command (:, /, or ?).<br>
+- Numerous keystrokes didn't work when @NAME@ was installed but turned off.
+  This included various Shift, Ctrl, and Shift-Ctrl combinations of left,
+  right, up, down, end, home, page-up, and page-down.<br>
 ]]>
     </change-notes>
 
@@ -272,6 +270,7 @@ Bug Fixes<br>
 
         <!-- Keys -->
         <action id="VimKeyHandler" class="com.maddyhome.idea.vim.action.key.KeyAction" text="Keys"/>
+        <action id="VimDummyHandler" class="com.maddyhome.idea.vim.action.key.DummyAction" text="Keys"/>
         <action id="VimNotImplementedHandler" class="com.maddyhome.idea.vim.action.key.NotImplementedAction" text="Reserved For Future Use"/>
         <action id="VimEditorBackSpace" class="com.maddyhome.idea.vim.action.key.BackSpaceAction" text="Backspace"/>
         <action id="VimEditorDelete" class="com.maddyhome.idea.vim.action.key.DeleteAction" text="Delete"/>

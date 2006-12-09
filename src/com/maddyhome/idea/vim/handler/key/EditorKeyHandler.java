@@ -49,7 +49,9 @@ public class EditorKeyHandler extends EditorActionHandler
 
     public void execute(Editor editor, DataContext context)
     {
-        if (isEnabled(editor, context))
+        logger.debug("execute");
+        //if (isEnabled(editor, context))
+        if (editor != null && VimPlugin.isEnabled())
         {
             handle(editor, context);
         }
@@ -100,6 +102,7 @@ public class EditorKeyHandler extends EditorActionHandler
             }
         }
 
+        logger.debug("res=" + res);
         return res;
     }
 

@@ -1,6 +1,12 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.11.2
+@VERSION@ from 0.11.3
+Bug Fixes
+- Numerous keystrokes didn't work when @NAME@ was installed but turned off.
+  This included various Shift, Ctrl, and Shift-Ctrl combinations of left,
+  right, up, down, end, home, page-up, and page-down.
+
+0.11.3 from 0.11.2
 New Features
 - Support for nrformats option.
 - Support for Ctrl-A and Ctrl-X.

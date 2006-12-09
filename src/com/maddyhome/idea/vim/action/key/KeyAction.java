@@ -38,6 +38,7 @@ public class KeyAction extends AnAction
 {
     public void actionPerformed(AnActionEvent event)
     {
+        logger.debug("actionPerformed=" + event);
         if (!VimPlugin.isEnabled())
         {
             return;
