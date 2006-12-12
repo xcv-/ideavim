@@ -127,6 +127,11 @@ public class MorePanel extends JPanel
         return width / charWidth;
     }
 
+    public boolean hasText()
+    {
+        return text.getText().length() > 0;
+    }
+    
     /**
      * Sets the text of the 'more' window
      * @param data The text to display
@@ -202,6 +207,7 @@ public class MorePanel extends JPanel
         }
         else
         {
+            text.setText("");
             currentPanel = null;
             JPanel glass = (JPanel)SwingUtilities.getRootPane(parent).getGlassPane();
             glass.setVisible(false);

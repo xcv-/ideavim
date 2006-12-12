@@ -34,7 +34,7 @@ public class SetHandler extends CommandHandler
 {
     public SetHandler()
     {
-        super("se", "t", ARGUMENT_OPTIONAL);
+        super("se", "t", ARGUMENT_OPTIONAL | KEEP_FOCUS);
     }
 
     public boolean execute(Editor editor, DataContext context, ExCommand cmd) throws ExException

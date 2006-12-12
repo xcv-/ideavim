@@ -5,6 +5,7 @@ Bug Fixes
 - Numerous keystrokes didn't work when @NAME@ was installed but turned off.
   This included various Shift, Ctrl, and Shift-Ctrl combinations of left,
   right, up, down, end, home, page-up, and page-down.
+- :set and :dig once again display their results in the "more" window.
 
 Performance
 - Improved search speed.

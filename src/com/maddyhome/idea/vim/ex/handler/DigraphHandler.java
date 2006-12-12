@@ -34,7 +34,7 @@ public class DigraphHandler extends CommandHandler
 {
     public DigraphHandler()
     {
-        super("dig", "raphs", ARGUMENT_OPTIONAL);
+        super("dig", "raphs", ARGUMENT_OPTIONAL | KEEP_FOCUS);
     }
 
     public boolean execute(Editor editor, DataContext context, ExCommand cmd) throws ExException
