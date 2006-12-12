@@ -104,7 +104,7 @@ public class DocumentManager
         }
     }
 
-    private void removeListeners(Document doc)
+    public void removeListeners(Document doc)
     {
         Iterator iter = docListeners.iterator();
         while (iter.hasNext())

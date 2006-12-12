@@ -59,6 +59,10 @@ public class EditorData
     {
         logger.debug("editor closed: " + editor);
         UndoManager.getInstance().editorClosed(editor);
+        editor.putUserData(COMMAND_STATE, null);
+        editor.putUserData(LAST_HIGHLIGHTS, null);
+        editor.putUserData(VISUAL, null);
+        editor.putUserData(VISUAL_OP, null);
     }
 
     /**

@@ -31,6 +31,7 @@ import com.intellij.openapi.editor.actionSystem.TypedAction;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerAdapter;
@@ -58,6 +59,7 @@ import com.maddyhome.idea.vim.undo.UndoManager;
 import org.jdom.Element;
 
 import java.awt.Toolkit;
+import java.util.ArrayList;
 
 /**
  * This plugin attempts to emulate the keybinding and general functionality of Vim and gVim. See the supplied
@@ -163,6 +165,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
             {
                 EditorData.uninitializeEditor(event.getEditor());
                 event.getEditor().getSettings().setAnimatedScrolling(isSmoothScrolling);
+                DocumentManager.getInstance().removeListeners(event.getEditor().getDocument());
             }
         });
 
@@ -172,13 +175,23 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
         {
             public void projectOpened(Project project)
             {
-                FileEditorManager.getInstance(project).addFileEditorManagerListener(new ChangeGroup.InsertCheck());
-                FileEditorManager.getInstance(project).addFileEditorManagerListener(new MotionGroup.MotionEditorChange());
-                FileEditorManager.getInstance(project).addFileEditorManagerListener(new MorePanel.MoreEditorChangeListener());
-                FileEditorManager.getInstance(project).addFileEditorManagerListener(new FileGroup.SelectionCheck());
+                FileEditorManagerListener l = new ChangeGroup.InsertCheck();
+                listeners.add(l);
+                l = new MotionGroup.MotionEditorChange();
+                listeners.add(l);
+                l = new MorePanel.MoreEditorChangeListener();
+                listeners.add(l);
+                l = new FileGroup.SelectionCheck();
+                listeners.add(l);
                 if (ApiHelper.supportsColorSchemes())
                 {
-                    FileEditorManager.getInstance(project).addFileEditorManagerListener(new SearchGroup.EditorSelectionCheck());
+                    l = new SearchGroup.EditorSelectionCheck();
+                    listeners.add(l);
+                }
+
+                for (int i = 0; i < listeners.size(); i++)
+                {
+                    FileEditorManager.getInstance(project).addFileEditorManagerListener((FileEditorManagerListener)listeners.get(i));
                 }
 
                 //DocumentManager.getInstance().openProject(project);
@@ -193,6 +206,13 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
 
             public void projectClosed(Project project)
             {
+                for (int i = 0; i < listeners.size(); i++)
+                {
+                    FileEditorManager.getInstance(project).removeFileEditorManagerListener((FileEditorManagerListener)listeners.get(i));
+                }
+
+                listeners.clear();
+
                 //DocumentManager.getInstance().closeProject(project);
 
                 /*
@@ -201,6 +221,8 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
                 mgr.unregisterToolWindow("VIM");
                 */
             }
+
+            ArrayList listeners = new ArrayList();
         });
 
         CommandProcessor.getInstance().addCommandListener(DelegateCommandListener.getInstance());

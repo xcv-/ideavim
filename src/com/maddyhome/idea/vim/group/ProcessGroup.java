@@ -196,7 +196,7 @@ public class ProcessGroup extends AbstractActionGroup
                     }
 
                     // If the result of the ex command is to display the "more" panel, show it here.
-                    if ((flg & CommandParser.RES_MORE_PANEL) != 0)
+                    if ((flg & CommandParser.RES_MORE_PANEL) != 0 && MorePanel.getInstance(editor).hasText())
                     {
                         RunnableHelper.runReadCommand(project, new Runnable() {
                             public void run()

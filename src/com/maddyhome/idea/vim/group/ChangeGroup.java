@@ -84,20 +84,33 @@ public class ChangeGroup extends AbstractActionGroup
         EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryAdapter() {
             public void editorCreated(EditorFactoryEvent event)
             {
-                final Editor editor = event.getEditor();
-                editor.addEditorMouseListener(new EditorMouseAdapter() {
-                    public void mouseClicked(EditorMouseEvent event)
-                    {
-                        if (!VimPlugin.isEnabled()) return;
-
-                        if (CommandState.getInstance(editor).getMode() == CommandState.MODE_INSERT ||
-                            CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
-                        {
-                            clearStrokes(event.getEditor());
-                        }
-                    }
-                });
+                Editor editor = event.getEditor();
+                editor.addEditorMouseListener(listener);
             }
+
+            public void editorReleased(EditorFactoryEvent event)
+            {
+                Editor editor = event.getEditor();
+                editor.removeEditorMouseListener(listener);
+            }
+
+            private EditorMouseAdapter listener = new EditorMouseAdapter()
+            {
+                public void mouseClicked(EditorMouseEvent event)
+                {
+                    Editor editor = event.getEditor();
+                    if (!VimPlugin.isEnabled())
+                    {
+                        return;
+                    }
+
+                    if (CommandState.getInstance(editor).getMode() == CommandState.MODE_INSERT ||
+                        CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
+                    {
+                        clearStrokes(editor);
+                    }
+                }
+            };
        });
     }
 

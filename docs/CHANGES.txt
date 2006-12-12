@@ -8,6 +8,7 @@ Bug Fixes
 
 Performance
 - Improved search speed.
+- Fixed a few small memory leaks.
 
 0.11.3 from 0.11.2
 New Features

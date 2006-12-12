@@ -87,12 +87,21 @@ public class MotionGroup extends AbstractActionGroup
             public void editorCreated(EditorFactoryEvent event)
             {
                 Editor editor = event.getEditor();
-                EditorMouseHandler handler = new EditorMouseHandler();
-                editor.addEditorMouseListener(handler);
-                editor.addEditorMouseMotionListener(handler);
+                editor.addEditorMouseListener(mouseHandler);
+                editor.addEditorMouseMotionListener(mouseHandler);
 
                 editor.getSelectionModel().addSelectionListener(selectionHandler);
                 editor.getScrollingModel().addVisibleAreaListener(scrollHandler);
+            }
+
+            public void editorReleased(EditorFactoryEvent event)
+            {
+                Editor editor = event.getEditor();
+                editor.removeEditorMouseListener(mouseHandler);
+                editor.removeEditorMouseMotionListener(mouseHandler);
+
+                editor.getSelectionModel().removeSelectionListener(selectionHandler);
+                editor.getScrollingModel().removeVisibleAreaListener(scrollHandler);
             }
         });
     }
@@ -1992,6 +2001,7 @@ public class MotionGroup extends AbstractActionGroup
     private int visualStart;
     private int visualEnd;
     private int visualOffset;
+    private EditorMouseHandler mouseHandler = new EditorMouseHandler();
     private EditorSelectionHandler selectionHandler = new EditorSelectionHandler();
     private EditorScrollHandler scrollHandler = new EditorScrollHandler();
 
