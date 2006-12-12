@@ -6,6 +6,9 @@ Bug Fixes
   This included various Shift, Ctrl, and Shift-Ctrl combinations of left,
   right, up, down, end, home, page-up, and page-down.
 
+Performance
+- Improved search speed.
+
 0.11.3 from 0.11.2
 New Features
 - Support for nrformats option.

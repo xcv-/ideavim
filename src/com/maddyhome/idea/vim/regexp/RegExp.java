@@ -4195,17 +4195,20 @@ public class RegExp
      */
     private CharPointer cstrchr(CharPointer s, char c)
     {
-        CharPointer p;
-        int cc;
-
         if (!ireg_ic)
         {
             return s.strchr(c);
+        }
+        else
+        {
+            return s.istrchr(c);
         }
 
         /* tolower() and toupper() can be slow, comparing twice should be a lot
          * faster (esp. when using MS Visual C++!).
          * For UTF-8 need to use folded case. */
+        /* was 1,173ms
+        int cc;
         if (CharacterClasses.isUpper(c))
         {
             cc = Character.toLowerCase(c);
@@ -4218,17 +4221,35 @@ public class RegExp
         {
             return s.strchr(c);
         }
+        */
 
         /* Faster version for when there are no multi-byte characters. */
+        /*
+        CharPointer p = s.ref(0);
+        char ch;
+        while ((ch = p.charAt()) != '\u0000')
+        {
+            if (ch == c || ch == cc)
+            {
+                return p;
+            }
+
+            p.inc();
+        }
+        */
+
+        /* was 2,053ms
         for (p = s.ref(0); !p.isNul(); p.inc())
         {
-            if (p.charAt() == c || p.charAt() == cc)
+            char ch = p.charAt();
+            if (ch == c || ch == cc)
             {
                 return p;
             }
         }
+        */
 
-        return null;
+        //return null;
     }
 
     /***************************************************************
