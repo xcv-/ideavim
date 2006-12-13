@@ -224,6 +224,7 @@ Bug Fixes<br>
 
         <!-- File -->
         <action id="VimFileSaveClose" class="com.maddyhome.idea.vim.action.file.FileSaveCloseAction" text="Save and Close Editor"/>
+        <action id="VimFilePrevious" class="com.maddyhome.idea.vim.action.file.FilePreviousAction" text="Selects Previous Editor"/>
 
         <!-- Search -->
         <action id="VimSearchFwdEntry" class="com.maddyhome.idea.vim.action.motion.search.SearchEntryFwdAction" text="Search Forward"/>

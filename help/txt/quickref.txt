@@ -1136,8 +1136,8 @@ Context-sensitive completion on the command-line:
 -->
 |:find|    :fin[d][!] {file}    Find {file} in 'path' and edit it.
 
-<!--
 |CTRL-^|   N   CTRL-^           Edit alternate file N (equivalent to ":e #N").
+<!--
 |gf|           gf  or ]f        Edit the file whose name is under the cursor
 |:pwd|     :pwd                 Print the current directory name.
 |:cd|      :cd [path]           Change the current directory to [path].

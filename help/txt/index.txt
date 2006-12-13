@@ -254,9 +254,9 @@ tag             char          note action in Normal mode        ~
                 CTRL-\ others      not used
 <!--
 |CTRL-]|        CTRL-]             :ta to ident under cursor
+-->
 |CTRL-^|        CTRL-^             edit Nth alternate file (equivalent to
                                    ":e #N")
--->
                 CTRL-_             not used
 
 |<Space>|       <Space>         1  same as "l"

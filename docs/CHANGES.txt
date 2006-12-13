@@ -11,6 +11,9 @@ Performance
 - Improved search speed.
 - Fixed a few small memory leaks.
 
+New Features
+- Support for Ctrl-^ to switch to the previous file (like :e #).
+
 0.11.3 from 0.11.2
 New Features
 - Support for nrformats option.

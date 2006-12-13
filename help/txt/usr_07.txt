@@ -202,7 +202,6 @@ you did other commands in between).
 ==============================================================================
 *07.3*  Jumping from file to file
 
-<!--
 To quickly jump between two files, press CTRL-^ (on English-US keyboards the ^
 is above the 6 key).  Example: >
 
@@ -226,7 +225,6 @@ The file you were previously editing is called the "alternate" file.  When you
 just started Vim CTRL-^ will not work, since there isn't a previous file.
 
 
--->
 <!--
 PREDEFINED MARKS
 

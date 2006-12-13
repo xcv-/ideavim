@@ -375,6 +375,9 @@ public class RegisterActions
             new Shortcut("ZQ"),
             new Shortcut("ZZ")
         });
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimFilePrevious", Command.OTHER_READONLY, new Shortcut[] {
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_CIRCUMFLEX, KeyEvent.CTRL_MASK))
+        });
 
         // Shift Actions
         // TODO - add =

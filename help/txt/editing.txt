@@ -169,6 +169,10 @@ If you want to keep the changed buffer without saving it, switch on the
                         This opens an existing file anywhere within the current
                         project.
 
+:e[dit] #
+                        Select the previous file. This command does the same as
+                        CTRL-^.
+
                                                         *:fin* *:find*
 :fi[nd] {file}
                         Find {file}.
@@ -181,6 +185,9 @@ If you want to keep the changed buffer without saving it, switch on the
                         This opens an existing class anywhere within the current
                         project. {Not in Vim}
 
+                                                        *CTRL-^*
+CTRL-^                  This gets you to the previously edited file.  This is a
+                        quick way to toggle between two (or more) files.
 <!--
                                                         *:e* *:edit*
 :e[dit] [++opt] [+cmd]  Edit the current file.  This is useful to re-edit the
