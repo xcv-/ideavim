@@ -376,6 +376,7 @@ public class RegisterActions
             new Shortcut("ZZ")
         });
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimFilePrevious", Command.OTHER_READONLY, new Shortcut[] {
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_6, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_CIRCUMFLEX, KeyEvent.CTRL_MASK))
         });
 

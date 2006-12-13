@@ -92,6 +92,7 @@
   <action id="Starteam.CheckinProject" />
   <action id="Subversion.CommitProject" />
   <action id="ToggleBookmark2" />
+  <action id="ToggleBookmark6" />
   <action id="TypeHierarchy">
     <keyboard-shortcut first-keystroke="shift control alt H" />
   </action>
@@ -136,6 +137,7 @@
     <keyboard-shortcut first-keystroke="control W" />
     <keyboard-shortcut first-keystroke="control W" />
     <keyboard-shortcut first-keystroke="control O" />
+    <keyboard-shortcut first-keystroke="shift control 6" />
   </action>
 </keymap>
 
