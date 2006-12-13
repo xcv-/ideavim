@@ -34,6 +34,6 @@ public class SearchEntryRevHandler extends MotionEditorActionHandler
     public int getOffset(Editor editor, DataContext context, int count, int rawCount, Argument argument)
     {
         return CommandGroups.getInstance().getSearch().search(editor, context, argument.getString(),
-            count, Command.FLAG_SEARCH_REV, true);
+            count, Command.FLAG_SEARCH_REV, false);
     }
 }
