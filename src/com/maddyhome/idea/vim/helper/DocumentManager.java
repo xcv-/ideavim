@@ -109,7 +109,18 @@ public class DocumentManager
         Iterator iter = docListeners.iterator();
         while (iter.hasNext())
         {
-            doc.removeDocumentListener((DocumentListener)iter.next());
+            try
+            {
+                doc.removeDocumentListener((DocumentListener)iter.next());
+            }
+            catch (AssertionError e)
+            {
+                // Ignore - I have no way to avoid removing a listenter twice.
+            }
+            catch (Throwable e)
+            {
+                // Ignore - I have no way to avoid removing a listenter twice.
+            }
         }
     }
 
