@@ -38,12 +38,18 @@ public abstract class TextObjectActionHandler extends AbstractEditorActionHandle
         if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
         {
             TextRange range = getRange(editor, context, cmd.getCount(), cmd.getRawCount(), cmd.getArgument());
+            if (range == null)
+            {
+                return false;
+            }
+
             TextRange vr = CommandGroups.getInstance().getMotion().getRawVisualRange();
 
-            int newstart = vr.getEndOffset() >= vr.getStartOffset() ? range.getStartOffset() : range.getEndOffset();
-            int newend = vr.getEndOffset() >= vr.getStartOffset() ? range.getEndOffset() : range.getStartOffset();
+            boolean block = (cmd.getFlags() & Command.FLAG_TEXT_BLOCK) != 0;
+            int newstart = block || vr.getEndOffset() >= vr.getStartOffset() ? range.getStartOffset() : range.getEndOffset();
+            int newend = block || vr.getEndOffset() >= vr.getStartOffset() ? range.getEndOffset() : range.getStartOffset();
 
-            if (vr.getStartOffset() == vr.getEndOffset())
+            if (vr.getStartOffset() == vr.getEndOffset() || block)
             {
                 CommandGroups.getInstance().getMotion().moveVisualStart(editor, newstart);
             }

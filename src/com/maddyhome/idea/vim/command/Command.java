@@ -72,6 +72,7 @@ public class Command
     /** Indicate that the character argument may come from a digraph */
     public static final int FLAG_ALLOW_DIGRAPH = 1 << 28;
     public static final int FLAG_COMPLETE_EX = 1 << 29;
+    public static final int FLAG_TEXT_BLOCK = 1 << 30;
 
     /** Represents commands that actually move the cursor and can be arguments to operators */
     public static final int MOTION = 1;

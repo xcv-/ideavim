@@ -753,6 +753,42 @@ public class RegisterActions
             new Shortcut("iw"));
         parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionTextInnerBigWord", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE,
             new Shortcut("iW"));
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionInnerBlockAngle", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE | Command.FLAG_TEXT_BLOCK, new Shortcut[] {
+            new Shortcut("i<"),
+            new Shortcut("i>")
+        });
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionInnerBlockBrace", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE | Command.FLAG_TEXT_BLOCK, new Shortcut[] {
+            new Shortcut("iB"),
+            new Shortcut("i{"),
+            new Shortcut("i}")
+        });
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionInnerBlockBracket", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE | Command.FLAG_TEXT_BLOCK, new Shortcut[] {
+            new Shortcut("i["),
+            new Shortcut("i]")
+        });
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionInnerBlockParen", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE | Command.FLAG_TEXT_BLOCK , new Shortcut[] {
+            new Shortcut("ib"),
+            new Shortcut("i("),
+            new Shortcut("i)")
+        });
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionOuterBlockAngle", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE  |Command.FLAG_TEXT_BLOCK , new Shortcut[] {
+            new Shortcut("a<"),
+            new Shortcut("a>")
+        });
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionOuterBlockBrace", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE | Command.FLAG_TEXT_BLOCK , new Shortcut[] {
+            new Shortcut("aB"),
+            new Shortcut("a{"),
+            new Shortcut("a}")
+        });
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionOuterBlockBracket", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE | Command.FLAG_TEXT_BLOCK , new Shortcut[] {
+            new Shortcut("a["),
+            new Shortcut("a]")
+        });
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionOuterBlockParen", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE | Command.FLAG_TEXT_BLOCK , new Shortcut[] {
+            new Shortcut("ab"),
+            new Shortcut("a("),
+            new Shortcut("a)")
+        });
 
         parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_OP_PEND, "VimResetMode", Command.RESET, new Shortcut(new KeyStroke[] {
             KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SLASH, KeyEvent.CTRL_MASK),

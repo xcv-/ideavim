@@ -94,6 +94,14 @@ Bug Fixes<br>
         <action id="VimMotionTextOuterBigWord" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBigWordAction" text="Select outer WORD"/>
         <action id="VimMotionTextInnerWord" class="com.maddyhome.idea.vim.action.motion.object.MotionInnerWordAction" text="Select inner word"/>
         <action id="VimMotionTextInnerBigWord" class="com.maddyhome.idea.vim.action.motion.object.MotionInnerBigWordAction" text="Select inner WORD"/>
+        <action id="VimMotionInnerBlockAngle" class="com.maddyhome.idea.vim.action.motion.object.MotionInnerBlockAngleAction" text="Select inner &lt; block"/>
+        <action id="VimMotionInnerBlockBrace" class="com.maddyhome.idea.vim.action.motion.object.MotionInnerBlockBraceAction" text="Select inner { block"/>
+        <action id="VimMotionInnerBlockBracket" class="com.maddyhome.idea.vim.action.motion.object.MotionInnerBlockBracketAction" text="Select inner [ block"/>
+        <action id="VimMotionInnerBlockParen" class="com.maddyhome.idea.vim.action.motion.object.MotionInnerBlockParenAction" text="Select inner ( block"/>
+        <action id="VimMotionOuterBlockAngle" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBlockAngleAction" text="Select outer &lt; block"/>
+        <action id="VimMotionOuterBlockBrace" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBlockBraceAction" text="Select outer { block"/>
+        <action id="VimMotionOuterBlockBracket" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBlockBracketAction" text="Select outer [ block"/>
+        <action id="VimMotionOuterBlockParen" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBlockParenAction" text="Select outer ( block"/>
         <!-- Marks -->
         <action id="VimMotionMark" class="com.maddyhome.idea.vim.action.motion.mark.MotionMarkAction" text="Mark"/>
         <action id="VimMotionGotoFileMark" class="com.maddyhome.idea.vim.action.motion.mark.MotionGotoFileMarkAction" text="Goto Mark"/>

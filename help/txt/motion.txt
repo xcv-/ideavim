@@ -562,6 +562,7 @@ ip                      "inner paragraph", select [count] paragraphs (see
                         is also a paragraph boundary.
                         When used in Visual mode it is made linewise.
 
+-->
 a]                                              *v_a]* *v_a[* *a]* *a[*
 a[                      "a [] block", select [count] '[' ']' blocks.  This
                         goes backwards to the [count] unclosed '[', and finds
@@ -615,7 +616,6 @@ iB                      "inner Block", select [count] Blocks, from "[count] [{"
                         to the matching '}', excluding the '{' and '}' (see
                         |[{|).
                         When used in Visual mode it is made characterwise.
--->
 
 When used after an operator:
 For non-block objects:
@@ -654,13 +654,15 @@ movement commands are used.
 <!--
         "dis"   delete inner sentence                   *dis*
         "das"   delete a sentence                       *das*
+-->
         "dib"   delete inner '(' ')' block              *dib*
         "dab"   delete a '(' ')' block                  *dab*
+<!--
         "dip"   delete inner paragraph                  *dip*
         "dap"   delete a paragraph                      *dap*
+-->
         "diB"   delete inner '{' '}' block              *diB*
         "daB"   delete a '{' '}' block                  *daB*
--->
 
 Note the difference between using a movement command and an object.  The
 movement command operates from here (cursor position) to where the movement

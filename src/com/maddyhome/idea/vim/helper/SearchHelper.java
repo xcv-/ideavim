@@ -93,19 +93,68 @@ public class SearchHelper
     {
         CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
-        int loc = getPairChars().indexOf(type);
+        int loc = blockChars.indexOf(type);
         // What direction should we go now (-1 is backward, 1 is forward)
         int dir = loc % 2 == 0 ? -1 : 1;
         // Which character did we find and which should we now search for
-        char match = getPairChars().charAt(loc);
-        char found = getPairChars().charAt(loc - dir);
+        char match = blockChars.charAt(loc);
+        char found = blockChars.charAt(loc - dir);
 
         return findBlockLocation(chars, found, match, dir, pos, count);
     }
 
     public static TextRange findBlockRange(Editor editor, char type, int count, boolean isOuter)
     {
-        return null;
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
+        int pos = editor.getCaretModel().getOffset();
+        int start = editor.getSelectionModel().getSelectionStart();
+        int end = editor.getSelectionModel().getSelectionEnd();
+        if (start != end)
+        {
+            pos = Math.min(start, end);
+        }
+
+        int loc = blockChars.indexOf(type);
+        char close = blockChars.charAt(loc + 1);
+
+        int bstart = findBlockLocation(chars, close, type, -1, pos, count);
+        if (bstart == -1)
+        {
+            return null;
+        }
+
+        int bend = findBlockLocation(chars, type, close, 1, bstart + 1, 1);
+
+        if (!isOuter)
+        {
+            bstart++;
+            if (chars.charAt(bstart) == '\n')
+            {
+                bstart++;
+            }
+
+            int o = EditorHelper.getLineStartForOffset(editor, bend);
+            boolean allWhite = true;
+            for (int i = o; i < bend; i++)
+            {
+                if (!Character.isWhitespace(chars.charAt(i)))
+                {
+                    allWhite = false;
+                    break;
+                }
+            }
+
+            if (allWhite)
+            {
+                bend = o - 2;
+            }
+            else
+            {
+                bend--;
+            }
+        }
+
+        return new TextRange(bstart, bend);
     }
 
     /**
@@ -154,14 +203,15 @@ public class SearchHelper
     private static int findBlockLocation(CharSequence chars, char found, char match, int dir, int pos, int cnt)
     {
         int res = -1;
-        boolean inString = false;
+        boolean inString = checkInString(chars, pos, true);
+        boolean inChar = checkInString(chars, pos, false);
         int stack = 0;
         pos += dir;
         // Search to start or end of file, as appropriate
         while (pos >= 0 && pos < chars.length() && cnt > 0)
         {
             // If we found a match and we're not in a string...
-            if (chars.charAt(pos) == match && !inString)
+            if (chars.charAt(pos) == match && !inString && !inChar)
             {
                 // We found our match
                 if (stack == 0)
@@ -176,34 +226,55 @@ public class SearchHelper
                 }
             }
             // We found another character like our original - belongs to another pair
-            else if (chars.charAt(pos) == found && !inString)
+            else if (chars.charAt(pos) == found && !inString && !inChar)
             {
                 stack++;
             }
             // We found the start/end of a string
-            else if (chars.charAt(pos) == '"' && (pos == 0 || chars.charAt(pos - 1) != '\\'))
+            else if (!inChar && chars.charAt(pos) == '"' && (pos == 0 || chars.charAt(pos - 1) != '\\'))
             {
                 inString = !inString;
             }
-            // We found character literal - skip it
-            else if (chars.charAt(pos) == '\'')
+            else if (!inString && chars.charAt(pos) == '\'' && (pos == 0 || chars.charAt(pos - 1) != '\\'))
             {
-                int tmp = pos + 2 * dir;
-                if (tmp < chars.length() && chars.charAt(tmp) == '\'')
-                {
-                    pos = tmp;
-                }
+                inChar = !inChar;
             }
             // End of line - mark not in a string any more (in case we started in the middle of one
             else if (chars.charAt(pos) == '\n')
             {
                 inString = false;
+                inChar = false;
             }
 
             pos += dir;
         }
 
         return res;
+    }
+
+    private static boolean checkInString(CharSequence chars, int pos, boolean str)
+    {
+        int offset = pos;
+        while (offset >= 0 && chars.charAt(offset) != '\n')
+        {
+            offset--;
+        }
+
+        boolean inString = false;
+        boolean inChar = false;
+        for (int i = offset; i < pos; i++)
+        {
+            if (!inChar && chars.charAt(i) == '"' && (i == 0 || chars.charAt(i - 1) != '\\'))
+            {
+                inString = !inString;
+            }
+            else if (!inString && chars.charAt(i) == '\'' && (i == 0 || chars.charAt(i - 1) != '\\'))
+            {
+                inChar = !inChar;
+            }
+        }
+
+        return str ? inString : inChar;
     }
 
     public static int findNextCamelStart(Editor editor, int count)
@@ -1074,6 +1145,7 @@ public class SearchHelper
     }
 
     private static String pairsChars = null;
+    private static String blockChars = "{}()[]<>";
 
     private static Logger logger = Logger.getInstance(SearchHelper.class.getName());
 }
