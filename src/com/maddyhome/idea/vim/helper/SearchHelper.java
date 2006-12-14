@@ -61,6 +61,53 @@ public class SearchHelper
         return false;
     }
 
+    public static int findSection(Editor editor, char type, int dir, int count)
+    {
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
+        int line = EditorHelper.getCurrentLogicalLine(editor) + dir;
+        int maxline = EditorHelper.getLineCount(editor);
+        int res = -1;
+
+        while (line > 0 && line < maxline && count > 0)
+        {
+            int offset = EditorHelper.getLineStartOffset(editor, line);
+            char ch = chars.charAt(offset);
+            if (ch == type || ch == '\u000C')
+            {
+                res = offset;
+                count--;
+            }
+
+            line += dir;
+        }
+
+        if (res == -1)
+        {
+            res = dir < 0 ? 0 : chars.length() - 1;
+        }
+
+        return res;
+    }
+
+    public static int findUnmatchedBlock(Editor editor, char type, int count)
+    {
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
+        int pos = editor.getCaretModel().getOffset();
+        int loc = getPairChars().indexOf(type);
+        // What direction should we go now (-1 is backward, 1 is forward)
+        int dir = loc % 2 == 0 ? -1 : 1;
+        // Which character did we find and which should we now search for
+        char match = getPairChars().charAt(loc);
+        char found = getPairChars().charAt(loc - dir);
+
+        return findBlockLocation(chars, found, match, dir, pos, count);
+    }
+
+    public static TextRange findBlockRange(Editor editor, char type, int count, boolean isOuter)
+    {
+        return null;
+    }
+
     /**
      * This looks on the current line, starting at the cursor postion for one of {, }, (, ), [, or ]. It then searches
      * forward or backward, as appropriate for the associated match pair. String in double quotes are skipped over.
@@ -72,13 +119,12 @@ public class SearchHelper
      */
     public static int findMatchingPairOnCurrentLine(Editor editor)
     {
-        int res = -1;
         int line = EditorHelper.getCurrentLogicalLine(editor);
         int end = EditorHelper.getLineEndOffset(editor, line, true);
         CharSequence chars = EditorHelper.getDocumentChars(editor);
         int pos = editor.getCaretModel().getOffset();
         int loc = -1;
-        // Search the remainder of the current line for one of the candicate characters
+        // Search the remainder of the current line for one of the candidate characters
         while (pos < end)
         {
             loc = getPairChars().indexOf(chars.charAt(pos));
@@ -90,6 +136,7 @@ public class SearchHelper
             pos++;
         }
 
+        int res = -1;
         // If we found one ...
         if (loc >= 0)
         {
@@ -98,54 +145,62 @@ public class SearchHelper
             // Which character did we find and which should we now search for
             char found = getPairChars().charAt(loc);
             char match = getPairChars().charAt(loc + dir);
-            boolean inString = false;
-            int stack = 0;
-            pos += dir;
-            // Search to start or end of file, as appropriate
-            while (pos >= 0 && pos < chars.length())
-            {
-                // If we found a match and we're not in a string...
-                if (chars.charAt(pos) == match && !inString)
-                {
-                    // We found our match
-                    if (stack == 0)
-                    {
-                        res = pos;
-                        break;
-                    }
-                    // Found the character but it "closes" a different pair
-                    else
-                    {
-                        stack--;
-                    }
-                }
-                // We found another character like our original - belongs to another pair
-                else if (chars.charAt(pos) == found && !inString)
-                {
-                    stack++;
-                }
-                // We found the start/end of a string
-                else if (chars.charAt(pos) == '"' && (pos == 0 || chars.charAt(pos - 1) != '\\'))
-                {
-                    inString = !inString;
-                }
-                // We found character literal - skip it
-                else if (chars.charAt(pos) == '\'')
-                {
-                    int tmp = pos + 2 * dir;
-                    if (tmp < chars.length() && chars.charAt(tmp) == '\'')
-                    {
-                        pos = tmp;
-                    }
-                }
-                // End of line - mark not in a string any more (in case we started in the middle of one
-                else if (chars.charAt(pos) == '\n')
-                {
-                    inString = false;
-                }
+            res = findBlockLocation(chars, found, match, dir, pos, 1);
+        }
 
-                pos += dir;
+        return res;
+    }
+
+    private static int findBlockLocation(CharSequence chars, char found, char match, int dir, int pos, int cnt)
+    {
+        int res = -1;
+        boolean inString = false;
+        int stack = 0;
+        pos += dir;
+        // Search to start or end of file, as appropriate
+        while (pos >= 0 && pos < chars.length() && cnt > 0)
+        {
+            // If we found a match and we're not in a string...
+            if (chars.charAt(pos) == match && !inString)
+            {
+                // We found our match
+                if (stack == 0)
+                {
+                    res = pos;
+                    cnt--;
+                }
+                // Found the character but it "closes" a different pair
+                else
+                {
+                    stack--;
+                }
             }
+            // We found another character like our original - belongs to another pair
+            else if (chars.charAt(pos) == found && !inString)
+            {
+                stack++;
+            }
+            // We found the start/end of a string
+            else if (chars.charAt(pos) == '"' && (pos == 0 || chars.charAt(pos - 1) != '\\'))
+            {
+                inString = !inString;
+            }
+            // We found character literal - skip it
+            else if (chars.charAt(pos) == '\'')
+            {
+                int tmp = pos + 2 * dir;
+                if (tmp < chars.length() && chars.charAt(tmp) == '\'')
+                {
+                    pos = tmp;
+                }
+            }
+            // End of line - mark not in a string any more (in case we started in the middle of one
+            else if (chars.charAt(pos) == '\n')
+            {
+                inString = false;
+            }
+
+            pos += dir;
         }
 
         return res;

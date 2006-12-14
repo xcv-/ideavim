@@ -970,7 +970,6 @@ stored in the viminfo file and restored when starting Vim.
                         #if/#else/#endif makes the movement linewise.
 -->
 
-<!--
                                                 *[(*
 [(                      go to [count] previous unmatched '('.
                         |exclusive| motion.
@@ -992,6 +991,7 @@ code block.  It is like doing "%" on the '(', ')', '{' or '}' at the other
 end of the code block, but you can do this from anywhere in the code block.
 Very useful for C programs.  Example: When standing on "case x:", "[{" will
 bring you back to the switch statement.
+<!--
 
                                                 *]m*
 ]m                      Go to [count] next start of a method (for Java or

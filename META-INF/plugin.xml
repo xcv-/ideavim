@@ -81,6 +81,14 @@ Bug Fixes<br>
         <action id="VimMotionBigWordRight" class="com.maddyhome.idea.vim.action.motion.text.MotionBigWordRightAction" text="BigWord Right"/>
         <action id="VimMotionParagraphNext" class="com.maddyhome.idea.vim.action.motion.text.MotionParagraphNextAction" text="Next Paragraph"/>
         <action id="VimMotionParagraphPrevious" class="com.maddyhome.idea.vim.action.motion.text.MotionParagraphPreviousAction" text="Previous Paragraph"/>
+        <action id="VimMotionUnmatchedBraceClose" class="com.maddyhome.idea.vim.action.motion.text.MotionUnmatchedBraceCloseAction" text="Unmatched }"/>
+        <action id="VimMotionUnmatchedBraceOpen" class="com.maddyhome.idea.vim.action.motion.text.MotionUnmatchedBraceOpenAction" text="Unmatched {"/>
+        <action id="VimMotionUnmatchedParenClose" class="com.maddyhome.idea.vim.action.motion.text.MotionUnmatchedParenCloseAction" text="Unmatched )"/>
+        <action id="VimMotionUnmatchedParenOpen" class="com.maddyhome.idea.vim.action.motion.text.MotionUnmatchedParenOpenAction" text="Unmatched ("/>
+        <action id="VimMotionSectionBackwardEnd" class="com.maddyhome.idea.vim.action.motion.text.MotionSectionBackwardEndAction" text="Section End Backward"/>
+        <action id="VimMotionSectionBackwardStart" class="com.maddyhome.idea.vim.action.motion.text.MotionSectionBackwardStartAction" text="Section Start Backward"/>
+        <action id="VimMotionSectionForwardEnd" class="com.maddyhome.idea.vim.action.motion.text.MotionSectionForwardEndAction" text="Section End Forward"/>
+        <action id="VimMotionSectionForwardStart" class="com.maddyhome.idea.vim.action.motion.text.MotionSectionForwardStartAction" text="Section Start Forward"/>
         <!-- Text Objects -->
         <action id="VimMotionTextOuterWord" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterWordAction" text="Select outer word"/>
         <action id="VimMotionTextOuterBigWord" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBigWordAction" text="Select outer WORD"/>

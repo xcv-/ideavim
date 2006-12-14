@@ -7,6 +7,7 @@ Bugs to fix:
 
 Requested Functionality to add:
 
+- Support [{, ]}, etc. and aB and iB, etc.
 - Add Config GUI to choose IDEA vs. VIM function for keystrokes
 - Support Select mode
 - Show message after shifting lines with :< or :>

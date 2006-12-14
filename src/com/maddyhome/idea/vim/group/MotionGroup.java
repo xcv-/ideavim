@@ -626,6 +626,44 @@ public class MotionGroup extends AbstractActionGroup
         }
     }
 
+    public int moveCaretToUnmatchedBlock(Editor editor, int count, char type)
+    {
+        if ((editor.getCaretModel().getOffset() == 0 && count < 0) ||
+            (editor.getCaretModel().getOffset() >= EditorHelper.getFileSize(editor) - 1 && count > 0))
+        {
+            return -1;
+        }
+        else
+        {
+            int res = SearchHelper.findUnmatchedBlock(editor, type, count);
+            if (res != -1)
+            {
+                res = EditorHelper.normalizeOffset(editor, res, false);
+            }
+
+            return res;
+        }
+    }
+
+    public int moveCaretToSection(Editor editor, char type, int dir, int count)
+    {
+        if ((editor.getCaretModel().getOffset() == 0 && count < 0) ||
+            (editor.getCaretModel().getOffset() >= EditorHelper.getFileSize(editor) - 1 && count > 0))
+        {
+            return -1;
+        }
+        else
+        {
+            int res = SearchHelper.findSection(editor, type, dir, count);
+            if (res != -1)
+            {
+                res = EditorHelper.normalizeOffset(editor, res, false);
+            }
+
+            return res;
+        }
+    }
+
     public void setLastFTCmd(int lastFTCmd, char lastChar)
     {
         this.lastFTCmd = lastFTCmd;

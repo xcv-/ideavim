@@ -678,7 +678,9 @@ tag             char          note action in Normal mode        ~
                                    or #ifdef
 |['|            ['              1  cursor to previous lowercase mark, on first
                                    non-blank
+-->
 |[(|            [(              1  cursor N times back to unmatched '('
+<!--
 |[star|         [*              1  same as "[/"
 |[`|            [`              1  cursor to previous lowercase mark
 |[/|            [/              1  cursor to N previous start of a C comment
@@ -692,10 +694,8 @@ tag             char          note action in Normal mode        ~
                                    current file
 -->
 |[P|            [P              2  same as "[p"
-<!--
 |[[|            [[              1  cursor N sections backward
 |[]|            []              1  cursor N SECTIONS backward
--->
 |[b|            [b              1  cursor N camel words backward
 <!--
 |[c|            [c              1  cursor N times backwards to start of change
@@ -717,7 +717,9 @@ tag             char          note action in Normal mode        ~
 |[w|            [w              1  cursor N camel words forward
 <!--
 |[z|            [z              1  move to start of open fold
+-->
 |[{|            [{              1  cursor N times back to unmatched '{'
+<!--
 |[<MiddleMouse> [<MiddleMouse>  2  same as "[p"
 
 |]_CTRL-D|      ]_CTRL-D           jump to first #define found in current and
@@ -729,7 +731,9 @@ tag             char          note action in Normal mode        ~
 |]#|            ]#              1  cursor to N next unmatched #endif or #else
 |]'|            ]'              1  cursor to next lowercase mark, on first
                                    non-blank
+-->
 |])|            ])              1  cursor N times forward to unmatched ')'
+<!--
 |]star|         ]*              1  same as "]/"
 |]`|            ]`              1  cursor to next lowercase mark
 |]/|            ]/              1  cursor to N next end of a C comment
@@ -742,10 +746,8 @@ tag             char          note action in Normal mode        ~
                                    position
 -->
 |]P|            ]P              2  same as "[p"
-<!--
 |][|            ][              1  cursor N SECTIONS forward
 |]]|            ]]              1  cursor N sections forward
--->
 |]b|            ]b              1  cursor backward to the end of camel word N
 <!--
 |]c|            ]c              1  cursor N times forward to start of change
@@ -766,7 +768,9 @@ tag             char          note action in Normal mode        ~
 |]w|            ]w              1  cursor forward to the end of camel word N
 <!--
 |]z|            ]z              1  move to end of open fold
+-->
 |]}|            ]}              1  cursor N times forward to unmatched '}'
+<!--
 |]<MiddleMouse> ]<MiddleMouse>  2  same as "]p"
 -->
 

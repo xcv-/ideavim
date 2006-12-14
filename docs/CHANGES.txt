@@ -18,6 +18,7 @@ Performance
 New Features
 - Support for Ctrl-^ to switch to the previous file (like :e #). (Requires
   updated Vim.xml keymap).
+- Support for [{, ]}, [(, ]), [[, [], ][, and ]].
 
 0.11.3 from 0.11.2
 New Features
