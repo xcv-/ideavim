@@ -542,8 +542,8 @@ tag             command            action in Normal mode        ~
 |v_a[|          a[                 "a []" from '[' to the matching ']'
 |v_a]|          a]                 same as a[
 |v_ab|          ab                 "a block" from "[(" to "])" (with braces)
-<!--
 |v_ap|          ap                 "a paragraph" (with white space)
+<!--
 |v_as|          as                 "a sentence" (with white space)
 -->
 |v_aw|          aw                 "a word" (with white space)
@@ -558,8 +558,8 @@ tag             command            action in Normal mode        ~
 |v_i[|          i[                 "inner []" from '[' to the matching ']'
 |v_i]|          i]                 same as i[
 |v_ib|          ib                 "inner block" from "[(" to "])"
-<!--
 |v_ip|          ip                 "inner paragraph"
+<!--
 |v_is|          is                 "inner sentence"
 -->
 |v_iw|          iw                 "inner word"

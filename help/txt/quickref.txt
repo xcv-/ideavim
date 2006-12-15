@@ -506,13 +506,13 @@ In Insert or Command-line mode:
 <!--
 |v_as|  N  as           Select "a sentence"
 |v_is|  N  is           Select "inner sentence"
+-->
 |v_ap|  N  ap           Select "a paragraph"
 |v_ip|  N  ip           Select "inner paragraph"
 |v_ab|  N  ab           Select "a block" (from "[(" to "])")
 |v_ib|  N  ib           Select "inner block" (from "[(" to "])")
 |v_aB|  N  aB           Select "a Block" (from "[{" to "]}")
 |v_iB|  N  iB           Select "inner Block" (from "[{" to "]}")
--->
 ------------------------------------------------------------------------------
 *Q_re*          Repeating commands
 

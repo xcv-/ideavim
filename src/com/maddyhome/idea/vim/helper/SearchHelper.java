@@ -1054,59 +1054,155 @@ public class SearchHelper
         }
     }
 
-    public static int findNextParagraph(Editor editor, int count)
+    public static int findNextParagraph(Editor editor, int count, boolean allowBlanks)
     {
-        int offset = editor.getCaretModel().getOffset();
+        int line = findNextParagraphLine(editor, count, allowBlanks);
+
+        return EditorHelper.getLineStartOffset(editor, line);
+    }
+
+    private static int findNextParagraphLine(Editor editor, int count, boolean allowBlanks)
+    {
         CharSequence chars = EditorHelper.getDocumentChars(editor);
-        int found = 0;
-        int step = count >= 0 ? 1 : -1;
-        int pos = offset;
-        int res = offset;
-        int cnt = 0;
-        pos = skipNewlines(chars, pos, step);
-        while (pos >= 0 && pos < chars.length() && found < Math.abs(count))
+        int dir = count > 0 ? 1 : -1;
+        count = Math.abs(count);
+        int line = EditorHelper.getCurrentLogicalLine(editor);
+        int maxline = EditorHelper.getLineCount(editor);
+        int res = -1;
+
+        line = skipEmptyLines(editor, line, dir, allowBlanks);
+        while (line >= 0 && line < maxline && count > 0)
         {
-            if (chars.charAt(pos) == '\n')
+            if (EditorHelper.isLineEmpty(editor, line, allowBlanks))
             {
-                cnt++;
-                if (cnt == 2)
+                res = line;
+                count--;
+                if (count > 0)
                 {
-                    found++;
-                    res = pos + (step == -1 ? 1 : 0);
-                    pos = skipNewlines(chars, pos, step) - step;
+                    line = skipEmptyLines(editor, line, dir, allowBlanks);
                 }
             }
-            else
-            {
-                cnt = 0;
-            }
 
-            pos += step;
+            line += dir;
         }
 
-        if (found < Math.abs(count))
+        if (res == -1 || count > 0)
         {
-            if (pos <= 0)
-            {
-                res = 0;
-            }
-            else if (pos >= chars.length())
-            {
-                res = chars.length() - 1;
-            }
+            //res = dir < 0 ? 0 : chars.length() - 1;
+            res = dir < 0 ? 0 : maxline - 1;
         }
 
         return res;
     }
 
-    private static int skipNewlines(CharSequence chars, int offset, int step)
+    private static int skipEmptyLines(Editor editor, int line, int dir, boolean allowBlanks)
     {
-        while (offset >= 0 && offset < chars.length() && chars.charAt(offset) == '\n')
+        int maxline = EditorHelper.getLineCount(editor);
+        while (line >= 0 && line < maxline)
         {
-            offset += step;
+            if (!EditorHelper.isLineEmpty(editor, line, allowBlanks))
+            {
+                return line;
+            }
+
+            line += dir;
         }
 
-        return offset;
+        return line;
+    }
+
+    public static TextRange findParagraphRange(Editor editor, int count, boolean isOuter)
+    {
+        int line = EditorHelper.getCurrentLogicalLine(editor);
+        logger.debug("starting on line " + line);
+        int sline = line;
+        int eline = line;
+        if (EditorHelper.isLineEmpty(editor, sline, true))
+        {
+            logger.debug("starting on an empty line");
+            sline = skipEmptyLines(editor, sline, -1, true);
+            if (!EditorHelper.isLineEmpty(editor, sline, true))
+            {
+                sline++;
+            }
+
+            if (isOuter)
+            {
+                eline = findNextParagraphLine(editor, count, true);
+                if (EditorHelper.isLineEmpty(editor, eline, true))
+                {
+                    eline--;
+                }
+            }
+            else
+            {
+                eline = skipEmptyLines(editor, sline, 1, false);
+                if (!EditorHelper.isLineEmpty(editor, eline, true))
+                {
+                    eline--;
+                }
+            }
+        }
+        else
+        {
+            logger.debug("starting on unempty line");
+            sline = findNextParagraphLine(editor, -count, true);
+            logger.debug("sline=" + sline);
+            if (EditorHelper.isLineEmpty(editor, sline, true))
+            {
+                sline++;
+                logger.debug("empty: sline=" + sline);
+            }
+
+            eline = findNextParagraphLine(editor, count, true);
+            logger.debug("eline=" + eline);
+            if (!EditorHelper.isLineEmpty(editor, eline, true))
+            {
+                logger.debug("eline not empty");
+                if (isOuter)
+                {
+                    sline = findNextParagraphLine(editor, -count, true);
+                    logger.debug("outer: sline=" + sline);
+                    sline = skipEmptyLines(editor, sline, -1, true);
+                    logger.debug("outer: sline=" + sline);
+                    if (!EditorHelper.isLineEmpty(editor, sline, true))
+                    {
+                        sline++;
+                        logger.debug("unempty: sline=" + sline);
+                    }
+                }
+            }
+            else
+            {
+                logger.debug("eline empty");
+                if (isOuter)
+                {
+                    eline = skipEmptyLines(editor, eline, 1, true);
+                    logger.debug("outer: eline=" + eline);
+                    if (!EditorHelper.isLineEmpty(editor, eline, true))
+                    {
+                        eline--;
+                        logger.debug("unempty: eline=" + eline);
+                    }
+                }
+                else
+                {
+                    logger.debug("inner");
+                    if (EditorHelper.isLineEmpty(editor, eline, true))
+                    {
+                        eline--;
+                        logger.debug("empty: eline=" + eline);
+                    }
+                }
+            }
+        }
+
+        logger.debug("final sline=" + sline);
+        logger.debug("final eline=" + sline);
+        int start = EditorHelper.getLineStartOffset(editor, sline);
+        int end = EditorHelper.getLineStartOffset(editor, eline);
+
+        return new TextRange(start, end);
     }
 
     private static String getPairChars()

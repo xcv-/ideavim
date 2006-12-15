@@ -152,16 +152,16 @@ Visual mode commands
 Some Ex commands
 Some :set options
 Full VIM regular expressions for search and search/replace
-macros
+Macros
 Diagraphs
+Command line history
+Search history
+VIM help
 
 Not Supported (yet)
-Keymaps
+Maps
 Various, lesser used (by me anyway), commands
 Jumplists
 Window commands
-Command line history
-Search history
 
-Please see the file 'index.txt' for a complete list of supported, soon-to-be
-supported, and never-to-be supported commands.
+Please see the help system for a complete list of supported commands.

@@ -1,6 +1,26 @@
 <idea-plugin url="http://sourceforge.net/projects/ideavim/">
     <name>IdeaVIM</name>
-    <description>VIM Emulator. This plugin provides key mappings in IDEA to emulate vi/vim/gvim.</description>
+    <description><![CDATA[
+        VIM Emulator. This plugin provides nearly complete vi/vim/gvim emulation while editing files in IDEA.
+        The following functionality is supported:
+        <ul>
+            <li>Motion keys</li>
+            <li>Deletion/Changing</li>
+            <li>Insert mode commands</li>
+            <li>Marks</li>
+            <li>Registers</li>
+            <li>VIM undo/redo</li>
+            <li>Visual mode commands</li>
+            <li>Some Ex commands</li>
+            <li>Some :set options</li>
+            <li>Full VIM regular expressions for search and search/replace</li>
+            <li>Macros</li>
+            <li>Diagraphs</li>
+            <li>Command line history</li>
+            <li>Search history</li>
+            <li>VIM help</li>
+        </ul>
+    ]]></description>
     <version>@VERSION@-@IDEA-VERSION@</version>
     <vendor email="rick@maddyhome.com" logo="/icons/vim16x16.png">Rick Maddy</vendor>
     <change-notes>
@@ -102,6 +122,8 @@ Bug Fixes<br>
         <action id="VimMotionOuterBlockBrace" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBlockBraceAction" text="Select outer { block"/>
         <action id="VimMotionOuterBlockBracket" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBlockBracketAction" text="Select outer [ block"/>
         <action id="VimMotionOuterBlockParen" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBlockParenAction" text="Select outer ( block"/>
+        <action id="VimMotionInnerParagraph" class="com.maddyhome.idea.vim.action.motion.object.MotionInnerParagraphAction" text="Select inner paragraph"/>
+        <action id="VimMotionOuterParagraph" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterParagraphAction" text="Select outer paragraph"/>
         <!-- Marks -->
         <action id="VimMotionMark" class="com.maddyhome.idea.vim.action.motion.mark.MotionMarkAction" text="Mark"/>
         <action id="VimMotionGotoFileMark" class="com.maddyhome.idea.vim.action.motion.mark.MotionGotoFileMarkAction" text="Goto Mark"/>

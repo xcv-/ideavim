@@ -307,6 +307,11 @@ public class MotionGroup extends AbstractActionGroup
         return SearchHelper.findBlockRange(editor, type, count, isOuter);
     }
 
+    public TextRange getParagraphRange(Editor editor, DataContext context, int count, boolean isOuter)
+    {
+        return SearchHelper.findParagraphRange(editor, count, isOuter);
+    }
+
     /**
      * This helper method calculates the complete range a motion will move over taking into account whether
      * the motion is FLAG_MOT_LINEWISE or FLAG_MOT_CHARACTERWISE (FLAG_MOT_INCLUSIVE or FLAG_MOT_EXCLUSIVE).
@@ -627,7 +632,7 @@ public class MotionGroup extends AbstractActionGroup
         }
         else
         {
-            return EditorHelper.normalizeOffset(editor, SearchHelper.findNextParagraph(editor, count), false);
+            return EditorHelper.normalizeOffset(editor, SearchHelper.findNextParagraph(editor, count, false), false);
         }
     }
 

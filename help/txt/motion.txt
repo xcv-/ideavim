@@ -548,6 +548,7 @@ is                      "inner sentence", select [count] sentences (see
                         |sentence|).
                         When used in Visual mode it is made characterwise.
 
+-->
                                                         *v_ap* *ap*
 ap                      "a paragraph", select [count] paragraphs (see
                         |paragraph|).
@@ -562,7 +563,6 @@ ip                      "inner paragraph", select [count] paragraphs (see
                         is also a paragraph boundary.
                         When used in Visual mode it is made linewise.
 
--->
 a]                                              *v_a]* *v_a[* *a]* *a[*
 a[                      "a [] block", select [count] '[' ']' blocks.  This
                         goes backwards to the [count] unclosed '[', and finds

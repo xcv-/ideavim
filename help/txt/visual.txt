@@ -204,9 +204,9 @@ The objects that can be used are:
 <!--
         as      a sentence (with white space)                   |v_as|
         is      inner sentence                                  |v_is|
+-->
         ap      a paragraph (with white space)                  |v_ap|
         ip      inner paragraph                                 |v_ip|
--->
         ab      a () block (with parenthesis)                   |v_ab|
         ib      inner () block                                  |v_ib|
         aB      a {} block (with braces)                        |v_aB|

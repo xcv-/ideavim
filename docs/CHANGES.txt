@@ -23,6 +23,7 @@ New Features
 - Added support for a(, a), ab, i(, i), ib.
 - Added support for a[, a], i[, i].
 - Added support for a{, a}, aB, i{, i}, iB.
+- Added support for ap, ip.
 
 0.11.3 from 0.11.2
 New Features

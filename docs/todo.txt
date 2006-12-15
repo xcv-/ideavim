@@ -9,7 +9,6 @@ Requested Functionality to add:
 
 - Support [m, ]m, [M, ]M
 - Support [', ]', [`, ]`
-- Support ap, ip
 - Support [z, ]z
 - Support ]/, ]*, [/, [*
 - Support g', g`

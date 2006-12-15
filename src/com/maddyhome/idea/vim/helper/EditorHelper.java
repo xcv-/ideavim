@@ -590,6 +590,32 @@ public class EditorHelper
         return CharBuffer.wrap(EditorHelper.getDocumentChars(editor), start, start + getLineCharCount(editor, lline));
     }
 
+    public static boolean isLineEmpty(Editor editor, int lline, boolean allowBlanks)
+    {
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
+        int offset = getLineStartOffset(editor, lline);
+        if (chars.charAt(offset) == '\n')
+        {
+            return true;
+        }
+        else if (allowBlanks)
+        {
+            for (; offset < chars.length(); offset++)
+            {
+                if (chars.charAt(offset) == '\n')
+                {
+                    return true;
+                }
+                else if (!Character.isWhitespace(chars.charAt(offset)))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static String pad(Editor editor, int lline, int to)
     {
         StringBuffer res = new StringBuffer();

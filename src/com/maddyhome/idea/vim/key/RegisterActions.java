@@ -751,8 +751,10 @@ public class RegisterActions
             new Shortcut("aW"));
         parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionTextInnerWord", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE,
             new Shortcut("iw"));
-        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionTextInnerBigWord", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE,
-            new Shortcut("iW"));
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionInnerParagraph", Command.MOTION, Command.FLAG_MOT_LINEWISE | Command.FLAG_TEXT_BLOCK,
+            new Shortcut("ip"));
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionOuterParagraph", Command.MOTION, Command.FLAG_MOT_LINEWISE | Command.FLAG_TEXT_BLOCK,
+            new Shortcut("ap"));
         parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionInnerBlockAngle", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE | Command.FLAG_TEXT_BLOCK, new Shortcut[] {
             new Shortcut("i<"),
             new Shortcut("i>")

@@ -93,7 +93,7 @@ public class MarkGroup extends AbstractActionGroup
 
         if ("{}".indexOf(ch) >= 0)
         {
-            int offset = SearchHelper.findNextParagraph(editor, ch == '{' ? -1 : 1);
+            int offset = SearchHelper.findNextParagraph(editor, ch == '{' ? -1 : 1, false);
             offset = EditorHelper.normalizeOffset(editor, offset, false);
             LogicalPosition lp = editor.offsetToLogicalPosition(offset);
             mark = new Mark(ch, lp.line, lp.column, EditorData.getVirtualFile(editor));
