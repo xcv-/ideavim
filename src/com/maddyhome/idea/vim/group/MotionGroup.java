@@ -307,6 +307,11 @@ public class MotionGroup extends AbstractActionGroup
         return SearchHelper.findBlockRange(editor, type, count, isOuter);
     }
 
+    public TextRange getSentenceRange(Editor editor, DataContext context, int count, boolean isOuter)
+    {
+        return SearchHelper.findSentenceRange(editor, count, isOuter);
+    }
+
     public TextRange getParagraphRange(Editor editor, DataContext context, int count, boolean isOuter)
     {
         return SearchHelper.findParagraphRange(editor, count, isOuter);
@@ -625,15 +630,47 @@ public class MotionGroup extends AbstractActionGroup
      */
     public int moveCaretToNextParagraph(Editor editor, int count)
     {
-        if ((editor.getCaretModel().getOffset() == 0 && count < 0) ||
-            (editor.getCaretModel().getOffset() >= EditorHelper.getFileSize(editor) - 1 && count > 0))
+        int res = SearchHelper.findNextParagraph(editor, count, false);
+        if (res >= 0)
         {
-            return -1;
+            res = EditorHelper.normalizeOffset(editor, res, false);
         }
         else
         {
-            return EditorHelper.normalizeOffset(editor, SearchHelper.findNextParagraph(editor, count, false), false);
+            res = -1;
         }
+
+        return res;
+    }
+
+    public int moveCaretToNextSentenceStart(Editor editor, int count)
+    {
+        int res = SearchHelper.findNextSentenceStart(editor, count, false, true);
+        if (res >= 0)
+        {
+            res = EditorHelper.normalizeOffset(editor, res, false);
+        }
+        else
+        {
+            res = -1;
+        }
+
+        return res;
+    }
+
+    public int moveCaretToNextSentenceEnd(Editor editor, int count)
+    {
+        int res = SearchHelper.findNextSentenceEnd(editor, count, false, true);
+        if (res >= 0)
+        {
+            res = EditorHelper.normalizeOffset(editor, res, false);
+        }
+        else
+        {
+            res = -1;
+        }
+
+        return res;
     }
 
     public int moveCaretToUnmatchedBlock(Editor editor, int count, char type)

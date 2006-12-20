@@ -714,7 +714,7 @@ public class SearchHelper
             return null;
         }
 
-        int end = start;
+        int end;
         // Special case 1 character words because 'findNextWordEnd' returns one to many chars
         if (start < stop && CharacterHelper.charType(chars.charAt(start + 1), false) != CharacterHelper.TYPE_CHAR)
         {
@@ -1054,42 +1054,645 @@ public class SearchHelper
         }
     }
 
+    public static int findNextSentenceStart(Editor editor, int count, boolean countCurrent, boolean requireAll)
+    {
+        int dir = count > 0 ? 1 : -1;
+        count = Math.abs(count);
+        int total = count;
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
+        int start = editor.getCaretModel().getOffset();
+        int max = EditorHelper.getFileSize(editor);
+
+        int res = start;
+        for (; count > 0 && res >= 0 && res <= max - 1 ; count--)
+        {
+            res = findSentenceStart(editor, chars, res, max, dir, countCurrent, count > 1);
+            if (res == 0 || res == max - 1)
+            {
+                count--;
+                break;
+            }
+        }
+
+        if (res < 0 && (!requireAll || total == 1))
+        {
+            res = dir > 0 ? max - 1 : 0;
+        }
+        else if (count > 0 && total > 1 && !requireAll)
+        {
+            res = dir > 0 ? max - 1 : 0;
+        }
+        else if (count > 0 && total > 1 && requireAll)
+        {
+            res = -count;
+        }
+
+        return res;
+    }
+
+    public static int findNextSentenceEnd(Editor editor, int count, boolean countCurrent, boolean requireAll)
+    {
+        int dir = count > 0 ? 1 : -1;
+        count = Math.abs(count);
+        int total = count;
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
+        int start = editor.getCaretModel().getOffset();
+        int max = EditorHelper.getFileSize(editor);
+
+        int res = start;
+        for (; count > 0 && res >= 0 && res <= max - 1 ; count--)
+        {
+            res = findSentenceEnd(editor, chars, res, max, dir, countCurrent && count == total, count > 1);
+            if (res == 0 || res == max - 1)
+            {
+                count--;
+                break;
+            }
+        }
+
+        if (res < 0 && (!requireAll || total == 1))
+        {
+            res = dir > 0 ? max - 1 : 0;
+        }
+        else if (count > 0 && total > 1 && !requireAll)
+        {
+            res = dir > 0 ? max - 1 : 0;
+        }
+        else if (count > 0 && total > 1 && requireAll)
+        {
+            res = -count;
+        }
+
+        return res;
+    }
+
+    private static int findSentenceStart(Editor editor, CharSequence chars, int start, int max, int dir,
+        boolean countCurrent, boolean multiple)
+    {
+        // Save off the next paragraph since a paragraph is a valid sentence.
+        int lline = editor.offsetToLogicalPosition(start).line;
+        int np = findNextParagraph(editor, lline, dir, false, multiple);
+
+        int end;
+        if (chars.charAt(start) == '\n' && !countCurrent)
+        {
+            end = findSentenceEnd(editor, chars, start, max, -1, false, multiple);
+        }
+        else
+        {
+            end = findSentenceEnd(editor, chars, start, max, -1, true, multiple);
+        }
+        if (end == start && countCurrent && chars.charAt(end) == '\n')
+        {
+            return end;
+        }
+
+        int pos = end - 1;
+        if (end >= 0)
+        {
+            int offset = end + 1;
+            while (offset < max)
+            {
+                char ch = chars.charAt(offset);
+                if (!Character.isWhitespace(ch))
+                {
+                    break;
+                }
+                offset++;
+            }
+
+            if (dir > 0)
+            {
+                if (offset == start && countCurrent)
+                {
+                    return offset;
+                }
+                else if (offset > start)
+                {
+                    return offset;
+                }
+            }
+            else
+            {
+                if (offset == start && countCurrent)
+                {
+                    return offset;
+                }
+                else if (offset < start)
+                {
+                    return offset;
+                }
+            }
+        }
+
+        if (dir > 0)
+        {
+            end = findSentenceEnd(editor, chars, start, max, dir, true, multiple);
+        }
+        else
+        {
+            end = findSentenceEnd(editor, chars, pos, max, dir, countCurrent, multiple);
+        }
+
+        int res = end + 1;
+        if (end != -1 && (chars.charAt(end) != '\n' || !countCurrent))
+        {
+            while (res < max)
+            {
+                char ch = chars.charAt(res);
+                if (!Character.isWhitespace(ch))
+                {
+                    break;
+                }
+                res++;
+            }
+        }
+
+        // Now let's see which to return, the sentence we found or the paragraph we found.
+        // This mess returns which ever is closer to our starting point (and in the right direction).
+        if (res >= 0 && np >= 0)
+        {
+            if (dir > 0)
+            {
+                if (np < res || res < start)
+                {
+                    res = np;
+                }
+            }
+            else
+            {
+                if (np > res || (res >= start && !countCurrent))
+                {
+                    res = np;
+                }
+            }
+        }
+        else if (res == -1 && np >= 0)
+        {
+            res = np;
+        }
+        // else we found neither, res already -1
+
+        return res;
+    }
+
+    private static int findSentenceEnd(Editor editor, CharSequence chars, int start, int max, int dir,
+        boolean countCurrent, boolean multiple)
+    {
+        if (dir > 0 && start >= EditorHelper.getFileSize(editor) - 1)
+        {
+            return -1;
+        }
+        else if (dir < 0 && start <= 0)
+        {
+            return -1;
+        }
+
+        // Save off the next paragraph since a paragraph is a valid sentence.
+        int lline = editor.offsetToLogicalPosition(start).line;
+        int np = findNextParagraph(editor, lline, dir, false, multiple);
+
+        // Sections are also end-of-sentence markers. However, { and } in column 1 don't count.
+        // Since our section implementation only supports these and form-feed chars, we'll just
+        // check for form-feeds below.
+
+        int res = -1;
+
+        int offset = start;
+        boolean found = false;
+        // Search forward looking for a candidate end-of-sentence character (., !, or ?)
+        while (offset >= 0 && offset < max && !found)
+        {
+            char ch = chars.charAt(offset);
+            if (".!?".indexOf(ch) >= 0)
+            {
+                int end = offset; // Save where we found the punctuation.
+                offset++;
+                // This can be followed by any number of ), ], ", or ' characters.
+                while (offset < max)
+                {
+                    ch = chars.charAt(offset);
+                    if (")]\"'".indexOf(ch) == -1)
+                    {
+                        break;
+                    }
+
+                    offset++;
+                }
+
+                // The next character must be whitespace for this to be a valid end-of-sentence.
+                if (offset >= max || Character.isWhitespace(ch))
+                {
+                    // So we have found the end of the next sentence. Now let's see if we ended
+                    // where we started (or further) on a back search. This will happen if we happen
+                    // to start this whole search already on a sentence end.
+                    if (offset - 1 == start && !countCurrent)
+                    {
+                        // Skip back to the sentence end so we can search backward from there
+                        // for the real previous sentence.
+                        offset = end;
+                    }
+                    else
+                    {
+                        // Yeah - we found the real end-of-sentence. Save it off.
+                        res = offset - 1;
+                        found = true;
+                    }
+                }
+                else
+                {
+                    // Turned out not to be an end-of-sentence so move back to where we were.
+                    offset = end;
+                }
+            }
+            else if (ch == '\n')
+            {
+                int end = offset; // Save where we found the punctuation.
+                if (dir > 0)
+                {
+                    offset++;
+                    while (offset < max)
+                    {
+                        ch = chars.charAt(offset);
+                        if (ch != '\n')
+                        {
+                            offset--;
+                            break;
+                        }
+                        if (offset == np && (end - 1 != start || countCurrent))
+                        {
+                            break;
+                        }
+                        offset++;
+                    }
+
+                    if (offset == np && (end - 1 != start || countCurrent))
+                    {
+                        res = end - 1;
+                        found = true;
+                    }
+                    else if (offset > end)
+                    {
+                        res = offset;
+                        np = res;
+                        found = true;
+                    }
+                    else if (offset == end)
+                    {
+                        if (offset > 0 && chars.charAt(offset - 1) == '\n' && countCurrent)
+                        {
+                            res = end;
+                            np = res;
+                            found = true;
+                        }
+                    }
+                }
+                else
+                {
+                    offset--;
+                    while (offset >= 0)
+                    {
+                        ch = chars.charAt(offset);
+                        if (ch != '\n')
+                        {
+                            offset++;
+                            break;
+                        }
+
+                        offset--;
+                    }
+
+                    if (offset < end)
+                    {
+                        if (end == start && countCurrent)
+                        {
+                            res = end;
+                        }
+                        else
+                        {
+                            res = offset - 1;
+                        }
+
+                        found = true;
+                    }
+                }
+
+                offset = end;
+            }
+            // Form-feeds are also end-of-sentence markers.
+            else if (ch == '\u000C')
+            {
+                res = offset;
+                found = true;
+            }
+
+            offset += dir;
+        }
+
+        // Now let's see which to return, the sentence we found or the paragraph we found.
+        // This mess returns which ever is closer to our starting point (and in the right direction).
+        if (res >= 0 && np >= 0)
+        {
+            if (dir > 0)
+            {
+                if (np < res || res < start)
+                {
+                    res = np;
+                }
+            }
+            else
+            {
+                if (np > res || (res >= start && !countCurrent))
+                {
+                    res = np;
+                }
+            }
+        }
+        /*
+        else if (res == -1 && np >= 0)
+        {
+            res = np;
+        }
+        */
+
+        return res;
+    }
+
+    private static int findSentenceRangeEnd(Editor editor, CharSequence chars, int start, int max, int count,
+        boolean isOuter, boolean oneway)
+    {
+        int dir = count > 0 ? 1 : -1;
+        count = Math.abs(count);
+        int total = count;
+
+        boolean toggle = !isOuter;
+        boolean findend = dir < 1;
+        // Even = start, odd = end
+        int which;
+        int eprev = findSentenceEnd(editor, chars, start, max, -1, true, false);
+        int enext = findSentenceEnd(editor, chars, start, max, 1, true, false);
+        int sprev = findSentenceStart(editor, chars, start, max, -1, true, false);
+        int snext = findSentenceStart(editor, chars, start, max, 1, true, false);
+        if (snext == eprev) // On blank line
+        {
+            if (dir < 0 && !oneway)
+            {
+                return start;
+            }
+
+            which = 0;
+            if (oneway)
+            {
+                findend = dir > 0;
+            }
+            else if (dir > 0 && start < max - 1 && !Character.isSpaceChar(chars.charAt(start + 1)))
+            {
+                findend = true;
+            }
+        }
+        else if (start == snext) // On sentence start
+        {
+            if (dir < 0 && !oneway)
+            {
+                return start;
+            }
+
+            which = dir > 0 ? 1 : 0;
+            if (dir < 0 && oneway)
+            {
+                findend = false;
+            }
+        }
+        else if (start == enext) // On sentence end
+        {
+            if (dir > 0 && !oneway)
+            {
+                return start;
+            }
+
+            which = 0;
+            if (dir > 0 && oneway)
+            {
+                findend = true;
+            }
+        }
+        else if (start >= sprev && start <= enext && enext < snext) // Middle of sentence
+        {
+            which = dir > 0 ? 1 : 0;
+        }
+        else // Between sentences
+        {
+            which = dir > 0 ? 0 : 1;
+            if (dir > 0)
+            {
+                if (oneway)
+                {
+                    if (start < snext - 1)
+                    {
+                        findend = true;
+                    }
+                    else if (start == snext - 1)
+                    {
+                        count++;
+                    }
+                }
+                else
+                {
+                    findend = true;
+                }
+            }
+            else
+            {
+                if (oneway)
+                {
+                    if (start > eprev + 1)
+                    {
+                        findend = false;
+                    }
+                    else if (start == eprev + 1)
+                    {
+                        count++;
+                    }
+                }
+                else
+                {
+                    findend = true;
+                }
+            }
+        }
+
+        int res = start;
+        for (; count > 0 && res >= 0 && res <= max - 1 ; count--)
+        {
+            if ((toggle && which % 2 == 1) || (isOuter && findend))
+            {
+                res = findSentenceEnd(editor, chars, res, max, dir, false, total > 1);
+            }
+            else
+            {
+                res = findSentenceStart(editor, chars, res, max, dir, false, total > 1);
+            }
+            if (res == 0 || res == max - 1)
+            {
+                count--;
+                break;
+            }
+            if (toggle)
+            {
+                if (which % 2 == 1 && dir < 0)
+                {
+                    res++;
+                }
+                else if (which % 2 == 0 && dir > 0)
+                {
+                    res--;
+                }
+            }
+
+            which++;
+        }
+
+        if (res < 0 || count > 0)
+        {
+            res = dir > 0 ? max - 1 : 0;
+        }
+        else if (isOuter && ((dir < 0 && findend) || (dir > 0 && !findend)))
+        {
+            if (res != 0 && res != max - 1)
+            {
+                res -= dir;
+            }
+        }
+
+        if (chars.charAt(res) == '\n' && res > 0 && chars.charAt(res - 1) != '\n')
+        {
+            res--;
+        }
+
+        return res;
+    }
+
+    public static TextRange findSentenceRange(Editor editor, int count, boolean isOuter)
+    {
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
+        int max = EditorHelper.getFileSize(editor);
+        int offset = editor.getCaretModel().getOffset();
+        int ssel = editor.getSelectionModel().getSelectionStart();
+        int esel = editor.getSelectionModel().getSelectionEnd();
+        if (Math.abs(esel - ssel) > 1)
+        {
+            int start;
+            int end;
+            // Forward selection
+            if (offset == esel - 1)
+            {
+                start = ssel;
+                end = findSentenceRangeEnd(editor, chars, offset, max, count, isOuter, true);
+
+                return new TextRange(start, end);
+            }
+            // Backward selection
+            else
+            {
+                end = esel - 1;
+                start = findSentenceRangeEnd(editor, chars, offset, max, -count, isOuter, true);
+
+                return new TextRange(end, start);
+            }
+        }
+        else
+        {
+            int end = findSentenceRangeEnd(editor, chars, offset, max, count, isOuter, false);
+
+            boolean space = isOuter;
+            if (Character.isSpaceChar(chars.charAt(end)))
+            {
+                space = false;
+            }
+
+            int start = findSentenceRangeEnd(editor, chars, offset, max, -1, space, false);
+
+            return new TextRange(start, end);
+        }
+    }
+
     public static int findNextParagraph(Editor editor, int count, boolean allowBlanks)
     {
         int line = findNextParagraphLine(editor, count, allowBlanks);
 
-        return EditorHelper.getLineStartOffset(editor, line);
+        int maxline = EditorHelper.getLineCount(editor);
+        if (line >= 0 && line < maxline)
+        {
+            return EditorHelper.getLineStartOffset(editor, line);
+        }
+        else if (line == maxline)
+        {
+            return count > 0 ? EditorHelper.getFileSize(editor) - 1 : 0;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    private static int findNextParagraph(Editor editor, int lline, int dir, boolean allowBlanks, boolean skipLines)
+    {
+        int line = findNextParagraphLine(editor, lline, dir, allowBlanks, skipLines);
+
+        if (line >= 0)
+        {
+            return EditorHelper.getLineStartOffset(editor, line);
+        }
+        else
+        {
+            return dir > 0 ? EditorHelper.getFileSize(editor) - 1 : 0;
+        }
     }
 
     private static int findNextParagraphLine(Editor editor, int count, boolean allowBlanks)
     {
-        CharSequence chars = EditorHelper.getDocumentChars(editor);
-        int dir = count > 0 ? 1 : -1;
-        count = Math.abs(count);
         int line = EditorHelper.getCurrentLogicalLine(editor);
+        int maxline = EditorHelper.getLineCount(editor);
+        int dir = count > 0 ? 1 : -1;
+        boolean skipLines = count > 1;
+        count = Math.abs(count);
+        int total = count;
+
+        for (; count > 0 && line >= 0; count--)
+        {
+            line = findNextParagraphLine(editor, line, dir, allowBlanks, skipLines);
+        }
+
+        if (total == 1 && line < 0)
+        {
+            line = dir > 0 ? maxline - 1 : 0;
+        }
+        else if (total > 1 && count == 0 && line < 0)
+        {
+            line = dir > 0 ? maxline - 1 : 0;
+        }
+
+        return line;
+    }
+
+    private static int findNextParagraphLine(Editor editor, int line, int dir, boolean allowBlanks, boolean skipLines)
+    {
         int maxline = EditorHelper.getLineCount(editor);
         int res = -1;
 
         line = skipEmptyLines(editor, line, dir, allowBlanks);
-        while (line >= 0 && line < maxline && count > 0)
+        while (line >= 0 && line < maxline && res == -1)
         {
             if (EditorHelper.isLineEmpty(editor, line, allowBlanks))
             {
                 res = line;
-                count--;
-                if (count > 0)
+                if (skipLines)
                 {
                     line = skipEmptyLines(editor, line, dir, allowBlanks);
                 }
             }
 
             line += dir;
-        }
-
-        if (res == -1 || count > 0)
-        {
-            //res = dir < 0 ? 0 : chars.length() - 1;
-            res = dir < 0 ? 0 : maxline - 1;
         }
 
         return res;
@@ -1114,91 +1717,134 @@ public class SearchHelper
     public static TextRange findParagraphRange(Editor editor, int count, boolean isOuter)
     {
         int line = EditorHelper.getCurrentLogicalLine(editor);
+        int maxline = EditorHelper.getLineCount(editor);
         logger.debug("starting on line " + line);
-        int sline = line;
-        int eline = line;
-        if (EditorHelper.isLineEmpty(editor, sline, true))
+        int sline;
+        int eline;
+        boolean fixstart = false;
+        boolean fixend = false;
+        if (isOuter)
         {
-            logger.debug("starting on an empty line");
-            sline = skipEmptyLines(editor, sline, -1, true);
-            if (!EditorHelper.isLineEmpty(editor, sline, true))
+            if (EditorHelper.isLineEmpty(editor, line, true))
             {
-                sline++;
-            }
-
-            if (isOuter)
-            {
-                eline = findNextParagraphLine(editor, count, true);
-                if (EditorHelper.isLineEmpty(editor, eline, true))
-                {
-                    eline--;
-                }
+                sline = line;
             }
             else
             {
-                eline = skipEmptyLines(editor, sline, 1, false);
-                if (!EditorHelper.isLineEmpty(editor, eline, true))
+                sline = findNextParagraphLine(editor, -1, true);
+            }
+
+            eline = findNextParagraphLine(editor, count, true);
+            if (eline < 0)
+            {
+                return null;
+            }
+
+            if (EditorHelper.isLineEmpty(editor, sline, true) && EditorHelper.isLineEmpty(editor, eline, true))
+            {
+                if (sline == line)
                 {
                     eline--;
+                    fixstart = true;
                 }
+                else
+                {
+                    sline++;
+                    fixend = true;
+                }
+            }
+            else if (!EditorHelper.isLineEmpty(editor, eline, true) && !EditorHelper.isLineEmpty(editor, sline, true) &&
+                sline > 0)
+            {
+                sline--;
+                fixstart = true;
+            }
+            else if (EditorHelper.isLineEmpty(editor, eline, true))
+            {
+                fixend = true;
+            }
+            else if (EditorHelper.isLineEmpty(editor, sline, true))
+            {
+                fixstart = true;
             }
         }
         else
         {
-            logger.debug("starting on unempty line");
-            sline = findNextParagraphLine(editor, -count, true);
-            logger.debug("sline=" + sline);
-            if (EditorHelper.isLineEmpty(editor, sline, true))
+            sline = line;
+            if (!EditorHelper.isLineEmpty(editor, sline, true))
             {
-                sline++;
-                logger.debug("empty: sline=" + sline);
-            }
-
-            eline = findNextParagraphLine(editor, count, true);
-            logger.debug("eline=" + eline);
-            if (!EditorHelper.isLineEmpty(editor, eline, true))
-            {
-                logger.debug("eline not empty");
-                if (isOuter)
+                sline = findNextParagraphLine(editor, -1, true);
+                if (EditorHelper.isLineEmpty(editor, sline, true))
                 {
-                    sline = findNextParagraphLine(editor, -count, true);
-                    logger.debug("outer: sline=" + sline);
-                    sline = skipEmptyLines(editor, sline, -1, true);
-                    logger.debug("outer: sline=" + sline);
-                    if (!EditorHelper.isLineEmpty(editor, sline, true))
-                    {
-                        sline++;
-                        logger.debug("unempty: sline=" + sline);
-                    }
+                    sline++;
                 }
+                eline = line;
             }
             else
             {
-                logger.debug("eline empty");
-                if (isOuter)
+                eline = line - 1;
+            }
+
+            int which = EditorHelper.isLineEmpty(editor, sline, true) ? 0 : 1;
+            for (int i = 0; i < count; i++)
+            {
+                if (which % 2 == 1)
                 {
-                    eline = skipEmptyLines(editor, eline, 1, true);
-                    logger.debug("outer: eline=" + eline);
-                    if (!EditorHelper.isLineEmpty(editor, eline, true))
+                    eline = findNextParagraphLine(editor, eline, 1, true, false) - 1;
+                    if (eline < 0)
                     {
-                        eline--;
-                        logger.debug("unempty: eline=" + eline);
+                        if (i == count - 1)
+                        {
+                            eline = maxline - 1;
+                        }
+                        else
+                        {
+                            return null;
+                        }
                     }
                 }
                 else
                 {
-                    logger.debug("inner");
-                    if (EditorHelper.isLineEmpty(editor, eline, true))
-                    {
-                        eline--;
-                        logger.debug("empty: eline=" + eline);
-                    }
+                    eline++;
+                }
+                which++;
+            }
+            fixstart = true;
+            fixend = true;
+        }
+
+        if (fixstart && EditorHelper.isLineEmpty(editor, sline, true))
+        {
+            while (sline > 0)
+            {
+                if (EditorHelper.isLineEmpty(editor, sline - 1, true))
+                {
+                    sline--;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        if (fixend && EditorHelper.isLineEmpty(editor, eline, true))
+        {
+            while (eline < maxline - 1)
+            {
+                if (EditorHelper.isLineEmpty(editor, eline + 1, true))
+                {
+                    eline++;
+                }
+                else
+                {
+                    break;
                 }
             }
         }
 
         logger.debug("final sline=" + sline);
-        logger.debug("final eline=" + sline);
+        logger.debug("final eline=" + eline);
         int start = EditorHelper.getLineStartOffset(editor, sline);
         int end = EditorHelper.getLineStartOffset(editor, eline);
 

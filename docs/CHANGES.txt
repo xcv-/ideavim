@@ -18,12 +18,14 @@ Performance
 New Features
 - Support for Ctrl-^ to switch to the previous file (like :e #). (Requires
   updated Vim.xml keymap).
+- Added support for (, ), g(, g), '(, '), `(, `).
 - Added support for [{, ]}, [(, ]), [[, [], ][, ]].
 - Added support for a<, a>, i<, i>.
 - Added support for a(, a), ab, i(, i), ib.
 - Added support for a[, a], i[, i].
 - Added support for a{, a}, aB, i{, i}, iB.
 - Added support for ap, ip.
+- Added support for as, is.
 
 0.11.3 from 0.11.2
 New Features

@@ -84,10 +84,8 @@ N is used to indicate an optional count that can be given before the command.
 |ge|    N  ge           backward to the end of the Nth word
 |gE|    N  gE           backward to the end of the Nth blank-separated |WORD|
 
-<!--
 |)|     N  )            N sentences forward
 |(|     N  (            N sentences backward
--->
 |}|     N  }            N paragraphs forward
 |{|     N  {            N paragraphs backward
 |[b|    N  [b           N camel words backward
@@ -103,10 +101,8 @@ N is used to indicate an optional count that can be given before the command.
 <!--
 |[m|    N  [m           N times back to start of method (for Java)
 |[M|    N  [M           N times back to end of method (for Java)
--->
 |])|    N  ])           N times forward to unclosed ')'
 |]}|    N  ]}           N times forward to unclosed '}'
-<!--
 |]m|    N  ]m           N times forward to start of method (for Java)
 |]M|    N  ]M           N times forward to end of method (for Java)
 |[#|    N  [#           N times back to unclosed "#if" or "#else"
@@ -503,10 +499,8 @@ In Insert or Command-line mode:
 |v_iw|  N  iw           Select "inner word"
 |v_aW|  N  aW           Select "a |WORD|"
 |v_iW|  N  iW           Select "inner |WORD|"
-<!--
 |v_as|  N  as           Select "a sentence"
 |v_is|  N  is           Select "inner sentence"
--->
 |v_ap|  N  ap           Select "a paragraph"
 |v_ip|  N  ip           Select "inner paragraph"
 |v_ab|  N  ab           Select "a block" (from "[(" to "])")

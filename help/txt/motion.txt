@@ -426,13 +426,19 @@ between Vi and Vim.
 ==============================================================================
 5. Text object motions                                  *object-motions*
 
-<!--
                                                         *(*
 (                       [count] sentences backward.  |exclusive| motion.
 
                                                         *)*
 )                       [count] sentences forward.  |exclusive| motion.
--->
+
+                                                        *g(*
+g(                      [count] sentence ends backward.  |exclusive| motion.
+                        (not in Vim.)
+
+                                                        *g)*
+g)                      [count] sentence ends forward.  |exclusive| motion.
+                        (not in Vim.)
 
                                                         *{*
 {                       [count] paragraphs backward.  |exclusive| motion.
@@ -459,7 +465,6 @@ between Vi and Vim.
 
 These commands move over three kinds of text objects.
 
-<!--
                                                         *sentence*
 A sentence is defined as ending at a '.', '!' or '?' followed by either the
 end of a line, or by a space or tab.  Any number of closing ')', ']', '"'
@@ -470,7 +475,6 @@ If the 'J' flag is present in 'cpoptions', at least two spaces have to
 follow the punctuation mark; <Tab>s are not recognized as white space.
 The definition of a sentence cannot be changed.
 
--->
                                                         *paragraph*
 A paragraph begins after each empty line, and also at each of a set of
 paragraph macros, specified by the pairs of characters in the 'paragraphs'
@@ -537,7 +541,6 @@ iW                      "inner WORD", select [count] WORDs (see |WORD|).
                         When used in Visual linewise mode "iW" switches to
                         Visual characterwise mode.
 
-<!--
                                                         *v_as* *as*
 as                      "a sentence", select [count] sentences (see
                         |sentence|).
@@ -548,7 +551,6 @@ is                      "inner sentence", select [count] sentences (see
                         |sentence|).
                         When used in Visual mode it is made characterwise.
 
--->
                                                         *v_ap* *ap*
 ap                      "a paragraph", select [count] paragraphs (see
                         |paragraph|).
@@ -651,16 +653,12 @@ movement commands are used.
         "diW"   delete inner WORD (see |WORD|)          *diW*
         "daW"   delete a WORD (see |WORD|)              *daW*
         "dd"    delete one line                         |dd|
-<!--
         "dis"   delete inner sentence                   *dis*
         "das"   delete a sentence                       *das*
--->
         "dib"   delete inner '(' ')' block              *dib*
         "dab"   delete a '(' ')' block                  *dab*
-<!--
         "dip"   delete inner paragraph                  *dip*
         "dap"   delete a paragraph                      *dap*
--->
         "diB"   delete inner '{' '}' block              *diB*
         "daB"   delete a '{' '}' block                  *daB*
 
@@ -809,7 +807,6 @@ was made yet in the current file.
                         command changed.  For example when inserting a word,
                         the position will be on the last character.
 
-<!--
                                                         *'(* *`(*
 '(  `(                  To the start of the current sentence, like the |(|
                         command.
@@ -817,7 +814,6 @@ was made yet in the current file.
                                                         *')* *`)*
 ')  `)                  To the end of the current sentence, like the |)|
                         command.
--->
 
                                                         *'{* *`{*
 '{  `{                  To the start of the current paragraph, like the |{|

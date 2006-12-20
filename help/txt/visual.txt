@@ -201,10 +201,8 @@ The objects that can be used are:
         iw      inner word                                      |v_iw|
         aW      a WORD (with white space)                       |v_aW|
         iW      inner WORD                                      |v_iW|
-<!--
         as      a sentence (with white space)                   |v_as|
         is      inner sentence                                  |v_is|
--->
         ap      a paragraph (with white space)                  |v_ap|
         ip      inner paragraph                                 |v_ip|
         ab      a () block (with parenthesis)                   |v_ab|

@@ -282,12 +282,10 @@ tag             char          note action in Normal mode        ~
                                    mark {a-zA-Z0-9}
 |''|            ''              1  cursor to the first CHAR of the line where
                                    the cursor was before the latest jump.
-<!--
 |'(|            '(              1  cursor to the first CHAR on the line of the
                                    start of the current sentence
 |')|            ')              1  cursor to the first CHAR on the line of the
                                    end of the current sentence
--->
 |'<|            '<              1  cursor to the first CHAR of the line where
                                    highlighted area starts/started in the
                                    current buffer.
@@ -304,10 +302,8 @@ tag             char          note action in Normal mode        ~
                                    start of the current paragraph
 |'}|            '}              1  cursor to the first CHAR on the line of the
                                    end of the current paragraph
-<!--
 |(|             (               1  cursor N sentences backward
 |)|             )               1  cursor N sentences forward
--->
 |star|          *               1  search forward for the Nth occurrence of
                                    the ident under the cursor
 |+|             +               1  cursor to the first CHAR N lines lower
@@ -404,10 +400,8 @@ tag             char          note action in Normal mode        ~
 |^|             ^               1  cursor to the first CHAR of the line
 |_|             _               1  cursor to the first CHAR N - 1 lines lower
 |`|             `{a-zA-Z0-9}    1  cursor to the mark {a-zA-Z0-9}
-<!--
 |`(|            `(              1  cursor to the start of the current sentence
 |`)|            `)              1  cursor to the end of the current sentence
--->
 |`<|            `<              1  cursor to the start of the highlighted area
 |`>|            `>              1  cursor to the end of the highlighted area
 |`[|            `[              1  cursor to the start of last operated text
@@ -543,9 +537,7 @@ tag             command            action in Normal mode        ~
 |v_a]|          a]                 same as a[
 |v_ab|          ab                 "a block" from "[(" to "])" (with braces)
 |v_ap|          ap                 "a paragraph" (with white space)
-<!--
 |v_as|          as                 "a sentence" (with white space)
--->
 |v_aw|          aw                 "a word" (with white space)
 |v_a{|          a{                 same as aB
 |v_a}|          a}                 same as aB
@@ -559,9 +551,7 @@ tag             command            action in Normal mode        ~
 |v_i]|          i]                 same as i[
 |v_ib|          ib                 "inner block" from "[(" to "])"
 |v_ip|          ip                 "inner paragraph"
-<!--
 |v_is|          is                 "inner sentence"
--->
 |v_iw|          iw                 "inner word"
 |v_i{|          i{                 same as iB
 |v_i}|          i}                 same as iB
@@ -791,6 +781,8 @@ tag             char          note action in Normal mode        ~
 |g'|            g'{mark}        1  like |'| but without changing the jumplist
 |g`|            g`{mark}        1  like |`| but without changing the jumplist
 -->
+|g(|            g(              1  cursor N sentence ends backward
+|g)|            g)              1  cursor N sentence ends forward
 |gstar|         g*              1  like "*", but without using "\<" and "\>"
 |g0|            g0              1  when 'wrap' off go to leftmost character of
                                    the current line that is on the screen;
@@ -1015,10 +1007,8 @@ tag             command       note action in Visual mode        ~
 |v_a[|          a[                 extend highlighted area with a [] block
 |v_a]|          a]                 same as a[
 |v_ab|          ab                 extend highlighted area with a () block
-<!--
 |v_ap|          ap                 extend highlighted area with a paragraph
 |v_as|          as                 extend highlighted area with a sentence
--->
 |v_aw|          aw                 extend highlighted area with "a word"
 |v_a{|          a{                 same as aB
 |v_a}|          a}                 same as aB
@@ -1038,10 +1028,8 @@ tag             command       note action in Visual mode        ~
 |v_i[|          i[                 extend highlighted area with inner [] block
 |v_i]|          i]                 same as i[
 |v_ib|          ib                 extend highlighted area with inner () block
-<!--
 |v_ip|          ip                 extend highlighted area with inner paragraph
 |v_is|          is                 extend highlighted area with inner sentence
--->
 |v_iw|          iw                 extend highlighted area with "inner word"
 |v_i{|          i{                 same as iB
 |v_i}|          i}                 same as iB

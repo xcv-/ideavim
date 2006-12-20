@@ -98,6 +98,13 @@ public class MarkGroup extends AbstractActionGroup
             LogicalPosition lp = editor.offsetToLogicalPosition(offset);
             mark = new Mark(ch, lp.line, lp.column, EditorData.getVirtualFile(editor));
         }
+        else if ("()".indexOf(ch) >= 0)
+        {
+            int offset = SearchHelper.findNextSentenceStart(editor, ch == '(' ? -1 : 1, false, true);
+            offset = EditorHelper.normalizeOffset(editor, offset, false);
+            LogicalPosition lp = editor.offsetToLogicalPosition(offset);
+            mark = new Mark(ch, lp.line, lp.column, EditorData.getVirtualFile(editor));
+        }
         // If this is a file mark, get the mark from this file
         else if (FILE_MARKS.indexOf(ch) >= 0)
         {
@@ -578,7 +585,7 @@ public class MarkGroup extends AbstractActionGroup
     private static final String WR_GLOBAL_MARKS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String WR_FILE_MARKS = "abcdefghijklmnopqrstuvwxyz'";
     private static final String RO_GLOBAL_MARKS = "0123456789";
-    private static final String RO_FILE_MARKS = "[]<>^{}";
+    private static final String RO_FILE_MARKS = "[]<>^{}()";
     private static final String SAVE_FILE_MARKS = WR_FILE_MARKS + ".^[]\"";
 
     private static final String GLOBAL_MARKS = WR_GLOBAL_MARKS + RO_GLOBAL_MARKS;

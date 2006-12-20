@@ -99,6 +99,10 @@ Bug Fixes<br>
         <action id="VimMotionBigWordLeft" class="com.maddyhome.idea.vim.action.motion.text.MotionBigWordLeftAction" text="BigWord Left"/>
         <action id="VimMotionWordRight" class="com.maddyhome.idea.vim.action.motion.text.MotionWordRightAction" text="Word Right"/>
         <action id="VimMotionBigWordRight" class="com.maddyhome.idea.vim.action.motion.text.MotionBigWordRightAction" text="BigWord Right"/>
+        <action id="VimMotionSentenceStartNext" class="com.maddyhome.idea.vim.action.motion.text.MotionSentenceNextStartAction" text="Next Sentence Start"/>
+        <action id="VimMotionSentenceStartPrevious" class="com.maddyhome.idea.vim.action.motion.text.MotionSentencePreviousStartAction" text="Previous Sentence Start"/>
+        <action id="VimMotionSentenceEndNext" class="com.maddyhome.idea.vim.action.motion.text.MotionSentenceNextEndAction" text="Next Sentence End"/>
+        <action id="VimMotionSentenceEndPrevious" class="com.maddyhome.idea.vim.action.motion.text.MotionSentencePreviousEndAction" text="Previous Sentence End"/>
         <action id="VimMotionParagraphNext" class="com.maddyhome.idea.vim.action.motion.text.MotionParagraphNextAction" text="Next Paragraph"/>
         <action id="VimMotionParagraphPrevious" class="com.maddyhome.idea.vim.action.motion.text.MotionParagraphPreviousAction" text="Previous Paragraph"/>
         <action id="VimMotionUnmatchedBraceClose" class="com.maddyhome.idea.vim.action.motion.text.MotionUnmatchedBraceCloseAction" text="Unmatched }"/>
@@ -122,8 +126,10 @@ Bug Fixes<br>
         <action id="VimMotionOuterBlockBrace" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBlockBraceAction" text="Select outer { block"/>
         <action id="VimMotionOuterBlockBracket" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBlockBracketAction" text="Select outer [ block"/>
         <action id="VimMotionOuterBlockParen" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBlockParenAction" text="Select outer ( block"/>
-        <action id="VimMotionInnerParagraph" class="com.maddyhome.idea.vim.action.motion.object.MotionInnerParagraphAction" text="Select inner paragraph"/>
-        <action id="VimMotionOuterParagraph" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterParagraphAction" text="Select outer paragraph"/>
+        <action id="VimMotionInnerParagraph" class="com.maddyhome.idea.vim.action.motion.object.MotionInnerParagraphAction" text="Select Inner Paragraph"/>
+        <action id="VimMotionOuterParagraph" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterParagraphAction" text="Select Outer Paragraph"/>
+        <action id="VimMotionInnerSentence" class="com.maddyhome.idea.vim.action.motion.object.MotionInnerSentenceAction" text="Select Inner Sentence"/>
+        <action id="VimMotionOuterSentence" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterSentenceAction" text="Select Outer Sentence"/>
         <!-- Marks -->
         <action id="VimMotionMark" class="com.maddyhome.idea.vim.action.motion.mark.MotionMarkAction" text="Mark"/>
         <action id="VimMotionGotoFileMark" class="com.maddyhome.idea.vim.action.motion.mark.MotionGotoFileMarkAction" text="Goto Mark"/>

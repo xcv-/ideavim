@@ -616,9 +616,17 @@ public class RegisterActions
             new Shortcut('W'),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_MASK))
         });
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionParagraphPrevious", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSentenceStartPrevious", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
+            new Shortcut('('));
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSentenceStartNext", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
+            new Shortcut(')'));
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSentenceEndPrevious", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
+            new Shortcut("g("));
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSentenceEndNext", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
+            new Shortcut("g)"));
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionParagraphPrevious", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut('{'));
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionParagraphNext", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionParagraphNext", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut('}'));
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionUnmatchedBraceOpen", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
             new Shortcut("[{"));
@@ -630,9 +638,9 @@ public class RegisterActions
             new Shortcut("])"));
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionBackwardEnd", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
             new Shortcut("[]"));
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionBackwardStart", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionBackwardStart", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut("[["));
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionForwardEnd", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionForwardEnd", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut("]]"));
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionForwardStart", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
             new Shortcut("]["));
@@ -737,10 +745,6 @@ public class RegisterActions
             new Shortcut('q'), Argument.CHARACTER);
 
         // Text Object Actions for Visual and Operator Pending Modes
-        // TODO - a[
-        // TODO - a]
-        // TODO - i[
-        // TODO - i]
         parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionGotoFileMark", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut('`'), Argument.CHARACTER);
         parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionGotoFileMarkLine", Command.MOTION, Command.FLAG_MOT_LINEWISE | Command.FLAG_SAVE_JUMP,
@@ -755,6 +759,10 @@ public class RegisterActions
             new Shortcut("ip"));
         parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionOuterParagraph", Command.MOTION, Command.FLAG_MOT_LINEWISE | Command.FLAG_TEXT_BLOCK,
             new Shortcut("ap"));
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionInnerSentence", Command.MOTION, Command.FLAG_MOT_INCLUSIVE | Command.FLAG_TEXT_BLOCK,
+            new Shortcut("is"));
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionOuterSentence", Command.MOTION, Command.FLAG_MOT_INCLUSIVE | Command.FLAG_TEXT_BLOCK,
+            new Shortcut("as"));
         parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionInnerBlockAngle", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE | Command.FLAG_TEXT_BLOCK, new Shortcut[] {
             new Shortcut("i<"),
             new Shortcut("i>")
