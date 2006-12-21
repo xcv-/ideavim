@@ -10,6 +10,7 @@ Bug Fixes
 - / and ? once again properly save current cursor location in ' mark. (Broken
   in 0.11.2).
 - Fix possible failed assertion errors when removing a document listener.
+- Update [ and ] marks when "putting" text.
 
 Performance
 - Improved search speed.

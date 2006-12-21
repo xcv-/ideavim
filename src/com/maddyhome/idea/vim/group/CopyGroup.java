@@ -477,6 +477,9 @@ public class CopyGroup extends AbstractActionGroup
                 break;
         }
 
+        CommandGroups.getInstance().getMark().setMark(editor, context, '[', offset);
+        CommandGroups.getInstance().getMark().setMark(editor, context, ']', endOffset);
+
         /*
         // Adjust the cursor position after the paste
         if ((type & Command.FLAG_MOT_LINEWISE) != 0)

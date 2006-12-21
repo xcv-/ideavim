@@ -207,7 +207,7 @@ public class RegisterGroup extends AbstractActionGroup
         if (start != -1)
         {
             CommandGroups.getInstance().getMark().setMark(editor, context, '[', start);
-            CommandGroups.getInstance().getMark().setMark(editor, context, ']', end);
+            CommandGroups.getInstance().getMark().setMark(editor, context, ']', end - 1);
         }
 
         return true;
