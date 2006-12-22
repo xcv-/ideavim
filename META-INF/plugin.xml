@@ -113,6 +113,10 @@ Bug Fixes<br>
         <action id="VimMotionSectionBackwardStart" class="com.maddyhome.idea.vim.action.motion.text.MotionSectionBackwardStartAction" text="Section Start Backward"/>
         <action id="VimMotionSectionForwardEnd" class="com.maddyhome.idea.vim.action.motion.text.MotionSectionForwardEndAction" text="Section End Forward"/>
         <action id="VimMotionSectionForwardStart" class="com.maddyhome.idea.vim.action.motion.text.MotionSectionForwardStartAction" text="Section Start Forward"/>
+        <action id="VimMotionMethodBackwardEnd" class="com.maddyhome.idea.vim.action.motion.text.MotionMethodPreviousEndAction" text="Previous Method End"/>
+        <action id="VimMotionMethodBackwardStart" class="com.maddyhome.idea.vim.action.motion.text.MotionMethodPreviousStartAction" text="Previous Method Start"/>
+        <action id="VimMotionMethodForwardEnd" class="com.maddyhome.idea.vim.action.motion.text.MotionMethodNextEndAction" text="Next Method End"/>
+        <action id="VimMotionMethodForwardStart" class="com.maddyhome.idea.vim.action.motion.text.MotionMethodNextStartAction" text="Next Method Start"/>
         <!-- Text Objects -->
         <action id="VimMotionTextOuterWord" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterWordAction" text="Select outer word"/>
         <action id="VimMotionTextOuterBigWord" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterBigWordAction" text="Select outer WORD"/>

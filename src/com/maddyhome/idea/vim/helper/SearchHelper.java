@@ -1851,6 +1851,26 @@ public class SearchHelper
         return new TextRange(start, end);
     }
 
+    public static int findMethodStart(Editor editor, int count)
+    {
+        if (PsiHelper.isJavaFile(editor))
+        {
+            return PsiHelper.findMethodStart(editor, editor.getCaretModel().getOffset(), count);
+        }
+
+        return -1; // TODO - support non-Java files. Need to figure out logic
+    }
+
+    public static int findMethodEnd(Editor editor, int count)
+    {
+        if (PsiHelper.isJavaFile(editor))
+        {
+            return PsiHelper.findMethodEnd(editor, editor.getCaretModel().getOffset(), count);
+        }
+
+        return -1; // TODO - support non-Java files. Need to figure out logic
+    }
+
     private static String getPairChars()
     {
         if (pairsChars == null)

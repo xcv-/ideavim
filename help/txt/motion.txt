@@ -989,7 +989,6 @@ code block.  It is like doing "%" on the '(', ')', '{' or '}' at the other
 end of the code block, but you can do this from anywhere in the code block.
 Very useful for C programs.  Example: When standing on "case x:", "[{" will
 bring you back to the switch statement.
-<!--
 
                                                 *]m*
 ]m                      Go to [count] next start of a method (for Java or
@@ -1034,6 +1033,7 @@ Starting with the cursor on "body_two()", using "[m" will jump to the '{' at
 the start of "method_two()" (obviously this is much more useful when the
 method is long!).  Using "2[m" will jump to the start of "method_one()".
 Using "3[m" will jump to the start of the class.
+<!--
 
                                                 *[#*
 [#                      go to [count] previous unmatched "#if" or "#else".

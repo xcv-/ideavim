@@ -27,6 +27,7 @@ New Features
 - Added support for a{, a}, aB, i{, i}, iB.
 - Added support for ap, ip.
 - Added support for as, is.
+- Added support for [m, [M, ]m, ]M in Java files only.
 
 0.11.3 from 0.11.2
 New Features

@@ -7,7 +7,6 @@ Bugs to fix:
 
 Requested Functionality to add:
 
-- Support [m, ]m, [M, ]M
 - Support [', ]', [`, ]`
 - Support [z, ]z
 - Support ]/, ]*, [/, [*

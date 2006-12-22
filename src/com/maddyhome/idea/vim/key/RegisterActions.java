@@ -628,22 +628,30 @@ public class RegisterActions
             new Shortcut('{'));
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionParagraphNext", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut('}'));
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionUnmatchedBraceOpen", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionUnmatchedBraceOpen", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut("[{"));
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionUnmatchedBraceClose", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionUnmatchedBraceClose", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut("]}"));
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionUnmatchedParenOpen", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionUnmatchedParenOpen", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut("[("));
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionUnmatchedParenClose", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionUnmatchedParenClose", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut("])"));
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionBackwardEnd", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionBackwardEnd", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut("[]"));
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionBackwardStart", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut("[["));
         parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionForwardEnd", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut("]]"));
-        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionForwardStart", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionSectionForwardStart", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
             new Shortcut("]["));
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionMethodBackwardEnd", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
+            new Shortcut("[M"));
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionMethodBackwardStart", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
+            new Shortcut("[m"));
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionMethodForwardEnd", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
+            new Shortcut("]M"));
+        parser.registerAction(KeyParser.MAPPING_NVO, "VimMotionMethodForwardStart", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SAVE_JUMP,
+            new Shortcut("]m"));
 
         // Misc Actions
         parser.registerAction(KeyParser.MAPPING_NVO, "VimSearchFwdEntry", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE | Command.FLAG_SEARCH_FWD | Command.FLAG_SAVE_JUMP,

@@ -711,6 +711,16 @@ public class MotionGroup extends AbstractActionGroup
         }
     }
 
+    public int moveCaretToMethodStart(Editor editor, int count)
+    {
+        return SearchHelper.findMethodStart(editor, count);
+    }
+
+    public int moveCaretToMethodEnd(Editor editor, int count)
+    {
+        return SearchHelper.findMethodEnd(editor, count);
+    }
+
     public void setLastFTCmd(int lastFTCmd, char lastChar)
     {
         this.lastFTCmd = lastFTCmd;
