@@ -29,9 +29,33 @@
 version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 <br>
 Bug Fixes<br>
-- Numerous keystrokes didn't work when @NAME@ was installed but turned off.
+- Numerous keystrokes didn't work when IdeaVIM was installed but turned off.
   This included various Shift, Ctrl, and Shift-Ctrl combinations of left,
-  right, up, down, end, home, page-up, and page-down.<br>
+  right, up, down, end, home, page-up, and page-down. (Requires updated Vim.xml
+  keymap).<br>
+- :set and :dig once again display their results in the "more" window.<br>
+- / and ? once again properly save current cursor location in ' mark. (Broken
+  in 0.11.2).<br>
+- Fix possible failed assertion errors when removing a document listener.<br>
+- Update [ and ] marks when "putting" text.<br>
+<br>
+Performance<br>
+- Improved search speed.<br>
+- Fixed a few small memory leaks.<br>
+<br>
+New Features<br>
+- Support for Ctrl-^ to switch to the previous file (like :e #). (Requires
+  updated Vim.xml keymap).<br>
+- Added support for (, ), g(, g), '(, '), `(, `).<br>
+- Added support for [{, ]}, [(, ]), [[, [], ][, ]].<br>
+- Added support for a&lt;, a&gt;, i&lt;, i&gt;.<br>
+- Added support for a(, a), ab, i(, i), ib.<br>
+- Added support for a[, a], i[, i].<br>
+- Added support for a{, a}, aB, i{, i}, iB.<br>
+- Added support for ap, ip.<br>
+- Added support for as, is.<br>
+- Added support for [m, [M, ]m, ]M in Java files only.<br>
+
 ]]>
     </change-notes>
 
