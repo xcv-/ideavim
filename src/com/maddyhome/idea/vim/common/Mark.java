@@ -151,6 +151,19 @@ public class Mark
         }
     }
 
+    public boolean equals(Object object)
+    {
+        if (object instanceof Mark)
+        {
+            if (((Mark)object).key == key)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public String toString()
     {
         StringBuffer res = new StringBuffer();

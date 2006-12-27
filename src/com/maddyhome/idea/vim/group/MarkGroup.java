@@ -46,6 +46,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.HashSet;
 
 /**
  * This class contains all the mark related functionality
@@ -222,14 +224,16 @@ public class MarkGroup extends AbstractActionGroup
 
     public List getMarks(Editor editor)
     {
-        ArrayList res = new ArrayList();
+        HashSet res = new HashSet();
 
         res.addAll(getFileMarks(editor.getDocument()).values());
         res.addAll(globalMarks.values());
 
-        Collections.sort(res, new Mark.KeySorter());
+        ArrayList list = new ArrayList(res);
 
-        return res;
+        Collections.sort(list, new Mark.KeySorter());
+
+        return list;
     }
 
     /**

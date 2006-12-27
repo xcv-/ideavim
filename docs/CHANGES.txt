@@ -1,5 +1,9 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
+@VERSION@ from 0.11.4
+Bug Fixes
+- Fixed minor issue displaying file marks with :marks command.
+
 @VERSION@ from 0.11.3
 Bug Fixes
 - Numerous keystrokes didn't work when @NAME@ was installed but turned off.
