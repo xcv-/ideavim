@@ -1386,9 +1386,7 @@ The commands are sorted on the non-optional part of their name.
 |:iunmenu|      :iunme[nu]      remove menu for Insert mode
 -->
 |:join|         :j[oin]         join lines
-<!--
 |:jumps|        :ju[mps]        print the jump list
--->
 |:k|            :k              set a mark
 <!--
 |:list|         :l[ist]         print lines

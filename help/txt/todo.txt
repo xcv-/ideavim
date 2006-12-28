@@ -24,7 +24,6 @@
 - Show message after shifting lines with :< or :>
 - Backspace in Replace mode deletes instead of restoring
 - Support incsearch option
-- Support CTRL-O, CTRL-I, :jumps
 - Support U (line undo)
 - Modify FileGroup.openFile to support ~ in filename, and files outside roots
 - :write doesn't support a range or arguments

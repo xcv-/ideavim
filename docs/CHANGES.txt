@@ -4,6 +4,10 @@ History of changes for @NAME@ for IDEA @IDEA-VERSION@
 Bug Fixes
 - Fixed minor issue displaying file marks with :marks command.
 
+New Features
+- Added support for Ctrl-O and Ctrl-I.
+- Added support for :jumps command.
+
 @VERSION@ from 0.11.3
 Bug Fixes
 - Numerous keystrokes didn't work when @NAME@ was installed but turned off.

@@ -588,7 +588,6 @@ the character searches with "fx" and "tx" or the word movements "w" and "e".
    Also, "j" and "k" are not considered to be a jump.  Even when you use a
 count to make them move the cursor quite a long way away.
 
-<!--
 The `` command jumps back and forth, between two points.  The CTRL-O command
 jumps to older positions (Hint: O for older).  CTRL-I then jumps back to newer
 positions (Hint: I is just next to O on the keyboard).  Consider this sequence
@@ -619,7 +618,6 @@ to the match for "The" with another CTRL-I.
 The ":jumps" command gives a list of positions you jumped to.  The entry which
 you used last is marked with a ">".
 
--->
 
 NAMED MARKS
 

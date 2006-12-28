@@ -190,11 +190,9 @@ N is used to indicate an optional count that can be given before the command.
 |'|        '{a-zA-Z0-9[]'"<>.}
                         same as `, but on the first non-blank in the line
 |:marks|  :marks        print the active marks
-<!--
 |CTRL-O|  N  CTRL-O     go to Nth older position in jump list
 |CTRL-I|  N  CTRL-I     go to Nth newer position in jump list
 |:ju|     :ju[mps]      print the jump list
--->
 ------------------------------------------------------------------------------
 *Q_vm*          Various motions
 

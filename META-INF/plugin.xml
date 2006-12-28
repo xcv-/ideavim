@@ -164,6 +164,8 @@ New Features<br>
         <action id="VimMotionGotoFileMarkLine" class="com.maddyhome.idea.vim.action.motion.mark.MotionGotoFileMarkLineAction" text="Goto Mark Line"/>
         <action id="VimMotionGotoMark" class="com.maddyhome.idea.vim.action.motion.mark.MotionGotoMarkAction" text="Goto Mark"/>
         <action id="VimMotionGotoMarkLine" class="com.maddyhome.idea.vim.action.motion.mark.MotionGotoMarkLineAction" text="Goto Mark Line"/>
+        <action id="VimMotionJumpNext" class="com.maddyhome.idea.vim.action.motion.mark.MotionJumpNextAction" text="Goto Next Jump"/>
+        <action id="VimMotionJumpPrevious" class="com.maddyhome.idea.vim.action.motion.mark.MotionJumpPreviousAction" text="Goto Previous Jump"/>
         <!-- Screen -->
         <action id="VimMotionFirstScreenLine" class="com.maddyhome.idea.vim.action.motion.screen.MotionFirstScreenLineAction" text="First Screen Line"/>
         <action id="VimMotionLastScreenLine" class="com.maddyhome.idea.vim.action.motion.screen.MotionLastScreenLineAction" text="Last Screen Line"/>

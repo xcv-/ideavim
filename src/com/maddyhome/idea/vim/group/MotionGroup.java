@@ -53,6 +53,7 @@ import com.maddyhome.idea.vim.command.VisualChange;
 import com.maddyhome.idea.vim.command.VisualRange;
 import com.maddyhome.idea.vim.common.Mark;
 import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.common.Jump;
 import com.maddyhome.idea.vim.helper.ApiHelper;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
@@ -437,7 +438,6 @@ public class MotionGroup extends AbstractActionGroup
             }
             else
             {
-                //saveJumpLocation(editor, context);
                 return moveCaretToLineStartSkipLeading(editor, line);
             }
         }
@@ -453,7 +453,6 @@ public class MotionGroup extends AbstractActionGroup
         if (mark != null)
         {
             int line = mark.getLogicalLine();
-            //saveJumpLocation(editor, context);
             return moveCaretToLineStartSkipLeading(editor, line);
         }
         else
@@ -483,8 +482,37 @@ public class MotionGroup extends AbstractActionGroup
             }
             else
             {
-                //saveJumpLocation(editor, context);
+                return editor.logicalPositionToOffset(lp);
+            }
+        }
+        else
+        {
+            return -1;
+        }
+    }
 
+    public int moveCaretToJump(Editor editor, DataContext context, int count)
+    {
+        Jump jump = CommandGroups.getInstance().getMark().getJump(count);
+        if (jump != null)
+        {
+            VirtualFile vf = EditorData.getVirtualFile(editor);
+            if (vf == null) return -1;
+
+            LogicalPosition lp = new LogicalPosition(jump.getLogicalLine(), jump.getCol());
+            if (!vf.getPath().equals(jump.getFilename()))
+            {
+                Editor newEditor = selectEditor(editor, jump.getFile());
+                if (newEditor != null)
+                {
+                    CommandGroups.getInstance().getMark().addJump(editor, context, false);
+                    moveCaret(newEditor, context, editor.logicalPositionToOffset(lp));
+                }
+
+                return -2;
+            }
+            else
+            {
                 return editor.logicalPositionToOffset(lp);
             }
         }
@@ -500,7 +528,6 @@ public class MotionGroup extends AbstractActionGroup
         if (mark != null)
         {
             LogicalPosition lp = new LogicalPosition(mark.getLogicalLine(), mark.getCol());
-            //saveJumpLocation(editor, context);
 
             return editor.logicalPositionToOffset(lp);
         }
@@ -522,8 +549,6 @@ public class MotionGroup extends AbstractActionGroup
         int pos = SearchHelper.findMatchingPairOnCurrentLine(editor);
         if (pos >= 0)
         {
-            //saveJumpLocation(editor, context);
-
             return pos;
         }
         else

@@ -395,9 +395,12 @@ public class RegisterActions
             new Shortcut('>'), Argument.MOTION);
 
         // Jump Actions
-        // TODO - Tab, CTRL-I
-        // TODO - CTRL-O
-        // TODO - CTRL-T
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimMotionJumpNext", Command.OTHER_READONLY, new Shortcut[] {
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_MASK)),
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))
+        });
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimMotionJumpPrevious", Command.OTHER_READONLY,
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK)));
 
         // Window Actions
         // TODO - CTRL-W commands: +, -, =, S, s, _, b, c, n, o, q, s, t, <up>, <down>

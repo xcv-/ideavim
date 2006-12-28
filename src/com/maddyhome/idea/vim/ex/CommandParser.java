@@ -70,6 +70,7 @@ import com.maddyhome.idea.vim.ex.handler.WritePreviousFileHandler;
 import com.maddyhome.idea.vim.ex.handler.WriteQuitHandler;
 import com.maddyhome.idea.vim.ex.handler.YankLinesHandler;
 import com.maddyhome.idea.vim.ex.handler.HistoryHandler;
+import com.maddyhome.idea.vim.ex.handler.JumpsHandler;
 import com.maddyhome.idea.vim.ex.range.AbstractRange;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.HistoryGroup;
@@ -131,6 +132,7 @@ public class CommandParser
         new HelpHandler();
         new HistoryHandler();
         new JoinLinesHandler();
+        new JumpsHandler();
         new MarkHandler();
         new MarksHandler();
         new MoveTextHandler();
