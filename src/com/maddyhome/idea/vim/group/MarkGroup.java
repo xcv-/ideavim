@@ -277,6 +277,7 @@ public class MarkGroup extends AbstractActionGroup
         }
 
         jumps.add(jump);
+
         if (reset)
         {
             jumpSpot = -1;
@@ -297,11 +298,11 @@ public class MarkGroup extends AbstractActionGroup
         if (FILE_MARKS.indexOf(ch) >= 0)
         {
             HashMap fmarks = getFileMarks(mark.getFilename());
-            fmarks.remove(Character.valueOf(ch));
+            fmarks.remove(new Character(ch));
         }
         else if (GLOBAL_MARKS.indexOf(ch) >= 0)
         {
-            globalMarks.remove(Character.valueOf(ch));
+            globalMarks.remove(new Character(ch));
         }
 
         mark.clear();

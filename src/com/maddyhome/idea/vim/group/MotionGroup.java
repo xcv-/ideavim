@@ -493,6 +493,7 @@ public class MotionGroup extends AbstractActionGroup
 
     public int moveCaretToJump(Editor editor, DataContext context, int count)
     {
+        int spot = CommandGroups.getInstance().getMark().getJumpSpot();
         Jump jump = CommandGroups.getInstance().getMark().getJump(count);
         if (jump != null)
         {
@@ -505,14 +506,22 @@ public class MotionGroup extends AbstractActionGroup
                 Editor newEditor = selectEditor(editor, jump.getFile());
                 if (newEditor != null)
                 {
-                    CommandGroups.getInstance().getMark().addJump(editor, context, false);
-                    moveCaret(newEditor, context, editor.logicalPositionToOffset(lp));
+                    if (spot == -1)
+                    {
+                        CommandGroups.getInstance().getMark().addJump(editor, context, false);
+                    }
+                    moveCaret(newEditor, context, newEditor.logicalPositionToOffset(lp));
                 }
 
                 return -2;
             }
             else
             {
+                if (spot == -1)
+                {
+                    CommandGroups.getInstance().getMark().addJump(editor, context, false);
+                }
+
                 return editor.logicalPositionToOffset(lp);
             }
         }
