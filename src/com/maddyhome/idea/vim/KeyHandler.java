@@ -22,7 +22,6 @@ package com.maddyhome.idea.vim;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
@@ -35,6 +34,7 @@ import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.RegisterGroup;
 import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.helper.DigraphSequence;
+import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.RunnableHelper;
 import com.maddyhome.idea.vim.key.ArgumentNode;
@@ -455,7 +455,7 @@ public class KeyHandler
             lastWasBS = ((cmd.getFlags() & Command.FLAG_IS_BACKSPACE) != 0);
             logger.debug("lastWasBS=" + lastWasBS);
 
-            Project project = (Project)context.getData(DataConstants.PROJECT);
+            Project project = EditorData.getProject(editor);
             if (cmd.isReadType() || EditorHelper.canEdit(project, editor))
             {
                 Runnable action = new ActionRunner(editor, context, cmd, key);

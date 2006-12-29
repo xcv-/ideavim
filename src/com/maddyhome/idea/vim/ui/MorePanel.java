@@ -24,8 +24,11 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.vim.helper.EditorData;
+import com.maddyhome.idea.vim.helper.EditorDataContext;
 import com.maddyhome.idea.vim.option.Options;
+import com.maddyhome.idea.vim.group.CommandGroups;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -39,11 +42,13 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 /**
@@ -131,7 +136,7 @@ public class MorePanel extends JPanel
     {
         return text.getText().length() > 0;
     }
-    
+
     /**
      * Sets the text of the 'more' window
      * @param data The text to display
@@ -314,6 +319,11 @@ public class MorePanel extends JPanel
 
     private void close()
     {
+        close(null);
+    }
+
+    private void close(final KeyEvent e)
+    {
         SwingUtilities.invokeLater(new Runnable()
         {
             public void run()
@@ -324,6 +334,16 @@ public class MorePanel extends JPanel
 
                 FileEditorManager.getInstance(EditorData.getProject(editor)).openFile(
                     EditorData.getVirtualFile(editor), true);
+
+                if (e != null && e.getKeyChar() != '\n')
+                {
+                    KeyStroke key = KeyStroke.getKeyStrokeForEvent(e);
+                    Project project = EditorData.getProject(editor);
+                    ArrayList keys = new ArrayList(1);
+                    keys.add(key);
+                    CommandGroups.getInstance().getMacro().playbackKeys(editor, new EditorDataContext(editor),
+                        project, keys, 0, 0, 1);
+                }
             }
         });
     }
@@ -338,11 +358,11 @@ public class MorePanel extends JPanel
         /**
          * Invoked when a key has been pressed.
          */
-        public void keyPressed(KeyEvent e)
+        public void keyTyped(KeyEvent e)
         {
             if (parent.atEnd)
             {
-                parent.close();
+                parent.close(e);
             }
             else
             {
