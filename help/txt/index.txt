@@ -1,4 +1,4 @@
-*index.txt*     For @NAME@ version @VERSION@.  Last change: 2006 Dec 01
+*index.txt*     For @NAME@ version @VERSION@.  Last change: 2006 Dec 29
 
 
                   @NAME@ REFERENCE MANUAL    by Rick Maddy
@@ -773,10 +773,8 @@ tag             char          note action in Normal mode        ~
                                    when 'wrap' on go to the rightmost character
                                    of the current screen line
 |g&|            g&              2  repeat last ":s" on all lines
-<!--
 |g'|            g'{mark}        1  like |'| but without changing the jumplist
 |g`|            g`{mark}        1  like |`| but without changing the jumplist
--->
 |g(|            g(              1  cursor N sentence ends backward
 |g)|            g)              1  cursor N sentence ends forward
 |gstar|         g*              1  like "*", but without using "\<" and "\>"

@@ -1,4 +1,4 @@
-*motion.txt*    For @NAME@ version @VERSION@.  Last change: 2006 Nov 12
+*motion.txt*    For @NAME@ version @VERSION@.  Last change: 2006 Dec 29
 
 
                   @NAME@ REFERENCE MANUAL    by Rick Maddy

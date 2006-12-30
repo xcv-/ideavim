@@ -10,7 +10,6 @@ Requested Functionality to add:
 - Support [', ]', [`, ]`
 - Support [z, ]z
 - Support ]/, ]*, [/, [*
-- Support g', g`
 - Support g8, ga
 - Support more fold commands (z*)
 - Add Config GUI to choose IDEA vs. VIM function for keystrokes

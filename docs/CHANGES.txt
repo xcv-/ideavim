@@ -9,6 +9,7 @@ Bug Fixes
 New Features
 - Added support for Ctrl-O and Ctrl-I.
 - Added support for :jumps command.
+- Added support for g', g`.
 
 @VERSION@ from 0.11.3
 Bug Fixes

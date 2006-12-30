@@ -350,6 +350,10 @@ public class RegisterActions
             new Shortcut('`'), Argument.CHARACTER);
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimMotionGotoMarkLine", Command.MOTION, Command.FLAG_MOT_LINEWISE | Command.FLAG_SAVE_JUMP,
             new Shortcut('\''), Argument.CHARACTER);
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimMotionGotoMark", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+            new Shortcut("g`"), Argument.CHARACTER);
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimMotionGotoMarkLine", Command.MOTION, Command.FLAG_MOT_LINEWISE,
+            new Shortcut("g'"), Argument.CHARACTER);
         // Misc Actions
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimLastSearchReplace", Command.OTHER_WRITABLE,
             new Shortcut('&'));
@@ -421,8 +425,6 @@ public class RegisterActions
         // TODO - add [`
         // TODO - add ]'
         // TODO - add ]`
-        // TODO - add g'
-        // TODO - add g`
         // TODO - add zj
         // TODO - add zk
 
@@ -760,6 +762,10 @@ public class RegisterActions
             new Shortcut('`'), Argument.CHARACTER);
         parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionGotoFileMarkLine", Command.MOTION, Command.FLAG_MOT_LINEWISE | Command.FLAG_SAVE_JUMP,
             new Shortcut('\''), Argument.CHARACTER);
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionGotoFileMark", Command.MOTION, Command.FLAG_MOT_EXCLUSIVE,
+            new Shortcut("g`"), Argument.CHARACTER);
+        parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionGotoFileMarkLine", Command.MOTION, Command.FLAG_MOT_LINEWISE,
+            new Shortcut("g'"), Argument.CHARACTER);
         parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionTextOuterWord", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE,
             new Shortcut("aw"));
         parser.registerAction(KeyParser.MAPPING_VISUAL | KeyParser.MAPPING_OP_PEND, "VimMotionTextOuterBigWord", Command.MOTION, Command.FLAG_MOT_CHARACTERWISE | Command.FLAG_MOT_INCLUSIVE,
