@@ -1,4 +1,4 @@
-*usr_07.txt*    For @NAME@ version @VERSION@.  Last change: 2006 Nov 12
+*usr_07.txt*    For @NAME@ version @VERSION@.  Last change: 2006 Dec 29
 
                      @NAME@ USER MANUAL - by Rick Maddy
 
@@ -285,11 +285,9 @@ You can also give several arguments: >
 
         :marks MCP
 
-<!--
 Don't forget that you can use CTRL-O and CTRL-I to jump to older and newer
 positions without placing marks there.
 
--->
 ==============================================================================
 *07.4*  Backup files
 

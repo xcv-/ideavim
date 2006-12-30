@@ -210,10 +210,8 @@ tag             char          note action in Normal mode        ~
 -->
 |<BS>|          <BS>            1  same as "h"
 |CTRL-H|        CTRL-H          1  same as "h"
-<!--
 |<Tab>|         <Tab>           1  go to N newer entry in jump list
 |CTRL-I|        CTRL-I          1  same as <Tab>
--->
 |<NL>|          <NL>            1  same as "j"
 |CTRL-J|        CTRL-J          1  same as "j"
                 CTRL-K             not used
@@ -223,9 +221,7 @@ tag             char          note action in Normal mode        ~
 |<CR>|          <CR>            1  cursor to the first CHAR N lines lower
 |CTRL-M|        CTRL-M>         1  same as <CR>
 |CTRL-N|        CTRL-N          1  same as "j"
-<!--
 |CTRL-O|        CTRL-O          1  go to N older entry in jump list
--->
 |CTRL-P|        CTRL-P          1  cursor N lines upward
                 CTRL-Q             (used for terminal control flow)
 |CTRL-R|        CTRL-R          2  redo changes which were undone with 'u'
