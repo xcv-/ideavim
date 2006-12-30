@@ -36,7 +36,6 @@ CTRL-L                  Clear and redraw the screen (later).
                         want.
 
 -->
-<!--
 :as[cii]        or                                      *ga* *:as* *:ascii*
 ga                      Print the ascii value of the character under the
                         cursor in decimal, hexadecimal and octal.  For
@@ -64,7 +63,6 @@ g8                      Print the hex values of the bytes used in the
                                 e0 b8 81 + e0 b8 b9 + e0 b9 89
 <
 
--->
 <!--
                                                         *:p* *:pr* *:print*
 :[range]p[rint]         Print [range] lines (default current line).

@@ -71,6 +71,7 @@ import com.maddyhome.idea.vim.ex.handler.WriteQuitHandler;
 import com.maddyhome.idea.vim.ex.handler.YankLinesHandler;
 import com.maddyhome.idea.vim.ex.handler.HistoryHandler;
 import com.maddyhome.idea.vim.ex.handler.JumpsHandler;
+import com.maddyhome.idea.vim.ex.handler.AsciiHandler;
 import com.maddyhome.idea.vim.ex.range.AbstractRange;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.HistoryGroup;
@@ -117,6 +118,7 @@ public class CommandParser
     {
         if (registered) return;
 
+        new AsciiHandler();
         new CmdFilterHandler();
         new CopyTextHandler();
         new DeleteLinesHandler();

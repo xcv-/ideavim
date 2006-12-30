@@ -406,6 +406,11 @@ public class RegisterActions
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimMotionJumpPrevious", Command.OTHER_READONLY,
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK)));
 
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimFileGetAscii", Command.OTHER_READONLY,
+            new Shortcut("ga"));
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimFileGetHex", Command.OTHER_READONLY,
+            new Shortcut("g8"));
+
         // Window Actions
         // TODO - CTRL-W commands: +, -, =, S, s, _, b, c, n, o, q, s, t, <up>, <down>
 

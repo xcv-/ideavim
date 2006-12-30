@@ -39,6 +39,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.helper.EditorData;
+import com.maddyhome.idea.vim.helper.StringHelper;
 
 import java.io.File;
 import java.util.HashMap;
@@ -291,6 +292,32 @@ public class FileGroup extends AbstractActionGroup
         }
 
         return null;
+    }
+
+    public void displayAsciiInfo(Editor editor)
+    {
+        int offset = editor.getCaretModel().getOffset();
+        char ch = editor.getDocument().getCharsSequence().charAt(offset);
+
+        StringBuffer msg = new StringBuffer();
+        msg.append('<');
+        msg.append(StringHelper.escape("" + ch));
+        msg.append(">  ");
+        msg.append((int)ch);
+        msg.append(",  Hex ");
+        msg.append(Long.toHexString(ch));
+        msg.append(",  Octal ");
+        msg.append(Long.toOctalString(ch));
+
+        VimPlugin.showMessage(msg.toString());
+    }
+
+    public void displayHexInfo(Editor editor)
+    {
+        int offset = editor.getCaretModel().getOffset();
+        char ch = editor.getDocument().getCharsSequence().charAt(offset);
+
+        VimPlugin.showMessage(Long.toHexString(ch));
     }
 
     /**

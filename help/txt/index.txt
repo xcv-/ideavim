@@ -782,9 +782,9 @@ tag             char          note action in Normal mode        ~
                                    the current line that is on the screen;
                                    when 'wrap' on go to the leftmost character
                                    of the current screen line
-<!--
 |g8|            g8                 print hex value of bytes used in UTF-8
                                    character under the cursor
+<!--
 |g?|            g?              2  Rot13 encoding operator
 |g?g?|          g??             2  Rot13 encode current line
 |g?g?|          g?g?            2  Rot13 encode current line
@@ -815,10 +815,8 @@ tag             char          note action in Normal mode        ~
                                    the screen; when 'wrap' on go to the
                                    leftmost non-white character of the current
                                    screen line
-<!--
 |ga|            ga                 print ascii value of character under the
                                    cursor
--->
 |gd|            gd              1  go to definition of word under the cursor
                                    in current function
 |ge|            ge              1  go backwards to the end of the previous
@@ -1199,8 +1197,8 @@ The commands are sorted on the non-optional part of their name.
 |:arglocal|     :argl[ocal]     define a local argument list
 -->
 |:argument|     :argu[ment]     go to specific file in the argument list
-<!--
 |:ascii|        :as[cii]        print ascii value of character under the cursor
+<!--
 |:autocmd|      :au[tocmd]      enter or show autocommands
 |:augroup|      :aug[roup]      select the autocommand group to use
 |:aunmenu|      :aun[menu]      remove menu for all modes
