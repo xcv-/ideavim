@@ -35,7 +35,7 @@ public class FindSymbolHandler extends CommandHandler
 {
     public FindSymbolHandler()
     {
-        super("sym", "bol", RANGE_FORBIDDEN | ARGUMENT_OPTIONAL);
+        super("sym", "bol", RANGE_FORBIDDEN | ARGUMENT_OPTIONAL | DONT_REOPEN);
     }
 
     public boolean execute(Editor editor, final DataContext context, ExCommand cmd) throws ExException

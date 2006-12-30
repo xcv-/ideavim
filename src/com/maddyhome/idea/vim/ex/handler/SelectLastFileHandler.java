@@ -37,6 +37,12 @@ public class SelectLastFileHandler extends CommandHandler
 
     public boolean execute(Editor editor, DataContext context, ExCommand cmd)
     {
-        return CommandGroups.getInstance().getFile().selectFile(99, context);
+        boolean res = CommandGroups.getInstance().getFile().selectFile(99, context);
+        if (res)
+        {
+            CommandGroups.getInstance().getMark().saveJumpLocation(editor, context);
+        }
+
+        return res;
     }
 }

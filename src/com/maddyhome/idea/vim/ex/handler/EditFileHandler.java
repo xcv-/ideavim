@@ -48,13 +48,20 @@ public class EditFileHandler extends CommandHandler
         {
             if (arg.equals("#"))
             {
+                CommandGroups.getInstance().getMark().saveJumpLocation(editor, context);
                 CommandGroups.getInstance().getFile().selectPreviousTab(context);
 
                 return true;
             }
             else if (arg.length() > 0)
             {
-                return CommandGroups.getInstance().getFile().openFile(arg, context);
+                boolean res = CommandGroups.getInstance().getFile().openFile(arg, context);
+                if (res)
+                {
+                    CommandGroups.getInstance().getMark().saveJumpLocation(editor, context);
+                }
+
+                return res;
             }
         }
 

@@ -41,6 +41,12 @@ public class SelectFirstFileHandler extends CommandHandler
 
     public boolean execute(Editor editor, DataContext context, ExCommand cmd)
     {
-        return CommandGroups.getInstance().getFile().selectFile(0, context);
+        boolean res = CommandGroups.getInstance().getFile().selectFile(0, context);
+        if (res)
+        {
+            CommandGroups.getInstance().getMark().saveJumpLocation(editor, context);
+        }
+
+        return res;
     }
 }

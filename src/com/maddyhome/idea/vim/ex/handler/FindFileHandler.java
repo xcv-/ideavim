@@ -44,7 +44,13 @@ public class FindFileHandler extends CommandHandler
         String arg = cmd.getArgument();
         if (arg != null && arg.length() > 0)
         {
-            return CommandGroups.getInstance().getFile().openFile(arg, context);
+            boolean res = CommandGroups.getInstance().getFile().openFile(arg, context);
+            if (res)
+            {
+                CommandGroups.getInstance().getMark().saveJumpLocation(editor, context);
+            }
+
+            return res;
         }
 
         SwingUtilities.invokeLater(new Runnable() {
