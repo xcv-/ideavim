@@ -155,10 +155,10 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
                 }
 
                 EditorData.initializeEditor(event.getEditor());
-                if (EditorData.getVirtualFile(event.getEditor()) == null)
-                {
+                //if (EditorData.getVirtualFile(event.getEditor()) == null)
+                //{
                     DocumentManager.getInstance().addListeners(event.getEditor().getDocument());
-                }
+                //}
             }
 
             public void editorReleased(EditorFactoryEvent event)

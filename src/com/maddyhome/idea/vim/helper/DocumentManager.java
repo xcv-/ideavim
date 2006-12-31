@@ -28,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.util.Key;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -42,7 +43,7 @@ public class DocumentManager
     public void init()
     {
         logger.debug("opening project");
-        FileDocumentManager.getInstance().addFileDocumentManagerListener(listener);
+        //FileDocumentManager.getInstance().addFileDocumentManagerListener(listener);
     }
 
     /*
@@ -86,13 +87,21 @@ public class DocumentManager
 
     public void addListeners(Document doc)
     {
+        Object marker = doc.getUserData(LISTENER_MARKER);
+        if (marker != null)
+        {
+            return;
+        }
+
+        doc.putUserData(LISTENER_MARKER, "foo");
         Iterator iter = docListeners.iterator();
         while (iter.hasNext())
         {
-            try
-            {
+            //try
+            //{
                 doc.addDocumentListener((DocumentListener)iter.next());
-            }
+            //}
+            /*
             catch (AssertionError e)
             {
                 // Ignore - I have no way to avoid adding a listenter twice.
@@ -101,18 +110,27 @@ public class DocumentManager
             {
                 // Ignore - I have no way to avoid adding a listenter twice.
             }
+            */
         }
     }
 
     public void removeListeners(Document doc)
     {
+        Object marker = doc.getUserData(LISTENER_MARKER);
+        if (marker == null)
+        {
+            return;
+        }
+
+        doc.putUserData(LISTENER_MARKER, null);
         Iterator iter = docListeners.iterator();
         while (iter.hasNext())
         {
-            try
-            {
+            //try
+            //{
                 doc.removeDocumentListener((DocumentListener)iter.next());
-            }
+            //}
+            /*
             catch (AssertionError e)
             {
                 // Ignore - I have no way to avoid removing a listenter twice.
@@ -121,6 +139,7 @@ public class DocumentManager
             {
                 // Ignore - I have no way to avoid removing a listenter twice.
             }
+            */
         }
     }
 
@@ -130,7 +149,7 @@ public class DocumentManager
 
     private class FileDocumentListener extends FileDocumentManagerAdapter
     {
-        /*
+        /* This doesn't seem to get called at all
         public void fileOpened(FileEditorManager fileEditorManager, VirtualFile virtualFile)
         {
             logger.debug("opened vf=" + virtualFile.getPresentableName());
@@ -154,13 +173,15 @@ public class DocumentManager
 
         public void fileContentLoaded(VirtualFile file, Document document)
         {
-            addListeners(document);
+            logger.debug("loaded vf=" + file.getName());
+            //addListeners(document);
         }
     }
 
-    private FileDocumentListener listener = new FileDocumentListener();
+    //private FileDocumentListener listener = new FileDocumentListener();
     private HashSet docListeners = new HashSet();
 
+    private static final Key LISTENER_MARKER = new Key("listenerMarker");
     private static DocumentManager instance = new DocumentManager();
     private static Logger logger = Logger.getInstance(DocumentManager.class.getName());
 }

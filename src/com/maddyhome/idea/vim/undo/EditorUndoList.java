@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.undo;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2005 Rick Maddy
+ * Copyright (C) 2003-2006 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -73,9 +73,10 @@ public class EditorUndoList
 
     public void endCommand()
     {
+        logger.info("endCommand");
         if (currentCommand != null && currentCommand.size() > 0)
         {
-            logger.info("endCommand");
+            logger.debug("ended");
             int max = getMaxUndos();
             if (max == 0)
             {
@@ -100,6 +101,8 @@ public class EditorUndoList
             currentCommand.complete();
 
             pointer = undos.size();
+
+            logger.debug("this=" + this);
         }
 
         currentCommand = null;
@@ -112,9 +115,10 @@ public class EditorUndoList
 
     public void addChange(DocumentChange change)
     {
+        logger.info("addChange");
         if (!inUndo && currentCommand != null)
         {
-            logger.info("addChange");
+            logger.info("added");
             currentCommand.addChange(change);
         }
         /*
