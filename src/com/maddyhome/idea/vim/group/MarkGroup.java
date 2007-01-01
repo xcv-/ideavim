@@ -99,14 +99,14 @@ public class MarkGroup extends AbstractActionGroup
             int offset = SearchHelper.findNextParagraph(editor, ch == '{' ? -1 : 1, false);
             offset = EditorHelper.normalizeOffset(editor, offset, false);
             LogicalPosition lp = editor.offsetToLogicalPosition(offset);
-            mark = new Mark(ch, lp.line, lp.column, EditorData.getVirtualFile(editor));
+            mark = new Mark(ch, lp.line, lp.column, EditorData.getVirtualFile(editor).getPath());
         }
         else if ("()".indexOf(ch) >= 0)
         {
             int offset = SearchHelper.findNextSentenceStart(editor, ch == '(' ? -1 : 1, false, true);
             offset = EditorHelper.normalizeOffset(editor, offset, false);
             LogicalPosition lp = editor.offsetToLogicalPosition(offset);
-            mark = new Mark(ch, lp.line, lp.column, EditorData.getVirtualFile(editor));
+            mark = new Mark(ch, lp.line, lp.column, EditorData.getVirtualFile(editor).getPath());
         }
         // If this is a file mark, get the mark from this file
         else if (FILE_MARKS.indexOf(ch) >= 0)
@@ -219,7 +219,7 @@ public class MarkGroup extends AbstractActionGroup
             return false;
         }
 
-        Mark mark = new Mark(ch, lp.line, lp.column, vf);
+        Mark mark = new Mark(ch, lp.line, lp.column, vf.getPath());
         // File specific marks get added to the file
         if (FILE_MARKS.indexOf(ch) >= 0)
         {
@@ -264,7 +264,7 @@ public class MarkGroup extends AbstractActionGroup
         }
 
         LogicalPosition lp = editor.offsetToLogicalPosition(offset);
-        Jump jump = new Jump(lp.line, lp.column, vf);
+        Jump jump = new Jump(lp.line, lp.column, vf.getPath());
 
         for (int i = 0; i < jumps.size(); i++)
         {
@@ -412,7 +412,7 @@ public class MarkGroup extends AbstractActionGroup
                 markElem.setAttribute("key", Character.toString(mark.getKey()));
                 markElem.setAttribute("line", Integer.toString(mark.getLogicalLine()));
                 markElem.setAttribute("column", Integer.toString(mark.getCol()));
-                markElem.setAttribute("filename", mark.getFile().getPath());
+                markElem.setAttribute("filename", mark.getFilename());
                 marksElem.addContent(markElem);
                 logger.debug("saved mark = " + mark);
             }
@@ -474,7 +474,7 @@ public class MarkGroup extends AbstractActionGroup
                 Element jumpElem = new Element("jump");
                 jumpElem.setAttribute("line", Integer.toString(jump.getLogicalLine()));
                 jumpElem.setAttribute("column", Integer.toString(jump.getCol()));
-                jumpElem.setAttribute("filename", jump.getFile().getPath());
+                jumpElem.setAttribute("filename", jump.getFilename());
                 jumpsElem.addContent(jumpElem);
                 logger.debug("saved jump = " + jump);
             }

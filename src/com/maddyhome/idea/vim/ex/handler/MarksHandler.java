@@ -71,7 +71,7 @@ public class MarksHandler extends CommandHandler
             text.append(num);
 
             text.append(" ");
-            if (EditorData.getVirtualFile(editor).equals(mark.getFile()))
+            if (EditorData.getVirtualFile(editor).getPath().equals(mark.getFilename()))
             {
                 text.append(StringHelper.escape(EditorHelper.getLineText(editor, mark.getLogicalLine()).trim()));
             }

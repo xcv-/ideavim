@@ -19,8 +19,6 @@ package com.maddyhome.idea.vim.common;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.vfs.VirtualFile;
-
 import java.util.Comparator;
 
 /**
@@ -28,20 +26,6 @@ import java.util.Comparator;
  */
 public class Mark extends FileLocation
 {
-    /**
-     * Creates a file mark
-     * @param key The mark's key
-     * @param lline The logical line within the file
-     * @param col The column within the line
-     * @param file The file being marked
-     */
-    public Mark(char key, int lline, int col, VirtualFile file)
-    {
-        super(lline, col, file);
-
-        this.key = key;
-    }
-
     /**
      * Creates a file mark
      * @param key The mark's key

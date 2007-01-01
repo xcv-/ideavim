@@ -80,7 +80,7 @@ public class JumpsHandler extends CommandHandler
             text.append(num);
 
             text.append(" ");
-            if (EditorData.getVirtualFile(editor).equals(jump.getFile()))
+            if (EditorData.getVirtualFile(editor).getPath().equals(jump.getFilename()))
             {
                 text.append(StringHelper.escape(EditorHelper.getLineText(editor, jump.getLogicalLine()).trim()));
             }

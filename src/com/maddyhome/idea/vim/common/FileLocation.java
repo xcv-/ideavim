@@ -19,25 +19,13 @@ package com.maddyhome.idea.vim.common;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.LocalFileSystem;
-
 public abstract class FileLocation
 {
-    protected FileLocation(int lline, int col, VirtualFile file)
-    {
-        this.line = lline;
-        this.col = col;
-        this.file = file;
-        this.filename = file.getPath();
-    }
-
     protected FileLocation(int lline, int col, String filename)
     {
         this.line = lline;
         this.col = col;
         this.filename = filename;
-        this.file = null;
     }
 
     /**
@@ -47,7 +35,6 @@ public abstract class FileLocation
     {
         line = -1;
         col = -1;
-        file = null;
         filename = null;
     }
 
@@ -88,20 +75,6 @@ public abstract class FileLocation
     }
 
     /**
-     * The virtual file associated with this mark
-     * @return The mark's virtual file
-     */
-    public VirtualFile getFile()
-    {
-        if (file == null)
-        {
-            file = LocalFileSystem.getInstance().findFileByPath(filename);
-        }
-
-        return file;
-    }
-
-    /**
      * Gets the filename the mark is associate with
      * @return The mark's filename
      */
@@ -110,10 +83,6 @@ public abstract class FileLocation
         if (filename != null)
         {
             return filename;
-        }
-        else if (file != null)
-        {
-            return file.getPath();
         }
         else
         {
@@ -127,7 +96,6 @@ public abstract class FileLocation
         sb.append("FileLocation");
         sb.append("{col=").append(col);
         sb.append(", line=").append(line);
-        sb.append(", file=").append(file);
         sb.append(", filename='").append(filename).append('\'');
         sb.append('}');
         return sb.toString();
@@ -135,6 +103,5 @@ public abstract class FileLocation
 
     private int line;
     private int col;
-    private VirtualFile file;
     private String filename;
 }

@@ -426,9 +426,9 @@ public class MotionGroup extends AbstractActionGroup
             if (vf == null) return -1;
 
             int line = mark.getLogicalLine();
-            if (!mark.getFile().equals(vf))
+            if (!mark.getFilename().equals(vf.getPath()))
             {
-                editor = selectEditor(editor, mark.getFile());
+                editor = selectEditor(editor, EditorData.getVirtualFile(editor));
                 if (editor != null)
                 {
                     moveCaret(editor, context, moveCaretToLineStartSkipLeading(editor, line));
@@ -470,9 +470,9 @@ public class MotionGroup extends AbstractActionGroup
             if (vf == null) return -1;
 
             LogicalPosition lp = new LogicalPosition(mark.getLogicalLine(), mark.getCol());
-            if (!vf.equals(mark.getFile()))
+            if (!vf.getPath().equals(mark.getFilename()))
             {
-                editor = selectEditor(editor, mark.getFile());
+                editor = selectEditor(editor, EditorData.getVirtualFile(editor));
                 if (editor != null)
                 {
                     moveCaret(editor, context, editor.logicalPositionToOffset(lp));
@@ -503,7 +503,7 @@ public class MotionGroup extends AbstractActionGroup
             LogicalPosition lp = new LogicalPosition(jump.getLogicalLine(), jump.getCol());
             if (!vf.getPath().equals(jump.getFilename()))
             {
-                Editor newEditor = selectEditor(editor, jump.getFile());
+                Editor newEditor = selectEditor(editor, EditorData.getVirtualFile(editor));
                 if (newEditor != null)
                 {
                     if (spot == -1)

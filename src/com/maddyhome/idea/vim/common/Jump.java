@@ -1,7 +1,5 @@
 package com.maddyhome.idea.vim.common;
 
-import com.intellij.openapi.vfs.VirtualFile;
-
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
  * Copyright (C) 2003-2006 Rick Maddy
@@ -23,11 +21,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 
 public class Jump extends FileLocation
 {
-    public Jump(int lline, int col, VirtualFile file)
-    {
-        super(lline, col, file);
-    }
-
     public Jump(int lline, int col, String filename)
     {
         super(lline, col, filename);
