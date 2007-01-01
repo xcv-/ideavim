@@ -1,4 +1,4 @@
-*motion.txt*    For @NAME@ version @VERSION@.  Last change: 2006 Dec 29
+*motion.txt*    For @NAME@ version @VERSION@.  Last change: 2006 Dec 31
 
 
                   @NAME@ REFERENCE MANUAL    by Rick Maddy
@@ -22,9 +22,10 @@ screen, the screen is scrolled to show the cursor (see also 'scrolljump' and
 
 General remarks:
 
-<!--
 If you want to know where you are in the file use the "CTRL-G" command
-|CTRL-G| or the "g CTRL-G" command |g_CTRL-G|.  If you set the 'ruler' option,
+|CTRL-G| or the "g CTRL-G" command |g_CTRL-G|.
+<!--
+  If you set the 'ruler' option,
 the cursor position is continuously shown in the status line (which slows down
 Vim a little).
 

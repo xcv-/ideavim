@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.group;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2005 Rick Maddy
+ * Copyright (C) 2003-2007 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,23 +23,29 @@ import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.TextEditor;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
+import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.helper.EditorData;
+import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.StringHelper;
+import com.maddyhome.idea.vim.helper.SearchHelper;
 
 import java.io.File;
 import java.util.HashMap;
@@ -318,6 +324,159 @@ public class FileGroup extends AbstractActionGroup
         char ch = editor.getDocument().getCharsSequence().charAt(offset);
 
         VimPlugin.showMessage(Long.toHexString(ch));
+    }
+
+    public void displayLocationInfo(Editor editor)
+    {
+        StringBuffer msg = new StringBuffer();
+        Document doc = editor.getDocument();
+
+        if (CommandState.getInstance(editor).getMode() != CommandState.MODE_VISUAL)
+        {
+            LogicalPosition lp = editor.getCaretModel().getLogicalPosition();
+            int col = editor.getCaretModel().getOffset() - doc.getLineStartOffset(lp.line);
+            int endoff = doc.getLineEndOffset(lp.line);
+            if (doc.getCharsSequence().charAt(endoff) == '\n')
+            {
+                endoff--;
+            }
+            int ecol = endoff - doc.getLineStartOffset(lp.line);
+            LogicalPosition elp = editor.offsetToLogicalPosition(endoff);
+
+            msg.append("Col ").append(col + 1);
+            if (col != lp.column)
+            {
+                msg.append("-").append(lp.column + 1);
+            }
+
+            msg.append(" of ").append(ecol + 1);
+            if (ecol != elp.column)
+            {
+                msg.append("-").append(elp.column + 1);
+            }
+
+            int lline = EditorHelper.getCurrentLogicalLine(editor);
+            int total = EditorHelper.getLineCount(editor);
+
+            msg.append("; Line ").append(lline + 1).append(" of " ).append(total);
+
+            SearchHelper.CountPosition cp = SearchHelper.countWords(editor);
+
+            msg.append("; Word ").append(cp.getPosition()).append(" of ").append(cp.getCount());
+
+            int offset = editor.getCaretModel().getOffset();
+            int size = EditorHelper.getFileSize(editor);
+
+            msg.append("; Character ").append(offset + 1).append(" of " ).append(size);
+        }
+        else
+        {
+            msg.append("Selected ");
+
+            TextRange vr = CommandGroups.getInstance().getMotion().getVisualRange(editor);
+            vr.normalize();
+
+            int lines;
+            SearchHelper.CountPosition cp = SearchHelper.countWords(editor);
+            int words = cp.getCount();
+            int word = 0;
+            if (vr.isMultiple())
+            {
+                lines = vr.size();
+                int cols = vr.getMaxLength();
+
+                msg.append(cols).append(" Cols; ");
+
+                for (int i = 0; i < vr.size(); i++)
+                {
+                    cp = SearchHelper.countWords(editor, vr.getStartOffsets()[i], vr.getEndOffsets()[i] - 1);
+                    word += cp.getCount();
+                }
+            }
+            else
+            {
+                LogicalPosition slp = editor.offsetToLogicalPosition(vr.getStartOffset());
+                LogicalPosition elp = editor.offsetToLogicalPosition(vr.getEndOffset());
+
+                lines = elp.line - slp.line + 1;
+
+                cp = SearchHelper.countWords(editor, vr.getStartOffset(), vr.getEndOffset() - 1);
+                word = cp.getCount();
+            }
+
+            int total = EditorHelper.getLineCount(editor);
+
+            msg.append(lines).append(" of ").append(total).append(" Lines");
+
+            msg.append("; ").append(word).append(" of ").append(words).append(" Words");
+
+            int chars = vr.getSelectionCount();
+            int size = EditorHelper.getFileSize(editor);
+
+            msg.append("; ").append(chars).append(" of ").append(size).append(" Characters");
+        }
+
+        VimPlugin.showMessage(msg.toString());
+    }
+
+    public void displayFileInfo(Editor editor, boolean fullPath)
+    {
+        StringBuffer msg = new StringBuffer();
+        VirtualFile vf = EditorData.getVirtualFile(editor);
+        if (vf != null)
+        {
+            msg.append('"');
+            if (fullPath)
+            {
+                msg.append(vf.getPath());
+            }
+            else
+            {
+                Project project = EditorData.getProject(editor);
+                VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(vf);
+                if (root != null)
+                {
+                    msg.append(vf.getPath().substring(root.getPath().length() + 1));
+                }
+                else
+                {
+                    msg.append(vf.getPath());
+                }
+            }
+            msg.append("\" ");
+        }
+        else
+        {
+            msg.append("\"[No File]\" ");
+        }
+
+        Document doc = editor.getDocument();
+        if (!doc.isWritable())
+        {
+            msg.append("[RO] ");
+        }
+        else if (FileDocumentManager.getInstance().isDocumentUnsaved(doc))
+        {
+            msg.append("[+] ");
+        }
+
+        int lline = EditorHelper.getCurrentLogicalLine(editor);
+        int total = EditorHelper.getLineCount(editor);
+        int pct = (int)((float)lline / (float)total * 100f + 0.5);
+
+        msg.append("line ").append(lline + 1).append(" of " ).append(total);
+        msg.append(" --").append(pct).append("%-- ");
+
+        LogicalPosition lp = editor.getCaretModel().getLogicalPosition();
+        int col = editor.getCaretModel().getOffset() - doc.getLineStartOffset(lline);
+
+        msg.append("col ").append(col + 1);
+        if (col != lp.column)
+        {
+            msg.append("-").append(lp.column + 1);
+        }
+
+        VimPlugin.showMessage(msg.toString());
     }
 
     /**

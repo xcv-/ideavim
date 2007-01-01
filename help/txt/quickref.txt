@@ -1,4 +1,4 @@
-*quickref.txt*  For @NAME@ version @VERSION@.  Last change: 2006 Dec 01
+*quickref.txt*  For @NAME@ version @VERSION@.  Last change: 2006 Dec 31
 
 
                   @NAME@ REFERENCE MANUAL    by Rick Maddy
@@ -994,12 +994,14 @@ Short explanation of each option:               *option-list*
 
 <!--
 |CTRL-L|           CTRL-L       Clear and redraw the screen.
+-->
 |CTRL-G|           CTRL-G       show current file name (with path) and cursor
                                    position
 |ga|               ga           show ascii value of character under cursor in
                                    decimal, hex, and octal
 |g_CTRL-G|         g CTRL-G     show cursor column, line, and character
                                    position
+<!--
 |CTRL-C|           CTRL-C       during searches: Interrupt the search
 |dos-CTRL-Break|   CTRL-Break   MS-DOS: during searches: Interrupt the search
 -->

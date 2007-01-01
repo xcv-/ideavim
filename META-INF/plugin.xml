@@ -301,6 +301,8 @@ New Features<br>
         <action id="VimFilePrevious" class="com.maddyhome.idea.vim.action.file.FilePreviousAction" text="Selects Previous Editor"/>
         <action id="VimFileGetAscii" class="com.maddyhome.idea.vim.action.file.FileGetAsciiAction" text="Get ASCII Info"/>
         <action id="VimFileGetHex" class="com.maddyhome.idea.vim.action.file.FileGetHexAction" text="Get Hex Info"/>
+        <action id="VimFileGetFileInfo" class="com.maddyhome.idea.vim.action.file.FileGetFileInfoAction" text="Get File Info"/>
+        <action id="VimFileGetLocationInfo" class="com.maddyhome.idea.vim.action.file.FileGetLocationInfoAction" text="Get Location Info"/>
 
         <!-- Search -->
         <action id="VimSearchFwdEntry" class="com.maddyhome.idea.vim.action.motion.search.SearchEntryFwdAction" text="Search Forward"/>

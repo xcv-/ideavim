@@ -1,4 +1,4 @@
-*editing.txt*   For @NAME@ version @VERSION@.  Last change: 2006 Nov 11
+*editing.txt*   For @NAME@ version @VERSION@.  Last change: 2007 Jan 01
 
 
                   @NAME@ REFERENCE MANUAL    by Rick Maddy
@@ -42,7 +42,6 @@ another with the CTRL-^ command (e.g., to copy text).  First type the number
 of the file and then hit CTRL-^.  {Vi: only one alternate file name}
 
 -->
-<!--
 CTRL-G          or                              *CTRL-G* *:f* *:fi* *:file*
 :f[ile]                 Prints the current file name (as typed), the
                         cursor position (unless the 'ruler' option is set),
@@ -70,6 +69,7 @@ g CTRL-G                Prints the current position of the cursor in four
                         Blockwise mode, Column count is also shown.  (For
                         {Visual} see |Visual-mode|.)
 
+<!--
                                                         *:file_f*
 :f[ile] {name}          Sets the current file name to {name}.
 

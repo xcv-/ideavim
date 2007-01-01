@@ -410,6 +410,8 @@ public class RegisterActions
             new Shortcut("ga"));
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimFileGetHex", Command.OTHER_READONLY,
             new Shortcut("g8"));
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimFileGetFileInfo", Command.OTHER_READONLY,
+            new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK)));
 
         // Window Actions
         // TODO - CTRL-W commands: +, -, =, S, s, _, b, c, n, o, q, s, t, <up>, <down>
@@ -749,6 +751,8 @@ public class RegisterActions
             new Shortcut("gD"),
             new Shortcut("gd")
         });
+        parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "VimFileGetLocationInfo", Command.OTHER_READONLY,
+            new Shortcut(new KeyStroke[] { KeyStroke.getKeyStroke('g'), KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK) }));
         // TODO - add zC
         // TODO - add zO
         parser.registerAction(KeyParser.MAPPING_NORMAL | KeyParser.MAPPING_VISUAL, "CollapseAllRegions", Command.OTHER_READONLY,

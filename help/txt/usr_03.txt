@@ -1,4 +1,4 @@
-*usr_03.txt*    For @NAME@ version @VERSION@.  Last change: 2006 Dec 01
+*usr_03.txt*    For @NAME@ version @VERSION@.  Last change: 2006 Dec 31
 
                      @NAME@ USER MANUAL - by Rick Maddy
 
@@ -231,8 +231,6 @@ Hints: "H" stands for Home, "M" for Middle and "L" for Last.
 ==============================================================================
 *03.6*  Telling where you are
 
-This information does not apply to @NAME@.
-<!--
 To see where you are in a file, there are three ways:
 
 1.  Use the CTRL-G command.  You get a message like this (assuming the 'ruler'
@@ -248,6 +246,7 @@ To see where you are in a file, there are three ways:
     because character one is a tab, occupying eight spaces worth of columns,
     the screen column is 9.
 
+<!--
 2.  Set the 'number' option.  This will display a line number in front of
     every line: >
 

@@ -53,6 +53,17 @@ public class TextRange
         return max;
     }
 
+    public int getSelectionCount()
+    {
+        int res = 0;
+        for (int i = 0; i < size(); i++)
+        {
+            res += getEndOffsets()[i] - getStartOffsets()[i];
+        }
+        
+        return res;
+    }
+
     public int size()
     {
         return starts.length;

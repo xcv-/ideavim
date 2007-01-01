@@ -386,6 +386,70 @@ public class SearchHelper
     }
 
     /**
+     * This counts all the words in the file.
+     */
+    public static CountPosition countWords(Editor editor)
+    {
+        int size = EditorHelper.getFileSize(editor);
+
+        return countWords(editor, 0, size);
+    }
+
+    /**
+     * This counts all the words in the file.
+     */
+    public static CountPosition countWords(Editor editor, int start, int end)
+    {
+        CharSequence chars = EditorHelper.getDocumentChars(editor);
+        int offset = editor.getCaretModel().getOffset();
+
+        return countWords(chars, start, end, offset);
+    }
+
+    public static CountPosition countWords(CharSequence chars, int start, int end, int offset)
+    {
+        int count = 1;
+        int position = 0;
+        int last = -1;
+        int res = start;
+        while (true)
+        {
+            res = findNextWordOne(chars, res, end, 1, true, false);
+            if (res == start || res == 0 || res > end || res == last)
+            {
+                break;
+            }
+
+            count++;
+
+            if (res == offset)
+            {
+                position = count;
+            }
+            else if (last < offset && res >= offset)
+            {
+                if (count == 2 && res > offset)
+                {
+                    position = 1;
+                }
+                else
+                {
+                    position = count - 1;
+                }
+            }
+
+            last = res;
+        }
+
+        if (position == 0 && res == offset)
+        {
+            position = count;
+        }
+
+        return new CountPosition(count, position);
+    }
+
+    /**
      * This finds the offset to the start of the next/previous word/WORD.
      *
      * @param editor The editor to find the words in
@@ -1904,6 +1968,28 @@ public class SearchHelper
         }
 
         return res.toString();
+    }
+
+    public static class CountPosition
+    {
+        public CountPosition(int count, int position)
+        {
+            this.count = count;
+            this.position = position;
+        }
+
+        public int getCount()
+        {
+            return count;
+        }
+
+        public int getPosition()
+        {
+            return position;
+        }
+
+        private int count;
+        private int position;
     }
 
     private static String pairsChars = null;
