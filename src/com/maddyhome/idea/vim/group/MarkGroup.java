@@ -19,8 +19,6 @@ package com.maddyhome.idea.vim.group;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataConstants;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -33,8 +31,9 @@ import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.VimPlugin;
-import com.maddyhome.idea.vim.common.Mark;
 import com.maddyhome.idea.vim.common.Jump;
+import com.maddyhome.idea.vim.common.Mark;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.SearchHelper;
@@ -74,7 +73,7 @@ public class MarkGroup extends AbstractActionGroup
      * @param editor The editor the jump will occur in
      * @param context The data context
      */
-    public void saveJumpLocation(Editor editor, DataContext context)
+    public void saveJumpLocation(Editor editor, DataPackage context)
     {
         addJump(editor, context, true);
         setMark(editor, context, '\'');
@@ -179,7 +178,7 @@ public class MarkGroup extends AbstractActionGroup
      * @param ch The mark set set
      * @return True if a valid, writable mark, false if not
      */
-    public boolean setMark(Editor editor, DataContext context, char ch)
+    public boolean setMark(Editor editor, DataPackage context, char ch)
     {
         if (VALID_SET_MARKS.indexOf(ch) >= 0)
         {
@@ -199,17 +198,18 @@ public class MarkGroup extends AbstractActionGroup
      * @param offset The offset to set the mark to
      * @return true if able to set the mark, false if not
      */
-    public boolean setMark(Editor editor, DataContext context, char ch, int offset)
+    public boolean setMark(Editor editor, DataPackage context, char ch, int offset)
     {
         if (ch == '`') ch = '\'';
         LogicalPosition lp = editor.offsetToLogicalPosition(offset);
 
-        VirtualFile vf;
+        VirtualFile vf = null;
         if (context != null)
         {
-            vf = (VirtualFile)context.getData(DataConstants.VIRTUAL_FILE);
+            vf = context.getVirtualFile(); // API change - don't merge
         }
-        else
+
+        if (vf == null)
         {
             vf = EditorData.getVirtualFile(editor);
         }
@@ -241,19 +241,20 @@ public class MarkGroup extends AbstractActionGroup
         return true;
     }
 
-    public void addJump(Editor editor, DataContext context, boolean reset)
+    public void addJump(Editor editor, DataPackage context, boolean reset)
     {
         addJump(editor, context, editor.getCaretModel().getOffset(), reset);
     }
 
-    private void addJump(Editor editor, DataContext context, int offset, boolean reset)
+    private void addJump(Editor editor, DataPackage context, int offset, boolean reset)
     {
-        VirtualFile vf;
+        VirtualFile vf = null;
         if (context != null)
         {
-            vf = (VirtualFile)context.getData(DataConstants.VIRTUAL_FILE);
+            vf = context.getVirtualFile(); // API change - don't merge
         }
-        else
+
+        if (vf == null)
         {
             vf = EditorData.getVirtualFile(editor);
         }

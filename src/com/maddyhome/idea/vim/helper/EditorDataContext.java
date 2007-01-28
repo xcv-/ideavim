@@ -1,7 +1,7 @@
 package com.maddyhome.idea.vim.helper;
 
-import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.editor.Editor;
 
 /*
@@ -32,22 +32,22 @@ public class EditorDataContext implements DataContext
 
     /**
      * Returns the object corresponding to the specified data identifier. Some of the supported data identifiers are
-     * defined in the {@link DataConstants} class.
+     * defined in the {@link DataKeys} class.
      *
      * @param dataId the data identifier for which the value is requested.
      * @return the value, or null if no value is available in the current context for this identifier.
      */
     public Object getData(String dataId)
     {
-        if (DataConstants.EDITOR.equals(dataId))
+        if (DataKeys.EDITOR.getName().equals(dataId))
         {
             return editor;
         }
-        else if (DataConstants.PROJECT.equals(dataId))
+        else if (DataKeys.PROJECT.getName().equals(dataId))
         {
             return EditorData.getProject(editor);
         }
-        else if (DataConstants.VIRTUAL_FILE.equals(dataId))
+        else if (DataKeys.VIRTUAL_FILE.getName().equals(dataId))
         {
             return EditorData.getVirtualFile(editor);
         }

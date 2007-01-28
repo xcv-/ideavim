@@ -19,8 +19,8 @@ package com.maddyhome.idea.vim.ex;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  * Represents an Ex command range
@@ -34,7 +34,7 @@ public interface Range
      * @param lastZero True if the last line set represents before the start of the false
      * @return The zero based logical line in the editor that the range represents
      */
-    int getLine(Editor editor, DataContext context, boolean lastZero);
+    int getLine(Editor editor, DataPackage context, boolean lastZero);
 
     /**
      * Should the cursor be moved to this range's line?

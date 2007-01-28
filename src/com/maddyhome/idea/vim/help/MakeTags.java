@@ -1,10 +1,10 @@
 package com.maddyhome.idea.vim.help;
 
-import java.io.FileReader;
-import java.io.FileNotFoundException;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea

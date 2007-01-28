@@ -20,7 +20,6 @@ package com.maddyhome.idea.vim.handler.visual;
  */
 
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.KeyHandler;
@@ -28,10 +27,11 @@ import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.handler.DelegateActionHandler;
 import com.maddyhome.idea.vim.handler.VisualOperatorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 public class VisualOperatorDelegateActionHandler extends VisualOperatorActionHandler implements DelegateActionHandler
 {
-    protected boolean execute(Editor editor, DataContext context, Command cmd, TextRange range)
+    protected boolean execute(Editor editor, DataPackage context, Command cmd, TextRange range)
     {
         logger.debug("execute, cmd=" + cmd + ", range=" + range);
         logger.debug("origAction=" + origAction);

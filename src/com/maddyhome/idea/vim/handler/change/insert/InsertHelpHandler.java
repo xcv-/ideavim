@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  *
@@ -31,6 +32,6 @@ public class InsertHelpHandler extends EditorActionHandler
 {
     public void execute(Editor editor, DataContext context)
     {
-        CommandGroups.getInstance().getChange().insertHelp(editor, context);
+        CommandGroups.getInstance().getChange().insertHelp(editor, new DataPackage(context));
     }
 }

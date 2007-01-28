@@ -25,10 +25,10 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.util.Key;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -73,7 +73,6 @@ public class DocumentManager
     {
         logger.debug("marking as up-to-date");
         VirtualFile vf = FileDocumentManager.getInstance().getFile(doc);
-        logger.debug("project=" + p.getName() + ":" + p.getProjectFile());
         logger.debug("file=" + vf);
         if (vf != null)
         {

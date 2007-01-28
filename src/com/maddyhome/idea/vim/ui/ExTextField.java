@@ -19,13 +19,13 @@ package com.maddyhome.idea.vim.ui;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.VimPlugin;
-import com.maddyhome.idea.vim.helper.DigraphSequence;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.HistoryGroup;
+import com.maddyhome.idea.vim.helper.DataPackage;
+import com.maddyhome.idea.vim.helper.DigraphSequence;
 
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -140,7 +140,7 @@ public class ExTextField extends JTextField
         }
     }
 
-    void setEditor(Editor editor, DataContext context)
+    void setEditor(Editor editor, DataPackage context)
     {
         this.editor = editor;
         this.context = context;
@@ -151,7 +151,7 @@ public class ExTextField extends JTextField
         return editor;
     }
 
-    public DataContext getContext()
+    public DataPackage getContext()
     {
         return context;
     }
@@ -425,7 +425,7 @@ public class ExTextField extends JTextField
     */
 
     private Editor editor;
-    private DataContext context;
+    private DataPackage context;
     private String lastEntry;
     private List history;
     private int histIndex = 0;

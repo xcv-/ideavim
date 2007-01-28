@@ -25,10 +25,11 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.project.Project;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorDataContext;
 import com.maddyhome.idea.vim.option.Options;
-import com.maddyhome.idea.vim.group.CommandGroups;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -341,8 +342,8 @@ public class MorePanel extends JPanel
                     Project project = EditorData.getProject(editor);
                     ArrayList keys = new ArrayList(1);
                     keys.add(key);
-                    CommandGroups.getInstance().getMacro().playbackKeys(editor, new EditorDataContext(editor),
-                        project, keys, 0, 0, 1);
+                    CommandGroups.getInstance().getMacro().playbackKeys(editor,
+                        new DataPackage(new EditorDataContext(editor)), project, keys, 0, 0, 1);
                 }
             }
         });

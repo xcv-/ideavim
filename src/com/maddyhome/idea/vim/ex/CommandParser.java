@@ -20,13 +20,13 @@ package com.maddyhome.idea.vim.ex;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.common.Register;
 import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.ex.handler.AsciiHandler;
 import com.maddyhome.idea.vim.ex.handler.CmdFilterHandler;
 import com.maddyhome.idea.vim.ex.handler.CopyTextHandler;
 import com.maddyhome.idea.vim.ex.handler.DeleteLinesHandler;
@@ -40,7 +40,9 @@ import com.maddyhome.idea.vim.ex.handler.FindSymbolHandler;
 import com.maddyhome.idea.vim.ex.handler.GotoCharacterHandler;
 import com.maddyhome.idea.vim.ex.handler.GotoLineHandler;
 import com.maddyhome.idea.vim.ex.handler.HelpHandler;
+import com.maddyhome.idea.vim.ex.handler.HistoryHandler;
 import com.maddyhome.idea.vim.ex.handler.JoinLinesHandler;
+import com.maddyhome.idea.vim.ex.handler.JumpsHandler;
 import com.maddyhome.idea.vim.ex.handler.MarkHandler;
 import com.maddyhome.idea.vim.ex.handler.MarksHandler;
 import com.maddyhome.idea.vim.ex.handler.MoveTextHandler;
@@ -69,13 +71,11 @@ import com.maddyhome.idea.vim.ex.handler.WriteNextFileHandler;
 import com.maddyhome.idea.vim.ex.handler.WritePreviousFileHandler;
 import com.maddyhome.idea.vim.ex.handler.WriteQuitHandler;
 import com.maddyhome.idea.vim.ex.handler.YankLinesHandler;
-import com.maddyhome.idea.vim.ex.handler.HistoryHandler;
-import com.maddyhome.idea.vim.ex.handler.JumpsHandler;
-import com.maddyhome.idea.vim.ex.handler.AsciiHandler;
 import com.maddyhome.idea.vim.ex.range.AbstractRange;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.HistoryGroup;
 import com.maddyhome.idea.vim.helper.ApiHelper;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.MessageHelper;
 import com.maddyhome.idea.vim.helper.Msg;
 
@@ -179,7 +179,7 @@ public class CommandParser
      * @return True if the command succeeded, false if it failed or there was no previous command
      * @throws ExException if any part of the command was invalid
      */
-    public boolean processLastCommand(Editor editor, DataContext context, int count) throws ExException
+    public boolean processLastCommand(Editor editor, DataPackage context, int count) throws ExException
     {
         Register reg = CommandGroups.getInstance().getRegister().getRegister(':');
         if (reg == null)
@@ -201,7 +201,7 @@ public class CommandParser
      * @return A bitwise collection of flags, if any, from the result of running the command.
      * @throws ExException if any part of the command is invalid or unknown
      */
-    public int processCommand(Editor editor, DataContext context, String cmd, int count) throws ExException
+    public int processCommand(Editor editor, DataPackage context, String cmd, int count) throws ExException
     {
         // Nothing entered
         int result = 0;

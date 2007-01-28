@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  *
@@ -36,6 +37,6 @@ public class InsertEnterHandler extends EditorActionHandler
             return;
         }
 
-        CommandGroups.getInstance().getChange().processEnter(editor, context);
+        CommandGroups.getInstance().getChange().processEnter(editor, new DataPackage(context));
     }
 }

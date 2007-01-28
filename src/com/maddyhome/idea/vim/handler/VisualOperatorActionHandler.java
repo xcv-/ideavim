@@ -19,7 +19,6 @@ package com.maddyhome.idea.vim.handler;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.KeyHandler;
@@ -29,6 +28,7 @@ import com.maddyhome.idea.vim.command.VisualChange;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.MotionGroup;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.undo.UndoManager;
@@ -38,7 +38,7 @@ import com.maddyhome.idea.vim.undo.UndoManager;
  */
 public abstract class VisualOperatorActionHandler extends AbstractEditorActionHandler
 {
-    protected final boolean execute(final Editor editor, DataContext context, Command cmd)
+    protected final boolean execute(final Editor editor, DataPackage context, Command cmd)
     {
         logger.debug("execute, cmd=" + cmd);
 
@@ -70,11 +70,11 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
         return res;
     }
 
-    protected abstract boolean execute(Editor editor, DataContext context, Command cmd, TextRange range);
+    protected abstract boolean execute(Editor editor, DataPackage context, Command cmd, TextRange range);
 
     private static class VisualStartFinishRunnable implements DelegateCommandListener.StartFinishRunnable
     {
-        public VisualStartFinishRunnable(Editor editor, DataContext context, Command cmd)
+        public VisualStartFinishRunnable(Editor editor, DataPackage context, Command cmd)
         {
             this.editor = editor;
             this.context = context;
@@ -200,7 +200,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
 
         private Command cmd;
         private Editor editor;
-        private DataContext context;
+        private DataPackage context;
         private boolean res;
         private int lastMode;
         private boolean wasRepeat;

@@ -30,15 +30,15 @@
     <property name="install" value="install" />
     <property name="dist" value="dist" />
     <!-- Update to your IntelliJ installtion -->
-    <property name="idea.home" value="/Applications/IntelliJ IDEA 5.1.2.app" />
-    <property name="plugin.home" value="${user.home}/Library/Application Support/IntelliJIDEA50" />
+    <property name="idea.home" value="/Applications/Selena-6667.app" />
+    <property name="plugin.home" value="${user.home}/Library/Application Support/IntelliJIDEA70" />
 
     <property name="project" value="IdeaVIM" />
     <!-- Update this prior to building a new distribution -->
-    <property name="idea-version" value="5.x" />
+    <property name="idea-version" value="7.x" />
     <property name="version" value="0.11.5" />
-    <property name="since-version" value="3461" />
-    <property name="compiler.build" value="javac14" />
+    <property name="since-version" value="6667" />
+    <property name="compiler.build" value="javac15" />
 
     <path id="build.classpath">
         <pathelement path="${idea.home}/lib/extensions.jar" />
@@ -65,7 +65,7 @@
 
     <target name="compile">
         <mkdir dir="${classes}"/>
-        <javac destdir="${classes}" debug="on" deprecation="on" classpathref="build.classpath" source="1.4" target="1.4" >
+        <javac destdir="${classes}" debug="on" deprecation="on" classpathref="build.classpath" source="1.5" target="1.5" >
             <src path="${src}"/>
             <include name="com/maddyhome/idea/**" />
         </javac>

@@ -22,8 +22,8 @@ package com.maddyhome.idea.vim.ui;
 import com.intellij.openapi.diagnostic.Logger;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.SearchHelper;
 import com.maddyhome.idea.vim.helper.DigraphSequence;
+import com.maddyhome.idea.vim.helper.SearchHelper;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;

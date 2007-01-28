@@ -19,10 +19,10 @@ package com.maddyhome.idea.vim.undo;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.group.MotionGroup;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 import java.util.ArrayList;
 
@@ -65,7 +65,7 @@ public class UndoCommand
         changes.add(change);
     }
 
-    public void redo(Editor editor, DataContext context)
+    public void redo(Editor editor, DataPackage context)
     {
         for (int i = 0; i < changes.size(); i++)
         {
@@ -77,7 +77,7 @@ public class UndoCommand
         MotionGroup.moveCaret(editor, context, endOffset);
     }
 
-    public void undo(Editor editor, DataContext context)
+    public void undo(Editor editor, DataPackage context)
     {
         logger.debug("undo: startOffset=" + startOffset);
         for (int i = changes.size() - 1; i >= 0; i--)

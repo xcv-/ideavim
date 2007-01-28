@@ -19,7 +19,6 @@ package com.maddyhome.idea.vim.group;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
@@ -29,6 +28,7 @@ import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.common.Register;
 import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 
 import java.util.StringTokenizer;
@@ -54,7 +54,7 @@ public class CopyGroup extends AbstractActionGroup
      * @param argument The motion command argument
      * @return true if able to yank the text, false if not
      */
-    public boolean yankMotion(Editor editor, DataContext context, int count, int rawCount, Argument argument)
+    public boolean yankMotion(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
     {
         TextRange range = MotionGroup.getMotionRange(editor, context, count, rawCount, argument, true, false);
 
@@ -68,7 +68,7 @@ public class CopyGroup extends AbstractActionGroup
      * @param count The number of lines to yank
      * @return true if able to yank the lines, false if not
      */
-    public boolean yankLine(Editor editor, DataContext context, int count)
+    public boolean yankLine(Editor editor, DataPackage context, int count)
     {
         int start = CommandGroups.getInstance().getMotion().moveCaretToLineStart(editor);
         int offset = Math.min(CommandGroups.getInstance().getMotion().moveCaretToLineEndOffset(
@@ -90,7 +90,7 @@ public class CopyGroup extends AbstractActionGroup
      * @param moveCursor
      * @return true if able to yank the range, false if not
      */
-    public boolean yankRange(Editor editor, DataContext context, TextRange range, int type, boolean moveCursor)
+    public boolean yankRange(Editor editor, DataPackage context, TextRange range, int type, boolean moveCursor)
     {
         if (range != null)
         {
@@ -115,7 +115,7 @@ public class CopyGroup extends AbstractActionGroup
      * @param cursorAfter
      * @return true if able to paste, false if not
      */
-    public boolean putTextBeforeCursor(Editor editor, DataContext context, int count, boolean indent,
+    public boolean putTextBeforeCursor(Editor editor, DataPackage context, int count, boolean indent,
         boolean cursorAfter)
     {
         // What register are we getting the text from?
@@ -154,7 +154,7 @@ public class CopyGroup extends AbstractActionGroup
      * @param cursorAfter
      * @return true if able to paste, false if not
      */
-    public boolean putTextAfterCursor(Editor editor, DataContext context, int count, boolean indent,
+    public boolean putTextAfterCursor(Editor editor, DataPackage context, int count, boolean indent,
         boolean cursorAfter)
     {
         Register reg = CommandGroups.getInstance().getRegister().getLastRegister();
@@ -191,7 +191,7 @@ public class CopyGroup extends AbstractActionGroup
         return false;
     }
 
-    public boolean putVisualRange(Editor editor, DataContext context, TextRange range, int count, boolean indent,
+    public boolean putVisualRange(Editor editor, DataPackage context, TextRange range, int count, boolean indent,
         boolean cursorAfter)
     {
         int type = CommandState.getInstance(editor).getSubMode();
@@ -269,7 +269,7 @@ public class CopyGroup extends AbstractActionGroup
      * @param cursorAfter If true move cursor to just after pasted text
      * @param mode The type of hightlight prior to the put.
      */
-    public void putText(Editor editor, DataContext context, int offset, String text, int type, int count,
+    public void putText(Editor editor, DataPackage context, int offset, String text, int type, int count,
         boolean indent, boolean cursorAfter, int mode)
     {
         logger.debug("offset=" + offset);

@@ -19,6 +19,9 @@ package com.maddyhome.idea.vim.helper;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * Used to see if the API supports certain functionality.
+ */
 public class ApiHelper
 {
     public static boolean supportsColorSchemes()
@@ -31,27 +34,7 @@ public class ApiHelper
         return hasBlockSelection;
     }
 
+    // By now all versions of IDEA support these APIs.
     private static boolean hasColorSchemes = true;
     private static boolean hasBlockSelection = true;
-
-    static {
-        try
-        {
-            Class.forName("com.intellij.openapi.editor.colors.EditorColors");
-        }
-        catch (ClassNotFoundException e)
-        {
-            hasColorSchemes = false;
-        }
-
-        try
-        {
-            Class sm = Class.forName("com.intellij.openapi.editor.SelectionModel");
-            sm.getMethod("hasBlockSelection", null);
-        }
-        catch (Exception e)
-        {
-            hasBlockSelection = false;
-        }
-    }
 }

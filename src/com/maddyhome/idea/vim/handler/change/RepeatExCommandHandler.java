@@ -19,18 +19,18 @@ package com.maddyhome.idea.vim.handler.change;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.ex.CommandParser;
 import com.maddyhome.idea.vim.ex.ExException;
 import com.maddyhome.idea.vim.handler.AbstractEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
 public class RepeatExCommandHandler extends AbstractEditorActionHandler
 {
-    public boolean execute(Editor editor, DataContext context, Command command)
+    public boolean execute(Editor editor, DataPackage context, Command command)
     {
         int count = command.getCount();
         try

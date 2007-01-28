@@ -19,31 +19,31 @@ package com.maddyhome.idea.vim.handler.motion.updown;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.handler.motion.MotionEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorData;
 
 /**
  */
 public class MotionUpHandler extends MotionEditorActionHandler
 {
-    public int getOffset(Editor editor, DataContext context, int count, int rawCount, Argument argument)
+    public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
     {
         int res = CommandGroups.getInstance().getMotion().moveCaretVertical(editor, -count);
 
         return res;
     }
 
-    protected void preMove(Editor editor, DataContext context, Command cmd)
+    protected void preMove(Editor editor, DataPackage context, Command cmd)
     {
         col = EditorData.getLastColumn(editor);
     }
 
-    protected void postMove(Editor editor, DataContext context, Command cmd)
+    protected void postMove(Editor editor, DataPackage context, Command cmd)
     {
         EditorData.setLastColumn(editor, col);
     }

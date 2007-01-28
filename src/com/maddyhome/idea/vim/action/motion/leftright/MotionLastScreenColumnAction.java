@@ -19,7 +19,6 @@ package com.maddyhome.idea.vim.action.motion.leftright;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.action.motion.MotionEditorAction;
 import com.maddyhome.idea.vim.command.Argument;
@@ -28,6 +27,7 @@ import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.MotionGroup;
 import com.maddyhome.idea.vim.handler.motion.MotionEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.option.BoundStringOption;
 import com.maddyhome.idea.vim.option.Options;
@@ -43,7 +43,7 @@ public class MotionLastScreenColumnAction extends MotionEditorAction
 
     private static class MotionLastScreenColumnHandler extends MotionEditorActionHandler
     {
-        public int getOffset(Editor editor, DataContext context, int count, int rawCount, Argument argument)
+        public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
         {
             boolean allow = false;
             if (CommandState.getInstance(editor).getMode() == CommandState.MODE_INSERT ||
@@ -64,7 +64,7 @@ public class MotionLastScreenColumnAction extends MotionEditorAction
             return CommandGroups.getInstance().getMotion().moveCaretToLineScreenEnd(editor);
         }
 
-        protected void postMove(Editor editor, DataContext context, Command cmd)
+        protected void postMove(Editor editor, DataPackage context, Command cmd)
         {
             EditorData.setLastColumn(editor, MotionGroup.LAST_COLUMN);
         }
