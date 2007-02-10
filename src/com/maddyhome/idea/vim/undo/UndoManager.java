@@ -19,7 +19,6 @@ package com.maddyhome.idea.vim.undo;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -30,8 +29,8 @@ import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
-import com.intellij.openapi.fileEditor.VetoDocumentSavingException;
 import com.maddyhome.idea.vim.VimPlugin;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorData;
 
 import java.util.HashMap;
@@ -113,7 +112,7 @@ public class UndoManager
         return list.size() > 0;
     }
 
-    public boolean undo(Editor editor, DataContext context)
+    public boolean undo(Editor editor, DataPackage context)
     {
         logger.debug("undo");
         EditorUndoList list = getEditorUndoList(editor);
@@ -122,7 +121,7 @@ public class UndoManager
         return res;
     }
 
-    public boolean undoLine(Editor editor, DataContext context)
+    public boolean undoLine(Editor editor, DataPackage context)
     {
         logger.debug("undoLine");
         EditorUndoList list = getEditorUndoList(editor);
@@ -131,7 +130,7 @@ public class UndoManager
         return res;
     }
 
-    public boolean redo(Editor editor, DataContext context)
+    public boolean redo(Editor editor, DataPackage context)
     {
         EditorUndoList list = getEditorUndoList(editor);
         boolean res = list.redo(editor, context);
@@ -237,7 +236,7 @@ public class UndoManager
 
     private class FileDocumentListener extends FileDocumentManagerAdapter
     {
-        public void beforeDocumentSaving(Document document) throws VetoDocumentSavingException
+        public void beforeDocumentSaving(Document document) // API change - don't merge
         {
             EditorUndoList list = (EditorUndoList)UndoManager.getInstance().getEditors().get(document);
             if (list != null)

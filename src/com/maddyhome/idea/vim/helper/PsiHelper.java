@@ -1,18 +1,18 @@
 package com.maddyhome.idea.vim.helper;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJavaFile;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiCodeBlock;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiMethod;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
@@ -44,7 +44,7 @@ public class PsiHelper
             return false;
         }
 
-        return file.canContainJavaCode() && file instanceof PsiJavaFile;
+        return file instanceof PsiJavaFile; // API change - don't merge
     }
 
     public static int findMethodStart(Editor editor, int offset, int count)

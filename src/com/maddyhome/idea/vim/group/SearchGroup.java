@@ -19,7 +19,6 @@ package com.maddyhome.idea.vim.group;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -41,6 +40,7 @@ import com.maddyhome.idea.vim.common.CharacterPosition;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.ex.LineRange;
 import com.maddyhome.idea.vim.helper.ApiHelper;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.MessageHelper;
@@ -108,7 +108,7 @@ public class SearchGroup extends AbstractActionGroup
         return lastPattern;
     }
 
-    private void setLastPattern(Editor editor, DataContext context, String lastPattern)
+    private void setLastPattern(Editor editor, DataPackage context, String lastPattern)
     {
         this.lastPattern = lastPattern;
         CommandGroups.getInstance().getRegister().storeTextInternal(editor, context, new TextRange(-1, -1),
@@ -117,7 +117,7 @@ public class SearchGroup extends AbstractActionGroup
         CommandGroups.getInstance().getHistory().addEntry(HistoryGroup.SEARCH, lastPattern);
     }
 
-    public boolean searchAndReplace(Editor editor, DataContext context, LineRange range, String excmd, String exarg)
+    public boolean searchAndReplace(Editor editor, DataPackage context, LineRange range, String excmd, String exarg)
     {
         boolean res = true;
 
@@ -503,7 +503,7 @@ public class SearchGroup extends AbstractActionGroup
         confirmDlg = new JOptionPane("Replace with " + match + " ?", JOptionPane.QUESTION_MESSAGE,
             JOptionPane.DEFAULT_OPTION, null, btns, btns[0]);
         JDialog dlg = confirmDlg.createDialog(null, "Confirm Replace");
-        dlg.show();
+        dlg.setVisible(true);
         Object res = confirmDlg.getValue();
         confirmDlg = null;
         if (res == null)
@@ -606,7 +606,7 @@ public class SearchGroup extends AbstractActionGroup
         return confirmBtns;
     }
 
-    public int search(Editor editor, DataContext context, String command, int count, int flags, boolean moveCursor)
+    public int search(Editor editor, DataPackage context, String command, int count, int flags, boolean moveCursor)
     {
         int res = search(editor, context, command, editor.getCaretModel().getOffset(), count, flags);
 
@@ -619,7 +619,7 @@ public class SearchGroup extends AbstractActionGroup
         return res;
     }
 
-    public int search(Editor editor, DataContext context, String command, int startOffset, int count, int flags)
+    public int search(Editor editor, DataPackage context, String command, int startOffset, int count, int flags)
     {
         int dir = 1;
         char type = '/';
@@ -678,7 +678,7 @@ public class SearchGroup extends AbstractActionGroup
         return res;
     }
 
-    public int searchWord(Editor editor, DataContext context, int count, boolean whole, int dir)
+    public int searchWord(Editor editor, DataPackage context, int count, boolean whole, int dir)
     {
         TextRange range = SearchHelper.findWordUnderCursor(editor);
         if (range == null)
@@ -711,13 +711,13 @@ public class SearchGroup extends AbstractActionGroup
         return res;
     }
 
-    public int searchNext(Editor editor, DataContext context, int count)
+    public int searchNext(Editor editor, DataPackage context, int count)
     {
         searchHighlight(false);
         return findItOffset(editor, context, editor.getCaretModel().getOffset(), count, lastDir, false);
     }
 
-    public int searchPrevious(Editor editor, DataContext context, int count)
+    public int searchPrevious(Editor editor, DataPackage context, int count)
     {
         searchHighlight(false);
         return findItOffset(editor, context, editor.getCaretModel().getOffset(), count, -lastDir, false);
@@ -863,7 +863,7 @@ public class SearchGroup extends AbstractActionGroup
         }
     }
 
-    private int findItOffset(Editor editor, DataContext context, int startOffset, int count, int dir,
+    private int findItOffset(Editor editor, DataPackage context, int startOffset, int count, int dir,
         boolean noSmartCase)
     {
         boolean wrap = Options.getInstance().isSet("wrapscan");
@@ -972,7 +972,7 @@ public class SearchGroup extends AbstractActionGroup
         }
     }
 
-    private TextRange findIt(Editor editor, DataContext context, int startOffset, int count, int dir,
+    private TextRange findIt(Editor editor, DataPackage context, int startOffset, int count, int dir,
         boolean noSmartCase, boolean wrap, boolean showMessages, boolean wholeFile)
     {
         TextRange res = null;
@@ -1310,7 +1310,7 @@ public class SearchGroup extends AbstractActionGroup
             color, HighlighterTargetArea.EXACT_RANGE);
     }
 
-    public void clearSearchHighlight(Editor editor, DataContext context)
+    public void clearSearchHighlight(Editor editor, DataPackage context)
     {
         if (!ApiHelper.supportsColorSchemes())
         {

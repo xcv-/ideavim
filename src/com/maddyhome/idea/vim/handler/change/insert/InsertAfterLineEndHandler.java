@@ -19,17 +19,17 @@ package com.maddyhome.idea.vim.handler.change.insert;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.handler.ChangeEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
 public class InsertAfterLineEndHandler extends ChangeEditorActionHandler
 {
-    public boolean execute(Editor editor, DataContext context, int count, int rawCount, Argument argument)
+    public boolean execute(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
     {
         CommandGroups.getInstance().getChange().insertAfterLineEnd(editor, context);
 

@@ -19,14 +19,15 @@ package com.maddyhome.idea.vim.handler.key;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.command.CommandState;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 import javax.swing.KeyStroke;
 
@@ -66,13 +67,12 @@ public class EditorKeyHandler extends EditorActionHandler
         logger.debug("original for " + stroke);
         logger.debug("original is " + origHandler.getClass().getName());
         logger.debug("editor viewer=" + editor.isViewer());
-        logger.debug("project=" + context.getData(DataConstants.PROJECT));
         origHandler.execute(editor, context);
     }
 
     protected void handle(Editor editor, DataContext context)
     {
-        KeyHandler.getInstance().handleKey(editor, stroke, context);
+        KeyHandler.getInstance().handleKey(editor, stroke, new DataPackage(context));
     }
 
     public boolean isEnabled(Editor editor, DataContext dataContext)
@@ -83,7 +83,7 @@ public class EditorKeyHandler extends EditorActionHandler
             logger.debug("no editor or disabled");
             res = origHandler.isEnabled(editor, dataContext);
         }
-        else if (dataContext.getData(DataConstants.VIRTUAL_FILE) == null)
+        else if (dataContext.getData(DataConstants.VIRTUAL_FILE) == null) // API change - don't merge
         {
             logger.debug("no file");
             if (!special)

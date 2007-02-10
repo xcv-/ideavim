@@ -19,11 +19,10 @@ package com.maddyhome.idea.vim.undo;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataConstants;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.DocumentManager;
 import com.maddyhome.idea.vim.option.NumberOption;
 import com.maddyhome.idea.vim.option.Options;
@@ -131,7 +130,7 @@ public class EditorUndoList
         */
     }
 
-    public boolean redo(Editor editor, DataContext context)
+    public boolean redo(Editor editor, DataPackage context)
     {
         if (pointer < undos.size())
         {
@@ -148,7 +147,7 @@ public class EditorUndoList
         return false;
     }
 
-    public boolean undo(Editor editor, DataContext context)
+    public boolean undo(Editor editor, DataPackage context)
     {
         if (pointer == 0 && getMaxUndos() == 0)
         {
@@ -166,7 +165,7 @@ public class EditorUndoList
 
             if (pointer == 0 && restorable)
             {
-                Project p = (Project)context.getData(DataConstants.PROJECT);
+                Project p = context.getProject(); // API change - don't merge
                 DocumentManager.getInstance().reloadDocument(editor.getDocument(), p);
             }
 
@@ -176,7 +175,7 @@ public class EditorUndoList
         return false;
     }
 
-    public boolean undoLine(Editor editor, DataContext context)
+    public boolean undoLine(Editor editor, DataPackage context)
     {
         if (pointer == 0 && getMaxUndos() == 0)
         {

@@ -19,13 +19,13 @@ package com.maddyhome.idea.vim.group;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.common.Register;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.undo.UndoManager;
 
 import java.awt.Component;
@@ -53,7 +53,7 @@ public class MacroGroup extends AbstractActionGroup
      * @param count The number of times to execute the macro
      * @return true if able to play the macro, false if invalid or empty register
      */
-    public boolean playbackRegister(Editor editor, DataContext context, Project project, char reg, int count)
+    public boolean playbackRegister(Editor editor, DataPackage context, Project project, char reg, int count)
     {
         logger.debug("play bakc register " + reg + " " + count + " times");
         Register register = CommandGroups.getInstance().getRegister().getPlaybackRegister(reg);
@@ -78,7 +78,7 @@ public class MacroGroup extends AbstractActionGroup
      * @param count The number of times to execute the macro
      * @return true if able to play the macro, false in no previous playback
      */
-    public boolean playbackLastRegister(Editor editor, DataContext context, Project project, int count)
+    public boolean playbackLastRegister(Editor editor, DataPackage context, Project project, int count)
     {
         if (lastRegister != 0)
         {
@@ -95,7 +95,7 @@ public class MacroGroup extends AbstractActionGroup
      * @param keys The list of keys to playback
      * @param pos The position within the list for the specific key to queue
      */
-    public void playbackKeys(final Editor editor, final DataContext context, final Project project, final List keys, final int pos,
+    public void playbackKeys(final Editor editor, final DataPackage context, final Project project, final List keys, final int pos,
         final int cnt, final int total)
     {
         logger.debug("playbackKeys " + pos);

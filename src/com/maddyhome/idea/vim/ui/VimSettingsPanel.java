@@ -19,28 +19,28 @@ package com.maddyhome.idea.vim.ui;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.maddyhome.idea.vim.VimSettings;
-import com.maddyhome.idea.vim.key.KeyConflict;
-import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.keymap.KeymapUtil;
+import com.maddyhome.idea.vim.VimSettings;
+import com.maddyhome.idea.vim.key.KeyConflict;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.TreeMap;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.TreeSet;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 public class VimSettingsPanel
 {

@@ -19,11 +19,11 @@ package com.maddyhome.idea.vim.ex.handler;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  *
@@ -35,9 +35,9 @@ public class SelectLastFileHandler extends CommandHandler
         super("la", "st", ARGUMENT_OPTIONAL | DONT_REOPEN);
     }
 
-    public boolean execute(Editor editor, DataContext context, ExCommand cmd)
+    public boolean execute(Editor editor, DataPackage context, ExCommand cmd)
     {
-        boolean res = CommandGroups.getInstance().getFile().selectFile(99, context);
+        boolean res = CommandGroups.getInstance().getFile().selectFile(999, context);
         if (res)
         {
             CommandGroups.getInstance().getMark().saveJumpLocation(editor, context);

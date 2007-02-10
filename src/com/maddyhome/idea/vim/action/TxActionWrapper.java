@@ -45,7 +45,7 @@ public class TxActionWrapper extends AbstractDelegateAction
     {
         logger.debug("actionPerformed");
 
-        final Editor editor = (Editor)event.getDataContext().getData(DataConstants.EDITOR);
+        final Editor editor = (Editor)event.getDataContext().getData(DataConstants.EDITOR); // API change - don't merge
         if (editor == null || !VimPlugin.isEnabled())
         {
             getOrigAction().actionPerformed(event);

@@ -19,18 +19,18 @@ package com.maddyhome.idea.vim.handler;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.undo.UndoManager;
 
 /**
  */
 public abstract class ChangeEditorActionHandler extends AbstractEditorActionHandler
 {
-    protected final boolean execute(Editor editor, DataContext context, Command cmd)
+    protected final boolean execute(Editor editor, DataPackage context, Command cmd)
     {
         UndoManager.getInstance().endCommand(editor);
         UndoManager.getInstance().beginCommand(editor);
@@ -53,5 +53,5 @@ public abstract class ChangeEditorActionHandler extends AbstractEditorActionHand
         return worked;
     }
 
-    public abstract boolean execute(Editor editor, DataContext context, int count, int rawCount, Argument argument);
+    public abstract boolean execute(Editor editor, DataPackage context, int count, int rawCount, Argument argument);
 }

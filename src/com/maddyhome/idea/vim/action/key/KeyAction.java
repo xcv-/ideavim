@@ -23,14 +23,15 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.actionSystem.ShortcutSet;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.ui.ExEntryPanel;
 
-import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
 
 /**
  */
@@ -47,11 +48,11 @@ public class KeyAction extends AnAction
         if (event.getInputEvent() instanceof KeyEvent)
         {
             KeyEvent ke = (KeyEvent)event.getInputEvent();
-            Editor editor = (Editor)event.getDataContext().getData(DataConstants.EDITOR);
+            final Editor editor = (Editor)event.getDataContext().getData(DataConstants.EDITOR); // API change - don't merge
             if (editor != null)
             {
                 KeyStroke key = KeyStroke.getKeyStrokeForEvent(ke);
-                KeyHandler.getInstance().handleKey(editor, key, event.getDataContext());
+                KeyHandler.getInstance().handleKey(editor, key, new DataPackage(event));
             }
             else
             {

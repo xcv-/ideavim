@@ -19,8 +19,6 @@ package com.maddyhome.idea.vim.group;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataConstants;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -40,12 +38,13 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
-import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.command.CommandState;
+import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
-import com.maddyhome.idea.vim.helper.StringHelper;
 import com.maddyhome.idea.vim.helper.SearchHelper;
+import com.maddyhome.idea.vim.helper.StringHelper;
 
 import java.io.File;
 import java.util.HashMap;
@@ -59,10 +58,10 @@ public class FileGroup extends AbstractActionGroup
     {
     }
 
-    public boolean openFile(String filename, DataContext context)
+    public boolean openFile(String filename, DataPackage context)
     {
         logger.debug("openFile(" + filename + ")");
-        Project proj = (Project)context.getData(DataConstants.PROJECT);
+        Project proj = context.getProject(); // API change - don't merge
 
         VirtualFile found = null;
         if (filename.length() > 2 && filename.charAt(0) == '~' && filename.charAt(1) == File.separatorChar)
@@ -154,10 +153,10 @@ public class FileGroup extends AbstractActionGroup
      *
      * @param context The data context
      */
-    public void closeFile(Editor editor, DataContext context)
+    public void closeFile(Editor editor, DataPackage context)
     {
-        Project proj = (Project)context.getData(DataConstants.PROJECT);
-        FileEditorManager fem = FileEditorManager.getInstance(proj);
+        Project proj = context.getProject();
+        FileEditorManager fem = FileEditorManager.getInstance(proj); // API change - don't merge
         //fem.closeFile(fem.getSelectedFile());
         fem.closeFile(EditorData.getVirtualFile(fem.getSelectedTextEditor()));
 
@@ -174,7 +173,7 @@ public class FileGroup extends AbstractActionGroup
      *
      * @param context The data context
      */
-    public void closeAllButCurrent(DataContext context)
+    public void closeAllButCurrent(DataPackage context)
     {
         KeyHandler.executeAction("CloseAllEditorsButCurrent", context);
     }
@@ -184,7 +183,7 @@ public class FileGroup extends AbstractActionGroup
      *
      * @param context The data context
      */
-    public void closeAllFiles(DataContext context)
+    public void closeAllFiles(DataPackage context)
     {
         KeyHandler.executeAction("CloseAllEditors", context);
     }
@@ -194,7 +193,7 @@ public class FileGroup extends AbstractActionGroup
      *
      * @param context The data context
      */
-    public void saveFile(Editor editor, DataContext context)
+    public void saveFile(Editor editor, DataPackage context)
     {
         FileDocumentManager.getInstance().saveDocument(editor.getDocument());
     }
@@ -204,12 +203,12 @@ public class FileGroup extends AbstractActionGroup
      *
      * @param context The data context
      */
-    public void saveFiles(DataContext context)
+    public void saveFiles(DataPackage context)
     {
         FileDocumentManager.getInstance().saveAllDocuments();
     }
 
-    public void closeProject(DataContext context)
+    public void closeProject(DataPackage context)
     {
         KeyHandler.executeAction("CloseProject", context);
     }
@@ -225,10 +224,10 @@ public class FileGroup extends AbstractActionGroup
      * @param count
      * @param context
      */
-    public boolean selectFile(int count, DataContext context)
+    public boolean selectFile(int count, DataPackage context)
     {
-        Project proj = (Project)context.getData(DataConstants.PROJECT);
-        FileEditorManager fem = FileEditorManager.getInstance(proj);
+        Project proj = context.getProject();
+        FileEditorManager fem = FileEditorManager.getInstance(proj); // API change - don't merge
         VirtualFile[] editors = fem.getOpenFiles();
         if (count == 99)
         {
@@ -250,10 +249,10 @@ public class FileGroup extends AbstractActionGroup
      * @param count
      * @param context
      */
-    public void selectNextFile(int count, DataContext context)
+    public void selectNextFile(int count, DataPackage context)
     {
-        Project proj = (Project)context.getData(DataConstants.PROJECT);
-        FileEditorManager fem = FileEditorManager.getInstance(proj);
+        Project proj = context.getProject();
+        FileEditorManager fem = FileEditorManager.getInstance(proj); // API change - don't merge
         VirtualFile[] editors = fem.getOpenFiles();
         VirtualFile current = fem.getSelectedFiles()[0];
         for (int i = 0; i < editors.length; i++)
@@ -270,10 +269,10 @@ public class FileGroup extends AbstractActionGroup
     /**
      * Selects previous editor tab
      */
-    public void selectPreviousTab(DataContext context)
+    public void selectPreviousTab(DataPackage context)
     {
-        Project proj = (Project)context.getData(DataConstants.PROJECT);
-        FileEditorManager fem = FileEditorManager.getInstance(proj);
+        Project proj = context.getProject();
+        FileEditorManager fem = FileEditorManager.getInstance(proj); // API change - don't merge
         VirtualFile vf = (VirtualFile)lastSelections.get(fem);
         if (vf != null)
         {

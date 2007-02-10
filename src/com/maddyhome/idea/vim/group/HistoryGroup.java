@@ -19,17 +19,17 @@ package com.maddyhome.idea.vim.group;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.maddyhome.idea.vim.helper.StringHelper;
-import com.maddyhome.idea.vim.option.Options;
-import com.maddyhome.idea.vim.option.NumberOption;
 import com.intellij.openapi.diagnostic.Logger;
+import com.maddyhome.idea.vim.helper.StringHelper;
+import com.maddyhome.idea.vim.option.NumberOption;
+import com.maddyhome.idea.vim.option.Options;
 import org.jdom.CDATA;
 import org.jdom.Element;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 public class HistoryGroup extends AbstractActionGroup
 {

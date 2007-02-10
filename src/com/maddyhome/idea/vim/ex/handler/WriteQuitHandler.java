@@ -19,12 +19,12 @@ package com.maddyhome.idea.vim.ex.handler;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.CommandName;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  *
@@ -40,7 +40,7 @@ public class WriteQuitHandler extends CommandHandler
         } , RANGE_OPTIONAL | ARGUMENT_OPTIONAL | DONT_REOPEN);
     }
 
-    public boolean execute(Editor editor, DataContext context, ExCommand cmd)
+    public boolean execute(Editor editor, DataPackage context, ExCommand cmd)
     {
         CommandGroups.getInstance().getFile().saveFile(editor, context);
         CommandGroups.getInstance().getFile().closeFile(editor, context);

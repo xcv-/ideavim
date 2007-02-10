@@ -19,10 +19,10 @@ package com.maddyhome.idea.vim.ex;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  *
@@ -36,12 +36,12 @@ public class ExCommand
         this.command = command;
     }
 
-    public int getLine(Editor editor, DataContext context)
+    public int getLine(Editor editor, DataPackage context)
     {
         return ranges.getLine(editor, context);
     }
 
-    public int getCount(Editor editor, DataContext context, int defaultCount, boolean checkCount)
+    public int getCount(Editor editor, DataPackage context, int defaultCount, boolean checkCount)
     {
         int count = -1;
         if (checkCount)
@@ -58,7 +58,7 @@ public class ExCommand
         return res;
     }
 
-    public LineRange getLineRange(Editor editor, DataContext context, boolean checkCount)
+    public LineRange getLineRange(Editor editor, DataPackage context, boolean checkCount)
     {
         int count = -1;
         if (checkCount)
@@ -69,7 +69,7 @@ public class ExCommand
         return ranges.getLineRange(editor, context, count);
     }
 
-    public TextRange getTextRange(Editor editor, DataContext context, boolean checkCount)
+    public TextRange getTextRange(Editor editor, DataPackage context, boolean checkCount)
     {
         int count = -1;
         if (checkCount)

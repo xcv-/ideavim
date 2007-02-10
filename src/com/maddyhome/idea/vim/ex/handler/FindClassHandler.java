@@ -19,13 +19,13 @@ package com.maddyhome.idea.vim.ex.handler;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.ex.ExException;
 import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 import javax.swing.SwingUtilities;
 
@@ -39,7 +39,7 @@ public class FindClassHandler extends CommandHandler
         super("cla", "ss", RANGE_FORBIDDEN | ARGUMENT_OPTIONAL | DONT_REOPEN);
     }
 
-    public boolean execute(Editor editor, final DataContext context, ExCommand cmd) throws ExException
+    public boolean execute(Editor editor, final DataPackage context, ExCommand cmd) throws ExException
     {
         String arg = cmd.getArgument();
         if (arg != null && arg.length() > 0)
