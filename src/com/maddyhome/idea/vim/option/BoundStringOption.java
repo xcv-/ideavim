@@ -70,9 +70,9 @@ public class BoundStringOption extends StringOption
 
     private boolean isValid(String val)
     {
-        for (int i = 0; i < values.length; i++)
+        for (String value : values)
         {
-            if (values[i].equals(val))
+            if (value.equals(val))
             {
                 return true;
             }

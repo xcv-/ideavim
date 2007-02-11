@@ -177,9 +177,9 @@ public class StringHelper
         return res.toString();
     }
 
-    public static List stringToKeys(String str)
+    public static List<KeyStroke> stringToKeys(String str)
     {
-        ArrayList res = new ArrayList();
+        ArrayList<KeyStroke> res = new ArrayList<KeyStroke>();
         for (int i = 0; i < str.length(); i++)
         {
             res.add(KeyStroke.getKeyStroke(str.charAt(i)));
@@ -188,12 +188,11 @@ public class StringHelper
         return res;
     }
 
-    public static String keysToString(List keys)
+    public static String keysToString(List<KeyStroke> keys)
     {
         StringBuffer res = new StringBuffer();
-        for (int i = 0; i < keys.size(); i++)
+        for (KeyStroke key : keys)
         {
-            KeyStroke key = (KeyStroke)keys.get(i);
             if (key.getKeyChar() != KeyEvent.CHAR_UNDEFINED)
             {
                 res.append(key.getKeyChar());

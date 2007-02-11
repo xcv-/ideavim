@@ -80,7 +80,7 @@ public class LineNumberRange extends AbstractRange
     {
         StringBuffer res = new StringBuffer();
         res.append("LineNumberRange[");
-        res.append("line=" + line);
+        res.append("line=").append(line);
         res.append(", ");
         res.append(super.toString());
         res.append("]");

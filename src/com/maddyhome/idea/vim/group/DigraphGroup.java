@@ -24,7 +24,6 @@ import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.ui.MorePanel;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.TreeMap;
 
 public class DigraphGroup extends AbstractActionGroup
@@ -37,11 +36,11 @@ public class DigraphGroup extends AbstractActionGroup
     public char getDigraph(char ch1, char ch2)
     {
         String key = new String(new char[]{ch1, ch2});
-        Character ch = (Character)digraphs.get(key);
+        Character ch = digraphs.get(key);
         if (ch == null)
         {
             key = new String(new char[]{ch2, ch1});
-            ch = (Character)digraphs.get(key);
+            ch = digraphs.get(key);
         }
 
         if (ch == null)
@@ -50,7 +49,7 @@ public class DigraphGroup extends AbstractActionGroup
         }
         else
         {
-            return ch.charValue();
+            return ch;
         }
     }
 
@@ -83,12 +82,9 @@ public class DigraphGroup extends AbstractActionGroup
 
         StringBuffer res = new StringBuffer();
         int cnt = 0;
-        Iterator iter = keys.keySet().iterator();
-        while (iter.hasNext())
+        for (Character code : keys.keySet())
         {
-            Character cd = (Character)iter.next();
-            char code = cd.charValue();
-            String key = (String)keys.get(cd);
+            String key = keys.get(code);
 
             res.append(key);
             res.append(' ');
@@ -120,7 +116,7 @@ public class DigraphGroup extends AbstractActionGroup
             {
                 res.append('0');
             }
-            res.append(Integer.toHexString((int)code));
+            res.append(Integer.toHexString(code));
             res.append("  ");
 
             cnt++;
@@ -141,7 +137,7 @@ public class DigraphGroup extends AbstractActionGroup
         {
             if (defaultDigraphs[i] != '\0' && defaultDigraphs[i + 1] != '\0')
             {
-                Character ch = new Character(defaultDigraphs[i + 2]);
+                char ch = defaultDigraphs[i + 2];
                 String key = new String(new char[]{defaultDigraphs[i], defaultDigraphs[i + 1]});
                 digraphs.put(key, ch);
                 keys.put(ch, key);
@@ -151,8 +147,8 @@ public class DigraphGroup extends AbstractActionGroup
         // TODO - load custom digraphs from .vimrc
     }
 
-    private HashMap digraphs = new HashMap(defaultDigraphs.length);
-    private TreeMap keys = new TreeMap();
+    private HashMap<String, Character> digraphs = new HashMap<String, Character>(defaultDigraphs.length);
+    private TreeMap<Character, String> keys = new TreeMap<Character, String>();
 
     private static final char defaultDigraphs[] = {
         /*

@@ -19,8 +19,6 @@ package com.maddyhome.idea.vim.option;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import java.util.Iterator;
-
 /**
  * This represents a set of one character flags
  */
@@ -45,9 +43,8 @@ public class FlagsOption extends BoundListOption
     public String getValue()
     {
         StringBuffer res = new StringBuffer();
-        for (Iterator iterator = value.iterator(); iterator.hasNext();)
+        for (String s : value)
         {
-            String s = (String)iterator.next();
             res.append(s);
         }
 

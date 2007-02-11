@@ -25,6 +25,7 @@ import com.maddyhome.idea.vim.group.MotionGroup;
 import com.maddyhome.idea.vim.helper.DataPackage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -67,9 +68,8 @@ public class UndoCommand
 
     public void redo(Editor editor, DataPackage context)
     {
-        for (int i = 0; i < changes.size(); i++)
+        for (DocumentChange change : changes)
         {
-            DocumentChange change = (DocumentChange)changes.get(i);
             change.redo(editor, context);
         }
 
@@ -82,7 +82,7 @@ public class UndoCommand
         logger.debug("undo: startOffset=" + startOffset);
         for (int i = changes.size() - 1; i >= 0; i--)
         {
-            DocumentChange change = (DocumentChange)changes.get(i);
+            DocumentChange change = changes.get(i);
             change.undo(editor, context);
         }
 
@@ -109,7 +109,7 @@ public class UndoCommand
     private Editor editor;
     private int startOffset;
     private int endOffset;
-    private ArrayList changes = new ArrayList();
+    private List<DocumentChange> changes = new ArrayList<DocumentChange>();
 
     private static Logger logger = Logger.getInstance(UndoCommand.class.getName());
 }

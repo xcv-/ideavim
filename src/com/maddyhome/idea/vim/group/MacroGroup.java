@@ -49,6 +49,7 @@ public class MacroGroup extends AbstractActionGroup
      * This method is used to play the macro of keystrokes stored in the specified registers.
      * @param editor The editor to play the macro in
      * @param context The data context
+     * @param project The project
      * @param reg The register to get the macro from
      * @param count The number of times to execute the macro
      * @return true if able to play the macro, false if invalid or empty register
@@ -63,7 +64,7 @@ public class MacroGroup extends AbstractActionGroup
         }
 
         UndoManager.getInstance().allowNewCommands(false);
-        List keys = register.getKeys();
+        List<KeyStroke> keys = register.getKeys();
         playbackKeys(editor, context, project, keys, 0, 0, count);
 
         lastRegister = reg;
@@ -75,6 +76,7 @@ public class MacroGroup extends AbstractActionGroup
      * This plays back the last register that was executed, if any.
      * @param editor The editr to play the macro in
      * @param context The data context
+     * @param project The project
      * @param count The number of times to execute the macro
      * @return true if able to play the macro, false in no previous playback
      */
@@ -91,12 +93,15 @@ public class MacroGroup extends AbstractActionGroup
     /**
      * This puts a single keystroke at the end of the event queue for playback
      * @param editor The editor to play the key in
-     * @param context The data cotnext
+     * @param context The data context
+     * @param project The project
      * @param keys The list of keys to playback
      * @param pos The position within the list for the specific key to queue
+     * @param cnt count
+     * @param total total
      */
-    public void playbackKeys(final Editor editor, final DataPackage context, final Project project, final List keys, final int pos,
-        final int cnt, final int total)
+    public void playbackKeys(final Editor editor, final DataPackage context, final Project project,
+        final List<KeyStroke> keys, final int pos, final int cnt, final int total)
     {
         logger.debug("playbackKeys " + pos);
         if (pos >= keys.size() || cnt >= total)
@@ -125,7 +130,7 @@ public class MacroGroup extends AbstractActionGroup
             {
                 logger.debug("processing key " + pos);
                 // Handle one keystroke then queue up the next key
-                KeyHandler.getInstance().handleKey(editor, (KeyStroke)keys.get(pos), context);
+                KeyHandler.getInstance().handleKey(editor, keys.get(pos), context);
                 if (pos < keys.size() - 1)
                 {
                     playbackKeys(editor, context, project, keys, pos + 1, cnt, total);

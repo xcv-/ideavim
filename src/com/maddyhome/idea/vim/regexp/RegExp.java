@@ -540,8 +540,8 @@ public class RegExp
             else if ((scan.OP() == BOW
                 || scan.OP() == EOW
                 || scan.OP() == NOTHING
-                || scan.OP() == MOPEN + 0 || scan.OP() == NOPEN
-                || scan.OP() == MCLOSE + 0 || scan.OP() == NCLOSE)
+                || scan.OP() == MOPEN || scan.OP() == NOPEN
+                || scan.OP() == MCLOSE || scan.OP() == NCLOSE)
                 && regnext(scan).OP() == EXACTLY)
             {
                 r.regstart = regnext(scan).OPERAND().charAt();
@@ -573,7 +573,10 @@ public class RegExp
                         len = so.strlen();
                     }
                 }
-                r.regmust = longest.ref(0);
+                if (longest != null)
+                {
+                    r.regmust = longest.ref(0);
+                }
                 r.regmlen = len;
             }
         }
@@ -1349,11 +1352,11 @@ public class RegExp
                             break;
 
                         case 's':
-                            ret = regnode(MOPEN + 0);
+                            ret = regnode(MOPEN);
                             break;
 
                         case 'e':
-                            ret = regnode(MCLOSE + 0);
+                            ret = regnode(MCLOSE);
                             break;
 
                         default:
@@ -1887,10 +1890,10 @@ public class RegExp
      */
     private CharPointer re_put_long(CharPointer p, int val)
     {
-        p.set((char)((val >> 24) & 0377)).inc();
-        p.set((char)((val >> 16) & 0377)).inc();
-        p.set((char)((val >> 8) & 0377)).inc();
-        p.set((char)(val & 0377)).inc();
+        p.set((char)((val >> 24) & 0xff)).inc();
+        p.set((char)((val >> 16) & 0xff)).inc();
+        p.set((char)((val >> 8) & 0xff)).inc();
+        p.set((char)(val & 0xff)).inc();
         return p;
     }
 
@@ -1923,8 +1926,8 @@ public class RegExp
             offset = val.pointer() - scan.pointer();
         }
 
-        scan.ref(1).set((char)(((char)offset >> 8) & 0377));
-        scan.ref(2).set((char)(offset & 0377));
+        scan.ref(1).set((char)(((char)offset >> 8) & 0xff));
+        scan.ref(2).set((char)(offset & 0xff));
     }
 
     /*
@@ -2465,9 +2468,7 @@ public class RegExp
      */
     private reg_extmatch_T make_extmatch()
     {
-        reg_extmatch_T em = new reg_extmatch_T();
-
-        return em;
+        return new reg_extmatch_T();
     }
 
     /*
@@ -2925,7 +2926,7 @@ public class RegExp
                     case BACK:
                         break;
 
-                    case MOPEN + 0:   /* Match start: \zs */
+                    case MOPEN:   /* Match start: \zs */
                     case MOPEN + 1:   /* \( */
                     case MOPEN + 2:
                     case MOPEN + 3:
@@ -2955,11 +2956,7 @@ public class RegExp
 
                     case NOPEN:       /* \%( */
                     case NCLOSE:      /* \) after \%( */
-                        if (regmatch(next))
-                        {
-                            return true;
-                        }
-                        return false;
+                        return regmatch(next);
                         /* break; Not Reached */
 
                     case ZOPEN + 1:
@@ -2989,7 +2986,7 @@ public class RegExp
                         }
                         /* break; Not Reached */
 
-                    case MCLOSE + 0:  /* Match end: \ze */
+                    case MCLOSE:  /* Match end: \ze */
                     case MCLOSE + 1:  /* \) */
                     case MCLOSE + 2:
                     case MCLOSE + 3:
@@ -3243,7 +3240,7 @@ public class RegExp
                         }
                         break;
 
-                    case BRACE_COMPLEX + 0:
+                    case BRACE_COMPLEX:
                     case BRACE_COMPLEX + 1:
                     case BRACE_COMPLEX + 2:
                     case BRACE_COMPLEX + 3:
@@ -4320,7 +4317,7 @@ public class RegExp
     //    return newsub;
     //}
 
-    /*
+    /**
      * vim_regsub() - perform substitutions after a vim_regexec() or
      * vim_regexec_multi() match.
      *
@@ -5023,7 +5020,7 @@ public class RegExp
             case END:
                 p = "END";
                 break;
-            case MOPEN + 0:
+            case MOPEN:
                 p = "MATCH START";
                 break;
             case MOPEN + 1:
@@ -5038,7 +5035,7 @@ public class RegExp
                 buf.append("MOPEN").append(op.OP() - MOPEN);
                 p = null;
                 break;
-            case MCLOSE + 0:
+            case MCLOSE:
                 p = "MATCH END";
                 break;
             case MCLOSE + 1:
@@ -5134,7 +5131,7 @@ public class RegExp
             case BRACE_SIMPLE:
                 p = "BRACE_SIMPLE";
                 break;
-            case BRACE_COMPLEX + 0:
+            case BRACE_COMPLEX:
             case BRACE_COMPLEX + 1:
             case BRACE_COMPLEX + 2:
             case BRACE_COMPLEX + 3:

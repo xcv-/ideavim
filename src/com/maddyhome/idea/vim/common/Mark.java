@@ -72,9 +72,9 @@ public class Mark extends FileLocation
         return sb.toString();
     }
 
-    public static class KeySorter implements Comparator
+    public static class KeySorter<V> implements Comparator<V>
     {
-        public int compare(Object o1, Object o2)
+        public int compare(V o1, V o2)
         {
             Mark a = (Mark)o1;
             Mark b = (Mark)o2;

@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
 /**
@@ -78,10 +77,10 @@ public class Options
      */
     public Option getOption(String name)
     {
-        Option res = (Option)options.get(name);
+        Option res = options.get(name);
         if (res == null)
         {
-            res = (Option)abbrevs.get(name);
+            res = abbrevs.get(name);
         }
 
         return res;
@@ -91,7 +90,7 @@ public class Options
      * Gets all options
      * @return All options
      */
-    Collection allOptions()
+    Collection<Option> allOptions()
     {
         return options.values();
     }
@@ -100,12 +99,11 @@ public class Options
      * Gets only options that have values different from their default values
      * @return The set of changed options
      */
-    Collection changedOptions()
+    Collection<Option> changedOptions()
     {
-        ArrayList res = new ArrayList();
-        for (Iterator iterator = options.values().iterator(); iterator.hasNext();)
+        ArrayList<Option> res = new ArrayList<Option>();
+        for (Option option: options.values())
         {
-            Option option = (Option)iterator.next();
             if (!option.isDefault())
             {
                 res.add(option);
@@ -166,9 +164,8 @@ public class Options
         // We now have 1 or more option operators separator by spaces
         String error = null;
         String token = null;
-        String option = "";
         StringTokenizer tokenizer = new StringTokenizer(args);
-        ArrayList toShow = new ArrayList();
+        ArrayList<Option> toShow = new ArrayList<Option>();
         while (tokenizer.hasMoreTokens())
         {
             token = tokenizer.nextToken();
@@ -185,7 +182,7 @@ public class Options
             // Print the value of an option
             if (token.endsWith("?"))
             {
-                option = token.substring(0, token.length() - 1);
+                String option = token.substring(0, token.length() - 1);
                 Option opt = getOption(option);
                 if (opt != null)
                 {
@@ -199,7 +196,7 @@ public class Options
             // Reset a boolean option
             else if (token.startsWith("no"))
             {
-                option = token.substring(2);
+                String option = token.substring(2);
                 Option opt = getOption(option);
                 if (opt != null)
                 {
@@ -220,7 +217,7 @@ public class Options
             // Toggle a boolean option
             else if (token.startsWith("inv"))
             {
-                option = token.substring(3);
+                String option = token.substring(3);
                 Option opt = getOption(option);
                 if (opt != null)
                 {
@@ -241,7 +238,7 @@ public class Options
             // Toggle a boolean option
             else if (token.endsWith("!"))
             {
-                option = token.substring(0, token.length() - 1);
+                String option = token.substring(0, token.length() - 1);
                 Option opt = getOption(option);
                 if (opt != null)
                 {
@@ -262,7 +259,7 @@ public class Options
             // Reset option to default
             else if (token.endsWith("&"))
             {
-                option = token.substring(0, token.length() - 1);
+                String option = token.substring(0, token.length() - 1);
                 Option opt = getOption(option);
                 if (opt != null)
                 {
@@ -285,8 +282,7 @@ public class Options
                 // No operator so only the option name was given
                 if (eq == -1)
                 {
-                    option = token;
-                    Option opt = getOption(option);
+                    Option opt = getOption(token);
                     if (opt != null)
                     {
                         // Valid option so set booleans or display others
@@ -318,17 +314,16 @@ public class Options
                             end--;
                         }
                         // Get option name and value after operator
-                        option = token.substring(0, end);
+                        String option = token.substring(0, end);
                         String value = token.substring(eq + 1);
                         Option opt = getOption(option);
                         if (opt != null)
                         {
-                            option = token;
                             // If not a boolean
                             if (opt instanceof TextOption)
                             {
                                 TextOption to = (TextOption)opt;
-                                boolean res = true;
+                                boolean res;
                                 switch (op)
                                 {
                                     case '+':
@@ -392,10 +387,9 @@ public class Options
      */
     private void resetAllOptions()
     {
-        Collection opts = allOptions();
-        for (Iterator iterator = opts.iterator(); iterator.hasNext();)
+        Collection<Option> opts = allOptions();
+        for (Option option : opts)
         {
-            Option option = (Option)iterator.next();
             option.resetDefault();
         }
     }
@@ -406,18 +400,17 @@ public class Options
      * @param opts The list of options to display
      * @param showIntro True if intro is displayed, false if not
      */
-    private void showOptions(Editor editor, Collection opts, boolean showIntro)
+    private void showOptions(Editor editor, Collection<Option> opts, boolean showIntro)
     {
         if (editor == null)
         {
             return;
         }
 
-        ArrayList cols = new ArrayList();
-        ArrayList extra = new ArrayList();
-        for (Iterator iterator = opts.iterator(); iterator.hasNext();)
+        ArrayList<Option> cols = new ArrayList<Option>();
+        ArrayList<Option> extra = new ArrayList<Option>();
+        for (Option option : opts)
         {
-            Option option = (Option)iterator.next();
             if (option.toString().length() > 19)
             {
                 extra.add(option);
@@ -428,8 +421,8 @@ public class Options
             }
         }
 
-        Collections.sort(cols, new Option.NameSorter());
-        Collections.sort(extra, new Option.NameSorter());
+        Collections.sort(cols, new Option.NameSorter<Option>());
+        Collections.sort(extra, new Option.NameSorter<Option>());
 
         String pad = "                    ";
         MorePanel panel = MorePanel.getInstance(editor);
@@ -467,7 +460,7 @@ public class Options
                     pos -= c - empty;
                 }
 
-                Option opt = (Option)cols.get(pos);
+                Option opt = cols.get(pos);
                 String val = opt.toString();
                 res.append(val);
                 res.append(pad.substring(0, 20 - val.length()));
@@ -475,9 +468,8 @@ public class Options
             res.append("\n");
         }
 
-        for (int i = 0; i < extra.size(); i++)
+        for (Option opt : extra)
         {
-            Option opt = (Option)extra.get(i);
             String val = opt.toString();
             int seg = (val.length() - 1) / width;
             for (int j = 0; j <= seg; j++)
@@ -536,6 +528,7 @@ public class Options
             }
             catch (Exception e)
             {
+                // no-op
             }
         }
     }
@@ -576,8 +569,8 @@ public class Options
         abbrevs.put(option.getAbbreviation(), option);
     }
 
-    private HashMap options = new HashMap();
-    private HashMap abbrevs = new HashMap();
+    private HashMap<String, Option> options = new HashMap<String, Option>();
+    private HashMap<String, Option> abbrevs = new HashMap<String, Option>();
 
     private static Options ourInstance;
 

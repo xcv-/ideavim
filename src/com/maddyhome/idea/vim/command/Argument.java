@@ -115,7 +115,7 @@ public class Argument
                 return motionArg;
             case CHARACTER:
             case DIGRAPH:
-                return new Character(charArg);
+                return charArg;
             case STRING:
                 return strArg;
         }

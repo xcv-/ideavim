@@ -21,6 +21,7 @@ package com.maddyhome.idea.vim.option;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -31,12 +32,12 @@ public class BoundListOption extends ListOption
     {
         super(name, abbrev, dflt, null);
 
-        this.values = new ArrayList(Arrays.asList(values));
+        this.values = new ArrayList<String>(Arrays.asList(values));
     }
 
     public boolean set(String val)
     {
-        ArrayList vals = parseVals(val);
+        List<String> vals = parseVals(val);
         if (values.containsAll(vals))
         {
             set(vals);
@@ -47,7 +48,7 @@ public class BoundListOption extends ListOption
 
     public boolean append(String val)
     {
-        ArrayList vals = parseVals(val);
+        List<String> vals = parseVals(val);
         if (values.containsAll(vals))
         {
             append(vals);
@@ -58,7 +59,7 @@ public class BoundListOption extends ListOption
 
     public boolean prepend(String val)
     {
-        ArrayList vals = parseVals(val);
+        List<String> vals = parseVals(val);
         if (values.containsAll(vals))
         {
             prepend(vals);
@@ -69,7 +70,7 @@ public class BoundListOption extends ListOption
 
     public boolean remove(String val)
     {
-        ArrayList vals = parseVals(val);
+        List<String> vals = parseVals(val);
         if (values.containsAll(vals))
         {
             remove(vals);
@@ -78,5 +79,5 @@ public class BoundListOption extends ListOption
         return true;
     }
 
-    protected ArrayList values;
+    protected List<String> values;
 }

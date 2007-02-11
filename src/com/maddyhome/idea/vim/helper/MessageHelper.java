@@ -46,16 +46,14 @@ public class MessageHelper
 
     public static String getMsg(String key)
     {
-        String msg = bundle.getString(key);
-
-        return msg;
+        return bundle.getString(key);
     }
 
     public static String getMsg(String key, String val)
     {
         String msg = bundle.getString(key);
 
-        msg = MessageFormat.format(msg, new Object[] { val });
+        msg = MessageFormat.format(msg, val);
 
         return msg;
     }

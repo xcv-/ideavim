@@ -28,11 +28,12 @@ import com.intellij.openapi.actionSystem.AnAction;
 public class ArgumentNode implements Node
 {
     /**
-     * Creates a node for the given action
-     * @param action The action this arguments is mapped to
-     * @param cmdType The type of the command this argument is for
-     * @param argType The type of the argument
-     * @param flags Any special flags associated with this argument
+     * Creates a node for the given action.
+     * @param actionId The id of the action.
+     * @param action The action this arguments is mapped to.
+     * @param cmdType The type of the command this argument is for.
+     * @param argType The type of the argument.
+     * @param flags Any special flags associated with this argument.
      */
     public ArgumentNode(String actionId, AnAction action, int cmdType, int argType, int flags)
     {

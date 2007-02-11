@@ -189,9 +189,9 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
                     listeners.add(l);
                 }
 
-                for (int i = 0; i < listeners.size(); i++)
+                for (FileEditorManagerListener listener : listeners)
                 {
-                    FileEditorManager.getInstance(project).addFileEditorManagerListener((FileEditorManagerListener)listeners.get(i));
+                    FileEditorManager.getInstance(project).addFileEditorManagerListener(listener);
                 }
 
                 //DocumentManager.getInstance().openProject(project);
@@ -206,9 +206,9 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
 
             public void projectClosed(Project project)
             {
-                for (int i = 0; i < listeners.size(); i++)
+                for (FileEditorManagerListener listener : listeners)
                 {
-                    FileEditorManager.getInstance(project).removeFileEditorManagerListener((FileEditorManagerListener)listeners.get(i));
+                    FileEditorManager.getInstance(project).removeFileEditorManagerListener(listener);
                 }
 
                 listeners.clear();
@@ -222,7 +222,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
                 */
             }
 
-            ArrayList listeners = new ArrayList();
+            ArrayList<FileEditorManagerListener> listeners = new ArrayList<FileEditorManagerListener>();
         });
 
         CommandProcessor.getInstance().addCommandListener(DelegateCommandListener.getInstance());
@@ -276,7 +276,7 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
         Element state = element.getChild("state");
         if (state != null)
         {
-            enabled = Boolean.valueOf(state.getAttributeValue("enabled")).booleanValue();
+            enabled = Boolean.valueOf(state.getAttributeValue("enabled"));
         }
 
         CommandGroups.getInstance().readData(element);
@@ -355,9 +355,9 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
         */
         ProjectManager pm = ProjectManager.getInstance();
         Project[] projs = pm.getOpenProjects();
-        for (int i = 0; i < projs.length; i++)
+        for (Project proj : projs)
         {
-            StatusBar bar = WindowManager.getInstance().getStatusBar(projs[i]);
+            StatusBar bar = WindowManager.getInstance().getStatusBar(proj);
             if (msg == null || msg.length() == 0)
             {
                 bar.setInfo("");
@@ -388,18 +388,18 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
     private void setCursors(boolean isBlock)
     {
         Editor[] editors = EditorFactory.getInstance().getAllEditors();
-        for (int j = 0; j < editors.length; j++)
+        for (Editor editor : editors)
         {
-            editors[j].getSettings().setBlockCursor(isBlock);
+            editor.getSettings().setBlockCursor(isBlock);
         }
     }
 
     private void setSmoothScrolling(boolean isOn)
     {
         Editor[] editors = EditorFactory.getInstance().getAllEditors();
-        for (int j = 0; j < editors.length; j++)
+        for (Editor editor : editors)
         {
-            editors[j].getSettings().setAnimatedScrolling(isOn);
+            editor.getSettings().setAnimatedScrolling(isOn);
         }
     }
 

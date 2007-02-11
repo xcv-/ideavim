@@ -60,12 +60,8 @@ public class VimSettings
         {
             return false;
         }
-        if (!choices.equals(that.choices))
-        {
-            return false;
-        }
 
-        return true;
+        return choices.equals(that.choices);
     }
 
     public int hashCode()

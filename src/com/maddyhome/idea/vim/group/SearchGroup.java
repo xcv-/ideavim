@@ -135,8 +135,8 @@ public class SearchGroup extends AbstractActionGroup
             which_pat = RE_SUBST;   /* use last substitute regexp */
         }
 
-        CharPointer pat = null;
-        CharPointer sub = null;
+        CharPointer pat;
+        CharPointer sub;
         char delimiter;
         /* new pattern and substitution */
         if (excmd.charAt(0) == 's' && !cmd.isNul() && !Character.isWhitespace(cmd.charAt()) &&
@@ -225,7 +225,7 @@ public class SearchGroup extends AbstractActionGroup
             do_all = Options.getInstance().isSet("gdefault");
             do_ask = false;
             do_error = true;
-            do_print = false;
+            //do_print = false;
             do_ic = 0;
         }
         while (!cmd.isNul())
@@ -252,7 +252,7 @@ public class SearchGroup extends AbstractActionGroup
             }
             else if (cmd.charAt() == 'p')
             {
-                do_print = true;
+                //do_print = true;
             }
             else if (cmd.charAt() == 'i')       /* ignore case */
             {
@@ -378,7 +378,6 @@ public class SearchGroup extends AbstractActionGroup
         logger.debug("search range=[" + start + "," + end + "]");
         logger.debug("pattern=" + pattern + ", replace=" + sub);
         int lastMatch = -1;
-        boolean found = true;
         int lastLine = -1;
         int searchcol = 0;
         boolean firstMatch = true;
@@ -388,8 +387,7 @@ public class SearchGroup extends AbstractActionGroup
         {
             CharacterPosition newpos = null;
             int nmatch = sp.vim_regexec_multi(regmatch, editor, lcount, lnum, searchcol);
-            found = nmatch > 0;
-            if (found)
+            if (nmatch > 0)
             {
                 if (firstMatch)
                 {
@@ -432,14 +430,12 @@ public class SearchGroup extends AbstractActionGroup
                                 break;
                             case JOptionPane.CLOSED_OPTION:
                             case 3: // Quit
-                                found = false;
                                 doReplace = false;
                                 got_quit = true;
                                 break;
                             case 4: // Last
                                 do_all = false;
                                 line2 = lnum;
-                                found = false;
                                 doReplace = true;
                                 break;
                         }
@@ -451,8 +447,7 @@ public class SearchGroup extends AbstractActionGroup
                         lastMatch = startoff;
                         newpos = EditorHelper.offsetToCharacterPosition(editor, newend);
 
-                        int diff = newpos.line - endpos.line;
-                        line2 += diff;
+                        line2 += newpos.line - endpos.line;
                     }
                 }
 
@@ -523,16 +518,10 @@ public class SearchGroup extends AbstractActionGroup
 
     private boolean shouldIgnoreCase(String pattern, boolean noSmartCase)
     {
-        boolean sc = noSmartCase ? false : Options.getInstance().isSet("smartcase");
+        boolean sc = !noSmartCase && Options.getInstance().isSet("smartcase");
         boolean ic = Options.getInstance().isSet("ignorecase");
-        if (ic && !(sc && StringHelper.containsUpperCase(pattern)))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+
+        return ic && !(sc && StringHelper.containsUpperCase(pattern));
     }
 
     public static int argsToFlags(String args)
@@ -673,9 +662,7 @@ public class SearchGroup extends AbstractActionGroup
 
         searchHighlight(false);
 
-        int res = findItOffset(editor, context, startOffset, count, lastDir, false);
-
-        return res;
+        return findItOffset(editor, context, startOffset, count, lastDir, false);
     }
 
     public int searchWord(Editor editor, DataPackage context, int count, boolean whole, int dir)
@@ -706,9 +693,7 @@ public class SearchGroup extends AbstractActionGroup
 
         searchHighlight(true);
 
-        int res = findItOffset(editor, context, editor.getCaretModel().getOffset(), count, lastDir, true);
-
-        return res;
+        return findItOffset(editor, context, editor.getCaretModel().getOffset(), count, lastDir, true);
     }
 
     public int searchNext(Editor editor, DataPackage context, int count)
@@ -753,18 +738,18 @@ public class SearchGroup extends AbstractActionGroup
         }
 
         Project[] projects = ProjectManager.getInstance().getOpenProjects();
-        for (int i = 0; i < projects.length; i++)
+        for (Project project : projects)
         {
-            Editor current = FileEditorManager.getInstance(projects[i]).getSelectedTextEditor();
-            Editor[] editors = current == null ? null : EditorFactory.getInstance().getEditors(current.getDocument(), projects[i]);
+            Editor current = FileEditorManager.getInstance(project).getSelectedTextEditor();
+            Editor[] editors =
+                current == null ? null : EditorFactory.getInstance().getEditors(current.getDocument(), project);
             if (editors == null)
             {
                 continue;
             }
 
-            for (int j = 0; j < editors.length; j++)
+            for (final Editor editor : editors)
             {
-                final Editor editor = editors[j];
                 String els = EditorData.getLastSearch(editor);
                 if (!showSearchHighlight)
                 {
@@ -802,14 +787,13 @@ public class SearchGroup extends AbstractActionGroup
         }
 
         TextAttributes color = editor.getColorsScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
-        ArrayList hls = (ArrayList)EditorData.getLastHighlights(editor);
+        Collection<RangeHighlighter> hls = EditorData.getLastHighlights(editor);
         if (hls == null)
         {
-            hls = new ArrayList();
+            hls = new ArrayList<RangeHighlighter>();
             EditorData.setLastHighlights(editor, hls);
         }
 
-        int line1 = startLine;
         int line2 = endLine == -1 ? EditorHelper.getLineCount(editor) : endLine;
 
         RegExp sp;
@@ -823,15 +807,12 @@ public class SearchGroup extends AbstractActionGroup
 
         regmatch.rmm_ic = ic;
 
-        boolean found = true;
         int searchcol = 0;
         int lcount = EditorHelper.getLineCount(editor);
-        for (int lnum = line1; lnum <= line2;)
+        for (int lnum = startLine; lnum <= line2;)
         {
-            CharacterPosition newpos = null;
             int nmatch = sp.vim_regexec_multi(regmatch, editor, lcount, lnum, searchcol);
-            found = nmatch > 0;
-            if (found)
+            if (nmatch > 0)
             {
                 CharacterPosition startpos = new CharacterPosition(lnum + regmatch.startpos[0].lnum,
                     regmatch.startpos[0].col);
@@ -846,14 +827,7 @@ public class SearchGroup extends AbstractActionGroup
                 hls.add(rh);
 
                 lnum += nmatch - 1;
-                if (newpos != null)
-                {
-                    searchcol = newpos.column;
-                }
-                else
-                {
-                    searchcol = endpos.column;
-                }
+                searchcol = endpos.column;
             }
             else
             {
@@ -867,7 +841,7 @@ public class SearchGroup extends AbstractActionGroup
         boolean noSmartCase)
     {
         boolean wrap = Options.getInstance().isSet("wrapscan");
-        TextRange range = findIt(editor, context, startOffset, count, dir, noSmartCase, wrap, true, true);
+        TextRange range = findIt(editor, startOffset, count, dir, noSmartCase, wrap, true, true);
         if (range == null)
         {
             return -1;
@@ -972,7 +946,7 @@ public class SearchGroup extends AbstractActionGroup
         }
     }
 
-    private TextRange findIt(Editor editor, DataPackage context, int startOffset, int count, int dir,
+    private TextRange findIt(Editor editor, int startOffset, int count, int dir,
         boolean noSmartCase, boolean wrap, boolean showMessages, boolean wholeFile)
     {
         TextRange res = null;
@@ -1019,7 +993,7 @@ public class SearchGroup extends AbstractActionGroup
         int found;
         int lnum;           /* no init to shut up Apollo cc */
         //RegExp.regmmatch_T regmatch;
-        CharPointer ptr = null;
+        CharPointer ptr;
         int matchcol;
         int startcol;
         RegExp.lpos_T endpos = new RegExp.lpos_T();
@@ -1031,7 +1005,6 @@ public class SearchGroup extends AbstractActionGroup
         long nmatched;
         //int         submatch = 0;
         int first_lnum;
-        boolean p_ws = wrap;
 
         int lineCount = EditorHelper.getLineCount(editor);
         int startLine = 0;
@@ -1220,7 +1193,7 @@ public class SearchGroup extends AbstractActionGroup
                 * stop the search if wrapscan isn't set, after an interrupt and
                 * after a match
                 */
-                if (!p_ws || found != 0)
+                if (!wrap || found != 0)
                 {
                     break;
                 }
@@ -1255,7 +1228,7 @@ public class SearchGroup extends AbstractActionGroup
             //if ((options & SEARCH_MSG) == SEARCH_MSG)
             if (showMessages)
             {
-                if (p_ws)
+                if (wrap)
                 {
                     MessageHelper.EMSG(Msg.e_patnotf2, lastSearch);
                 }
@@ -1328,16 +1301,14 @@ public class SearchGroup extends AbstractActionGroup
             return;
         }
 
-        Collection ehl = EditorData.getLastHighlights(editor);
+        Collection<RangeHighlighter> ehl = EditorData.getLastHighlights(editor);
         if (ehl == null)
         {
             return;
         }
 
-        Iterator iter = ehl.iterator();
-        while (iter.hasNext())
+        for (RangeHighlighter rh : ehl)
         {
-            RangeHighlighter rh = (RangeHighlighter)iter.next();
             editor.getMarkupModel().removeHighlighter(rh);
         }
 
@@ -1443,7 +1414,7 @@ public class SearchGroup extends AbstractActionGroup
 
         Element show = search.getChild("show-last");
         logger.debug("show=" + show + "(" + show.getText() + ")");
-        showSearchHighlight = Boolean.valueOf(show.getText()).booleanValue();
+        showSearchHighlight = Boolean.valueOf(show.getText());
         logger.debug("showSearchHighlight=" + showSearchHighlight);
     }
 
@@ -1495,12 +1466,11 @@ public class SearchGroup extends AbstractActionGroup
             }
 
             Project[] projs = ProjectManager.getInstance().getOpenProjects();
-            for (int i = 0; i < projs.length; i++)
+            for (Project proj : projs)
             {
-                Editor[] editors = EditorFactory.getInstance().getEditors(event.getDocument(), projs[i]);
-                for (int j = 0; j < editors.length; j++)
+                Editor[] editors = EditorFactory.getInstance().getEditors(event.getDocument(), proj);
+                for (Editor editor : editors)
                 {
-                    Editor editor = editors[j];
                     Collection hls = EditorData.getLastHighlights(editor);
                     if (hls == null)
                     {
@@ -1547,7 +1517,7 @@ public class SearchGroup extends AbstractActionGroup
     private boolean do_all = false; /* do multiple substitutions per line */
     private boolean do_ask = false; /* ask for confirmation */
     private boolean do_error = true; /* if false, ignore errors */
-    private boolean do_print = false; /* print last line with subs. */
+    //private boolean do_print = false; /* print last line with subs. */
     private char do_ic = 0; /* ignore case flag */
 
     private static final int RE_LAST = 1;

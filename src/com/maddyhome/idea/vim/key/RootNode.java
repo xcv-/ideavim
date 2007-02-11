@@ -19,8 +19,6 @@ package com.maddyhome.idea.vim.key;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import java.util.Iterator;
-
 /**
  * Represents the root of the key/action tree
  */
@@ -32,9 +30,8 @@ public class RootNode extends ParentNode
         res.append("RootNode[");
         res.append("children=[");
         int cnt = 0;
-        for (Iterator iterator = children.keySet().iterator(); iterator.hasNext();)
+        for (Object key : children.keySet())
         {
-            Object key = iterator.next();
             Node node = (Node)children.get(key);
             if (cnt > 0)
             {

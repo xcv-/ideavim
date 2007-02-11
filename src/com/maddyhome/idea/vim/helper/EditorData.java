@@ -22,6 +22,7 @@ package com.maddyhome.idea.vim.helper;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
@@ -72,14 +73,14 @@ public class EditorData
      */
     public static int getLastColumn(Editor editor)
     {
-        Integer col = (Integer)editor.getUserData(LAST_COLUMN);
+        Integer col = editor.getUserData(LAST_COLUMN);
         if (col == null)
         {
             return EditorHelper.getCurrentVisualColumn(editor);
         }
         else
         {
-            return col.intValue();
+            return col;
         }
     }
 
@@ -90,14 +91,14 @@ public class EditorData
      */
     public static void setLastColumn(Editor editor, int col)
     {
-        editor.putUserData(LAST_COLUMN, new Integer(col));
+        editor.putUserData(LAST_COLUMN, col);
         int t = getLastColumn(editor);
         logger.debug("setLastColumn(" + col + ") is now " + t);
     }
 
     public static String getLastSearch(Editor editor)
     {
-        return (String)editor.getUserData(LAST_SEARCH);
+        return editor.getUserData(LAST_SEARCH);
     }
 
     public static void setLastSearch(Editor editor, String search)
@@ -105,12 +106,12 @@ public class EditorData
         editor.putUserData(LAST_SEARCH, search);
     }
 
-    public static Collection getLastHighlights(Editor editor)
+    public static Collection<RangeHighlighter> getLastHighlights(Editor editor)
     {
-        return (Collection)editor.getUserData(LAST_HIGHLIGHTS);
+        return editor.getUserData(LAST_HIGHLIGHTS);
     }
 
-    public static void setLastHighlights(Editor editor, Collection highlights)
+    public static void setLastHighlights(Editor editor, Collection<RangeHighlighter> highlights)
     {
         editor.putUserData(LAST_HIGHLIGHTS, highlights);
     }
@@ -122,8 +123,7 @@ public class EditorData
      */
     public static VisualRange getLastVisualRange(Editor editor)
     {
-        VisualRange res = (VisualRange)editor.getDocument().getUserData(VISUAL);
-        return res;
+        return editor.getDocument().getUserData(VISUAL);
     }
 
     /**
@@ -143,8 +143,7 @@ public class EditorData
      */
     public static VisualChange getLastVisualOperatorRange(Editor editor)
     {
-        VisualChange res = (VisualChange)editor.getDocument().getUserData(VISUAL_OP);
-        return res;
+        return editor.getDocument().getUserData(VISUAL_OP);
     }
 
     /**
@@ -159,7 +158,7 @@ public class EditorData
 
     public static CommandState getCommandState(Editor editor)
     {
-        return (CommandState)editor.getUserData(COMMAND_STATE);
+        return editor.getUserData(COMMAND_STATE);
     }
 
     public static void setCommandState(Editor editor, CommandState state)
@@ -174,21 +173,21 @@ public class EditorData
      */
     public static Project getProject(Editor editor)
     {
-        Project proj = (Project)editor.getUserData(PROJECT);
+        Project proj = editor.getUserData(PROJECT);
         if (proj == null)
         {
             // If we don't have the project already we need to scan all open projects and check all their
             // open editors until there is a match
             Project[] projs = ProjectManager.getInstance().getOpenProjects();
-            for (int p = 0; p < projs.length; p++)
+            for (Project p : projs)
             {
-                Editor[] editors = EditorFactory.getInstance().getEditors(editor.getDocument(), projs[p]);
-                for (int e = 0; e < editors.length; e++)
+                Editor[] editors = EditorFactory.getInstance().getEditors(editor.getDocument(), p);
+                for (Editor e : editors)
                 {
-                    if (editors[e].equals(editor))
+                    if (e.equals(editor))
                     {
-                        editor.putUserData(PROJECT, projs[p]);
-                        proj = projs[p];
+                        editor.putUserData(PROJECT, p);
+                        proj = p;
                         break;
                     }
                 }
@@ -201,12 +200,12 @@ public class EditorData
     public static Project getProject(FileEditorManager mgr)
     {
         Project[] projs = ProjectManager.getInstance().getOpenProjects();
-        for (int p = 0; p < projs.length; p++)
+        for (Project proj : projs)
         {
-            FileEditorManager fem = FileEditorManager.getInstance(projs[p]);
+            FileEditorManager fem = FileEditorManager.getInstance(proj);
             if (fem.equals(mgr))
             {
-                return projs[p];
+                return proj;
             }
         }
 
@@ -228,13 +227,13 @@ public class EditorData
      */
     private EditorData() {}
 
-    private static final Key LAST_COLUMN = new Key("lastColumn");
-    private static final Key PROJECT = new Key("project");
-    private static final Key VISUAL = new Key("lastVisual");
-    private static final Key VISUAL_OP = new Key("lastVisualOp");
-    private static final Key LAST_SEARCH = new Key("lastSearch");
-    private static final Key LAST_HIGHLIGHTS = new Key("lastHighlights");
-    private static final Key COMMAND_STATE = new Key("commandState");
+    private static final Key<Integer> LAST_COLUMN = new Key<Integer>("lastColumn");
+    private static final Key<Project> PROJECT = new Key<Project>("project");
+    private static final Key<VisualRange> VISUAL = new Key<VisualRange>("lastVisual");
+    private static final Key<VisualChange> VISUAL_OP = new Key<VisualChange>("lastVisualOp");
+    private static final Key<String> LAST_SEARCH = new Key<String>("lastSearch");
+    private static final Key<Collection<RangeHighlighter>> LAST_HIGHLIGHTS = new Key<Collection<RangeHighlighter>>("lastHighlights");
+    private static final Key<CommandState> COMMAND_STATE = new Key<CommandState>("commandState");
 
     private static Logger logger = Logger.getInstance(EditorData.class.getName());
 }

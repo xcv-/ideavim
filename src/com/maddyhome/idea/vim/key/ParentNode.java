@@ -43,10 +43,8 @@ public abstract class ParentNode implements Node
      */
     public Node getChild(Object key)
     {
-        Node res = (Node)children.get(key);
-
-        return res;
+        return children.get(key);
     }
 
-    protected HashMap children = new HashMap();
+    protected HashMap<Object, Node> children = new HashMap<Object, Node>();
 }

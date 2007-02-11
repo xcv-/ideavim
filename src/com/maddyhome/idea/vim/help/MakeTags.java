@@ -35,9 +35,8 @@ public class MakeTags
             return;
         }
 
-        for (int i = 0; i < args.length; i++)
+        for (String filename : args)
         {
-            String filename = args[i];
             if (filename.lastIndexOf(File.separatorChar) >= 0)
             {
                 filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
@@ -47,7 +46,7 @@ public class MakeTags
             try
             {
                 System.err.println("Processing " + filename);
-                reader = new BufferedReader(new FileReader(args[i]));
+                reader = new BufferedReader(new FileReader(filename));
                 boolean inComment = false;
                 String line;
                 while ((line = reader.readLine()) != null)
@@ -113,11 +112,11 @@ public class MakeTags
             }
             catch (FileNotFoundException e)
             {
-                System.err.println("Unable to open " + args[i]);
+                System.err.println("Unable to open " + filename);
             }
             catch (IOException e)
             {
-                System.err.println("Unable to read from " + args[i]);
+                System.err.println("Unable to read from " + filename);
             }
             finally
             {

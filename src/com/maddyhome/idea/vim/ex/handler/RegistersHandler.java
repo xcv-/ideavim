@@ -30,7 +30,6 @@ import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.StringHelper;
 import com.maddyhome.idea.vim.ui.MorePanel;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -48,13 +47,12 @@ public class RegistersHandler extends CommandHandler
 
     public boolean execute(final Editor editor, DataPackage context, ExCommand cmd) throws ExException
     {
-        List registers = CommandGroups.getInstance().getRegister().getRegisters();
+        List<Register> registers = CommandGroups.getInstance().getRegister().getRegisters();
 
         StringBuffer text = new StringBuffer();
         text.append("--- Registers ---\n");
-        for (Iterator iterator = registers.iterator(); iterator.hasNext();)
+        for (Register reg : registers)
         {
-            Register reg = (Register)iterator.next();
             text.append("\"");
             text.append(reg.getName());
 

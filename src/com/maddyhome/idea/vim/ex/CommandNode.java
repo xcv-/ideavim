@@ -39,14 +39,14 @@ public class CommandNode
     public CommandNode addChild(char ch, CommandHandler command)
     {
         CommandNode res = new CommandNode(command);
-        nodes.put(new Character(ch), res);
+        nodes.put(ch, res);
 
         return res;
     }
 
     public CommandNode getChild(char ch)
     {
-        return (CommandNode)nodes.get(new Character(ch));
+        return nodes.get(ch);
     }
 
     public CommandHandler getCommandHandler()
@@ -60,5 +60,5 @@ public class CommandNode
     }
 
     private CommandHandler command;
-    private HashMap nodes = new HashMap();
+    private HashMap<Character, CommandNode> nodes = new HashMap<Character, CommandNode>();
 }

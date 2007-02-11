@@ -28,6 +28,7 @@ import com.maddyhome.idea.vim.option.NumberOption;
 import com.maddyhome.idea.vim.option.Options;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -134,7 +135,7 @@ public class EditorUndoList
     {
         if (pointer < undos.size())
         {
-            UndoCommand cmd = (UndoCommand)undos.get(pointer);
+            UndoCommand cmd = undos.get(pointer);
             logger.debug("redo command " + pointer);
             pointer++;
             inUndo = true;
@@ -157,7 +158,7 @@ public class EditorUndoList
         if (pointer > 0)
         {
             pointer--;
-            UndoCommand cmd = (UndoCommand)undos.get(pointer);
+            UndoCommand cmd = undos.get(pointer);
             logger.debug("undo command " + pointer);
             inUndo = true;
             cmd.undo(editor, context);
@@ -187,7 +188,7 @@ public class EditorUndoList
             int lastLine = -1;
 
             pointer--;
-            UndoCommand cmd = (UndoCommand)undos.get(pointer);
+            UndoCommand cmd = undos.get(pointer);
             logger.debug("undo command " + pointer);
             while (cmd.isOneLine() && (lastLine == -1 || cmd.getLine() == lastLine))
             {
@@ -200,7 +201,7 @@ public class EditorUndoList
                 if (pointer > 0)
                 {
                     pointer--;
-                    cmd = (UndoCommand)undos.get(pointer);
+                    cmd = undos.get(pointer);
                 }
                 else
                 {
@@ -232,7 +233,7 @@ public class EditorUndoList
 
     //private Editor editor;
     private UndoCommand currentCommand;
-    private ArrayList undos = new ArrayList();
+    private List<UndoCommand> undos = new ArrayList<UndoCommand>();
     private int pointer = 0;
     private boolean inUndo = false;
     private boolean restorable = true;

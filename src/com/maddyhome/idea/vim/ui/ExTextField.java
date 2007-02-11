@@ -107,7 +107,7 @@ public class ExTextField extends JTextField
                 }
                 else
                 {
-                    HistoryGroup.HistoryEntry entry = (HistoryGroup.HistoryEntry)history.get(i);
+                    HistoryGroup.HistoryEntry entry = history.get(i);
                     txt = entry.getEntry();
                 }
 
@@ -132,7 +132,7 @@ public class ExTextField extends JTextField
             }
             else
             {
-                HistoryGroup.HistoryEntry entry = (HistoryGroup.HistoryEntry)history.get(histIndex);
+                HistoryGroup.HistoryEntry entry = history.get(histIndex);
                 txt = entry.getEntry();
             }
 
@@ -427,7 +427,7 @@ public class ExTextField extends JTextField
     private Editor editor;
     private DataPackage context;
     private String lastEntry;
-    private List history;
+    private List<HistoryGroup.HistoryEntry> history;
     private int histIndex = 0;
     private DigraphSequence digraph;
     // TODO - support block cursor for overwrite mode

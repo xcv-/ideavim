@@ -25,6 +25,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.maddyhome.idea.vim.handler.AbstractEditorActionHandler;
 
 import java.util.List;
+import javax.swing.KeyStroke;
 
 /**
  * This represents a single Vim command to be executed. It may optionally include an argument if appropriate for
@@ -269,12 +270,12 @@ public class Command
         this.argument = argument;
     }
 
-    public List getKeys()
+    public List<KeyStroke> getKeys()
     {
         return keys;
     }
 
-    public void setKeys(List keys)
+    public void setKeys(List<KeyStroke> keys)
     {
         this.keys = keys;
     }
@@ -301,5 +302,5 @@ public class Command
     private int type;
     private int flags;
     private Argument argument;
-    private List keys;
+    private List<KeyStroke> keys;
 }

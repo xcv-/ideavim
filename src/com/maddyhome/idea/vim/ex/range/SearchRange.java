@@ -28,6 +28,7 @@ import com.maddyhome.idea.vim.helper.EditorHelper;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.List;
 
 /**
  * Represents a range given by a search pattern. The pattern can be '\\/', '\\?', '\\&amp;', /{pattern}/,
@@ -61,27 +62,27 @@ public class SearchRange extends AbstractRange
             if (pat.equals("\\/"))
             {
                 patterns.add(CommandGroups.getInstance().getSearch().getLastSearch());
-                flags.add(new Integer(Command.FLAG_SEARCH_FWD));
+                flags.add(Command.FLAG_SEARCH_FWD);
             }
             else if (pat.equals("\\?"))
             {
                 patterns.add(CommandGroups.getInstance().getSearch().getLastSearch());
-                flags.add(new Integer(Command.FLAG_SEARCH_REV));
+                flags.add(Command.FLAG_SEARCH_REV);
             }
             else if (pat.equals("\\&"))
             {
                 patterns.add(CommandGroups.getInstance().getSearch().getLastPattern());
-                flags.add(new Integer(Command.FLAG_SEARCH_FWD));
+                flags.add(Command.FLAG_SEARCH_FWD);
             }
             else
             {
                 if (pat.charAt(0) == '/')
                 {
-                    flags.add(new Integer(Command.FLAG_SEARCH_FWD));
+                    flags.add(Command.FLAG_SEARCH_FWD);
                 }
                 else
                 {
-                    flags.add(new Integer(Command.FLAG_SEARCH_REV));
+                    flags.add(Command.FLAG_SEARCH_REV);
                 }
 
                 pat = pat.substring(1);
@@ -108,8 +109,8 @@ public class SearchRange extends AbstractRange
         int pos = -1;
         for (int i = 0; i < patterns.size(); i++)
         {
-            String pattern = (String)patterns.get(i);
-            int flag = ((Integer)flags.get(i)).intValue();
+            String pattern = patterns.get(i);
+            int flag = flags.get(i);
             if ((flag & Command.FLAG_SEARCH_FWD) != 0 && !lastZero)
             {
                 pos = CommandGroups.getInstance().getMotion().moveCaretToLineEnd(editor, line, true);
@@ -153,8 +154,8 @@ public class SearchRange extends AbstractRange
         return res.toString();
     }
 
-    private ArrayList patterns = new ArrayList();
-    private ArrayList flags = new ArrayList();
+    private List<String> patterns = new ArrayList<String>();
+    private List<Integer> flags = new ArrayList<Integer>();
 
     private static Logger logger = Logger.getInstance(SearchRange.class.getName());
 }

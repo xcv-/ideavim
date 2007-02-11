@@ -53,8 +53,8 @@ public class UndoManager
     public UndoManager()
     {
         //listener = new DocumentChangeListener();
-        editors = new HashMap();
-        documents = new HashMap();
+        editors = new HashMap<Document, EditorUndoList>();
+        documents = new HashMap<Document, HashSet<Editor>>();
 
         EditorFactory.getInstance().addEditorFactoryListener(new UndoEditorCloseListener());
         FileDocumentManager.getInstance().addFileDocumentManagerListener(new FileDocumentListener());
@@ -156,7 +156,7 @@ public class UndoManager
         }
     }
 
-    public HashMap getEditors()
+    public HashMap<Document, EditorUndoList> getEditors()
     {
         return editors;
     }
@@ -164,10 +164,10 @@ public class UndoManager
     private EditorUndoList addEditorUndoList(Editor editor)
     {
         EditorUndoList res;
-        HashSet tors = (HashSet)documents.get(editor.getDocument());
+        HashSet<Editor> tors = documents.get(editor.getDocument());
         if (tors == null)
         {
-            tors = new HashSet();
+            tors = new HashSet<Editor>();
             documents.put(editor.getDocument(), tors);
 
             res = new EditorUndoList(editor);
@@ -175,7 +175,7 @@ public class UndoManager
         }
         else
         {
-            res = (EditorUndoList)editors.get(editor.getDocument());
+            res = editors.get(editor.getDocument());
         }
 
         tors.add(editor);
@@ -185,7 +185,7 @@ public class UndoManager
 
     private void removeEditorUndoList(Editor editor)
     {
-        HashSet tors = (HashSet)documents.get(editor.getDocument());
+        HashSet tors = documents.get(editor.getDocument());
         if (tors != null)
         {
             tors.remove(editor);
@@ -200,7 +200,7 @@ public class UndoManager
 
     private EditorUndoList getEditorUndoList(Editor editor)
     {
-        EditorUndoList res = (EditorUndoList)editors.get(editor.getDocument());
+        EditorUndoList res = editors.get(editor.getDocument());
         if (res == null)
         {
             logger.info("Creating new undo list for " + EditorData.getVirtualFile(editor).getPath());
@@ -216,7 +216,7 @@ public class UndoManager
         {
             if (!VimPlugin.isEnabled()) return;
 
-            EditorUndoList list = (EditorUndoList)UndoManager.getInstance().getEditors().get(event.getDocument());
+            EditorUndoList list = UndoManager.getInstance().getEditors().get(event.getDocument());
             logger.debug("Change: list=" + list);
             if (list != null)
             {
@@ -238,7 +238,7 @@ public class UndoManager
     {
         public void beforeDocumentSaving(Document document) // API change - don't merge
         {
-            EditorUndoList list = (EditorUndoList)UndoManager.getInstance().getEditors().get(document);
+            EditorUndoList list = UndoManager.getInstance().getEditors().get(document);
             if (list != null)
             {
                 list.documentSaved();
@@ -247,8 +247,8 @@ public class UndoManager
     }
 
     //private DocumentListener listener;
-    private HashMap editors;
-    private HashMap documents;
+    private HashMap<Document, EditorUndoList> editors;
+    private HashMap<Document, HashSet<Editor>> documents;
     private boolean allow = true;
 
     private static UndoManager instance;

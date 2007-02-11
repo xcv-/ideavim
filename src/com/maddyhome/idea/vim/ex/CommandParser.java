@@ -660,10 +660,10 @@ public class CommandParser
     {
         // Iterator through each command name alias
         CommandName[] names = handler.getNames();
-        for (int c = 0; c < names.length; c++)
+        for (CommandName name : names)
         {
             CommandNode node = root;
-            String text = names[c].getRequired();
+            String text = name.getRequired();
             // Build a tree for each character in the required portion of the command name
             for (int i = 0; i < text.length() - 1; i++)
             {
@@ -689,7 +689,7 @@ public class CommandParser
             node = cn;
 
             // Now add the handler for each character in the optional portion of the command name
-            text = names[c].getOptional();
+            text = name.getOptional();
             for (int i = 0; i < text.length(); i++)
             {
                 cn = node.getChild(text.charAt(i));

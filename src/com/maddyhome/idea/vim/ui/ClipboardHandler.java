@@ -53,12 +53,15 @@ public class ClipboardHandler
         }
         catch (HeadlessException e)
         {
+            // ignore
         }
         catch (UnsupportedFlavorException e)
         {
+            // ignore
         }
         catch (IOException e)
         {
+            // ignore
         }
 
         return res;
@@ -78,6 +81,7 @@ public class ClipboardHandler
         }
         catch (HeadlessException e)
         {
+            // ignore
         }
     }
 }

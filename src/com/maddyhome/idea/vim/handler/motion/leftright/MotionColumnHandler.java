@@ -33,7 +33,7 @@ public class MotionColumnHandler extends MotionEditorActionHandler
 {
     public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
     {
-        return CommandGroups.getInstance().getMotion().moveCaretToColumn(editor, count - 1);
+        return CommandGroups.getInstance().getMotion().moveCaretToColumn(editor, count - 1, false);
     }
 
     protected void postMove(Editor editor, DataPackage context, Command cmd)

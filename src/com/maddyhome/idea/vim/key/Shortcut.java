@@ -60,7 +60,7 @@ public class Shortcut
 
     /**
      * Creates a shortcut based on the supplied list of keystrokes
-     * @param keys
+     * @param keys The keys
      */
     public Shortcut(KeyStroke[] keys)
     {

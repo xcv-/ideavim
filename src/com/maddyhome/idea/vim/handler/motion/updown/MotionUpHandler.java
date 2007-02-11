@@ -33,9 +33,7 @@ public class MotionUpHandler extends MotionEditorActionHandler
 {
     public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
     {
-        int res = CommandGroups.getInstance().getMotion().moveCaretVertical(editor, -count);
-
-        return res;
+        return CommandGroups.getInstance().getMotion().moveCaretVertical(editor, -count);
     }
 
     protected void preMove(Editor editor, DataPackage context, Command cmd)

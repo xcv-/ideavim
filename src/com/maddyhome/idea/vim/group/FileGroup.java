@@ -129,19 +129,19 @@ public class FileGroup extends AbstractActionGroup
         }
 
         VirtualFile[] children = root.getChildren();
-        for (int i = 0; i < children.length; i++)
+        for (VirtualFile child : children)
         {
-            if (children[i].isDirectory())
+            if (child.isDirectory())
             {
-                res = findFile(children[i], filename);
+                res = findFile(child, filename);
                 if (res != null)
                 {
                     return res;
                 }
             }
-            else if (children[i].getName().equals(filename))
+            else if (child.getName().equals(filename))
             {
-                return children[i];
+                return child;
             }
         }
 
@@ -273,7 +273,7 @@ public class FileGroup extends AbstractActionGroup
     {
         Project proj = context.getProject();
         FileEditorManager fem = FileEditorManager.getInstance(proj); // API change - don't merge
-        VirtualFile vf = (VirtualFile)lastSelections.get(fem);
+        VirtualFile vf = lastSelections.get(fem);
         if (vf != null)
         {
             fem.openFile(vf, true);
@@ -495,7 +495,7 @@ public class FileGroup extends AbstractActionGroup
         }
     }
 
-    private static HashMap lastSelections = new HashMap();
+    private static HashMap<FileEditorManager, VirtualFile> lastSelections = new HashMap<FileEditorManager, VirtualFile>();
 
     private static Logger logger = Logger.getInstance(FileGroup.class.getName());
 }

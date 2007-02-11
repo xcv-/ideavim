@@ -44,12 +44,12 @@ public class FilterMotionHandler extends AbstractEditorActionHandler
         LogicalPosition current = editor.getCaretModel().getLogicalPosition();
         LogicalPosition start = editor.offsetToLogicalPosition(range.getStartOffset());
         LogicalPosition end = editor.offsetToLogicalPosition(range.getEndOffset());
-        int count = 0;
         if (current.line != start.line)
         {
             MotionGroup.moveCaret(editor, context, range.getStartOffset());
         }
 
+        int count;
         if (start.line < end.line)
         {
             count = end.line - start.line + 1;

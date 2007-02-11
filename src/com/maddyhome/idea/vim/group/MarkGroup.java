@@ -45,7 +45,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -121,7 +120,7 @@ public class MarkGroup extends AbstractActionGroup
         // This is a mark from another file
         else if (GLOBAL_MARKS.indexOf(ch) >= 0)
         {
-            mark = (Mark)globalMarks.get(new Character(ch));
+            mark = globalMarks.get(new Character(ch));
             if (mark != null && mark.isClear())
             {
                 globalMarks.remove(new Character(ch));
@@ -147,7 +146,7 @@ public class MarkGroup extends AbstractActionGroup
         else
         {
             jumpSpot -= count;
-            return (Jump)jumps.get(index);
+            return jumps.get(index);
         }
     }
 
@@ -180,6 +179,7 @@ public class MarkGroup extends AbstractActionGroup
      */
     public boolean setMark(Editor editor, DataPackage context, char ch)
     {
+        //noinspection SimplifiableIfStatement
         if (VALID_SET_MARKS.indexOf(ch) >= 0)
         {
             return setMark(editor, context, ch, editor.getCaretModel().getOffset());
@@ -223,15 +223,15 @@ public class MarkGroup extends AbstractActionGroup
         // File specific marks get added to the file
         if (FILE_MARKS.indexOf(ch) >= 0)
         {
-            HashMap fmarks = getFileMarks(editor.getDocument());
-            fmarks.put(new Character(ch), mark);
+            HashMap<Character, Mark> fmarks = getFileMarks(editor.getDocument());
+            fmarks.put(ch, mark);
         }
         // Global marks get set to both the file and the global list of marks
         else if (GLOBAL_MARKS.indexOf(ch) >= 0)
         {
-            HashMap fmarks = getFileMarks(editor.getDocument());
-            fmarks.put(new Character(ch), mark);
-            Mark oldMark = (Mark)globalMarks.put(new Character(ch), mark);
+            HashMap<Character, Mark> fmarks = getFileMarks(editor.getDocument());
+            fmarks.put(ch, mark);
+            Mark oldMark = globalMarks.put(ch, mark);
             if (oldMark != null)
             {
                 oldMark.clear();
@@ -269,7 +269,7 @@ public class MarkGroup extends AbstractActionGroup
 
         for (int i = 0; i < jumps.size(); i++)
         {
-            Jump j = (Jump)jumps.get(i);
+            Jump j = jumps.get(i);
             if (j.getFilename().equals(jump.getFilename()) && j.getLogicalLine() == jump.getLogicalLine())
             {
                 jumps.remove(i);
@@ -309,21 +309,21 @@ public class MarkGroup extends AbstractActionGroup
         mark.clear();
     }
 
-    public List getMarks(Editor editor)
+    public List<Mark> getMarks(Editor editor)
     {
-        HashSet res = new HashSet();
+        HashSet<Mark> res = new HashSet<Mark>();
 
         res.addAll(getFileMarks(editor.getDocument()).values());
         res.addAll(globalMarks.values());
 
-        ArrayList list = new ArrayList(res);
+        ArrayList<Mark> list = new ArrayList<Mark>(res);
 
-        Collections.sort(list, new Mark.KeySorter());
+        Collections.sort(list, new Mark.KeySorter<Mark>());
 
         return list;
     }
 
-    public List getJumps()
+    public List<Jump> getJumps()
     {
         return jumps;
     }
@@ -339,7 +339,7 @@ public class MarkGroup extends AbstractActionGroup
      * @return The map of marks. The keys are <code>Character</code>s of the mark names, the values are
      * <code>Mark</code>s.
      */
-    private FileMarks getFileMarks(Document doc)
+    private FileMarks<Character, Mark> getFileMarks(Document doc)
     {
         VirtualFile vf = FileDocumentManager.getInstance().getFile(doc);
         if (vf == null)
@@ -350,7 +350,7 @@ public class MarkGroup extends AbstractActionGroup
         return getFileMarks(vf.getPath());
     }
 
-    private HashMap getAllFileMarks(Document doc)
+    private HashMap<Character, Mark> getAllFileMarks(Document doc)
     {
         VirtualFile vf = FileDocumentManager.getInstance().getFile(doc);
         if (vf == null)
@@ -358,18 +358,16 @@ public class MarkGroup extends AbstractActionGroup
             return null;
         }
 
-        HashMap res = new HashMap();
-        FileMarks fileMarks = getFileMarks(doc);
+        HashMap<Character, Mark> res = new HashMap<Character, Mark>();
+        FileMarks<Character, Mark> fileMarks = getFileMarks(doc);
         if (fileMarks != null)
         {
             res.putAll(fileMarks);
         }
 
-        Iterator iter = globalMarks.keySet().iterator();
-        while (iter.hasNext())
+        for (Character ch : globalMarks.keySet())
         {
-            Character ch = (Character)iter.next();
-            Mark mark = (Mark)globalMarks.get(ch);
+            Mark mark = globalMarks.get(ch);
             if (mark.getFilename().equals(vf.getPath()))
             {
                 res.put(ch, mark);
@@ -385,12 +383,12 @@ public class MarkGroup extends AbstractActionGroup
      * @return The map of marks. The keys are <code>Character</code>s of the mark names, the values are
      * <code>Mark</code>s.
      */
-    private FileMarks getFileMarks(String filename)
+    private FileMarks<Character, Mark> getFileMarks(String filename)
     {
-        FileMarks marks = (FileMarks)fileMarks.get(filename);
+        FileMarks<Character, Mark> marks = fileMarks.get(filename);
         if (marks == null)
         {
-            marks = new FileMarks();
+            marks = new FileMarks<Character, Mark>();
             fileMarks.put(filename, marks);
         }
 
@@ -404,9 +402,8 @@ public class MarkGroup extends AbstractActionGroup
     public void saveData(Element element)
     {
         Element marksElem = new Element("globalmarks");
-        for (Iterator iterator = globalMarks.values().iterator(); iterator.hasNext();)
+        for (Mark mark : globalMarks.values())
         {
-            Mark mark = (Mark)iterator.next();
             if (!mark.isClear())
             {
                 Element markElem = new Element("mark");
@@ -422,11 +419,11 @@ public class MarkGroup extends AbstractActionGroup
 
         Element fileMarksElem = new Element("filemarks");
 
-        List files = new ArrayList(fileMarks.values());
-        Collections.sort(files, new Comparator() {
-            public int compare(Object o1, Object o2)
+        List<FileMarks<Character, Mark>> files = new ArrayList<FileMarks<Character, Mark>>(fileMarks.values());
+        Collections.sort(files, new Comparator<FileMarks<Character, Mark>>() {
+            public int compare(FileMarks<Character, Mark> o1, FileMarks<Character, Mark> o2)
             {
-                return ((FileMarks)o1).timestamp.compareTo(((FileMarks)o2).timestamp);
+                return o1.timestamp.compareTo(o2.timestamp);
             }
         });
 
@@ -435,10 +432,9 @@ public class MarkGroup extends AbstractActionGroup
             files = files.subList(files.size() - SAVE_MARK_COUNT, files.size());
         }
 
-        for (Iterator iterator = fileMarks.keySet().iterator(); iterator.hasNext();)
+        for (String file : fileMarks.keySet())
         {
-            String file = (String)iterator.next();
-            FileMarks marks = (FileMarks)fileMarks.get(file);
+            FileMarks<Character, Mark> marks = fileMarks.get(file);
             if (!files.contains(marks))
             {
                 continue;
@@ -449,10 +445,10 @@ public class MarkGroup extends AbstractActionGroup
                 Element fileMarkElem = new Element("file");
                 fileMarkElem.setAttribute("name", file);
                 fileMarkElem.setAttribute("timestamp", Long.toString(marks.timestamp.getTime()));
-                for (Iterator miter = marks.values().iterator(); miter.hasNext();)
+                for (Mark mark : marks.values())
                 {
-                    Mark mark = (Mark)miter.next();
-                    if (!mark.isClear() && !Character.isUpperCase(mark.getKey()) && SAVE_FILE_MARKS.indexOf(mark.getKey()) >= 0)
+                    if (!mark.isClear() && !Character.isUpperCase(mark.getKey()) &&
+                        SAVE_FILE_MARKS.indexOf(mark.getKey()) >= 0)
                     {
                         Element markElem = new Element("mark");
                         markElem.setAttribute("key", Character.toString(mark.getKey()));
@@ -467,9 +463,8 @@ public class MarkGroup extends AbstractActionGroup
         element.addContent(fileMarksElem);
 
         Element jumpsElem = new Element("jumps");
-        for (Iterator iterator = jumps.iterator(); iterator.hasNext();)
+        for (Jump jump : jumps)
         {
-            Jump jump = (Jump)iterator.next();
             if (!jump.isClear())
             {
                 Element jumpElem = new Element("jump");
@@ -498,17 +493,17 @@ public class MarkGroup extends AbstractActionGroup
         if (marksElem != null)
         {
             List markList = marksElem.getChildren("mark");
-            for (int i = 0; i < markList.size(); i++)
+            for (Object aMarkList : markList)
             {
-                Element markElem = (Element)markList.get(i);
+                Element markElem = (Element)aMarkList;
                 Mark mark = new Mark(markElem.getAttributeValue("key").charAt(0),
                     Integer.parseInt(markElem.getAttributeValue("line")),
                     Integer.parseInt(markElem.getAttributeValue("column")),
                     markElem.getAttributeValue("filename"));
 
-                globalMarks.put(new Character(mark.getKey()), mark);
-                HashMap fmarks = getFileMarks(mark.getFilename());
-                fmarks.put(new Character(mark.getKey()), mark);
+                globalMarks.put(mark.getKey(), mark);
+                HashMap<Character, Mark> fmarks = getFileMarks(mark.getFilename());
+                fmarks.put(mark.getKey(), mark);
             }
         }
 
@@ -518,9 +513,9 @@ public class MarkGroup extends AbstractActionGroup
         if (fileMarksElem != null)
         {
             List fileList = fileMarksElem.getChildren("file");
-            for (int i = 0; i < fileList.size(); i++)
+            for (Object aFileList : fileList)
             {
-                Element fileElem = (Element)fileList.get(i);
+                Element fileElem = (Element)aFileList;
                 String filename = fileElem.getAttributeValue("name");
                 Date timestamp = new Date();
                 try
@@ -532,17 +527,17 @@ public class MarkGroup extends AbstractActionGroup
                 {
                     // ignore
                 }
-                FileMarks fmarks = getFileMarks(filename);
+                FileMarks<Character, Mark> fmarks = getFileMarks(filename);
                 List markList = fileElem.getChildren("mark");
-                for (int j = 0; j < markList.size(); j++)
+                for (Object aMarkList : markList)
                 {
-                    Element markElem = (Element)markList.get(j);
+                    Element markElem = (Element)aMarkList;
                     Mark mark = new Mark(markElem.getAttributeValue("key").charAt(0),
                         Integer.parseInt(markElem.getAttributeValue("line")),
                         Integer.parseInt(markElem.getAttributeValue("column")),
                         filename);
 
-                    fmarks.put(new Character(mark.getKey()), mark);
+                    fmarks.put(mark.getKey(), mark);
                 }
                 fmarks.setTimestamp(timestamp);
             }
@@ -555,9 +550,9 @@ public class MarkGroup extends AbstractActionGroup
         if (jumpsElem != null)
         {
             List jumpList = jumpsElem.getChildren("jump");
-            for (int i = 0; i < jumpList.size(); i++)
+            for (Object aJumpList : jumpList)
             {
-                Element jumpElem = (Element)jumpList.get(i);
+                Element jumpElem = (Element)aJumpList;
                 Jump jump = new Jump(Integer.parseInt(jumpElem.getAttributeValue("line")),
                     Integer.parseInt(jumpElem.getAttributeValue("column")),
                     jumpElem.getAttributeValue("filename"));
@@ -578,7 +573,7 @@ public class MarkGroup extends AbstractActionGroup
      * @param delStartOff The offset within the editor where the deletion occurred
      * @param delLength The length of the deleted text
      */
-    public static void updateMarkFromDelete(Editor editor, HashMap marks, int delStartOff, int delLength)
+    public static void updateMarkFromDelete(Editor editor, HashMap<Character, Mark> marks, int delStartOff, int delLength)
     {
         // Skip all this work if there are no marks
         if (marks != null && marks.size() > 0 && editor != null)
@@ -590,10 +585,9 @@ public class MarkGroup extends AbstractActionGroup
             logger.debug("mark delete. delStart = " + delStart + ", delEnd = " + delEnd);
 
             // Now analyze each mark to determine if it needs to be updated or removed
-            for (Iterator iterator = marks.keySet().iterator(); iterator.hasNext();)
+            for (Character ch: marks.keySet())
             {
-                Character ch = (Character)iterator.next();
-                Mark mark = (Mark)marks.get(ch);
+                Mark mark = marks.get(ch);
 
                 logger.debug("mark = " + mark);
                 // If the end of the deleted text is prior to the marked line, simply shift the mark up by the
@@ -612,7 +606,7 @@ public class MarkGroup extends AbstractActionGroup
                     // If the marked line is completely within the deleted text, remove the mark
                     if (delStartOff <= markLineStartOff && delEndOff >= markLineEndOff)
                     {
-                        CommandGroups.getInstance().getMark().removeMark(ch.charValue(), mark);
+                        CommandGroups.getInstance().getMark().removeMark(ch, mark);
                         logger.debug("Removed mark");
                     }
                     // The deletion only covers part of the marked line so shift the mark only if the deletion begins
@@ -636,7 +630,7 @@ public class MarkGroup extends AbstractActionGroup
      * @param insStartOff The insertion point
      * @param insLength The length of the insertion
      */
-    public static void updateMarkFromInsert(Editor editor, HashMap marks, int insStartOff, int insLength)
+    public static void updateMarkFromInsert(Editor editor, HashMap<Character, Mark> marks, int insStartOff, int insLength)
     {
         if (marks != null && marks.size() > 0 && editor != null)
         {
@@ -647,9 +641,8 @@ public class MarkGroup extends AbstractActionGroup
             int lines = insEnd.line - insStart.line;
             if (lines == 0) return;
 
-            for (Iterator iterator = marks.values().iterator(); iterator.hasNext();)
+            for (Mark mark : marks.values())
             {
-                Mark mark = (Mark)iterator.next();
                 logger.debug("mark = " + mark);
                 // Shift the mark if the insertion began on a line prior to the marked line.
                 if (insStart.line < mark.getLogicalLine())
@@ -661,7 +654,7 @@ public class MarkGroup extends AbstractActionGroup
         }
     }
 
-    private static class FileMarks extends HashMap
+    private static class FileMarks<K, V> extends HashMap<K, V>
     {
         public Date getTimestamp()
         {
@@ -673,7 +666,7 @@ public class MarkGroup extends AbstractActionGroup
             this.timestamp = timestamp;
         }
 
-        public Object put(Object key, Object value)
+        public V put(K key, V value)
         {
             timestamp = new Date();
             return super.put(key, value);
@@ -743,9 +736,9 @@ public class MarkGroup extends AbstractActionGroup
         }
     }
 
-    private HashMap fileMarks = new HashMap();
-    private HashMap globalMarks = new HashMap();
-    private ArrayList jumps = new ArrayList();
+    private HashMap<String, FileMarks<Character, Mark>> fileMarks = new HashMap<String, FileMarks<Character, Mark>>();
+    private HashMap<Character, Mark> globalMarks = new HashMap<Character, Mark>();
+    private List<Jump> jumps = new ArrayList<Jump>();
     private int jumpSpot = -1;
 
     private static int SAVE_MARK_COUNT = 20;

@@ -96,9 +96,9 @@ public class NumberOption extends TextOption
             return false;
         }
 
-        if (inRange(num.intValue()))
+        if (inRange(num))
         {
-            value = num.intValue();
+            value = num;
             fireOptionChangeEvent();
 
             return true;
@@ -123,9 +123,9 @@ public class NumberOption extends TextOption
             return false;
         }
 
-        if (inRange(value + num.intValue()))
+        if (inRange(value + num))
         {
-            value += num.intValue();
+            value += num;
             fireOptionChangeEvent();
 
             return true;
@@ -150,9 +150,9 @@ public class NumberOption extends TextOption
             return false;
         }
 
-        if (inRange(value * num.intValue()))
+        if (inRange(value * num))
         {
-            value *= num.intValue();
+            value *= num;
             fireOptionChangeEvent();
 
             return true;
@@ -177,9 +177,9 @@ public class NumberOption extends TextOption
             return false;
         }
 
-        if (inRange(value - num.intValue()))
+        if (inRange(value - num))
         {
-            value -= num.intValue();
+            value -= num;
             fireOptionChangeEvent();
 
             return true;

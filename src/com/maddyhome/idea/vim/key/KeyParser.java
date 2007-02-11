@@ -348,12 +348,12 @@ public class KeyParser
      */
     public RootNode getKeyRoot(int mode)
     {
-        RootNode res = (RootNode)keyRoots.get(new Integer(mode));
+        RootNode res = keyRoots.get(new Integer(mode));
         // Create the root node if one doesn't exist yet for this mode
         if (res == null)
         {
             res = new RootNode();
-            keyRoots.put(new Integer(mode), res);
+            keyRoots.put(mode, res);
         }
 
         return res;
@@ -382,10 +382,9 @@ public class KeyParser
 
         Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
         com.intellij.openapi.actionSystem.Shortcut[] cuts = keymap.getShortcuts(ideaName);
-        ArrayList shortcuts = new ArrayList();
-        for (int j = 0; j < cuts.length; j++)
+        ArrayList<Shortcut> shortcuts = new ArrayList<Shortcut>();
+        for (com.intellij.openapi.actionSystem.Shortcut cut : cuts)
         {
-            com.intellij.openapi.actionSystem.Shortcut cut = cuts[j];
             if (cut instanceof KeyboardShortcut)
             {
                 KeyStroke keyStroke = ((KeyboardShortcut)cut).getFirstKeyStroke();
@@ -394,11 +393,11 @@ public class KeyParser
             }
         }
 
-        registerAction(mapping, actName, cmdType, cmdFlags, (Shortcut[])shortcuts.toArray(new Shortcut[] {}));
+        registerAction(mapping, actName, cmdType, cmdFlags, shortcuts.toArray(new Shortcut[] {}));
         KeyStroke firstStroke = null;
         for (int i = 0; i < shortcuts.size(); i++)
         {
-            Shortcut cut = (Shortcut)shortcuts.get(i);
+            Shortcut cut = shortcuts.get(i);
             //removePossibleConflict(cut.getKeys()[0]);
             if (i == 0)
             {
@@ -518,9 +517,9 @@ public class KeyParser
      */
     public void registerAction(int mapping, String actName, int cmdType, int cmdFlags, Shortcut[] shortcuts, int argType)
     {
-        for (int i = 0; i < shortcuts.length; i++)
+        for (Shortcut shortcut : shortcuts)
         {
-            registerAction(mapping, actName, cmdType, cmdFlags, shortcuts[i].getKeys(), argType);
+            registerAction(mapping, actName, cmdType, cmdFlags, shortcut.getKeys(), argType);
         }
     }
 
@@ -564,6 +563,8 @@ public class KeyParser
      * @param cmdFlags Any special flags associated with this command
      * @param key The keystroke to map to the action
      * @param argType The type of argument required by the action
+     * @param last True if last
+     * @return Node
      */
     private Node addNode(ParentNode base, String actName, int cmdType, int cmdFlags, KeyStroke key, int argType, boolean last)
     {
@@ -854,8 +855,6 @@ public class KeyParser
         //    Nothing to do.
         public void onShortcutChanged(String actionId)
         {
-            return; // TODO - remove this once the bug has been fixed.
-
             /* TODO - this is untested code due to the bug.
             // Get the newly updated list of shortcuts for this action
             com.intellij.openapi.actionSystem.Shortcut[] cuts = keymap.getShortcuts(actionId);
@@ -944,7 +943,7 @@ public class KeyParser
         }
     }
 
-    private HashMap keyRoots = new HashMap();
+    private HashMap<Integer, RootNode> keyRoots = new HashMap<Integer, RootNode>();
     //private HashMap conflicts = new HashMap();
     //private HashSet ideaWins = new HashSet();
     //private Keymap keymap;

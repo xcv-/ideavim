@@ -61,7 +61,7 @@ public class MotionLastScreenColumnAction extends MotionEditorAction
 
             }
 
-            return CommandGroups.getInstance().getMotion().moveCaretToLineScreenEnd(editor);
+            return CommandGroups.getInstance().getMotion().moveCaretToLineScreenEnd(editor, allow);
         }
 
         protected void postMove(Editor editor, DataPackage context, Command cmd)

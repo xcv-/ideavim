@@ -26,10 +26,10 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.maddyhome.idea.vim.VimSettings;
 import com.maddyhome.idea.vim.key.KeyConflict;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import javax.swing.JCheckBox;
@@ -54,7 +54,7 @@ public class VimSettingsPanel
         return mainPanel;
     }
 
-    public void setOptions(VimSettings options, HashMap conflicts)
+    public void setOptions(VimSettings options, HashMap<KeyStroke, KeyConflict> conflicts)
     {
         pluginEnable.setSelected(options.isEnabled());
 
@@ -130,14 +130,12 @@ public class VimSettingsPanel
 
     private static class ConflictTableModel extends AbstractTableModel
     {
-        public ConflictTableModel(HashMap conflicts)
+        public ConflictTableModel(HashMap<KeyStroke, KeyConflict> conflicts)
         {
-            TreeMap keys = new TreeMap();
-            Iterator iter = conflicts.keySet().iterator();
-            while (iter.hasNext())
+            TreeMap<String, KeyStroke> keys = new TreeMap<String, KeyStroke>();
+            for (KeyStroke stroke : conflicts.keySet())
             {
-                KeyStroke stroke = (KeyStroke)iter.next();
-                KeyConflict conf = (KeyConflict)conflicts.get(stroke);
+                KeyConflict conf = conflicts.get(stroke);
                 if (conf.hasConflict())
                 {
                     keys.put(KeymapUtil.getKeystrokeText(stroke), stroke);
@@ -149,23 +147,21 @@ public class VimSettingsPanel
             data = new Object[keys.size()][4];
 
             ActionManager mgr = ActionManager.getInstance();
-            iter = keys.keySet().iterator();
+            Iterator iter = keys.keySet().iterator();
             for (int i = 0; iter.hasNext(); i++)
             {
                 String keyLabel = (String)iter.next();
-                KeyStroke stroke = (KeyStroke)keys.get(keyLabel);
-                KeyConflict conf = (KeyConflict)conflicts.get(stroke);
+                KeyStroke stroke = keys.get(keyLabel);
+                KeyConflict conf = conflicts.get(stroke);
 
                 orig[i] = !conf.isPluginWins();
                 keystokes[i] = stroke;
-                data[i][0] = new Boolean(!conf.isPluginWins());
+                data[i][0] = !conf.isPluginWins();
                 data[i][1] = keyLabel;
 
-                TreeSet actions = new TreeSet();
-                Iterator acts = conf.getIdeaActions().keySet().iterator();
-                while (acts.hasNext())
+                TreeSet<String> actions = new TreeSet<String>();
+                for (String id : conf.getIdeaActions().keySet())
                 {
-                    String id = (String)acts.next();
                     String desc = null;
                     AnAction act = mgr.getAction(id);
                     if (act != null)
@@ -184,11 +180,10 @@ public class VimSettingsPanel
 
                 data[i][2] = actions.toString();
 
-                actions = new TreeSet();
-                ArrayList pacts = conf.getPluginActions();
-                for (int j = 0; j < pacts.size(); j++)
+                actions = new TreeSet<String>();
+                List<String> pacts = conf.getPluginActions();
+                for (String id : pacts)
                 {
-                    String id = (String)pacts.get(j);
                     actions.add(mgr.getAction(id).getTemplatePresentation().getText());
                 }
 
@@ -198,11 +193,11 @@ public class VimSettingsPanel
 
         public HashSet getChoices()
         {
-            HashSet res = new HashSet();
+            HashSet<KeyStroke> res = new HashSet<KeyStroke>();
             for (int i = 0; i < getRowCount(); i++)
             {
                 Boolean val = (Boolean)getValueAt(i, 0);
-                if (val.booleanValue())
+                if (val)
                 {
                     res.add(keystokes[i]);
                 }

@@ -109,8 +109,8 @@ public class MotionGroup extends AbstractActionGroup
 
     /**
      * Process mouse clicks by setting/resetting visual mode. There are some strange scenerios to handle.
-     * @param editor
-     * @param event
+     * @param editor The editor
+     * @param event The mouse event
      */
     private void processMouseClick(Editor editor, MouseEvent event)
     {
@@ -183,8 +183,9 @@ public class MotionGroup extends AbstractActionGroup
     }
 
     /**
-     * Handles mouse drags by properly setting up visual mode based on the new selection
-     * @param editor The editor the mouse drag occured in
+     * Handles mouse drags by properly setting up visual mode based on the new selection.
+     * @param editor The editor the mouse drag occured in.
+     * @param update True if update, false if not.
      */
     private void processLineSelection(Editor editor, boolean update)
     {
@@ -326,6 +327,7 @@ public class MotionGroup extends AbstractActionGroup
      * @param count The count applied to the motion
      * @param rawCount The actual count entered by the user
      * @param argument Any argument needed by the motion
+     * @param incNewline True if to include newline
      * @param moveCursor True if cursor should be moved just as if motion command were executed by user, false if not
      * @return The motion's range
      */
@@ -568,8 +570,9 @@ public class MotionGroup extends AbstractActionGroup
 
     /**
      * This moves the caret to the start of the next/previous camel word.
-     * @param count The number of words to skip
      * @param editor The editor to move in
+     * @param count The number of words to skip
+     * @return position
      */
     public int moveCaretToNextCamel(Editor editor, int count)
     {
@@ -586,8 +589,9 @@ public class MotionGroup extends AbstractActionGroup
 
     /**
      * This moves the caret to the start of the next/previous camel word.
-     * @param count The number of words to skip
      * @param editor The editor to move in
+     * @param count The number of words to skip
+     * @return position
      */
     public int moveCaretToNextCamelEnd(Editor editor, int count)
     {
@@ -604,9 +608,10 @@ public class MotionGroup extends AbstractActionGroup
 
     /**
      * This moves the caret to the start of the next/previous word/WORD.
+     * @param editor The editor to move in
      * @param count The number of words to skip
      * @param skipPunc If true then find WORD, if false then find word
-     * @param editor The editor to move in
+     * @return position
      */
     public int moveCaretToNextWord(Editor editor, int count, boolean skipPunc)
     {
@@ -623,9 +628,10 @@ public class MotionGroup extends AbstractActionGroup
 
     /**
      * This moves the caret to the end of the next/previous word/WORD.
+     * @param editor The editor to move in
      * @param count The number of words to skip
      * @param skipPunc If true then find WORD, if false then find word
-     * @param editor The editor to move in
+     * @return position
      */
     public int moveCaretToNextWordEnd(Editor editor, int count, boolean skipPunc)
     {
@@ -659,8 +665,9 @@ public class MotionGroup extends AbstractActionGroup
 
     /**
      * This moves the caret to the start of the next/previous paragraph.
-     * @param count The number of paragraphs to skip
      * @param editor The editor to move in
+     * @param count The number of paragraphs to skip
+     * @return position
      */
     public int moveCaretToNextParagraph(Editor editor, int count)
     {
@@ -852,19 +859,19 @@ public class MotionGroup extends AbstractActionGroup
 
     public boolean scrollColumnToFirstScreenColumn(Editor editor, DataPackage context)
     {
-        scrollColumnToScreenColumn(editor, context, 0);
+        scrollColumnToScreenColumn(editor, 0);
 
         return true;
     }
 
     public boolean scrollColumnToLastScreenColumn(Editor editor, DataPackage context)
     {
-        scrollColumnToScreenColumn(editor, context, EditorHelper.getScreenWidth(editor));
+        scrollColumnToScreenColumn(editor, EditorHelper.getScreenWidth(editor));
 
         return true;
     }
 
-    private void scrollColumnToScreenColumn(Editor editor, DataPackage context, int scol)
+    private void scrollColumnToScreenColumn(Editor editor, int scol)
     {
         int scrolloff = ((NumberOption)Options.getInstance().getOption("sidescrolloff")).value();
         int width = EditorHelper.getScreenWidth(editor);
@@ -1182,13 +1189,13 @@ public class MotionGroup extends AbstractActionGroup
         int width = EditorHelper.getScreenWidth(editor) / 2;
         int len = EditorHelper.getLineLength(editor);
 
-        return moveCaretToColumn(editor, Math.max(0, Math.min(len - 1, width)));
+        return moveCaretToColumn(editor, Math.max(0, Math.min(len - 1, width)), false);
     }
 
-    public int moveCaretToColumn(Editor editor, int count)
+    public int moveCaretToColumn(Editor editor, int count, boolean allowEnd)
     {
         int line = EditorHelper.getCurrentLogicalLine(editor);
-        int pos = EditorHelper.normalizeColumn(editor, line, count);
+        int pos = EditorHelper.normalizeColumn(editor, line, count, allowEnd);
 
         return editor.logicalPositionToOffset(new LogicalPosition(line, pos));
     }
@@ -1290,7 +1297,7 @@ public class MotionGroup extends AbstractActionGroup
     public int moveCaretToLineScreenStart(Editor editor)
     {
         int col = EditorHelper.getVisualColumnAtLeftOfScreen(editor);
-        return moveCaretToColumn(editor, col);
+        return moveCaretToColumn(editor, col, false);
     }
 
     public int moveCaretToLineScreenStartSkipLeading(Editor editor)
@@ -1300,10 +1307,10 @@ public class MotionGroup extends AbstractActionGroup
         return EditorHelper.getLeadingCharacterOffset(editor, lline, col);
     }
 
-    public int moveCaretToLineScreenEnd(Editor editor)
+    public int moveCaretToLineScreenEnd(Editor editor, boolean allowEnd)
     {
         int col = EditorHelper.getVisualColumnAtLeftOfScreen(editor) + EditorHelper.getScreenWidth(editor) - 1;
-        return moveCaretToColumn(editor, col);
+        return moveCaretToColumn(editor, col, allowEnd);
     }
 
     public int moveCaretHorizontalWrap(Editor editor, int count)
@@ -1370,7 +1377,7 @@ public class MotionGroup extends AbstractActionGroup
             col = EditorHelper.getLineLength(editor, line);
         }
 
-        LogicalPosition newPos = new LogicalPosition(line, EditorHelper.normalizeColumn(editor, line, col));
+        LogicalPosition newPos = new LogicalPosition(line, EditorHelper.normalizeColumn(editor, line, col, false));
 
         return editor.logicalPositionToOffset(newPos);
     }
@@ -1923,6 +1930,11 @@ public class MotionGroup extends AbstractActionGroup
 
         LogicalPosition lstart = editor.getSelectionModel().getBlockStart();
         LogicalPosition lend = editor.getSelectionModel().getBlockEnd();
+        if (lstart == null || lend == null)
+        {
+            return false;
+        }
+
         if (visualStart > visualEnd)
         {
             LogicalPosition t = lend;
@@ -1985,15 +1997,15 @@ public class MotionGroup extends AbstractActionGroup
             TextRange range = new TextRange(selectionEvent.getNewRange().getStartOffset(), selectionEvent.getNewRange().getEndOffset());
 
             Editor[] editors = EditorFactory.getInstance().getEditors(editor.getDocument());
-            for (int i = 0; i < editors.length; i++)
+            for (Editor ed : editors)
             {
-                if (editors[i].equals(editor))
+                if (ed.equals(editor))
                 {
                     continue;
                 }
 
-                editors[i].getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
-                editors[i].getCaretModel().moveToOffset(editor.getCaretModel().getOffset());
+                ed.getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
+                ed.getCaretModel().moveToOffset(editor.getCaretModel().getOffset());
             }
 
             makingChanges = false;

@@ -174,10 +174,9 @@ public class HistoryHandler extends CommandHandler
         res.append("      #  ").append(key).append(" ").append("history\n");
 
         String spaces = "       ";
-        List entries = CommandGroups.getInstance().getHistory().getEntries(key, start, end);
-        for (int i = 0; i < entries.size(); i++)
+        List<HistoryGroup.HistoryEntry> entries = CommandGroups.getInstance().getHistory().getEntries(key, start, end);
+        for (HistoryGroup.HistoryEntry entry : entries)
         {
-            HistoryGroup.HistoryEntry entry = (HistoryGroup.HistoryEntry)entries.get(i);
             String num = Integer.toString(entry.getNumber());
             res.append(spaces.substring(num.length())).append(num).append("  ").append(entry.getEntry()).append("\n");
         }

@@ -492,17 +492,16 @@ public class ChangeGroup extends AbstractActionGroup
         for (int i = 0; i < count; i++)
         {
             // Treat other keys special by performing the appropriate action they represent in insert/replace mode
-            for (int k = 0; k < lastStrokes.size(); k++)
+            for (Object lastStroke : lastStrokes)
             {
-                Object obj = lastStrokes.get(k);
-                if (obj instanceof AnAction)
+                if (lastStroke instanceof AnAction)
                 {
-                    KeyHandler.executeAction((AnAction)obj, context);
-                    strokes.add(obj);
+                    KeyHandler.executeAction((AnAction)lastStroke, context);
+                    strokes.add(lastStroke);
                 }
-                else if (obj instanceof Character)
+                else if (lastStroke instanceof Character)
                 {
-                    processKey(editor, context, KeyStroke.getKeyStroke(((Character)obj).charValue()));
+                    processKey(editor, context, KeyStroke.getKeyStroke((Character)lastStroke));
                 }
             }
         }
@@ -615,7 +614,7 @@ public class ChangeGroup extends AbstractActionGroup
         {
             // Regular characters are not handled by us, pass them back to Idea. We just keep track of the keystroke
             // for repeating later.
-            strokes.add(new Character(key.getKeyChar()));
+            strokes.add(key.getKeyChar());
 
             ApplicationManager.getApplication().runWriteAction(new Runnable() {
                 public void run()
@@ -660,7 +659,7 @@ public class ChangeGroup extends AbstractActionGroup
 
     /**
      * Clears all the keystrokes from the current insert command
-     * @param editor
+     * @param editor The editor to clear strokes from.
      */
     private void clearStrokes(Editor editor)
     {
@@ -763,6 +762,7 @@ public class ChangeGroup extends AbstractActionGroup
         if (count < 2) count = 2;
         int lline = EditorHelper.getCurrentLogicalLine(editor);
         int total = EditorHelper.getLineCount(editor);
+        //noinspection SimplifiableIfStatement
         if (lline + count > total)
         {
             return false;
@@ -835,6 +835,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param count The number of times to repear the deletion
      * @param rawCount The actual count entered by the user
      * @param argument The motion command
+     * @param isChange if from a change
      * @return true if able to delete the text, false if not
      */
     public boolean deleteMotion(Editor editor, DataPackage context, int count, int rawCount, Argument argument, boolean isChange)
@@ -888,7 +889,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param context The data context
      * @param range The range to delete
      * @param type The type of deletion (FLAG_MOT_LINEWISE, FLAG_MOT_EXCLUSIVE, or FLAG_MOT_INCLUSIVE)
-     * @param isChange
+     * @param isChange If from a change
      * @return true if able to delete the text, false if not
      */
     public boolean deleteRange(Editor editor, DataPackage context, TextRange range, int type, boolean isChange)
@@ -899,8 +900,7 @@ public class ChangeGroup extends AbstractActionGroup
         }
         else
         {
-            boolean res = true;
-            res = deleteText(editor, context, range, type);
+            boolean res = deleteText(editor, context, range, type);
 
             if (res && editor.getCaretModel().getOffset() >= EditorHelper.getFileSize(editor) &&
                 editor.getCaretModel().getOffset() != 0 && !isChange)
@@ -1403,7 +1403,7 @@ public class ChangeGroup extends AbstractActionGroup
                 if (stroke instanceof Character)
                 {
                     Character key = (Character)stroke;
-                    if (key.charValue() == '0')
+                    if (key == '0')
                     {
                         deleteCharacter(editor, context, -1);
                         cnt = 99;
@@ -1461,7 +1461,7 @@ public class ChangeGroup extends AbstractActionGroup
                 // Right shift blockwise selection
                 StringBuffer space = new StringBuffer();
                 int tabCnt = 0;
-                int spcCnt = 0;
+                int spcCnt;
                 if (useTabs)
                 {
                     tabCnt = size / tabSize;
@@ -1533,7 +1533,7 @@ public class ChangeGroup extends AbstractActionGroup
                 {
                     StringBuffer space = new StringBuffer();
                     int tabCnt = 0;
-                    int spcCnt = 0;
+                    int spcCnt;
                     if (useTabs)
                     {
                         tabCnt = newCol / tabSize;
@@ -1668,9 +1668,9 @@ public class ChangeGroup extends AbstractActionGroup
         Document doc = FileDocumentManager.getInstance().getDocument(virtualFile);
         Editor[] editors = EditorFactory.getInstance().getEditors(doc, proj);
         logger.debug("There are " + editors.length + " editors for virtual file " + virtualFile.getName());
-        for (int i = 0; i < editors.length; i++)
+        for (Editor editor : editors)
         {
-            editors[i].getSettings().setBlockCursor(!insert);
+            editor.getSettings().setBlockCursor(!insert);
         }
     }
 

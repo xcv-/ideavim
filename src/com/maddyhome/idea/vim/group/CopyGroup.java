@@ -127,7 +127,7 @@ public class CopyGroup extends AbstractActionGroup
                 return false;
             }
 
-            int pos = 0;
+            int pos;
             // If a linewise put the text is inserted before the current line.
             if ((reg.getType() & Command.FLAG_MOT_LINEWISE) != 0)
             {
@@ -165,7 +165,7 @@ public class CopyGroup extends AbstractActionGroup
                 return false;
             }
 
-            int pos = 0;
+            int pos;
             // If a linewise paste, the text is inserted after the current line.
             if ((reg.getType() & Command.FLAG_MOT_LINEWISE) != 0)
             {
@@ -420,7 +420,7 @@ public class CopyGroup extends AbstractActionGroup
             logger.debug("insertCnt=" + insertCnt);
         }
 
-        int cursorMode = 0;
+        int cursorMode;
         if ((type & Command.FLAG_MOT_BLOCKWISE) != 0)
         {
             if ((mode & Command.FLAG_MOT_LINEWISE) != 0)

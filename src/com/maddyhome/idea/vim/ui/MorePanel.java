@@ -44,6 +44,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -106,7 +107,7 @@ public class MorePanel extends JPanel
         setBorder(BorderFactory.createEtchedBorder());
 
         // Setup some listeners to handle keystrokes
-        moreKeyListener = new MoreKeyListener(this);
+        MoreKeyListener moreKeyListener = new MoreKeyListener(this);
         addKeyListener(moreKeyListener);
         text.addKeyListener(moreKeyListener);
 
@@ -340,7 +341,7 @@ public class MorePanel extends JPanel
                 {
                     KeyStroke key = KeyStroke.getKeyStrokeForEvent(e);
                     Project project = EditorData.getProject(editor);
-                    ArrayList keys = new ArrayList(1);
+                    List<KeyStroke> keys = new ArrayList<KeyStroke>(1);
                     keys.add(key);
                     CommandGroups.getInstance().getMacro().playbackKeys(editor,
                         new DataPackage(new EditorDataContext(editor)), project, keys, 0, 0, 1);
@@ -476,7 +477,6 @@ public class MorePanel extends JPanel
     private JTextArea text = new JTextArea();
     private JScrollPane scrollPane = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    private MoreKeyListener moreKeyListener;
     private ParentFocusListener focusListener;
     private MoreResizeListener resizeListener;
     private boolean atEnd;

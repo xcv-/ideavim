@@ -31,7 +31,6 @@ import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.util.HashSet;
-import java.util.Iterator;
 
 public class DocumentManager
 {
@@ -93,12 +92,11 @@ public class DocumentManager
         }
 
         doc.putUserData(LISTENER_MARKER, "foo");
-        Iterator iter = docListeners.iterator();
-        while (iter.hasNext())
+        for (DocumentListener docListener : docListeners)
         {
             //try
             //{
-                doc.addDocumentListener((DocumentListener)iter.next());
+            doc.addDocumentListener(docListener);
             //}
             /*
             catch (AssertionError e)
@@ -122,12 +120,11 @@ public class DocumentManager
         }
 
         doc.putUserData(LISTENER_MARKER, null);
-        Iterator iter = docListeners.iterator();
-        while (iter.hasNext())
+        for (DocumentListener docListener : docListeners)
         {
             //try
             //{
-                doc.removeDocumentListener((DocumentListener)iter.next());
+            doc.removeDocumentListener(docListener);
             //}
             /*
             catch (AssertionError e)
@@ -178,9 +175,9 @@ public class DocumentManager
     }
 
     //private FileDocumentListener listener = new FileDocumentListener();
-    private HashSet docListeners = new HashSet();
+    private HashSet<DocumentListener> docListeners = new HashSet<DocumentListener>();
 
-    private static final Key LISTENER_MARKER = new Key("listenerMarker");
+    private static final Key<String> LISTENER_MARKER = new Key<String>("listenerMarker");
     private static DocumentManager instance = new DocumentManager();
     private static Logger logger = Logger.getInstance(DocumentManager.class.getName());
 }

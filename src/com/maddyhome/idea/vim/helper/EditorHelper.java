@@ -186,6 +186,7 @@ public class EditorHelper
     /**
      * Gets the actual number of characters in the file
      * @param editor The editor
+     * @param incEnd True include newline
      * @return The file's character count
      */
     public static int getFileSize(Editor editor, boolean incEnd)
@@ -306,6 +307,7 @@ public class EditorHelper
      * Returns the offset of the end of the requested line.
      * @param editor The editor
      * @param lline The logical line to get the end offset for.
+     * @param incEnd True include newline
      * @return 0 if line is &lt 0, file size of line is bigger than file, else the end offset for the line
      */
     public static int getLineEndOffset(Editor editor, int lline, boolean incEnd)
@@ -358,6 +360,7 @@ public class EditorHelper
      * @param editor The editor
      * @param vline The visual line number
      * @param col The column number to normalize
+     * @param allowEnd True if newline allowed
      * @return The normalized column number
      */
     public static int normalizeVisualColumn(Editor editor, int vline, int col, boolean allowEnd)
@@ -373,11 +376,12 @@ public class EditorHelper
      * @param editor The editor
      * @param lline The logical line number
      * @param col The column number to normalize
+     * @param allowEnd True if newline allowed
      * @return The normalized column number
      */
-    public static int normalizeColumn(Editor editor, int lline, int col)
+    public static int normalizeColumn(Editor editor, int lline, int col, boolean allowEnd)
     {
-        col = Math.min(Math.max(0, getLineLength(editor, lline) - 1), col);
+        col = Math.min(Math.max(0, getLineLength(editor, lline) - (allowEnd ? 0 : 1)), col);
 
         return col;
     }
@@ -399,7 +403,7 @@ public class EditorHelper
         }
 
         int min = getLineStartOffset(editor, lline);
-        int max = getLineEndOffset(editor, lline, allowEnd);;
+        int max = getLineEndOffset(editor, lline, allowEnd);
         offset = Math.max(Math.min(offset, max), min);
 
         return offset;

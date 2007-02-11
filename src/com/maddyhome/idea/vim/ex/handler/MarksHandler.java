@@ -32,7 +32,6 @@ import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.StringHelper;
 import com.maddyhome.idea.vim.ui.MorePanel;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -49,14 +48,13 @@ public class MarksHandler extends CommandHandler
 
     public boolean execute(Editor editor, DataPackage context, ExCommand cmd) throws ExException
     {
-        List marks = CommandGroups.getInstance().getMark().getMarks(editor);
+        List<Mark> marks = CommandGroups.getInstance().getMark().getMarks(editor);
 
         String spaces = "     ";
         StringBuffer text = new StringBuffer();
         text.append("mark  line  col file/text\n");
-        for (Iterator iterator = marks.iterator(); iterator.hasNext();)
+        for (Mark mark : marks)
         {
-            Mark mark = (Mark)iterator.next();
             text.append(" ");
             text.append(mark.getKey());
 

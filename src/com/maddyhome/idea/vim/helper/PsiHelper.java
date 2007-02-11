@@ -81,10 +81,10 @@ public class PsiHelper
         PsiClass fclass = null;
         boolean inside = false;
         int closest = dir > 0 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
-        for (int i = 0; i < classes.length; i++)
+        for (PsiClass clazz : classes)
         {
-            PsiElement lbrace = classes[i].getLBrace();
-            PsiElement rbrace = classes[i].getRBrace();
+            PsiElement lbrace = clazz.getLBrace();
+            PsiElement rbrace = clazz.getRBrace();
             if (lbrace == null || rbrace == null)
             {
                 continue;
@@ -94,14 +94,14 @@ public class PsiHelper
             {
                 if (offset >= lbrace.getTextOffset() && offset < rbrace.getTextOffset())
                 {
-                    fclass = classes[i];
+                    fclass = clazz;
                     inside = true;
                     break;
                 }
                 // We are before this class
                 else if (offset < lbrace.getTextOffset() && lbrace.getTextOffset() < closest)
                 {
-                    fclass = classes[i];
+                    fclass = clazz;
                     closest = lbrace.getTextOffset();
                 }
             }
@@ -109,14 +109,14 @@ public class PsiHelper
             {
                 if (offset > lbrace.getTextOffset() && offset <= rbrace.getTextOffset())
                 {
-                    fclass = classes[i];
+                    fclass = clazz;
                     inside = true;
                     break;
                 }
                 // We are after this class
                 if (offset > rbrace.getTextOffset() && rbrace.getTextOffset() > closest)
                 {
-                    fclass = classes[i];
+                    fclass = clazz;
                     closest = rbrace.getTextOffset();
                 }
             }
@@ -176,10 +176,10 @@ public class PsiHelper
         boolean inside = false;
 
         PsiClass[] classes = clazz.getInnerClasses();
-        for (int i = 0; i < classes.length; i++)
+        for (PsiClass aClass : classes)
         {
-            PsiElement lbrace = classes[i].getLBrace();
-            PsiElement rbrace = classes[i].getRBrace();
+            PsiElement lbrace = aClass.getLBrace();
+            PsiElement rbrace = aClass.getRBrace();
             if (lbrace == null || rbrace == null)
             {
                 continue;
@@ -189,14 +189,14 @@ public class PsiHelper
             {
                 if (offset >= lbrace.getTextOffset() && offset < rbrace.getTextOffset())
                 {
-                    fclass = classes[i];
+                    fclass = aClass;
                     inside = true;
                     break;
                 }
                 // We are before this class
                 else if (offset < lbrace.getTextOffset() && lbrace.getTextOffset() < closest)
                 {
-                    fclass = classes[i];
+                    fclass = aClass;
                     closest = lbrace.getTextOffset();
                 }
             }
@@ -204,14 +204,14 @@ public class PsiHelper
             {
                 if (offset > lbrace.getTextOffset() && offset <= rbrace.getTextOffset())
                 {
-                    fclass = classes[i];
+                    fclass = aClass;
                     inside = true;
                     break;
                 }
                 // We are after this class
                 if (offset > rbrace.getTextOffset() && rbrace.getTextOffset() > closest)
                 {
-                    fclass = classes[i];
+                    fclass = aClass;
                     closest = rbrace.getTextOffset();
                 }
             }
@@ -367,29 +367,29 @@ public class PsiHelper
 
     private static int scanMethod(PsiMethod fmethod, int offset, int dir, boolean start)
     {
-        ArrayList classes = new ArrayList();
+        List<PsiClass> classes = new ArrayList<PsiClass>();
         findClasses(fmethod.getBody(), classes);
 
         if (classes.size() > 0)
         {
-            return scanClasses((PsiClass[])classes.toArray(new PsiClass[] {}), offset, dir, start);
+            return scanClasses(classes.toArray(new PsiClass[] {}), offset, dir, start);
         }
 
         return -1;
     }
 
-    private static void findClasses(PsiElement element, List classes)
+    private static void findClasses(PsiElement element, List<PsiClass> classes)
     {
         PsiElement[] children = element.getChildren();
-        for (int i = 0; i < children.length; i++)
+        for (PsiElement child : children)
         {
-            if (children[i] instanceof PsiClass)
+            if (child instanceof PsiClass)
             {
-                classes.add(children[i]);
+                classes.add((PsiClass)child);
                 return;
             }
 
-            findClasses(children[i], classes);
+            findClasses(child, classes);
         }
     }
 

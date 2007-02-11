@@ -53,12 +53,12 @@ public class HistoryGroup extends AbstractActionGroup
         return block.getEntry(index);
     }
 
-    public List getEntries(String key, int first, int last)
+    public List<HistoryEntry> getEntries(String key, int first, int last)
     {
         HistoryBlock block = blocks(key);
 
-        ArrayList entries = block.getEntries();
-        ArrayList res = new ArrayList();
+        List<HistoryEntry> entries = block.getEntries();
+        List<HistoryEntry> res = new ArrayList<HistoryEntry>();
         if (first < 0)
         {
             if (-first > entries.size())
@@ -67,7 +67,7 @@ public class HistoryGroup extends AbstractActionGroup
             }
             else
             {
-                HistoryEntry entry = (HistoryEntry)entries.get(entries.size() + first);
+                HistoryEntry entry = entries.get(entries.size() + first);
                 first = entry.getNumber();
             }
         }
@@ -79,7 +79,7 @@ public class HistoryGroup extends AbstractActionGroup
             }
             else
             {
-                HistoryEntry entry = (HistoryEntry)entries.get(entries.size() + last);
+                HistoryEntry entry = entries.get(entries.size() + last);
                 last = entry.getNumber();
             }
         }
@@ -91,9 +91,8 @@ public class HistoryGroup extends AbstractActionGroup
         logger.debug("first=" + first);
         logger.debug("last=" + last);
 
-        for (int i = 0; i < entries.size(); i++)
+        for (HistoryEntry entry : entries)
         {
-            HistoryEntry entry = (HistoryEntry)entries.get(i);
             if (entry.getNumber() >= first && entry.getNumber() <= last)
             {
                 res.add(entry);
@@ -105,7 +104,7 @@ public class HistoryGroup extends AbstractActionGroup
 
     private HistoryBlock blocks(String key)
     {
-        HistoryBlock block = (HistoryBlock)histories.get(key);
+        HistoryBlock block = histories.get(key);
         if (block == null)
         {
             block = new HistoryBlock();
@@ -135,7 +134,7 @@ public class HistoryGroup extends AbstractActionGroup
 
     private void saveData(Element element, String key)
     {
-        HistoryBlock block = (HistoryBlock)histories.get(key);
+        HistoryBlock block = histories.get(key);
         if (block == null)
         {
             return;
@@ -143,10 +142,9 @@ public class HistoryGroup extends AbstractActionGroup
 
         Element root = new Element("history-" + key);
 
-        ArrayList elems = block.getEntries();
-        for (int i = 0; i < elems.size(); i++)
+        List<HistoryEntry> elems = block.getEntries();
+        for (HistoryEntry entry : elems)
         {
-            HistoryEntry entry = (HistoryEntry)elems.get(i);
             Element text = new Element("entry");
             CDATA data = new CDATA(StringHelper.entities(entry.getEntry()));
             text.addContent(data);
@@ -178,7 +176,7 @@ public class HistoryGroup extends AbstractActionGroup
 
     private void readData(Element element, String key)
     {
-        HistoryBlock block = (HistoryBlock)histories.get(key);
+        HistoryBlock block = histories.get(key);
         if (block != null)
         {
             return;
@@ -191,9 +189,9 @@ public class HistoryGroup extends AbstractActionGroup
         if (root != null)
         {
             List items = root.getChildren("entry");
-            for (int i = 0; i < items.size(); i++)
+            for (Object item : items)
             {
-                block.addEntry(StringHelper.unentities(((Element)items.get(i)).getText()));
+                block.addEntry(StringHelper.unentities(((Element)item).getText()));
             }
         }
     }
@@ -211,7 +209,7 @@ public class HistoryGroup extends AbstractActionGroup
         {
             for (int i = 0; i < entries.size(); i++)
             {
-                HistoryEntry entry = (HistoryEntry)entries.get(i);
+                HistoryEntry entry = entries.get(i);
                 if (text.equals(entry.getEntry()))
                 {
                     entries.remove(i);
@@ -231,7 +229,7 @@ public class HistoryGroup extends AbstractActionGroup
         {
             if (index < entries.size())
             {
-                HistoryEntry entry = (HistoryEntry)entries.get(index);
+                HistoryEntry entry = entries.get(index);
                 return entry.getEntry();
             }
             else
@@ -240,12 +238,12 @@ public class HistoryGroup extends AbstractActionGroup
             }
         }
 
-        public ArrayList getEntries()
+        public List<HistoryEntry> getEntries()
         {
             return entries;
         }
 
-        private ArrayList entries = new ArrayList();
+        private List<HistoryEntry> entries = new ArrayList<HistoryEntry>();
         private int counter;
     }
 
@@ -271,7 +269,7 @@ public class HistoryGroup extends AbstractActionGroup
         private String entry;
     }
 
-    private Map histories = new HashMap();
+    private Map<String, HistoryBlock> histories = new HashMap<String, HistoryBlock>();
 
     private static Logger logger = Logger.getInstance(HistoryGroup.class.getName());
 }

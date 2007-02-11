@@ -1956,11 +1956,10 @@ public class SearchHelper
 
     private static String parseOption(ListOption option)
     {
-        List vals = option.values();
+        List<String> vals = option.values();
         StringBuffer res = new StringBuffer();
-        for (int i = 0; i < vals.size(); i++)
+        for (String s : vals)
         {
-            String s = (String)vals.get(i);
             if (s.length() == 3)
             {
                 res.append(s.charAt(0)).append(s.charAt(2));

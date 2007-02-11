@@ -28,6 +28,7 @@ import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles the set of range values entered as part of an Ex command.
@@ -39,7 +40,7 @@ public class Ranges
      */
     public Ranges()
     {
-        ranges = new ArrayList();
+        ranges = new ArrayList<Range>();
     }
 
     /**
@@ -48,9 +49,9 @@ public class Ranges
      */
     public void addRange(Range[] range)
     {
-        for (int i = 0; i < range.length; i++)
+        for (Range aRange : range)
         {
-            ranges.add(range[i]);
+            ranges.add(aRange);
         }
     }
 
@@ -130,8 +131,8 @@ public class Ranges
     public LineRange getLineRange(Editor editor, DataPackage context, int count)
     {
         processRange(editor, context);
-        int end = -1;
-        int start = -1;
+        int end;
+        int start;
         if (count == -1)
         {
             end = endLine;
@@ -206,10 +207,9 @@ public class Ranges
         endLine = startLine;
         boolean lastZero = false;
         // Now process each range, moving the cursor if appropriate
-        for (int i = 0; i < ranges.size(); i++)
+        for (Range range : ranges)
         {
             startLine = endLine;
-            Range range = (Range)ranges.get(i);
             endLine = range.getLine(editor, context, lastZero);
             if (range.isMove())
             {
@@ -233,7 +233,7 @@ public class Ranges
     public String toString()
     {
         StringBuffer res = new StringBuffer();
-        res.append("Ranges[ranges=" + ranges);
+        res.append("Ranges[ranges=").append(ranges);
         res.append("]");
 
         return res.toString();
@@ -244,5 +244,5 @@ public class Ranges
     private int count = 0;
     private int defaultLine = -1;
     private boolean done = false;
-    private ArrayList ranges;
+    private List<Range> ranges;
 }

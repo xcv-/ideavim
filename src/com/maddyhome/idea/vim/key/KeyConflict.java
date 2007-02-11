@@ -21,6 +21,7 @@ package com.maddyhome.idea.vim.key;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.KeyStroke;
 
 public class KeyConflict
@@ -51,7 +52,7 @@ public class KeyConflict
         this.pluginWins = pluginWins;
     }
 
-    public HashMap getIdeaActions()
+    public HashMap<String, Integer> getIdeaActions()
     {
         return ideaActions;
     }
@@ -68,15 +69,15 @@ public class KeyConflict
 
     public void putIdeaAction(String action, int pos)
     {
-        ideaActions.put(action, new Integer(pos));
+        ideaActions.put(action, pos);
     }
 
-    public String removeIdeaAction(String action)
+    public int removeIdeaAction(String action)
     {
-        return (String)ideaActions.remove(action);
+        return ideaActions.remove(action);
     }
 
-    public ArrayList getPluginActions()
+    public List<String> getPluginActions()
     {
         return pluginActions;
     }
@@ -116,12 +117,8 @@ public class KeyConflict
         {
             return false;
         }
-        if (!pluginActions.equals(that.pluginActions))
-        {
-            return false;
-        }
 
-        return true;
+        return pluginActions.equals(that.pluginActions);
     }
 
     public int hashCode()
@@ -148,6 +145,6 @@ public class KeyConflict
 
     private KeyStroke keyStroke;
     private boolean pluginWins;
-    private HashMap ideaActions = new HashMap();
-    private ArrayList pluginActions = new ArrayList();
+    private HashMap<String, Integer> ideaActions = new HashMap<String, Integer>();
+    private List<String> pluginActions = new ArrayList<String>();
 }

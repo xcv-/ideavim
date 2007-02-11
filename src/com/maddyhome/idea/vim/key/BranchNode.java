@@ -19,7 +19,6 @@ package com.maddyhome.idea.vim.key;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-import java.util.Iterator;
 import javax.swing.KeyStroke;
 
 /**
@@ -50,7 +49,7 @@ public class BranchNode extends ParentNode
         Node res = super.getChild(key);
         if (res == null)
         {
-            res = (Node)children.get(ARGUMENT);
+            res = children.get(ARGUMENT);
         }
 
         return res;
@@ -58,7 +57,7 @@ public class BranchNode extends ParentNode
 
     public Node getArgumentNode()
     {
-        return (Node)children.get(ARGUMENT);
+        return children.get(ARGUMENT);
     }
 
     /**
@@ -77,10 +76,9 @@ public class BranchNode extends ParentNode
         res.append(key);
         res.append("children=[");
         int cnt = 0;
-        for (Iterator iterator = children.keySet().iterator(); iterator.hasNext();)
+        for (Object key : children.keySet())
         {
-            Object key = iterator.next();
-            Node node = (Node)children.get(key);
+            Node node = children.get(key);
             if (cnt > 0)
             {
                 res.append(",");

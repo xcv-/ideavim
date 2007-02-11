@@ -47,6 +47,7 @@ import com.maddyhome.idea.vim.option.Options;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.List;
 import javax.swing.KeyStroke;
 
 /**
@@ -183,7 +184,7 @@ public class KeyHandler
                     // Create the character argument, add it to the current command, and signal we are ready to process
                     // the command
                     Argument arg = new Argument(chKey);
-                    Command cmd = (Command)currentCmd.peek();
+                    Command cmd = currentCmd.peek();
                     cmd.setArgument(arg);
                     mode = STATE_READY;
                 }
@@ -294,7 +295,7 @@ public class KeyHandler
                     {
                         String text = CommandGroups.getInstance().getProcess().endSearchCommand(editor, context);
                         Argument arg = new Argument(text);
-                        Command cmd = (Command)currentCmd.peek();
+                        Command cmd = currentCmd.peek();
                         cmd.setArgument(arg);
                         CommandState.getInstance(editor).popState();
                     }
@@ -418,10 +419,10 @@ public class KeyHandler
             // Let's go through the command stack and merge it all into one command. At this time there should never
             // be more than two commands on the stack - one is the actual command and the other would be a motion
             // command argument needed by the first command
-            Command cmd = (Command)currentCmd.pop();
+            Command cmd = currentCmd.pop();
             while (currentCmd.size() > 0)
             {
-                Command top = (Command)currentCmd.pop();
+                Command top = currentCmd.pop();
                 top.setArgument(new Argument(cmd));
                 cmd = top;
             }
@@ -540,12 +541,12 @@ public class KeyHandler
     /**
      * Partially resets the state of this handler. Resets the command count, clears the key list, resets the key tree
      * node to the root for the current mode we are in.
-     * @param editor
+     * @param editor The editor to reset.
      */
     private void partialReset(Editor editor)
     {
         count = 0;
-        keys = new ArrayList();
+        keys = new ArrayList<KeyStroke>();
         CommandState editorState = CommandState.getInstance(editor);
         editorState.setCurrentNode(KeyParser.getInstance().getKeyRoot(editorState.getMappingMode()));
         logger.debug("partialReset");
@@ -553,7 +554,7 @@ public class KeyHandler
 
     /**
      * Resets the state of this handler. Does a partial reset then resets the mode, the command, and the argument
-     * @param editor
+     * @param editor The editor to reset.
      */
     public void reset(Editor editor)
     {
@@ -568,7 +569,7 @@ public class KeyHandler
     /**
      * Completely resets the state of this handler. Resets the command mode to normal, resets, and clears the selected
      * register.
-     * @param editor
+     * @param editor The editor to reset.
      */
     public void fullReset(Editor editor)
     {
@@ -639,9 +640,9 @@ public class KeyHandler
     }
 
     private int count;
-    private ArrayList keys;
+    private List<KeyStroke> keys;
     private int mode;
-    private Stack currentCmd = new Stack();
+    private Stack<Command> currentCmd = new Stack<Command>();
     private int currentArg;
     private TypedActionHandler origHandler;
     private DigraphSequence digraph = null;

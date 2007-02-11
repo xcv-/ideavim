@@ -107,9 +107,9 @@ public class DocumentChange
     {
         StringBuffer res = new StringBuffer();
         res.append("DocumentChange[");
-        res.append("offset=" + offset);
-        res.append(", oldText=\"" + oldText);
-        res.append("\", newText=\"" + newText);
+        res.append("offset=").append(offset);
+        res.append(", oldText=\"").append(oldText);
+        res.append("\", newText=\"").append(newText);
         res.append("\"]");
 
         return res.toString();

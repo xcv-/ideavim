@@ -32,7 +32,6 @@ import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.StringHelper;
 import com.maddyhome.idea.vim.ui.MorePanel;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -49,16 +48,15 @@ public class JumpsHandler extends CommandHandler
 
     public boolean execute(Editor editor, DataPackage context, ExCommand cmd) throws ExException
     {
-        List jumps = CommandGroups.getInstance().getMark().getJumps();
+        List<Jump> jumps = CommandGroups.getInstance().getMark().getJumps();
         int spot = CommandGroups.getInstance().getMark().getJumpSpot();
 
         String spaces = "     ";
         StringBuffer text = new StringBuffer();
         text.append("  jump line  col file/text\n");
         int i = jumps.size();
-        for (Iterator iterator = jumps.iterator(); iterator.hasNext();)
+        for (Jump jump : jumps)
         {
-            Jump jump = (Jump)iterator.next();
             if (i - spot - 1 == 0)
             {
                 text.append("> ");

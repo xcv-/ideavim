@@ -30,7 +30,7 @@
     <property name="install" value="install" />
     <property name="dist" value="dist" />
     <!-- Update to your IntelliJ installtion -->
-    <property name="idea.home" value="/Applications/Selena-6667.app" />
+    <property name="idea.home" value="/Applications/Selena-6700.app" />
     <property name="plugin.home" value="${user.home}/Library/Application Support/IntelliJIDEA70" />
 
     <property name="project" value="IdeaVIM" />

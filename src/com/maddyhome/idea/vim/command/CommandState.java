@@ -172,7 +172,7 @@ public class CommandState
         State state;
         if (pos >= 0 && pos < modes.size())
         {
-            state = (State)modes.get(pos);
+            state = modes.get(pos);
         }
         else if (pos < 0)
         {
@@ -201,7 +201,7 @@ public class CommandState
             case MODE_VISUAL:
                 if (pos > 0)
                 {
-                    State tmp = (State)modes.get(pos - 1);
+                    State tmp = modes.get(pos - 1);
                     if (tmp.getMode() == MODE_COMMAND && tmp.getSubmode() == SUBMODE_SINGLE_COMMAND)
                     {
                         msg.append(getStatusString(pos - 1));
@@ -329,7 +329,7 @@ public class CommandState
     {
         if (modes.size() > 0)
         {
-            return (State)modes.peek();
+            return modes.peek();
         }
         else
         {
@@ -407,7 +407,7 @@ public class CommandState
         private int mapping;
     }
 
-    private Stack modes = new Stack();
+    private Stack<State> modes = new Stack<State>();
     private State defaultState = new State(MODE_COMMAND, 0, KeyParser.MAPPING_NORMAL);
     private Command command;
     private int flags;

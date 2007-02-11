@@ -433,5 +433,4 @@ public class CharPointer
     private CharSequence seq;
     private int pointer;
     private boolean readonly = true;
-    private boolean noNullCheck = true;
 }
