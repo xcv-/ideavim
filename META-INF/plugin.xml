@@ -18,6 +18,7 @@
             <li>Diagraphs</li>
             <li>Command line history</li>
             <li>Search history</li>
+            <li>Jumplists</li>
             <li>VIM help</li>
         </ul>
     ]]></description>
@@ -29,16 +30,7 @@
 version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 <br>
 Bug Fixes<br>
-- Fixed minor issue displaying file marks with :marks command.<br>
-- Pressing a key other than Enter is now properly processed when closing a
-  "more" window.<br>
-<br>
-New Features<br>
-- Added support for Ctrl-O and Ctrl-I.<br>
-- Added support for :jumps command.<br>
-- Added support for g', g`.<br>
-- Added support for ga, g8, and :ascii command.<br>
-- Added support for Ctrl-G and gCtrl-G.<br>
+- Support Selena build 6755<br>
 ]]>
     </change-notes>
 

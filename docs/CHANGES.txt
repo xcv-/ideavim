@@ -1,6 +1,10 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.11.4
+@VERSION@ from 0.11.5
+Bug Fixes
+- Support for Selena build 6755
+
+0.11.5 from 0.11.4
 Bug Fixes
 - Fixed minor issue displaying file marks with :marks command.
 - Pressing a key other than Enter is now properly processed when closing a

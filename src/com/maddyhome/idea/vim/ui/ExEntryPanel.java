@@ -24,16 +24,16 @@ import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.helper.DataPackage;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.ComponentEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -90,14 +90,12 @@ public class ExEntryPanel extends JPanel
         add(entry);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        newGlass = new CommandEntryGlass();
-        newGlass.add(this);
-        newGlass.addComponentListener(new ComponentAdapter() {
+        adapter = new ComponentAdapter() {
             public void componentResized(ComponentEvent e)
             {
                 positionPanel();
             }
-        });
+        };
     }
 
     /**
@@ -112,20 +110,24 @@ public class ExEntryPanel extends JPanel
     {
         //last = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         entry.setEditor(editor, context);
-        JComponent comp = editor.getContentComponent();
         this.label.setText(label);
         this.count = count;
         entry.setDocument(entry.createDefaultModel());
         entry.setText(initText);
         entry.setType(label);
-        parent = comp;
-        root = SwingUtilities.getRootPane(parent);
-        oldGlass = root.getGlassPane();
-        root.setGlassPane(newGlass);
+        parent = editor.getContentComponent();
+        JRootPane root = SwingUtilities.getRootPane(parent);
+        oldGlass = (JComponent)root.getGlassPane();
+        oldLayout = oldGlass.getLayout();
+        wasOpaque = oldGlass.isOpaque();
+        oldGlass.setLayout(null);
+        oldGlass.setOpaque(false);
+        oldGlass.add(this);
+        oldGlass.addComponentListener(adapter);
 
         positionPanel();
 
-        newGlass.setVisible(true);
+        oldGlass.setVisible(true);
         entry.requestFocus();
         active = true;
     }
@@ -171,7 +173,7 @@ public class ExEntryPanel extends JPanel
         Rectangle bounds = scroll.getBounds();
         bounds.translate(0, scroll.getHeight() - height);
         bounds.height = height;
-        Point pos = SwingUtilities.convertPoint(scroll.getParent(), bounds.getLocation(), newGlass);
+        Point pos = SwingUtilities.convertPoint(scroll.getParent(), bounds.getLocation(), oldGlass);
         bounds.setLocation(pos);
         setBounds(bounds);
         repaint();
@@ -200,8 +202,11 @@ public class ExEntryPanel extends JPanel
         logger.info("deactivate");
         if (!active) return;
         active = false;
-        newGlass.setVisible(false);
-        root.setGlassPane(oldGlass);
+        oldGlass.removeComponentListener(adapter);
+        oldGlass.setVisible(false);
+        oldGlass.remove(this);
+        oldGlass.setOpaque(wasOpaque);
+        oldGlass.setLayout(oldLayout);
         /*
         if (changeFocus)
         {
@@ -227,21 +232,13 @@ public class ExEntryPanel extends JPanel
         return active;
     }
 
-    class CommandEntryGlass extends JPanel
-    {
-        CommandEntryGlass()
-        {
-            setLayout(null);
-            setOpaque(false);
-        }
-    }
-
     private JComponent parent;
     private JLabel label;
     private ExTextField entry;
-    private JPanel newGlass;
-    private Component oldGlass;
-    private JRootPane root;
+    private JComponent oldGlass;
+    private LayoutManager oldLayout;
+    private boolean wasOpaque;
+    private ComponentAdapter adapter;
     private int count;
     //private Component last;
 

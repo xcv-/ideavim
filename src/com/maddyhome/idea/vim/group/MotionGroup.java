@@ -93,16 +93,23 @@ public class MotionGroup extends AbstractActionGroup
 
                 editor.getSelectionModel().addSelectionListener(selectionHandler);
                 editor.getScrollingModel().addVisibleAreaListener(scrollHandler);
+
+                EditorData.setMotionGroup(editor, true);
             }
 
             public void editorReleased(EditorFactoryEvent event)
             {
                 Editor editor = event.getEditor();
-                editor.removeEditorMouseListener(mouseHandler);
-                editor.removeEditorMouseMotionListener(mouseHandler);
+                if (EditorData.getMotionGroup(editor))
+                {
+                    editor.removeEditorMouseListener(mouseHandler);
+                    editor.removeEditorMouseMotionListener(mouseHandler);
 
-                editor.getSelectionModel().removeSelectionListener(selectionHandler);
-                editor.getScrollingModel().removeVisibleAreaListener(scrollHandler);
+                    editor.getSelectionModel().removeSelectionListener(selectionHandler);
+                    editor.getScrollingModel().removeVisibleAreaListener(scrollHandler);
+
+                    EditorData.setMotionGroup(editor, false);
+                }
             }
         });
     }

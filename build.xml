@@ -30,14 +30,14 @@
     <property name="install" value="install" />
     <property name="dist" value="dist" />
     <!-- Update to your IntelliJ installtion -->
-    <property name="idea.home" value="/Applications/Selena-6700.app" />
+    <property name="idea.home" value="/Applications/Selena-6755.app" />
     <property name="plugin.home" value="${user.home}/Library/Application Support/IntelliJIDEA70" />
 
     <property name="project" value="IdeaVIM" />
     <!-- Update this prior to building a new distribution -->
     <property name="idea-version" value="7.x" />
-    <property name="version" value="0.11.5" />
-    <property name="since-version" value="6667" />
+    <property name="version" value="0.11.5a" />
+    <property name="since-version" value="6755" />
     <property name="compiler.build" value="javac15" />
 
     <path id="build.classpath">
@@ -114,7 +114,7 @@
         </fileset>
         <pathconvert property="helpfiles" refid="txt.files" pathsep=" "/>
 
-        <java classname="com.maddyhome.idea.vim.help.MakeTags" classpath="${classes}" output="${build}/help/vim/tags" error="error">
+        <java failonerror="true" classname="com.maddyhome.idea.vim.help.MakeTags" classpath="${classes}" output="${build}/help/vim/tags" error="error">
             <arg line="${helpfiles}"/>
         </java>
         <exec executable="sort" output="${build}/help/vim/tags.sort">

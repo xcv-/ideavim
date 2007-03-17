@@ -157,11 +157,11 @@ Diagraphs
 Command line history
 Search history
 VIM help
+Jumplists
 
 Not Supported (yet)
 Maps
 Various, lesser used (by me anyway), commands
-Jumplists
 Window commands
 
 Please see the help system for a complete list of supported commands.

@@ -166,6 +166,42 @@ public class EditorData
         editor.putUserData(COMMAND_STATE, state);
     }
 
+    public static boolean getChangeGroup(Editor editor)
+    {
+        Boolean res = editor.getUserData(CHANGE_GROUP);
+        if (res != null)
+        {
+            return res;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static void setChangeGroup(Editor editor, boolean adapter)
+    {
+        editor.putUserData(CHANGE_GROUP, adapter);
+    }
+
+    public static boolean getMotionGroup(Editor editor)
+    {
+        Boolean res = editor.getUserData(MOTION_GROUP);
+        if (res != null)
+        {
+            return res;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static void setMotionGroup(Editor editor, boolean adapter)
+    {
+        editor.putUserData(MOTION_GROUP, adapter);
+    }
+
     /**
      * Gets the project associated with the editor.
      * @param editor The editor to get the project for
@@ -234,6 +270,8 @@ public class EditorData
     private static final Key<String> LAST_SEARCH = new Key<String>("lastSearch");
     private static final Key<Collection<RangeHighlighter>> LAST_HIGHLIGHTS = new Key<Collection<RangeHighlighter>>("lastHighlights");
     private static final Key<CommandState> COMMAND_STATE = new Key<CommandState>("commandState");
+    private static final Key<Boolean> CHANGE_GROUP = new Key<Boolean>("changeGroup");
+    private static final Key<Boolean> MOTION_GROUP = new Key<Boolean>("motionGroup");
 
     private static Logger logger = Logger.getInstance(EditorData.class.getName());
 }

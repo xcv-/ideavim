@@ -37,6 +37,7 @@ public class MakeTags
 
         for (String filename : args)
         {
+            String origFile = filename;
             if (filename.lastIndexOf(File.separatorChar) >= 0)
             {
                 filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
@@ -46,7 +47,7 @@ public class MakeTags
             try
             {
                 System.err.println("Processing " + filename);
-                reader = new BufferedReader(new FileReader(filename));
+                reader = new BufferedReader(new FileReader(origFile));
                 boolean inComment = false;
                 String line;
                 while ((line = reader.readLine()) != null)

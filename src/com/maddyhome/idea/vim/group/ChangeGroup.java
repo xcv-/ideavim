@@ -85,12 +85,17 @@ public class ChangeGroup extends AbstractActionGroup
             {
                 Editor editor = event.getEditor();
                 editor.addEditorMouseListener(listener);
+                EditorData.setChangeGroup(editor, true);
             }
 
             public void editorReleased(EditorFactoryEvent event)
             {
                 Editor editor = event.getEditor();
-                editor.removeEditorMouseListener(listener);
+                if (EditorData.getChangeGroup(editor))
+                {
+                    editor.removeEditorMouseListener(listener);
+                    EditorData.setChangeGroup(editor, false);
+                }
             }
 
             private EditorMouseAdapter listener = new EditorMouseAdapter()

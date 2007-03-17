@@ -52,7 +52,7 @@ using IDEA in VIM Emulation mode:
     it the active keymap by pressing the <code>Set Active</code> button.</li>
 </ol>
 
-<h4>Idea Aurora/4.0.x, Pallada/4.5.x, and Irida/5.0.x</h4>
+<h4>Idea Aurora/4.0.x, Pallada/4.5.x, Irida/5.0.x, Demetra/6.x, and Selena/7.x</h4>
 
 <ol>
 <li>
@@ -84,15 +84,15 @@ using IDEA in VIM Emulation mode:
         </tr>
         <tr>
             <td>PLUGIN_HOME</td>
-            <td>%HOME%\.IntelliJIdea[50]\config/plugins</td>
-            <td>$HOME/.IntelliJIdea[50]/config/plugins</td>
-            <td>$HOME/Library/Application Support/IntelliJIDEA[50]</td>
+            <td>%HOME%\.IntelliJIdea[[567]0]\config/plugins</td>
+            <td>$HOME/.IntelliJIdea[[567]0]/config/plugins</td>
+            <td>$HOME/Library/Application Support/IntelliJIDEA[[567]0]</td>
         </tr>
         <tr>
             <td>CONFIG_HOME</td>
-            <td>%HOME%\.IntelliJIdea[50]\config</td>
-            <td>$HOME/.IntelliJIdea[50]/config</td>
-            <td>$HOME/Preferences/IntelliJIDEA[50]</td>
+            <td>%HOME%\.IntelliJIdea[[567]0]\config</td>
+            <td>$HOME/.IntelliJIdea[[567]0]/config</td>
+            <td>$HOME/Preferences/IntelliJIDEA[[567]0]</td>
         </tr>
     </table>
     <br>
@@ -128,6 +128,8 @@ Version 0.8.x was used with IDEA 4.0.x and Pallada/IDEA 4.5.x
 Version 0.9.x was used with IDEA 5.0.x
 <br>
 Version 0.10.x is used with IDEA 4.x and 5.0.x. Just use the one with the correct version suffix (-4x or -5x).
+<br>
+Version 0.11.x is used with IDEA 5.0.x, 6.x, and 7.x. Just use the one with the correct version suffix (-5x, -6x, or -7x).
 
 <hr>
 
