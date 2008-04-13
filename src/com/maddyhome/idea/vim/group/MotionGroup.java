@@ -19,6 +19,7 @@ package com.maddyhome.idea.vim.group;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -87,12 +88,32 @@ public class MotionGroup extends AbstractActionGroup
         EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryAdapter() {
             public void editorCreated(EditorFactoryEvent event)
             {
-                Editor editor = event.getEditor();
+                final Editor editor = event.getEditor();
                 editor.addEditorMouseListener(mouseHandler);
                 editor.addEditorMouseMotionListener(mouseHandler);
 
                 editor.getSelectionModel().addSelectionListener(selectionHandler);
-                editor.getScrollingModel().addVisibleAreaListener(scrollHandler);
+                // This ridiculous code ensures that a lot of events are processed BEFORE we finally start listening
+                // to visible area changes. This primary reason for this change is to fix the cursor position bug
+                // using the gd and gD commands (Goto Declaration). This bug has been around since Idea 6.0.4?
+                // Prior to this change the visible area code was moving the cursor around during file load and messing
+                // with the cursor position of the Goto Declaration processing.
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    public void run()
+                    {
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            public void run()
+                            {
+                                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                                    public void run()
+                                    {
+                                        editor.getScrollingModel().addVisibleAreaListener(scrollHandler);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
 
                 EditorData.setMotionGroup(editor, true);
             }
