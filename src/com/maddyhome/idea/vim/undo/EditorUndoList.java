@@ -102,7 +102,10 @@ public class EditorUndoList
 
             pointer = undos.size();
 
-            logger.debug("this=" + this);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("this=" + this);
+            }
         }
 
         currentCommand = null;
@@ -136,7 +139,7 @@ public class EditorUndoList
         if (pointer < undos.size())
         {
             UndoCommand cmd = undos.get(pointer);
-            logger.debug("redo command " + pointer);
+            if (logger.isDebugEnabled()) logger.debug("redo command " + pointer);
             pointer++;
             inUndo = true;
             cmd.redo(editor, context);
@@ -159,7 +162,7 @@ public class EditorUndoList
         {
             pointer--;
             UndoCommand cmd = undos.get(pointer);
-            logger.debug("undo command " + pointer);
+            if (logger.isDebugEnabled()) logger.debug("undo command " + pointer);
             inUndo = true;
             cmd.undo(editor, context);
             inUndo = false;
@@ -189,7 +192,7 @@ public class EditorUndoList
 
             pointer--;
             UndoCommand cmd = undos.get(pointer);
-            logger.debug("undo command " + pointer);
+            if (logger.isDebugEnabled()) logger.debug("undo command " + pointer);
             while (cmd.isOneLine() && (lastLine == -1 || cmd.getLine() == lastLine))
             {
                 lastLine = cmd.getLine();

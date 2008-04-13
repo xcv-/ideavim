@@ -555,7 +555,7 @@ public class EditorHelper
      */
     public static int getLineEndForOffset(Editor editor, int offset)
     {
-        logger.debug("editor=" + editor);
+        if (logger.isDebugEnabled()) logger.debug("editor=" + editor);
         LogicalPosition pos = editor.offsetToLogicalPosition(offset);
         return editor.getDocument().getLineEndOffset(pos.line);
     }
@@ -626,9 +626,12 @@ public class EditorHelper
         StringBuffer res = new StringBuffer();
 
         int len = getLineLength(editor, lline);
-        logger.debug("lline=" + lline);
-        logger.debug("len=" + len);
-        logger.debug("to=" + to);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("lline=" + lline);
+            logger.debug("len=" + len);
+            logger.debug("to=" + to);
+        }
         if (len < to)
         {
             // TODO - use tabs as needed

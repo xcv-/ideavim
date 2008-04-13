@@ -564,10 +564,13 @@ public class SearchHelper
         int offset = EditorHelper.getLineStartOffset(editor, lline);
         int pos = editor.getCaretModel().getOffset() - offset;
 
-        logger.debug("lline=" + lline);
-        logger.debug("text=" + text);
-        logger.debug("offset=" + offset);
-        logger.debug("pos=" + pos);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("lline=" + lline);
+            logger.debug("text=" + text);
+            logger.debug("offset=" + offset);
+            logger.debug("pos=" + pos);
+        }
 
         while (true)
         {
@@ -577,7 +580,7 @@ public class SearchHelper
                 pos++;
             }
 
-            logger.debug("pos=" + pos);
+            if (logger.isDebugEnabled()) logger.debug("pos=" + pos);
             if (pos >= text.length())
             {
                 logger.debug("no number char on line");
@@ -673,10 +676,10 @@ public class SearchHelper
 
         if (alpha)
         {
-            logger.debug("checking alpha for " + text.charAt(pos));
+            if (logger.isDebugEnabled()) logger.debug("checking alpha for " + text.charAt(pos));
             if (isNumberChar(text.charAt(pos), true, false, false, false))
             {
-                logger.debug("found alpha at " + pos);
+                if (logger.isDebugEnabled()) logger.debug("found alpha at " + pos);
                 return new TextRange(pos + offset, pos + offset + 1);
             }
         }
@@ -794,11 +797,14 @@ public class SearchHelper
 
     public static TextRange findWordUnderCursor(Editor editor, int count, int dir, boolean isOuter, boolean isBig, boolean hasSelection)
     {
-        logger.debug("count=" + count);
-        logger.debug("dir=" + dir);
-        logger.debug("isOuter=" + isOuter);
-        logger.debug("isBig=" + isBig);
-        logger.debug("hasSelection=" + hasSelection);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("count=" + count);
+            logger.debug("dir=" + dir);
+            logger.debug("isOuter=" + isOuter);
+            logger.debug("isBig=" + isBig);
+            logger.debug("hasSelection=" + hasSelection);
+        }
 
         CharSequence chars = EditorHelper.getDocumentChars(editor);
         //int min = EditorHelper.getLineStartOffset(editor, EditorHelper.getCurrentLogicalLine(editor));
@@ -806,8 +812,11 @@ public class SearchHelper
         int min = 0;
         int max = EditorHelper.getFileSize(editor);
 
-        logger.debug("min=" + min);
-        logger.debug("max=" + max);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("min=" + min);
+            logger.debug("max=" + max);
+        }
 
         int pos = editor.getCaretModel().getOffset();
         boolean startSpace = CharacterHelper.charType(chars.charAt(pos), isBig) == CharacterHelper.TYPE_SPACE;
@@ -816,8 +825,11 @@ public class SearchHelper
             CharacterHelper.charType(chars.charAt(pos - 1), isBig) != CharacterHelper.charType(chars.charAt(pos), isBig);
         int start = pos;
 
-        logger.debug("pos=" + pos);
-        logger.debug("onWordStart=" + onWordStart);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("pos=" + pos);
+            logger.debug("onWordStart=" + onWordStart);
+        }
 
         if ((!onWordStart && !(startSpace && isOuter)) || hasSelection || (count > 1 && dir == -1))
         {
@@ -833,13 +845,13 @@ public class SearchHelper
             start = EditorHelper.normalizeOffset(editor, start, false);
         }
 
-        logger.debug("start=" + start);
+        if (logger.isDebugEnabled()) logger.debug("start=" + start);
 
         // Find word end
         boolean onWordEnd = pos == max ||
             CharacterHelper.charType(chars.charAt(pos + 1), isBig) != CharacterHelper.charType(chars.charAt(pos), isBig);
 
-        logger.debug("onWordEnd=" + onWordEnd);
+        if (logger.isDebugEnabled()) logger.debug("onWordEnd=" + onWordEnd);
 
         int end = pos;
         if (!onWordEnd || hasSelection || (count > 1 && dir == 1) || (startSpace && isOuter))
@@ -856,7 +868,7 @@ public class SearchHelper
             }
         }
 
-        logger.debug("end=" + end);
+        if (logger.isDebugEnabled()) logger.debug("end=" + end);
 
         boolean goBack = (startSpace && !hasSelection) || (!startSpace && hasSelection && !onWordStart);
         if (dir == 1 && isOuter)
@@ -912,8 +924,11 @@ public class SearchHelper
             }
         }
 
-        logger.debug("goBack=" + goBack);
-        logger.debug("goForward=" + goForward);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("goBack=" + goBack);
+            logger.debug("goForward=" + goForward);
+        }
 
         if (goForward)
         {
@@ -930,8 +945,11 @@ public class SearchHelper
             }
         }
 
-        logger.debug("start=" + start);
-        logger.debug("end=" + end);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("start=" + start);
+            logger.debug("end=" + end);
+        }
 
         return new TextRange(start, end);
     }
@@ -1782,7 +1800,7 @@ public class SearchHelper
     {
         int line = EditorHelper.getCurrentLogicalLine(editor);
         int maxline = EditorHelper.getLineCount(editor);
-        logger.debug("starting on line " + line);
+        if (logger.isDebugEnabled()) logger.debug("starting on line " + line);
         int sline;
         int eline;
         boolean fixstart = false;
@@ -1907,8 +1925,11 @@ public class SearchHelper
             }
         }
 
-        logger.debug("final sline=" + sline);
-        logger.debug("final eline=" + eline);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("final sline=" + sline);
+            logger.debug("final eline=" + eline);
+        }
         int start = EditorHelper.getLineStartOffset(editor, sline);
         int end = EditorHelper.getLineStartOffset(editor, eline);
 

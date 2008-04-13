@@ -32,13 +32,13 @@ public class RunnableHelper
 {
     public static void runReadCommand(Project project, Runnable cmd, String name, Object groupId)
     {
-        logger.debug("read command " + cmd);
+        if (logger.isDebugEnabled()) logger.debug("read command " + cmd);
         CommandProcessor.getInstance().executeCommand(project, new ReadAction(cmd), name, groupId);
     }
 
     public static void runWriteCommand(Project project, Runnable cmd, String name, Object groupId)
     {
-        logger.debug("write command " + cmd);
+        if (logger.isDebugEnabled()) logger.debug("write command " + cmd);
         CommandProcessor.getInstance().executeCommand(project, new WriteAction(cmd), name, groupId);
     }
 

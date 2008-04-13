@@ -412,7 +412,10 @@ public class MarkGroup extends AbstractActionGroup
                 markElem.setAttribute("column", Integer.toString(mark.getCol()));
                 markElem.setAttribute("filename", mark.getFilename());
                 marksElem.addContent(markElem);
-                logger.debug("saved mark = " + mark);
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("saved mark = " + mark);
+                }
             }
         }
         element.addContent(marksElem);
@@ -472,7 +475,10 @@ public class MarkGroup extends AbstractActionGroup
                 jumpElem.setAttribute("column", Integer.toString(jump.getCol()));
                 jumpElem.setAttribute("filename", jump.getFilename());
                 jumpsElem.addContent(jumpElem);
-                logger.debug("saved jump = " + jump);
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("saved jump = " + jump);
+                }
             }
         }
         element.addContent(jumpsElem);
@@ -507,7 +513,10 @@ public class MarkGroup extends AbstractActionGroup
             }
         }
 
-        logger.debug("globalMarks=" + globalMarks);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("globalMarks=" + globalMarks);
+        }
 
         Element fileMarksElem = element.getChild("filemarks");
         if (fileMarksElem != null)
@@ -543,7 +552,10 @@ public class MarkGroup extends AbstractActionGroup
             }
         }
 
-        logger.debug("fileMarks=" + fileMarks);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("fileMarks=" + fileMarks);
+        }
 
         jumps.clear();
         Element jumpsElem = element.getChild("jumps");
@@ -561,7 +573,10 @@ public class MarkGroup extends AbstractActionGroup
             }
         }
 
-        logger.debug("jumps=" + jumps);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("jumps=" + jumps);
+        }
     }
 
     /**
@@ -582,20 +597,20 @@ public class MarkGroup extends AbstractActionGroup
             int delEndOff = delStartOff + delLength;
             LogicalPosition delStart = editor.offsetToLogicalPosition(delStartOff);
             LogicalPosition delEnd = editor.offsetToLogicalPosition(delEndOff);
-            logger.debug("mark delete. delStart = " + delStart + ", delEnd = " + delEnd);
+            if (logger.isDebugEnabled()) logger.debug("mark delete. delStart = " + delStart + ", delEnd = " + delEnd);
 
             // Now analyze each mark to determine if it needs to be updated or removed
             for (Character ch: marks.keySet())
             {
                 Mark mark = marks.get(ch);
 
-                logger.debug("mark = " + mark);
+                if (logger.isDebugEnabled()) logger.debug("mark = " + mark);
                 // If the end of the deleted text is prior to the marked line, simply shift the mark up by the
                 // proper number of lines.
                 if (delEnd.line < mark.getLogicalLine())
                 {
                     int lines = delEnd.line - delStart.line;
-                    logger.debug("Shifting mark by " + lines + " lines");
+                    if (logger.isDebugEnabled()) logger.debug("Shifting mark by " + lines + " lines");
                     mark.setLogicalLine(mark.getLogicalLine() - lines);
                 }
                 // If the deleted text begins before the mark and ends after the mark then it may be shifted or deleted
@@ -615,7 +630,7 @@ public class MarkGroup extends AbstractActionGroup
                     {
                         // shift mark
                         mark.setLogicalLine(delStart.line);
-                        logger.debug("Shifting mark to line " + delStart.line);
+                        if (logger.isDebugEnabled()) logger.debug("Shifting mark to line " + delStart.line);
                     }
                 }
             }
@@ -637,18 +652,18 @@ public class MarkGroup extends AbstractActionGroup
             int insEndOff = insStartOff + insLength;
             LogicalPosition insStart = editor.offsetToLogicalPosition(insStartOff);
             LogicalPosition insEnd = editor.offsetToLogicalPosition(insEndOff);
-            logger.debug("mark insert. insStart = " + insStart + ", insEnd = " + insEnd);
+            if (logger.isDebugEnabled()) logger.debug("mark insert. insStart = " + insStart + ", insEnd = " + insEnd);
             int lines = insEnd.line - insStart.line;
             if (lines == 0) return;
 
             for (Mark mark : marks.values())
             {
-                logger.debug("mark = " + mark);
+                if (logger.isDebugEnabled()) logger.debug("mark = " + mark);
                 // Shift the mark if the insertion began on a line prior to the marked line.
                 if (insStart.line < mark.getLogicalLine())
                 {
                     mark.setLogicalLine(mark.getLogicalLine() + lines);
-                    logger.debug("Shifting mark by " + lines + " lines");
+                    if (logger.isDebugEnabled()) logger.debug("Shifting mark by " + lines + " lines");
                 }
             }
         }
@@ -696,7 +711,7 @@ public class MarkGroup extends AbstractActionGroup
         {
             if (!VimPlugin.isEnabled()) return;
 
-            logger.debug("MarkUpdater before, event = " + event);
+            if (logger.isDebugEnabled()) logger.debug("MarkUpdater before, event = " + event);
             if (event.getOldLength() == 0) return;
 
             Document doc = event.getDocument();
@@ -713,7 +728,7 @@ public class MarkGroup extends AbstractActionGroup
         {
             if (!VimPlugin.isEnabled()) return;
 
-            logger.debug("MarkUpdater after, event = " + event);
+            if (logger.isDebugEnabled()) logger.debug("MarkUpdater after, event = " + event);
             if (event.getNewLength() == 0 || (event.getNewLength() == 1 && !event.getNewFragment().equals("\n"))) return;
 
             Document doc = event.getDocument();

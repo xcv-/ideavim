@@ -5,6 +5,7 @@ Bug Fixes
 - Support for Idea 7.0.x
 - Fix cursor position of newly opened file using gd and gD commands.
 - Fix internal error calculating line length in editor.
+- Improve performance of non-trivial debug statements.
 
 0.11.5 from 0.11.4
 Bug Fixes

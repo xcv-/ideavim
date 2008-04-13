@@ -40,7 +40,10 @@ public class SetHandler extends CommandHandler
     public boolean execute(Editor editor, DataPackage context, ExCommand cmd) throws ExException
     {
         String arg = cmd.getArgument();
-        logger.debug("arg="+arg);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("arg="+arg);
+        }
 
         return Options.getInstance().parseOptionLine(editor, cmd.getArgument(), true);
     }

@@ -436,9 +436,12 @@ public class Options
         int empty = cols.size() % colCount;
         empty = empty == 0 ? colCount : empty;
 
-        logger.debug("width=" + width);
-        logger.debug("colCount=" + colCount);
-        logger.debug("height=" + height);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("width=" + width);
+            logger.debug("colCount=" + colCount);
+            logger.debug("height=" + height);
+        }
 
         StringBuffer res = new StringBuffer();
         if (showIntro)
@@ -511,7 +514,7 @@ public class Options
                 }
             }
 
-            logger.debug("found vimrc at " + rc);
+            if (logger.isDebugEnabled()) logger.debug("found vimrc at " + rc);
 
             try
             {

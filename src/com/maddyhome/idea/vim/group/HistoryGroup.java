@@ -40,7 +40,10 @@ public class HistoryGroup extends AbstractActionGroup
 
     public void addEntry(String key, String text)
     {
-        logger.debug("Add entry '" + text + "' to " + key);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Add entry '" + text + "' to " + key);
+        }
 
         HistoryBlock block = blocks(key);
         block.addEntry(text);
@@ -88,8 +91,11 @@ public class HistoryGroup extends AbstractActionGroup
             last = Integer.MAX_VALUE;
         }
 
-        logger.debug("first=" + first);
-        logger.debug("last=" + last);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("first=" + first);
+            logger.debug("last=" + last);
+        }
 
         for (HistoryEntry entry : entries)
         {

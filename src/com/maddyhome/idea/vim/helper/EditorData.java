@@ -48,7 +48,7 @@ public class EditorData
      */
     public static void initializeEditor(Editor editor)
     {
-        logger.debug("editor created: " + editor);
+        if (logger.isDebugEnabled()) logger.debug("editor created: " + editor);
         UndoManager.getInstance().editorOpened(editor);
     }
 
@@ -58,7 +58,7 @@ public class EditorData
      */
     public static void uninitializeEditor(Editor editor)
     {
-        logger.debug("editor closed: " + editor);
+        if (logger.isDebugEnabled()) logger.debug("editor closed: " + editor);
         UndoManager.getInstance().editorClosed(editor);
         editor.putUserData(COMMAND_STATE, null);
         editor.putUserData(LAST_HIGHLIGHTS, null);
@@ -93,7 +93,7 @@ public class EditorData
     {
         editor.putUserData(LAST_COLUMN, col);
         int t = getLastColumn(editor);
-        logger.debug("setLastColumn(" + col + ") is now " + t);
+        if (logger.isDebugEnabled()) logger.debug("setLastColumn(" + col + ") is now " + t);
     }
 
     public static String getLastSearch(Editor editor)

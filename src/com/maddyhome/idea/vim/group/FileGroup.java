@@ -60,16 +60,22 @@ public class FileGroup extends AbstractActionGroup
 
     public boolean openFile(String filename, DataPackage context)
     {
-        logger.debug("openFile(" + filename + ")");
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("openFile(" + filename + ")");
+        }
         Project proj = context.getProject(); // API change - don't merge
 
         VirtualFile found = null;
         if (filename.length() > 2 && filename.charAt(0) == '~' && filename.charAt(1) == File.separatorChar)
         {
-            logger.debug("home dir file");
             String homefile = filename.substring(2);
             String dir = System.getProperty("user.home");
-            logger.debug("looking for " + homefile + " in " + dir);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("home dir file");
+                logger.debug("looking for " + homefile + " in " + dir);
+            }
             found = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(dir, homefile));
         }
         else
@@ -78,7 +84,10 @@ public class FileGroup extends AbstractActionGroup
             VirtualFile[] roots = prm.getContentRoots();
             for (int i = 0; i < roots.length; i++)
             {
-                logger.debug("root[" + i + "] = " + roots[i].getPath());
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("root[" + i + "] = " + roots[i].getPath());
+                }
                 found = findFile(roots[i], filename);
                 if (found != null)
                 {
@@ -94,7 +103,10 @@ public class FileGroup extends AbstractActionGroup
 
         if (found != null)
         {
-            logger.debug("found file: " + found);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("found file: " + found);
+            }
             // Can't open a file unless it has a known file type. The next call will return the known type.
             // If unknown, IDEA will prompt the user to pick a type.
             FileType type = FileTypeManager.getInstance().getKnownFileTypeOrAssociate(found);

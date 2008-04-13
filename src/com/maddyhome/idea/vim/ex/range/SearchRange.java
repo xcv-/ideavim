@@ -54,7 +54,10 @@ public class SearchRange extends AbstractRange
      */
     private void setPattern(String pattern)
     {
-        logger.debug("pattern=" + pattern);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("pattern=" + pattern);
+        }
         StringTokenizer tok = new StringTokenizer(pattern, "\u0000");
         while (tok.hasMoreTokens())
         {

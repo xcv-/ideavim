@@ -76,9 +76,12 @@ public class DigraphGroup extends AbstractActionGroup
         int colCount = width / 12;
         int height = (int)Math.ceil((double)digraphs.size() / (double)colCount);
 
-        logger.debug("width=" + width);
-        logger.debug("colCount=" + colCount);
-        logger.debug("height=" + height);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("width=" + width);
+            logger.debug("colCount=" + colCount);
+            logger.debug("height=" + height);
+        }
 
         StringBuffer res = new StringBuffer();
         int cnt = 0;

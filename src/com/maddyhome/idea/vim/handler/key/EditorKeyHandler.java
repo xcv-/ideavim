@@ -64,10 +64,14 @@ public class EditorKeyHandler extends EditorActionHandler
 
     protected void original(Editor editor, DataContext context)
     {
-        logger.debug("original for " + stroke);
-        logger.debug("original is " + origHandler.getClass().getName());
-        logger.debug("editor viewer=" + editor.isViewer());
-        logger.debug("project=" + DataKeys.PROJECT.getData(context)); // API change - don't merge
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("original for " + stroke);
+            logger.debug("original is " + origHandler.getClass().getName());
+            logger.debug("editor viewer=" + editor.isViewer());
+            logger.debug("project=" + DataKeys.PROJECT.getData(context)); // API change - don't merge
+        }
         origHandler.execute(editor, context);
     }
 
@@ -103,7 +107,7 @@ public class EditorKeyHandler extends EditorActionHandler
             }
         }
 
-        logger.debug("res=" + res);
+        if (logger.isDebugEnabled()) logger.debug("res=" + res);
         return res;
     }
 

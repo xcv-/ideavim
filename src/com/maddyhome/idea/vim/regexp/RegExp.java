@@ -581,7 +581,7 @@ public class RegExp
             }
         }
 
-        logger.debug(regdump(expr, r));
+        if (logger.isDebugEnabled()) logger.debug(regdump(expr, r));
 
         return r;
     }

@@ -39,7 +39,10 @@ public class PassThruDelegateAction extends AbstractDelegateAction
 
     public void actionPerformed(AnActionEvent event)
     {
-        logger.debug("actionPerformed key=" + stroke);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("actionPerformed key=" + stroke);
+        }
         final Editor editor = event.getData(DataKeys.EDITOR); // API change - don't merge
         if (editor == null || !VimPlugin.isEnabled())
         {
@@ -48,12 +51,18 @@ public class PassThruDelegateAction extends AbstractDelegateAction
         else if (event.getInputEvent() instanceof KeyEvent)
         {
             KeyStroke key = KeyStroke.getKeyStrokeForEvent((KeyEvent)event.getInputEvent());
-            logger.debug("event = KeyEvent: " + key);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("event = KeyEvent: " + key);
+            }
             KeyHandler.getInstance().handleKey(editor, key, new DataPackage(event));
         }
         else
         {
-            logger.debug("event is a " + event.getInputEvent().getClass().getName());
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("event is a " + event.getInputEvent().getClass().getName());
+            }
             KeyHandler.getInstance().handleKey(editor, stroke, new DataPackage(event));
         }
     }

@@ -613,7 +613,10 @@ public class ChangeGroup extends AbstractActionGroup
      */
     public boolean processKey(final Editor editor, final DataPackage context, final KeyStroke key)
     {
-        logger.debug("processKey(" + key + ")");
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("processKey(" + key + ")");
+        }
 
         if (key.getKeyChar() != KeyEvent.CHAR_UNDEFINED)
         {
@@ -710,8 +713,11 @@ public class ChangeGroup extends AbstractActionGroup
         int start = CommandGroups.getInstance().getMotion().moveCaretToLineStart(editor);
         int offset = Math.min(CommandGroups.getInstance().getMotion().moveCaretToLineEndOffset(editor,
             count - 1, true) + 1, EditorHelper.getFileSize(editor, true));
-        logger.debug("start="+start);
-        logger.debug("offset="+offset);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("start="+start);
+            logger.debug("offset="+offset);
+        }
         if (offset != -1)
         {
             boolean res = deleteText(editor, context, new TextRange(start, offset), Command.FLAG_MOT_LINEWISE);
@@ -857,7 +863,10 @@ public class ChangeGroup extends AbstractActionGroup
         if (text.indexOf('\n') >= 0 && !(range.getStartOffset() == 0 || EditorHelper.getDocumentChars(editor).charAt(range.getStartOffset() - 1) == '\n'))
         {
             String id = ActionManager.getInstance().getId(argument.getMotion().getAction());
-            logger.debug("action id=" + id);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("action id=" + id);
+            }
             if (id.equals("VimMotionWordRight") || id.equals("VimMotionBigWordRight") || id.equals("VimMotionCamelRight"))
             {
                 range = new TextRange(range.getStartOffset(), range.getEndOffset() - 1);
@@ -969,7 +978,10 @@ public class ChangeGroup extends AbstractActionGroup
         {
             num = 1;
             space = EditorHelper.getLeadingWhitespace(editor, editor.offsetToLogicalPosition(offset).line);
-            logger.debug("space='" + space + "'");
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("space='" + space + "'");
+            }
         }
 
         StringBuffer repl = new StringBuffer(count);
@@ -1005,7 +1017,10 @@ public class ChangeGroup extends AbstractActionGroup
      */
     public boolean changeCharacterRange(Editor editor, DataPackage context, TextRange range, char ch)
     {
-        logger.debug("change range: " + range + " to " + ch);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("change range: " + range + " to " + ch);
+        }
         /*
         int max = range.getMaxLength();
         StringBuffer chs = new StringBuffer(max);
@@ -1160,11 +1175,14 @@ public class ChangeGroup extends AbstractActionGroup
             int cnt = count * argument.getMotion().getCount();
             int pos1 = SearchHelper.findNextWordEnd(EditorHelper.getDocumentChars(editor), pos, size, cnt, skipPunc, false, false);
             int pos2 = SearchHelper.findNextWordEnd(EditorHelper.getDocumentChars(editor), pos1, size, -cnt, skipPunc, false, false);
-            logger.debug("pos=" + pos);
-            logger.debug("pos1=" + pos1);
-            logger.debug("pos2=" + pos2);
-            logger.debug("count=" + count);
-            logger.debug("arg.count=" + argument.getMotion().getCount());
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("pos=" + pos);
+                logger.debug("pos1=" + pos1);
+                logger.debug("pos2=" + pos2);
+                logger.debug("count=" + count);
+                logger.debug("arg.count=" + argument.getMotion().getCount());
+            }
             if (pos2 == pos)
             {
                 if (count > 1)
@@ -1432,7 +1450,10 @@ public class ChangeGroup extends AbstractActionGroup
 
     public void indentRange(Editor editor, DataPackage context, TextRange range, int count, int dir)
     {
-        logger.debug("count=" + count);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("count=" + count);
+        }
         if (range == null) return;
 
         Project proj = context.getProject(); // API change - don't merge
@@ -1672,7 +1693,10 @@ public class ChangeGroup extends AbstractActionGroup
         logger.debug("resetCursor");
         Document doc = FileDocumentManager.getInstance().getDocument(virtualFile);
         Editor[] editors = EditorFactory.getInstance().getEditors(doc, proj);
-        logger.debug("There are " + editors.length + " editors for virtual file " + virtualFile.getName());
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("There are " + editors.length + " editors for virtual file " + virtualFile.getName());
+        }
         for (Editor editor : editors)
         {
             editor.getSettings().setBlockCursor(!insert);
@@ -1694,9 +1718,12 @@ public class ChangeGroup extends AbstractActionGroup
         }
         else
         {
-            logger.debug("found range " + range);
             String text = EditorHelper.getText(editor, range);
-            logger.debug("text=" + text);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("found range " + range);
+                logger.debug("text=" + text);
+            }
             String number = text;
             if (text.length() == 0)
             {

@@ -229,7 +229,7 @@ public class KeyParser
 
     public void setupActionHandler(String ideaActName, String vimActName)
     {
-        logger.debug("vimActName=" + vimActName);
+        if (logger.isDebugEnabled()) logger.debug("vimActName=" + vimActName);
 
         ActionManager amgr = ActionManager.getInstance();
         AnAction vaction = amgr.getAction(vimActName);
@@ -242,7 +242,7 @@ public class KeyParser
 
     public void setupActionHandler(String ideaActName, AnAction vaction)
     {
-        logger.debug("ideaActName=" + ideaActName);
+        if (logger.isDebugEnabled()) logger.debug("ideaActName=" + ideaActName);
 
         ActionManager amgr = ActionManager.getInstance();
         AnAction iaction = amgr.getAction(ideaActName);
@@ -275,12 +275,12 @@ public class KeyParser
 
     public void setupActionHandler(String ideaActName, String vimActName, KeyStroke stroke, boolean special)
     {
-        logger.debug("setupActionHandler for " + ideaActName + " and " + vimActName + " for " + stroke);
+        if (logger.isDebugEnabled()) logger.debug("setupActionHandler for " + ideaActName + " and " + vimActName + " for " + stroke);
         ActionManager amgr = ActionManager.getInstance();
         AnAction action = amgr.getAction(ideaActName);
         if (action instanceof EditorAction)
         {
-            logger.debug(ideaActName + " is an EditorAction");
+            if (logger.isDebugEnabled()) logger.debug(ideaActName + " is an EditorAction");
             EditorAction iaction = (EditorAction)action;
             EditorActionHandler handler = iaction.getHandler();
             if (vimActName != null)

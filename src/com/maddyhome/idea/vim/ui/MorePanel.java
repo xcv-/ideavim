@@ -128,7 +128,7 @@ public class MorePanel extends JPanel
         int width = scroll.getSize().width;
 
         //int width = text.getSize().width;
-        logger.debug("width=" + width);
+        if (logger.isDebugEnabled()) logger.debug("width=" + width);
         int charWidth = text.getFontMetrics(text.getFont()).charWidth('M');
 
         return width / charWidth;
@@ -234,10 +234,13 @@ public class MorePanel extends JPanel
         lineHeight = text.getFontMetrics(text.getFont()).getHeight();
         int count = countLines(text.getText());
         int visLines = getSize().height / lineHeight - 1;
-        logger.debug("size.height=" + getSize().height);
-        logger.debug("lineHeight=" + lineHeight);
-        logger.debug("count=" + count);
-        logger.debug("visLines=" + visLines);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("size.height=" + getSize().height);
+            logger.debug("lineHeight=" + lineHeight);
+            logger.debug("count=" + count);
+            logger.debug("visLines=" + visLines);
+        }
         int lines = Math.min(count, visLines);
         setSize(getSize().width, lines * lineHeight + label.getPreferredSize().height +
             getBorder().getBorderInsets(this).top * 2);
@@ -302,12 +305,15 @@ public class MorePanel extends JPanel
     private void scrollOffset(int more)
     {
         int val = scrollPane.getVerticalScrollBar().getValue();
-        logger.debug("val=" + val);
-        logger.debug("more=" + more);
         scrollPane.getVerticalScrollBar().setValue(val + more);
         scrollPane.getHorizontalScrollBar().setValue(0);
-        logger.debug("scrollPane.getVerticalScrollBar().getMaximum()=" + scrollPane.getVerticalScrollBar().getMaximum());
-        logger.debug("scrollPane.getVerticalScrollBar().getVisibleAmount()=" + scrollPane.getVerticalScrollBar().getVisibleAmount());
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("val=" + val);
+            logger.debug("more=" + more);
+            logger.debug("scrollPane.getVerticalScrollBar().getMaximum()=" + scrollPane.getVerticalScrollBar().getMaximum());
+            logger.debug("scrollPane.getVerticalScrollBar().getVisibleAmount()=" + scrollPane.getVerticalScrollBar().getVisibleAmount());
+        }
         if (val + more >= scrollPane.getVerticalScrollBar().getMaximum() - scrollPane.getVerticalScrollBar().getVisibleAmount())
         {
             atEnd = true;
@@ -396,12 +402,12 @@ public class MorePanel extends JPanel
                                     parent.close();
                                     break;
                                 default:
-                                    logger.debug("e.getKeyCode()=" + e.getKeyCode());
+                                    if (logger.isDebugEnabled()) logger.debug("e.getKeyCode()=" + e.getKeyCode());
                                     parent.badKey();
                             }
                         }
                     default:
-                        logger.debug("e.getKeyChar()=" + (int)e.getKeyChar());
+                        if (logger.isDebugEnabled()) logger.debug("e.getKeyChar()=" + (int)e.getKeyChar());
                         parent.badKey();
                 }
             }
@@ -428,7 +434,7 @@ public class MorePanel extends JPanel
             if (cnt > 1)
             {
                 parent.close();
-                logger.debug("cnt="+cnt);
+                if (logger.isDebugEnabled()) logger.debug("cnt="+cnt);
             }
             else
             {

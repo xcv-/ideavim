@@ -66,7 +66,10 @@ public class HistoryHandler extends CommandHandler
             arg = "";
         }
 
-        logger.debug("key='" + key + "'");
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("key='" + key + "'");
+        }
 
         if (key.length() == 1 && ":/=@".indexOf(key.charAt(0)) >= 0)
         {
@@ -91,7 +94,10 @@ public class HistoryHandler extends CommandHandler
             if (!"cmd".startsWith(key) && !"search".startsWith(key) && !"expr".startsWith(key) && !"input".startsWith(key) && !"all".startsWith(key))
             {
                 // Invalid command
-                logger.debug("invalid command " + key);
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("invalid command " + key);
+                }
                 return false;
             }
         }
@@ -167,7 +173,10 @@ public class HistoryHandler extends CommandHandler
 
     private String processKey(String key, int start, int end)
     {
-        logger.debug("process " + key + " " + start + "," + end);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("process " + key + " " + start + "," + end);
+        }
 
         StringBuffer res = new StringBuffer();
 

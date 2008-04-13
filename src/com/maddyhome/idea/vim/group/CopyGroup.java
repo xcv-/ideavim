@@ -94,7 +94,10 @@ public class CopyGroup extends AbstractActionGroup
     {
         if (range != null)
         {
-            logger.debug("yanking range: " + range);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("yanking range: " + range);
+            }
             boolean res = CommandGroups.getInstance().getRegister().storeText(editor, context, range, type, false, true);
             if (moveCursor)
             {
@@ -206,10 +209,13 @@ public class CopyGroup extends AbstractActionGroup
             }
 
             int start = range.getStartOffset();
-            logger.debug("start=" + start);
             int end = range.getEndOffset();
             int endLine = editor.offsetToLogicalPosition(end).line;
-            logger.debug("end=" + end);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("start=" + start);
+                logger.debug("end=" + end);
+            }
 
             if ((type & Command.FLAG_MOT_LINEWISE) != 0)
             {
@@ -272,9 +278,12 @@ public class CopyGroup extends AbstractActionGroup
     public void putText(Editor editor, DataPackage context, int offset, String text, int type, int count,
         boolean indent, boolean cursorAfter, int mode)
     {
-        logger.debug("offset=" + offset);
-        logger.debug("type=" + type);
-        logger.debug("mode=" + mode);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("offset=" + offset);
+            logger.debug("type=" + type);
+            logger.debug("mode=" + mode);
+        }
 
         if ((mode & Command.FLAG_MOT_LINEWISE) != 0 && editor.isOneLineMode())
         {
@@ -303,7 +312,10 @@ public class CopyGroup extends AbstractActionGroup
             LogicalPosition start = editor.offsetToLogicalPosition(offset);
             int col = (mode & Command.FLAG_MOT_LINEWISE) != 0 ? 0 : start.column;
             int line = start.line;
-            logger.debug("col=" + col + ", line=" + line);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("col=" + col + ", line=" + line);
+            }
             int lines = 1;
             for (int i = 0; i < text.length(); i++)
             {
@@ -349,13 +361,16 @@ public class CopyGroup extends AbstractActionGroup
                         origSegment = segment;
                     }
                 }
-                logger.debug("segment='" + segment + "'");
-                logger.debug("origSegment='" + origSegment + "'");
                 String pad = EditorHelper.pad(editor, line, col);
 
                 int insoff = editor.logicalPositionToOffset(new LogicalPosition(line, col));
                 endOffset = insoff;
-                logger.debug("insoff=" + insoff);
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("segment='" + segment + "'");
+                    logger.debug("origSegment='" + origSegment + "'");
+                    logger.debug("insoff=" + insoff);
+                }
                 for (int i = 0; i < count; i++)
                 {
                     String txt = i == 0 ? origSegment : segment;
@@ -394,8 +409,11 @@ public class CopyGroup extends AbstractActionGroup
         }
         */
         LogicalPosition elp = editor.offsetToLogicalPosition(endOffset - 1);
-        logger.debug("slp.line=" + slp.line);
-        logger.debug("elp.line=" + elp.line);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("slp.line=" + slp.line);
+            logger.debug("elp.line=" + elp.line);
+        }
         if (indent)
         {
             int startOff = editor.getDocument().getLineStartOffset(slp.line);
@@ -412,12 +430,18 @@ public class CopyGroup extends AbstractActionGroup
             indented = true;
         }
         */
-        logger.debug("insertCnt=" + insertCnt);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("insertCnt=" + insertCnt);
+        }
         if (indent)
         {
             endOffset = EditorHelper.getLineEndOffset(editor, elp.line, true);
             insertCnt = endOffset - offset;
-            logger.debug("insertCnt=" + insertCnt);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("insertCnt=" + insertCnt);
+            }
         }
 
         int cursorMode;

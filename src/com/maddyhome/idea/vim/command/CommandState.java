@@ -114,7 +114,10 @@ public class CommandState
         logger.debug("pushState");
         modes.push(new State(mode, submode, mapping));
         updateStatus();
-        logger.debug("state=" + this);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("state=" + this);
+        }
     }
 
     public void popState()
@@ -122,7 +125,10 @@ public class CommandState
         logger.debug("popState");
         modes.pop();
         updateStatus();
-        logger.debug("state=" + this);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("state=" + this);
+        }
     }
 
     /**
@@ -131,7 +137,10 @@ public class CommandState
      */
     public int getMode()
     {
-        logger.debug("getMode=" + currentState().getMode());
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("getMode=" + currentState().getMode());
+        }
         //return mode;
         return currentState().getMode();
     }
@@ -272,7 +281,10 @@ public class CommandState
     public int getMappingMode()
     {
         //return mappingMode;
-        logger.debug("getMappingMode=" + currentState().getMapping());
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("getMappingMode=" + currentState().getMapping());
+        }
         return currentState().getMapping();
     }
 

@@ -375,8 +375,11 @@ public class SearchGroup extends AbstractActionGroup
 
         searchHighlight(false);
 
-        logger.debug("search range=[" + start + "," + end + "]");
-        logger.debug("pattern=" + pattern + ", replace=" + sub);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("search range=[" + start + "," + end + "]");
+            logger.debug("pattern=" + pattern + ", replace=" + sub);
+        }
         int lastMatch = -1;
         int lastLine = -1;
         int searchcol = 0;
@@ -627,7 +630,7 @@ public class SearchGroup extends AbstractActionGroup
                 CharPointer p = new CharPointer(command);
                 CharPointer end = RegExp.skip_regexp(p.ref(0), type, true);
                 pattern = p.substring(end.pointer() - p.pointer());
-                logger.debug("pattern=" + pattern);
+                if (logger.isDebugEnabled()) logger.debug("pattern=" + pattern);
                 if (p.charAt() != type)
                 {
                     logger.debug("no offset");
@@ -637,7 +640,7 @@ public class SearchGroup extends AbstractActionGroup
                 {
                     p.inc();
                     offset = p.toString();
-                    logger.debug("offset=" + offset);
+                    if (logger.isDebugEnabled()) logger.debug("offset=" + offset);
                 }
             }
             else if (command.length() == 1)
@@ -647,7 +650,7 @@ public class SearchGroup extends AbstractActionGroup
             else
             {
                 offset = command.substring(1);
-                logger.debug("offset=" + offset);
+                if (logger.isDebugEnabled()) logger.debug("offset=" + offset);
             }
         }
 
@@ -656,9 +659,12 @@ public class SearchGroup extends AbstractActionGroup
         lastOffset = offset;
         lastDir = dir;
 
-        logger.debug("lastSearch=" + lastSearch);
-        logger.debug("lastOffset=" + lastOffset);
-        logger.debug("lastDir=" + lastDir);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("lastSearch=" + lastSearch);
+            logger.debug("lastOffset=" + lastOffset);
+            logger.debug("lastDir=" + lastDir);
+        }
 
         searchHighlight(false);
 
@@ -971,7 +977,7 @@ public class SearchGroup extends AbstractActionGroup
         regmatch.regprog = sp.vim_regcomp(lastSearch, 1);
         if (regmatch == null)
         {
-            logger.debug("bad pattern: " + lastSearch);
+            if (logger.isDebugEnabled()) logger.debug("bad pattern: " + lastSearch);
             return res;
         }
 
@@ -1368,7 +1374,7 @@ public class SearchGroup extends AbstractActionGroup
 
         text = new Element("show-last");
         text.addContent(Boolean.toString(showSearchHighlight));
-        logger.debug("text=" + text);
+        if (logger.isDebugEnabled()) logger.debug("text=" + text);
         search.addContent(text);
 
         element.addContent(search);
@@ -1413,9 +1419,12 @@ public class SearchGroup extends AbstractActionGroup
         lastDir = Integer.parseInt(dir.getText());
 
         Element show = search.getChild("show-last");
-        logger.debug("show=" + show + "(" + show.getText() + ")");
         showSearchHighlight = Boolean.valueOf(show.getText());
-        logger.debug("showSearchHighlight=" + showSearchHighlight);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("show=" + show + "(" + show.getText() + ")");
+            logger.debug("showSearchHighlight=" + showSearchHighlight);
+        }
     }
 
     private class ButtonActionListener implements ActionListener
@@ -1480,8 +1489,11 @@ public class SearchGroup extends AbstractActionGroup
                     int soff = event.getOffset();
                     int eoff = soff + event.getNewLength();
 
-                    logger.debug("hls=" + hls);
-                    logger.debug("event=" + event);
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("hls=" + hls);
+                        logger.debug("event=" + event);
+                    }
                     Iterator iter = hls.iterator();
                     while (iter.hasNext())
                     {
@@ -1495,10 +1507,13 @@ public class SearchGroup extends AbstractActionGroup
 
                     int sl = editor.offsetToLogicalPosition(soff).line;
                     int el = editor.offsetToLogicalPosition(eoff).line;
-                    logger.debug("sl=" + sl + ", el=" + el);
                     CommandGroups.getInstance().getSearch().highlightSearchLines(editor, false, sl, el);
                     hls = EditorData.getLastHighlights(editor);
-                    logger.debug("hls=" + hls);
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("sl=" + sl + ", el=" + el);
+                        logger.debug("hls=" + hls);
+                    }
                 }
             }
         }

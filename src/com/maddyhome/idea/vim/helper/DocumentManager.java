@@ -71,7 +71,7 @@ public class DocumentManager
     {
         logger.debug("marking as up-to-date");
         VirtualFile vf = FileDocumentManager.getInstance().getFile(doc);
-        logger.debug("file=" + vf);
+        if (logger.isDebugEnabled()) logger.debug("file=" + vf);
         if (vf != null)
         {
             removeListeners(doc);
@@ -168,7 +168,7 @@ public class DocumentManager
 
         public void fileContentLoaded(VirtualFile file, Document document)
         {
-            logger.debug("loaded vf=" + file.getName());
+            if (logger.isDebugEnabled()) logger.debug("loaded vf=" + file.getName());
             //addListeners(document);
         }
     }

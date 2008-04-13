@@ -200,7 +200,10 @@ public class KeyHandler
             {
                 // For debugging purposes we track the keys entered for this command
                 keys.add(key);
-                logger.debug("keys now " + keys);
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("keys now " + keys);
+                }
 
                 // Ask the key/action tree if this is an appropriate key at this point in the command and if so,
                 // return the node matching this keystroke
@@ -427,12 +430,18 @@ public class KeyHandler
                 cmd = top;
             }
 
-            logger.debug("cmd=" + cmd);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("cmd=" + cmd);
+            }
             // If we have a command and a motion command argument, both could possibly have their own counts. We
             // need to adjust the counts so the motion gets the product of both counts and the command's count gets
             // reset. Example 3c2w (change 2 words, three times) becomes c6w (change 6 words)
             Argument arg = cmd.getArgument();
-            logger.debug("arg=" + arg);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("arg=" + arg);
+            }
             if (arg != null && arg.getType() == Argument.MOTION)
             {
                 Command mot = arg.getMotion();
@@ -522,7 +531,10 @@ public class KeyHandler
      */
     public static void executeAction(AnAction action, DataPackage context)
     {
-        logger.debug("executing action " + action);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("executing action " + action);
+        }
 
         // Hopefully all the arguments are sufficient. So far they all seem to work OK.
         // We don't have a specific InputEvent so that is null

@@ -146,11 +146,11 @@ public class ProcessGroup extends AbstractActionGroup
             logger.debug("processing command");
             final String text = panel.getText();
             record(editor, text);
-            logger.debug("swing=" + SwingUtilities.isEventDispatchThread());
+            if (logger.isDebugEnabled()) logger.debug("swing=" + SwingUtilities.isEventDispatchThread());
             if (panel.getLabel().equals(":"))
             {
                 flags = CommandParser.getInstance().processCommand(editor, context, text, 1);
-                logger.debug("flags=" + flags);
+                if (logger.isDebugEnabled()) logger.debug("flags=" + flags);
                 if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
                 {
                     CommandGroups.getInstance().getMotion().exitVisual(editor);
@@ -269,7 +269,7 @@ public class ProcessGroup extends AbstractActionGroup
 
     public boolean executeFilter(Editor editor, DataPackage context, TextRange range, String command) throws IOException
     {
-        logger.debug("command=" + command);
+        if (logger.isDebugEnabled()) logger.debug("command=" + command);
         CharSequence chars = EditorHelper.getDocumentChars(editor);
         StringReader car = new StringReader(chars.subSequence(range.getStartOffset(),
             range.getEndOffset()).toString());
@@ -303,7 +303,7 @@ public class ProcessGroup extends AbstractActionGroup
         int cnt;
         while ((cnt = from.read(buf)) != -1)
         {
-            logger.debug("buf="+buf);
+            if (logger.isDebugEnabled()) logger.debug("buf="+buf);
             to.write(buf, 0, cnt);
         }
     }

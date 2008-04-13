@@ -102,7 +102,10 @@ public class UndoManager
         {
             EditorUndoList list = getEditorUndoList(editor);
             list.endCommand();
-            logger.debug("endCommand: list=" + list);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("endCommand: list=" + list);
+            }
         }
     }
 
@@ -117,7 +120,10 @@ public class UndoManager
         logger.debug("undo");
         EditorUndoList list = getEditorUndoList(editor);
         boolean res = list.undo(editor, context);
-        logger.debug("undo: list=" + list);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("undo: list=" + list);
+        }
         return res;
     }
 
@@ -126,7 +132,10 @@ public class UndoManager
         logger.debug("undoLine");
         EditorUndoList list = getEditorUndoList(editor);
         boolean res = list.undoLine(editor, context);
-        logger.debug("undo: list=" + list);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("undo: list=" + list);
+        }
         return res;
     }
 
@@ -134,7 +143,10 @@ public class UndoManager
     {
         EditorUndoList list = getEditorUndoList(editor);
         boolean res = list.redo(editor, context);
-        logger.debug("redo: list=" + list);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("redo: list=" + list);
+        }
         return res;
     }
 
@@ -217,7 +229,10 @@ public class UndoManager
             if (!VimPlugin.isEnabled()) return;
 
             EditorUndoList list = UndoManager.getInstance().getEditors().get(event.getDocument());
-            logger.debug("Change: list=" + list);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Change: list=" + list);
+            }
             if (list != null)
             {
                 list.addChange(new DocumentChange(event.getOffset(), event.getOldFragment().toString(),

@@ -33,8 +33,11 @@ public class VisualOperatorDelegateActionHandler extends VisualOperatorActionHan
 {
     protected boolean execute(Editor editor, DataPackage context, Command cmd, TextRange range)
     {
-        logger.debug("execute, cmd=" + cmd + ", range=" + range);
-        logger.debug("origAction=" + origAction);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("execute, cmd=" + cmd + ", range=" + range);
+            logger.debug("origAction=" + origAction);
+        }
         KeyHandler.executeAction(origAction, context);
 
         return true;
@@ -42,7 +45,7 @@ public class VisualOperatorDelegateActionHandler extends VisualOperatorActionHan
 
     public void setOrigAction(AnAction origAction)
     {
-        logger.debug("setOrigHander to " + origAction);
+        if (logger.isDebugEnabled()) logger.debug("setOrigHander to " + origAction);
         this.origAction = origAction;
     }
 

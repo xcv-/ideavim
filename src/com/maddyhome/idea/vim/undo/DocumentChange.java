@@ -78,7 +78,7 @@ public class DocumentChange
 
     public void undo(Editor editor, DataPackage context)
     {
-        logger.debug("undo command = " + this);
+        if (logger.isDebugEnabled()) logger.debug("undo command = " + this);
         if (oldText.length() > 0)
         {
             if (newText.length() > 0)

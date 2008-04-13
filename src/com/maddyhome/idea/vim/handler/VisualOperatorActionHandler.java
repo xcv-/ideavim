@@ -40,13 +40,13 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
 {
     protected final boolean execute(final Editor editor, DataPackage context, Command cmd)
     {
-        logger.debug("execute, cmd=" + cmd);
+        if (logger.isDebugEnabled()) logger.debug("execute, cmd=" + cmd);
 
         TextRange range = null;
         if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
         {
             range = CommandGroups.getInstance().getMotion().getVisualRange(editor);
-            logger.debug("range=" + range);
+            if (logger.isDebugEnabled()) logger.debug("range=" + range);
         }
 
         VisualStartFinishRunnable runnable = new VisualStartFinishRunnable(editor, context, cmd);
@@ -117,7 +117,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                     change = CommandGroups.getInstance().getMotion().getVisualOperatorRange(editor,
                         cmd == null ? Command.FLAG_MOT_LINEWISE : cmd.getFlags());
                 }
-                logger.debug("change=" + change);
+                if (logger.isDebugEnabled()) logger.debug("change=" + change);
             }
 
             // If this is a mutli key change then exit visual now

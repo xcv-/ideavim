@@ -73,7 +73,7 @@ public class RegisterGroup extends AbstractActionGroup
         if (VALID_REGISTERS.indexOf(reg) != -1)
         {
             lastRegister = reg;
-            logger.debug("register selected: " + lastRegister);
+            if (logger.isDebugEnabled()) logger.debug("register selected: " + lastRegister);
 
             return true;
         }
@@ -154,7 +154,7 @@ public class RegisterGroup extends AbstractActionGroup
             else
             {
                 registers.put(lreg, new Register(lreg, type, text));
-                logger.debug("register '" + register + "' contains: \"" + text + "\"");
+                if (logger.isDebugEnabled()) logger.debug("register '" + register + "' contains: \"" + text + "\"");
             }
         }
         else if (register == '*' || register == '+')
@@ -165,14 +165,14 @@ public class RegisterGroup extends AbstractActionGroup
         else
         {
             registers.put(register, new Register(register, type, text));
-            logger.debug("register '" + register + "' contains: \"" + text + "\"");
+            if (logger.isDebugEnabled()) logger.debug("register '" + register + "' contains: \"" + text + "\"");
         }
 
         // Also add it to the default register if the default wasn't specified
         if (register != REGISTER_DEFAULT && ".:/".indexOf(register) == -1)
         {
             registers.put(REGISTER_DEFAULT, new Register(REGISTER_DEFAULT, type, text));
-            logger.debug("register '" + register + "' contains: \"" + text + "\"");
+            if (logger.isDebugEnabled()) logger.debug("register '" + register + "' contains: \"" + text + "\"");
         }
 
         // Deletes go into register 1. Old 1 goes to 2, etc. Old 8 to 9, old 9 is lost
@@ -202,7 +202,7 @@ public class RegisterGroup extends AbstractActionGroup
         else if (register == REGISTER_DEFAULT)
         {
             registers.put('0', new Register('0', type, text));
-            logger.debug("register '" + '0' + "' contains: \"" + text + "\"");
+            if (logger.isDebugEnabled()) logger.debug("register '" + '0' + "' contains: \"" + text + "\"");
         }
 
         if (start != -1)
@@ -354,9 +354,12 @@ public class RegisterGroup extends AbstractActionGroup
                 CDATA data = new CDATA(/*CDATA.normalizeString*/(StringHelper.entities(register.getText())));
                 text.addContent(data);
                 reg.addContent(text);
-                logger.debug("register='" + register.getText() + "'");
-                logger.debug("data=" + data);
-                logger.debug("text=" + text);
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("register='" + register.getText() + "'");
+                    logger.debug("data=" + data);
+                    logger.debug("text=" + text);
+                }
             }
             else
             {

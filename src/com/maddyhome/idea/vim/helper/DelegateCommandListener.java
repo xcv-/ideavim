@@ -45,9 +45,12 @@ public class DelegateCommandListener extends CommandAdapter
     public void commandStarted(CommandEvent event)
     {
         inCommand = true;
-        logger.debug("Command started: " + event);
-        logger.debug("Name: " + event.getCommandName());
-        logger.debug("Group: " + event.getCommandGroupId());
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Command started: " + event);
+            logger.debug("Name: " + event.getCommandName());
+            logger.debug("Group: " + event.getCommandGroupId());
+        }
 
         if (runnable != null)
         {
@@ -57,9 +60,12 @@ public class DelegateCommandListener extends CommandAdapter
 
     public void commandFinished(CommandEvent event)
     {
-        logger.debug("Command finished: " + event);
-        logger.debug("Name: " + event.getCommandName());
-        logger.debug("Group: " + event.getCommandGroupId());
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Command finished: " + event);
+            logger.debug("Name: " + event.getCommandName());
+            logger.debug("Group: " + event.getCommandGroupId());
+        }
 
         if (runnable != null && inCommand)
         {

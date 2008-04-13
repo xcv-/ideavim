@@ -36,7 +36,7 @@ public class UndoCommand
     {
         this.editor = editor;
         startOffset = editor.getCaretModel().getOffset();
-        logger.debug("new undo command: startOffset=" + startOffset);
+        if (logger.isDebugEnabled()) logger.debug("new undo command: startOffset=" + startOffset);
     }
 
     public void complete()
@@ -60,7 +60,7 @@ public class UndoCommand
         if (changes.size() == 0)
         {
 //            startOffset = editor.getCaretModel().getOffset();
-            logger.debug("startOffest=" + startOffset);
+            if (logger.isDebugEnabled()) logger.debug("startOffest=" + startOffset);
         }
 
         changes.add(change);
@@ -79,7 +79,7 @@ public class UndoCommand
 
     public void undo(Editor editor, DataPackage context)
     {
-        logger.debug("undo: startOffset=" + startOffset);
+        if (logger.isDebugEnabled()) logger.debug("undo: startOffset=" + startOffset);
         for (int i = changes.size() - 1; i >= 0; i--)
         {
             DocumentChange change = changes.get(i);

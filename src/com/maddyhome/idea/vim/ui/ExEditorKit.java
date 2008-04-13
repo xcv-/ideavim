@@ -71,7 +71,7 @@ public class ExEditorKit extends DefaultEditorKit
     public Action[] getActions()
     {
         Action[] res = TextAction.augmentList(super.getActions(), this.exActions);
-        logger.debug("res.length=" + res.length);
+        if (logger.isDebugEnabled()) logger.debug("res.length=" + res.length);
 
         return res;
     }
@@ -371,7 +371,7 @@ public class ExEditorKit extends DefaultEditorKit
             Caret caret = target.getCaret();
             int offset = SearchHelper.findNextWord(target.getText(), caret.getDot(), target.getText().length(),
                 -1, false, false);
-            logger.debug("offset=" + offset);
+            if (logger.isDebugEnabled()) logger.debug("offset=" + offset);
             try
             {
                 int pos = caret.getDot();

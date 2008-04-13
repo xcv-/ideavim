@@ -284,7 +284,10 @@ public class CommandParser
     public ParseResult parse(String cmd) throws ExException
     {
         // This is a complicated state machine that should probably be rewritten
-        logger.debug("processing `" + cmd + "'");
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("processing `" + cmd + "'");
+        }
         int state = STATE_START;
         Ranges ranges = new Ranges(); // The list of ranges
         StringBuffer command = new StringBuffer(); // The command
@@ -645,9 +648,12 @@ public class CommandParser
             }
         }
 
-        logger.debug("ranges = " + ranges);
-        logger.debug("command = " + command);
-        logger.debug("argument = " + argument);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("ranges = " + ranges);
+            logger.debug("command = " + command);
+            logger.debug("argument = " + argument);
+        }
 
         return new ParseResult(ranges, command.toString(), argument.toString().trim());
     }

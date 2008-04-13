@@ -50,12 +50,16 @@ public class DumpLineHandler extends CommandHandler
         {
             int start = editor.getDocument().getLineStartOffset(l);
             int end = editor.getDocument().getLineEndOffset(l);
-            logger.debug("Line " + l + ", start offset=" + start + ", end offset=" + end);
 
-            for (int i = start; i <= end; i++)
+            if (logger.isDebugEnabled())
             {
-                logger.debug("Offset " + i + ", char=" + chars.charAt(i) + ", lp=" + editor.offsetToLogicalPosition(i) +
-                    ", vp=" + editor.offsetToVisualPosition(i));
+                logger.debug("Line " + l + ", start offset=" + start + ", end offset=" + end);
+
+                for (int i = start; i <= end; i++)
+                {
+                    logger.debug("Offset " + i + ", char=" + chars.charAt(i) + ", lp=" + editor.offsetToLogicalPosition(i) +
+                        ", vp=" + editor.offsetToVisualPosition(i));
+                }
             }
         }
 

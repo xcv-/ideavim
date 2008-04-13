@@ -40,7 +40,10 @@ public class DigraphHandler extends CommandHandler
     public boolean execute(Editor editor, DataPackage context, ExCommand cmd) throws ExException
     {
         String arg = cmd.getArgument();
-        logger.debug("arg="+arg);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("arg="+arg);
+        }
 
         return CommandGroups.getInstance().getDigraph().parseCommandLine(editor, cmd.getArgument(), true);
     }

@@ -56,7 +56,10 @@ public class MacroGroup extends AbstractActionGroup
      */
     public boolean playbackRegister(Editor editor, DataPackage context, Project project, char reg, int count)
     {
-        logger.debug("play bakc register " + reg + " " + count + " times");
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("play bakc register " + reg + " " + count + " times");
+        }
         Register register = CommandGroups.getInstance().getRegister().getPlaybackRegister(reg);
         if (register == null)
         {
@@ -103,7 +106,10 @@ public class MacroGroup extends AbstractActionGroup
     public void playbackKeys(final Editor editor, final DataPackage context, final Project project,
         final List<KeyStroke> keys, final int pos, final int cnt, final int total)
     {
-        logger.debug("playbackKeys " + pos);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("playbackKeys " + pos);
+        }
         if (pos >= keys.size() || cnt >= total)
         {
             logger.debug("done");
@@ -128,7 +134,10 @@ public class MacroGroup extends AbstractActionGroup
         final Runnable run = new Runnable() {
             public void run()
             {
-                logger.debug("processing key " + pos);
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("processing key " + pos);
+                }
                 // Handle one keystroke then queue up the next key
                 KeyHandler.getInstance().handleKey(editor, keys.get(pos), context);
                 if (pos < keys.size() - 1)
@@ -158,7 +167,10 @@ public class MacroGroup extends AbstractActionGroup
         {
             public void run()
             {
-                logger.debug("posting " + event);
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("posting " + event);
+                }
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(event);
             }
         });

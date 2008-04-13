@@ -39,7 +39,10 @@ public class KeyAction extends AnAction
 {
     public void actionPerformed(AnActionEvent event)
     {
-        logger.debug("actionPerformed=" + event);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("actionPerformed=" + event);
+        }
         if (!VimPlugin.isEnabled())
         {
             return;
@@ -68,7 +71,10 @@ public class KeyAction extends AnAction
 
     protected void setShortcutSet(ShortcutSet shortcutSet)
     {
-        logger.debug("setShortcutSet=" + shortcutSet);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("setShortcutSet=" + shortcutSet);
+        }
         super.setShortcutSet(shortcutSet);
     }
 

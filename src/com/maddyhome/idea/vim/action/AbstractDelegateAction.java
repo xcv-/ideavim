@@ -35,7 +35,10 @@ public abstract class AbstractDelegateAction extends AnAction implements Delegat
 
     public void setOrigAction(AnAction origAction)
     {
-        logger.debug("origAction=" + origAction);
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("origAction=" + origAction);
+        }
         this.origAction = origAction;
         copyFrom(origAction);
     }
