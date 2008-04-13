@@ -266,7 +266,8 @@ public class EditorHelper
      */
     public static int visualLineToLogicalLine(Editor editor, int vline)
     {
-        return editor.visualToLogicalPosition(new VisualPosition(vline, 0)).line;
+        int lline = editor.visualToLogicalPosition(new VisualPosition(vline, 0)).line;
+        return normalizeLine(editor, lline);
     }
 
     /**
