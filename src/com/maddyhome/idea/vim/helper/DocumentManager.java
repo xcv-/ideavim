@@ -26,7 +26,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -77,7 +76,7 @@ public class DocumentManager
         {
             removeListeners(doc);
             FileDocumentManager.getInstance().reloadFromDisk(doc);
-            AbstractVcsHelper.getInstance(p).markFileAsUpToDate(vf);
+            //AbstractVcsHelper.getInstance(p).markFileAsUpToDate(vf);
             FileStatusManager.getInstance(p).fileStatusChanged(vf);
             addListeners(doc);
         }
