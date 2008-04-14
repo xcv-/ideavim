@@ -240,9 +240,13 @@ public class KeyHandler
                 if (node instanceof BranchNode)
                 {
                     logger.debug("branch node");
-                    // Flag that we aren't allowing any more count digits
-                    mode = STATE_COMMAND;
-                    editorState.setCurrentNode((BranchNode)node);
+                    BranchNode bnode = (BranchNode)node;
+                    // Flag that we aren't allowing any more count digits (unless it's OK)
+                    if ((bnode.getFlags() & Command.FLAG_ALLOW_MID_COUNT) == 0)
+                    {
+                        mode = STATE_COMMAND;
+                    }
+                    editorState.setCurrentNode(bnode);
 
                     ArgumentNode arg = (ArgumentNode)((BranchNode)editorState.getCurrentNode()).getArgumentNode();
                     if (arg != null)

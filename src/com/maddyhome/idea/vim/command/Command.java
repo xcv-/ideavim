@@ -56,6 +56,9 @@ public class Command
     public static final int FLAG_IGNORE_SCROLL_JUMP = 1 << 12;
     public static final int FLAG_IGNORE_SIDE_SCROLL_JUMP = 1 << 13;
 
+    /** Indicates a command can accept a count in mid command */
+    public static final int FLAG_ALLOW_MID_COUNT = 1 << 14;
+
     /** Search Flags */
     public static final int FLAG_SEARCH_FWD = 1 << 16;
     public static final int FLAG_SEARCH_REV = 1 << 17;

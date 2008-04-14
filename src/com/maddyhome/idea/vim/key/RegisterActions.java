@@ -275,7 +275,7 @@ public class RegisterActions
         });
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimCopyYankLine", Command.COPY,
             new Shortcut('Y'));
-        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimCopyYankLine", Command.COPY,
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimCopyYankLine", Command.COPY, Command.FLAG_ALLOW_MID_COUNT,
             new Shortcut("yy"));
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimCopyYankMotion", Command.COPY, Command.FLAG_OP_PEND,
             new Shortcut('y'), Argument.MOTION);
@@ -295,7 +295,7 @@ public class RegisterActions
             new Shortcut('s'));
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeEndOfLine", Command.CHANGE, Command.FLAG_MULTIKEY_UNDO,
             new Shortcut('C'));
-        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeLine", Command.CHANGE, Command.FLAG_MULTIKEY_UNDO, new Shortcut[] {
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeLine", Command.CHANGE, Command.FLAG_ALLOW_MID_COUNT | Command.FLAG_MULTIKEY_UNDO, new Shortcut[] {
             new Shortcut("cc"),
             new Shortcut('S')
         });
@@ -319,7 +319,7 @@ public class RegisterActions
             new Shortcut("gJ"));
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimDeleteJoinLinesSpaces", Command.DELETE,
             new Shortcut('J'));
-        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimDeleteLine", Command.DELETE,
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimDeleteLine", Command.DELETE, Command.FLAG_ALLOW_MID_COUNT,
             new Shortcut("dd"));
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimDeleteMotion", Command.DELETE, Command.FLAG_OP_PEND,
             new Shortcut('d'), Argument.MOTION);

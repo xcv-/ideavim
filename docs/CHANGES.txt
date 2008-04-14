@@ -7,6 +7,7 @@ Bug Fixes
 - Fix internal error calculating line length in editor.
 - Improve performance of non-trivial debug statements.
 - Fixed iB to be linewise as an operator yet characterwise when in visual mode.
+- Allow count to be entered in the middle of cc, dd, and yy commands.
 
 0.11.5 from 0.11.4
 Bug Fixes

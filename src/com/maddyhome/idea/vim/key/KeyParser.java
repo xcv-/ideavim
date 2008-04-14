@@ -591,7 +591,7 @@ public class KeyParser
             // If this are more keystrokes in the shortcut or there is an argument, add a branch node
             else
             {
-                node = new BranchNode(key);
+                node = new BranchNode(key, cmdFlags);
             }
 
             base.addChild(node, key);

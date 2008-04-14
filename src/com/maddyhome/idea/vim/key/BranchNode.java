@@ -35,7 +35,13 @@ public class BranchNode extends ParentNode
      */
     public BranchNode(KeyStroke key)
     {
+        this(key, 0);
+    }
+
+    public BranchNode(KeyStroke key, int flags)
+    {
         this.key = key;
+        this.flags = flags;
     }
 
     /**
@@ -69,6 +75,11 @@ public class BranchNode extends ParentNode
         return key;
     }
 
+    public int getFlags()
+    {
+        return flags;
+    }
+
     public String toString()
     {
         StringBuffer res = new StringBuffer();
@@ -94,4 +105,5 @@ public class BranchNode extends ParentNode
     }
 
     protected KeyStroke key;
+    protected int flags;
 }
