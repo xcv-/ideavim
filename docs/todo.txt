@@ -1,6 +1,5 @@
 Bugs to fix:
 
-- Count before S or cc also does n inserts. Count should only apply to # of lines to change.
 - Split text when typing fast after o command.
 - Replace mode - fix caret. Can't figure out how to keep block caret.
 - Repeating a last change doesn't include text inserted by IDEA using code
@@ -8,6 +7,7 @@ Bugs to fix:
 
 Requested Functionality to add:
 
+- Integrate IDEA's back/forward with jumplists
 - Support [', ]', [`, ]`
 - Support [z, ]z
 - Support ]/, ]*, [/, [*

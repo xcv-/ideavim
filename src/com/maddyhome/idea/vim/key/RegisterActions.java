@@ -293,9 +293,9 @@ public class RegisterActions
             new Shortcut('r'), Argument.DIGRAPH);
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeCharacters", Command.CHANGE, Command.FLAG_NO_REPEAT | Command.FLAG_MULTIKEY_UNDO,
             new Shortcut('s'));
-        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeEndOfLine", Command.CHANGE, Command.FLAG_MULTIKEY_UNDO,
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeEndOfLine", Command.CHANGE, Command.FLAG_NO_REPEAT | Command.FLAG_MULTIKEY_UNDO,
             new Shortcut('C'));
-        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeLine", Command.CHANGE, Command.FLAG_ALLOW_MID_COUNT | Command.FLAG_MULTIKEY_UNDO, new Shortcut[] {
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimChangeLine", Command.CHANGE, Command.FLAG_NO_REPEAT | Command.FLAG_ALLOW_MID_COUNT | Command.FLAG_MULTIKEY_UNDO, new Shortcut[] {
             new Shortcut("cc"),
             new Shortcut('S')
         });
