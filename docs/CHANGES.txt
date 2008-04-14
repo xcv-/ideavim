@@ -10,6 +10,7 @@ Bug Fixes
 - Allow count to be entered in the middle of cc, dd, and yy commands.
 - Count for cc, S, and C no longer results in multiple insert of changed text.
 - Fix internal errors about resetting cursor in non-text editors.
+- Fixed jumps (Ctrl-I and Ctrl-O) between files.
 
 0.11.5 from 0.11.4
 Bug Fixes

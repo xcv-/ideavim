@@ -41,6 +41,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
@@ -66,6 +67,7 @@ import com.maddyhome.idea.vim.option.Options;
 import com.maddyhome.idea.vim.ui.ExEntryPanel;
 
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 /**
  * This handles all motion related commands and marks
@@ -539,14 +541,17 @@ public class MotionGroup extends AbstractActionGroup
             LogicalPosition lp = new LogicalPosition(jump.getLogicalLine(), jump.getCol());
             if (!vf.getPath().equals(jump.getFilename()))
             {
-                Editor newEditor = selectEditor(editor, EditorData.getVirtualFile(editor));
+                VirtualFile newFile = LocalFileSystem.getInstance().findFileByPath(jump.getFilename().replace(File.separatorChar, '/'));
+                if (newFile == null) return -2;
+
+                Editor newEditor = selectEditor(editor, newFile);
                 if (newEditor != null)
                 {
                     if (spot == -1)
                     {
                         CommandGroups.getInstance().getMark().addJump(editor, context, false);
                     }
-                    moveCaret(newEditor, context, newEditor.logicalPositionToOffset(lp));
+                    moveCaret(newEditor, context, EditorHelper.normalizeOffset(newEditor, newEditor.logicalPositionToOffset(lp), false));
                 }
 
                 return -2;
