@@ -91,10 +91,6 @@ public class MotionGroup extends AbstractActionGroup
             public void editorCreated(EditorFactoryEvent event)
             {
                 final Editor editor = event.getEditor();
-                editor.addEditorMouseListener(mouseHandler);
-                editor.addEditorMouseMotionListener(mouseHandler);
-
-                editor.getSelectionModel().addSelectionListener(selectionHandler);
                 // This ridiculous code ensures that a lot of events are processed BEFORE we finally start listening
                 // to visible area changes. This primary reason for this change is to fix the cursor position bug
                 // using the gd and gD commands (Goto Declaration). This bug has been around since Idea 6.0.4?
@@ -109,15 +105,19 @@ public class MotionGroup extends AbstractActionGroup
                                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                                     public void run()
                                     {
+                                        editor.addEditorMouseListener(mouseHandler);
+                                        editor.addEditorMouseMotionListener(mouseHandler);
+
+                                        editor.getSelectionModel().addSelectionListener(selectionHandler);
                                         editor.getScrollingModel().addVisibleAreaListener(scrollHandler);
+
+                                        EditorData.setMotionGroup(editor, true);
                                     }
                                 });
                             }
                         });
                     }
                 });
-
-                EditorData.setMotionGroup(editor, true);
             }
 
             public void editorReleased(EditorFactoryEvent event)
