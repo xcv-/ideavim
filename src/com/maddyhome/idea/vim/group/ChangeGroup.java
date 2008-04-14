@@ -1692,6 +1692,7 @@ public class ChangeGroup extends AbstractActionGroup
     {
         logger.debug("resetCursor");
         Document doc = FileDocumentManager.getInstance().getDocument(virtualFile);
+        if (doc == null) return; // Must be no text editor (such as image)
         Editor[] editors = EditorFactory.getInstance().getEditors(doc, proj);
         if (logger.isDebugEnabled())
         {
