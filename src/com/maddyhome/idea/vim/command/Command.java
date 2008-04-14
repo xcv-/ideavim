@@ -41,6 +41,8 @@ public class Command
     public static final int FLAG_MOT_EXCLUSIVE = 1 << 5;
     /** Indicates that the cursor position should be saved prior to this motion command */
     public static final int FLAG_SAVE_JUMP = 1 << 6;
+    /** Special flag that says this is characterwise only for visual mode */
+    public static final int FLAG_VISUAL_CHARACTERWISE = 1 << 7;
 
     /** Special command flag that indicates it is not to be repeated */
     public static final int FLAG_NO_REPEAT = 1 << 8;
