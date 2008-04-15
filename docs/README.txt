@@ -18,7 +18,7 @@ have to create the keymaps directory if it doesn't exist.
 
 Mac/OSX
 
-Copy Vim.xml from the plugin to ~/Library/Preferences/IntelliJIDEA50/keymaps.
+Copy Vim.xml from the plugin to ~/Library/Preferences/IntelliJIDEA80/keymaps.
 You will have to create the keymaps directory if it doesn't exist.
 
 Windows

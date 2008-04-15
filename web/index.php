@@ -52,7 +52,7 @@ using IDEA in VIM Emulation mode:
     it the active keymap by pressing the <code>Set Active</code> button.</li>
 </ol>
 
-<h4>Idea Aurora/4.0.x, Pallada/4.5.x, Irida/5.0.x, Demetra/6.x, and Selena/7.x</h4>
+<h4>Idea Aurora/4.0.x, Pallada/4.5.x, Irida/5.0.x, Demetra/6.x, Selena/7.x, and Diana/8.x</h4>
 
 <ol>
 <li>

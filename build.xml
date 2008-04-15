@@ -30,20 +30,21 @@
     <property name="install" value="install" />
     <property name="dist" value="dist" />
     <!-- Update to your IntelliJ installtion -->
-    <property name="idea.home" value="/Applications/IntelliJ IDEA 7.0.3.app" />
-    <property name="plugin.home" value="${user.home}/Library/Application Support/IntelliJIDEA70" />
+    <property name="idea.home" value="/Applications/Diana-8280.app" />
+    <property name="plugin.home" value="${user.home}/Library/Application Support/IntelliJIDEA80" />
 
     <property name="project" value="IdeaVIM" />
     <!-- Update this prior to building a new distribution -->
-    <property name="idea-version" value="7.x" />
+    <property name="idea-version" value="8.x" />
     <property name="version" value="0.11.6" />
-    <property name="since-version" value="6755" />
+    <property name="since-version" value="8280" />
     <property name="compiler.build" value="javac15" />
 
     <path id="build.classpath">
         <pathelement path="${idea.home}/lib/extensions.jar" />
         <pathelement path="${idea.home}/lib/openapi.jar" />
         <pathelement path="${idea.home}/lib/jdom.jar" />
+        <pathelement path="${idea.home}/lib/util.jar" />
         <pathelement path="${classes}"/>
     </path>
 
