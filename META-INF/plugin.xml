@@ -30,15 +30,7 @@
 version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 <br>
 Bug Fixes<br>
-- Support for Idea 7.0.x<br>
-- Fix cursor position of newly opened file using gd and gD commands.<br>
-- Fix internal error calculating line length in editor.<br>
-- Improve performance of non-trivial debug statements.<br>
-- Fixed iB to be linewise as an operator yet characterwise when in visual mode.<br>
-- Allow count to be entered in the middle of cc, dd, and yy commands.<br>
-- Count for cc, S, and C no longer results in multiple insert of changed text.<br>
-- Fix internal errors about resetting cursor in non-text editors.<br>
-- Fixed jumps (Ctrl-I and Ctrl-O) between files.<br>
+- Support for Idea Diana (8.x)<br>
 ]]>
     </change-notes>
 
