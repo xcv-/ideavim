@@ -66,10 +66,11 @@ public class RegisterActions
         KeyParser parser = KeyParser.getInstance();
 
         // ******************* Insert Mode Actions **********************
-        parser.registerAction(KeyParser.MAPPING_INSERT, "VimClassNameCompletion", Command.INSERT);
-        parser.registerAction(KeyParser.MAPPING_INSERT, "VimCodeCompletion", Command.INSERT);
-        parser.registerAction(KeyParser.MAPPING_INSERT, "VimSmartTypeCompletion", Command.INSERT);
-        parser.registerAction(KeyParser.MAPPING_INSERT, "VimWordCompletion", Command.INSERT);
+        // The next few are now flagged as readonly due to changes in IDEA Diana (8.x)
+        parser.registerAction(KeyParser.MAPPING_INSERT, "VimClassNameCompletion", Command.OTHER_READONLY);
+        parser.registerAction(KeyParser.MAPPING_INSERT, "VimCodeCompletion", Command.OTHER_READONLY);
+        parser.registerAction(KeyParser.MAPPING_INSERT, "VimSmartTypeCompletion", Command.OTHER_READONLY);
+        parser.registerAction(KeyParser.MAPPING_INSERT, "VimWordCompletion", Command.OTHER_READONLY);
         parser.registerAction(KeyParser.MAPPING_INSERT, "VimInsertLiveTemplate", Command.INSERT);
 
         parser.registerAction(KeyParser.MAPPING_INSERT, "VimEditorBackSpace", Command.INSERT, Command.FLAG_SAVE_STROKE | Command.FLAG_IS_BACKSPACE, new Shortcut[] {
