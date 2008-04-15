@@ -200,7 +200,7 @@ public class ProcessGroup extends AbstractActionGroup
                         RunnableHelper.runReadCommand(project, new Runnable() {
                             public void run()
                             {
-                                MorePanel.getInstance(editor).setVisible(true);
+                                MorePanel.getInstance(editor).activate();
                             }
                         }, "ShowMorePanel", "ExCommand");
                     }

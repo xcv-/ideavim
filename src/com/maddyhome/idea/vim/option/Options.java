@@ -483,7 +483,6 @@ public class Options
         }
 
         panel.setText(res.toString());
-        //panel.setVisible(true);
     }
 
     /**

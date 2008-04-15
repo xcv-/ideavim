@@ -45,7 +45,6 @@ import javax.swing.SwingUtilities;
 
 /**
  * This is used to enter ex commands such as searches and "colon" commands
- * TODO - redo focus change support to work like MorePanel
  */
 public class ExEntryPanel extends JPanel
 {

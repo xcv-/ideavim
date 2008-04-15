@@ -65,6 +65,7 @@ import com.maddyhome.idea.vim.option.BoundStringOption;
 import com.maddyhome.idea.vim.option.NumberOption;
 import com.maddyhome.idea.vim.option.Options;
 import com.maddyhome.idea.vim.ui.ExEntryPanel;
+import com.maddyhome.idea.vim.ui.MorePanel;
 
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -149,6 +150,11 @@ public class MotionGroup extends AbstractActionGroup
             ExEntryPanel.getInstance().deactivate(false);
         }
 
+        if (MorePanel.getInstance().isActive())
+        {
+            MorePanel.getInstance().deactivate(false);
+        }
+
         int visualMode = 0;
         switch (event.getClickCount() % 3)
         {
@@ -224,6 +230,11 @@ public class MotionGroup extends AbstractActionGroup
             ExEntryPanel.getInstance().deactivate(false);
         }
 
+        if (MorePanel.getInstance().isActive())
+        {
+            MorePanel.getInstance().deactivate(false);
+        }
+
         if (update)
         {
             if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
@@ -263,6 +274,11 @@ public class MotionGroup extends AbstractActionGroup
         if (ExEntryPanel.getInstance().isActive())
         {
             ExEntryPanel.getInstance().deactivate(false);
+        }
+
+        if (MorePanel.getInstance().isActive())
+        {
+            MorePanel.getInstance().deactivate(false);
         }
 
         logger.debug("mouse released");
@@ -2018,6 +2034,11 @@ public class MotionGroup extends AbstractActionGroup
             if (ExEntryPanel.getInstance().isActive())
             {
                 ExEntryPanel.getInstance().deactivate(false);
+            }
+
+            if (MorePanel.getInstance().isActive())
+            {
+                MorePanel.getInstance().deactivate(false);
             }
 
             FileEditor fe = event.getOldEditor();

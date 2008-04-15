@@ -131,7 +131,6 @@ public class DigraphGroup extends AbstractActionGroup
         }
 
         panel.setText(res.toString());
-        //panel.setVisible(true);
     }
 
     private void loadDigraphs()
