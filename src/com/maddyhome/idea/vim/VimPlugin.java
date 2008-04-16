@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2006 Rick Maddy
+ * Copyright (C) 2003-2008 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,7 +54,6 @@ import com.maddyhome.idea.vim.helper.DocumentManager;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.key.RegisterActions;
 import com.maddyhome.idea.vim.option.Options;
-import com.maddyhome.idea.vim.ui.MorePanel;
 import com.maddyhome.idea.vim.undo.UndoManager;
 import org.jdom.Element;
 
@@ -178,8 +177,6 @@ public class VimPlugin implements ApplicationComponent, JDOMExternalizable//, Co
                 FileEditorManagerListener l = new ChangeGroup.InsertCheck();
                 listeners.add(l);
                 l = new MotionGroup.MotionEditorChange();
-                listeners.add(l);
-                l = new MorePanel.MoreEditorChangeListener();
                 listeners.add(l);
                 l = new FileGroup.SelectionCheck();
                 listeners.add(l);

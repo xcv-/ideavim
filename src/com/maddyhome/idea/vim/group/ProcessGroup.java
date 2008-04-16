@@ -2,7 +2,7 @@ package com.maddyhome.idea.vim.group;
 
 /*
  * IdeaVim - A Vim emulator plugin for IntelliJ Idea
- * Copyright (C) 2003-2006 Rick Maddy
+ * Copyright (C) 2003-2008 Rick Maddy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -200,7 +200,7 @@ public class ProcessGroup extends AbstractActionGroup
                         RunnableHelper.runReadCommand(project, new Runnable() {
                             public void run()
                             {
-                                MorePanel.getInstance(editor).setVisible(true);
+                                MorePanel.getInstance(editor).activate();
                             }
                         }, "ShowMorePanel", "ExCommand");
                     }
