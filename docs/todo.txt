@@ -8,7 +8,6 @@ Bugs to fix:
 
 Requested Functionality to add:
 
-- Integrate IDEA's back/forward with jumplists
 - Support [', ]', [`, ]`
 - Support [z, ]z
 - Support ]/, ]*, [/, [*
