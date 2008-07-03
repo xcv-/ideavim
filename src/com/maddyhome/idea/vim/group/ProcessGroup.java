@@ -66,6 +66,11 @@ public class ProcessGroup extends AbstractActionGroup
 
     public void startSearchCommand(Editor editor, DataPackage context, int count, char leader)
     {
+        if (editor.isOneLineMode()) // Don't allow searching in one line editors
+        {
+            return;
+        }
+
         String initText = "";
         String label = "" + leader;
 
@@ -93,6 +98,11 @@ public class ProcessGroup extends AbstractActionGroup
 
     public void startExCommand(Editor editor, DataPackage context, Command cmd)
     {
+        if (editor.isOneLineMode()) // Don't allow ex commands in one line editors
+        {
+            return;
+        }
+
         String initText = getRange(editor, cmd);
         CommandState.getInstance(editor).pushState(CommandState.MODE_EX_ENTRY, 0, KeyParser.MAPPING_CMD_LINE);
         ExEntryPanel panel = ExEntryPanel.getInstance();

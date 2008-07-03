@@ -3,6 +3,7 @@ History of changes for @NAME@ for IDEA @IDEA-VERSION@
 @VERSION@ from 0.11.6
 Bug Fixes
 - Pasting linewise text not containing trailing newline now correctly pastes.
+- Don't allow :, /, or ? commands in one line editors.
 
 Internal Changes
 - Refactored many handlers as inner classes to their actions.

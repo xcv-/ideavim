@@ -31,6 +31,7 @@ version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 <br>
 Bug Fixes<br>
 - Pasting linewise text not containing trailing newline now correctly pastes.<br>
+- Don't allow :, /, or ? commands in one line editors.</br>
 <br>
 Internal Changes<br>
 - Refactored many handlers as inner classes to their actions.<br>
