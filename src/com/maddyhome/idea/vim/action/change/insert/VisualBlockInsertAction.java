@@ -19,8 +19,13 @@ package com.maddyhome.idea.vim.action.change.insert;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.maddyhome.idea.vim.handler.change.insert.VisualBlockInsertHandler;
+import com.maddyhome.idea.vim.command.Command;
+import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.handler.VisualOperatorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
@@ -28,6 +33,19 @@ public class VisualBlockInsertAction extends EditorAction
 {
     public VisualBlockInsertAction()
     {
-        super(new VisualBlockInsertHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends VisualOperatorActionHandler
+    {
+        protected boolean execute(Editor editor, DataPackage context, Command cmd, TextRange range)
+        {
+            if (editor.isOneLineMode())
+            {
+                return false;
+            }
+
+            return CommandGroups.getInstance().getChange().blockInsert(editor, context, range, false);
+        }
     }
 }

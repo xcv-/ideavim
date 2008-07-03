@@ -19,8 +19,12 @@ package com.maddyhome.idea.vim.action.change.insert;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.maddyhome.idea.vim.handler.change.insert.InsertInsertHandler;
+import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
@@ -28,6 +32,14 @@ public class InsertInsertAction extends EditorAction
 {
     public InsertInsertAction()
     {
-        super(new InsertInsertHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends EditorActionHandler
+    {
+        public void execute(Editor editor, DataContext context)
+        {
+            CommandGroups.getInstance().getChange().processInsert(editor, new DataPackage(context));
+        }
     }
 }

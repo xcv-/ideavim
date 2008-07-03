@@ -32,10 +32,10 @@ public class ChangeNumberIncAction extends EditorAction
 {
     public ChangeNumberIncAction()
     {
-        super(new ChangeNumberIncHandler());
+        super(new Handler());
     }
 
-    private static class ChangeNumberIncHandler extends ChangeEditorActionHandler
+    private static class Handler extends ChangeEditorActionHandler
     {
         public boolean execute(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
         {

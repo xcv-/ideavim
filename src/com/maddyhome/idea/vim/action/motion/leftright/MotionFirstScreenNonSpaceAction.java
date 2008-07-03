@@ -32,10 +32,10 @@ public class MotionFirstScreenNonSpaceAction extends MotionEditorAction
 {
     public MotionFirstScreenNonSpaceAction()
     {
-        super(new MotionFirstScreenNonSpaceHandler());
+        super(new Handler());
     }
 
-    private static class MotionFirstScreenNonSpaceHandler extends MotionEditorActionHandler
+    private static class Handler extends MotionEditorActionHandler
     {
         public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
         {

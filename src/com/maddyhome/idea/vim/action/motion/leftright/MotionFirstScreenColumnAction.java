@@ -32,10 +32,10 @@ public class MotionFirstScreenColumnAction extends MotionEditorAction
 {
     public MotionFirstScreenColumnAction()
     {
-        super(new MotionFirstScreenColumnHandler());
+        super(new Handler());
     }
 
-    private static class MotionFirstScreenColumnHandler extends MotionEditorActionHandler
+    private static class Handler extends MotionEditorActionHandler
     {
         public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
         {

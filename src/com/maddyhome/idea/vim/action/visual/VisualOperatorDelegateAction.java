@@ -20,19 +20,56 @@ package com.maddyhome.idea.vim.action.visual;
  */
 
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Editor;
+import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.action.AbstractDelegateEditorAction;
-import com.maddyhome.idea.vim.handler.visual.VisualOperatorDelegateActionHandler;
+import com.maddyhome.idea.vim.command.Command;
+import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.handler.DelegateActionHandler;
+import com.maddyhome.idea.vim.handler.VisualOperatorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 public class VisualOperatorDelegateAction extends AbstractDelegateEditorAction
 {
     public VisualOperatorDelegateAction()
     {
-        super(new VisualOperatorDelegateActionHandler());
+        super(new Handler());
     }
 
     public void setOrigAction(AnAction origAction)
     {
         super.setOrigAction(origAction);
-        ((VisualOperatorDelegateActionHandler)getHandler()).setOrigAction(origAction);
+        ((Handler)getHandler()).setOrigAction(origAction);
+    }
+
+    private static class Handler extends VisualOperatorActionHandler implements DelegateActionHandler
+    {
+        protected boolean execute(Editor editor, DataPackage context, Command cmd, TextRange range)
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("execute, cmd=" + cmd + ", range=" + range);
+                logger.debug("origAction=" + origAction);
+            }
+            KeyHandler.executeAction(origAction, context);
+
+            return true;
+        }
+
+        public void setOrigAction(AnAction origAction)
+        {
+            if (logger.isDebugEnabled()) logger.debug("setOrigHander to " + origAction);
+            this.origAction = origAction;
+        }
+
+        public AnAction getOrigAction()
+        {
+            return origAction;
+        }
+
+        private AnAction origAction;
+
+        private static Logger logger = Logger.getInstance(Handler.class.getName());
     }
 }

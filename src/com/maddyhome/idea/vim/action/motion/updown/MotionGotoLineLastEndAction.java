@@ -19,8 +19,15 @@ package com.maddyhome.idea.vim.action.motion.updown;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.action.motion.MotionEditorAction;
-import com.maddyhome.idea.vim.handler.motion.updown.MotionGotoLineLastEndHandler;
+import com.maddyhome.idea.vim.command.Argument;
+import com.maddyhome.idea.vim.command.CommandState;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.handler.motion.MotionEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
+import com.maddyhome.idea.vim.option.BoundStringOption;
+import com.maddyhome.idea.vim.option.Options;
 
 /**
  */
@@ -28,6 +35,30 @@ public class MotionGotoLineLastEndAction extends MotionEditorAction
 {
     public MotionGotoLineLastEndAction()
     {
-        super(new MotionGotoLineLastEndHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends MotionEditorActionHandler
+    {
+        public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+        {
+            boolean allow = false;
+            if (CommandState.getInstance(editor).getMode() == CommandState.MODE_INSERT ||
+                CommandState.getInstance(editor).getMode() == CommandState.MODE_REPLACE)
+            {
+                allow = true;
+            }
+            else if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
+            {
+                BoundStringOption opt = (BoundStringOption)Options.getInstance().getOption("selection");
+                if (!opt.getValue().equals("old"))
+                {
+                    allow = true;
+                }
+
+            }
+
+            return CommandGroups.getInstance().getMotion().moveCaretGotoLineLastEnd(editor, context, rawCount, count - 1, allow);
+        }
     }
 }

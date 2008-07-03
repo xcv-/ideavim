@@ -19,16 +19,34 @@ package com.maddyhome.idea.vim.action.change.insert;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.maddyhome.idea.vim.handler.change.insert.InsertNewLineAboveHandler;
+import com.maddyhome.idea.vim.command.Argument;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.handler.ChangeEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
-public class
-    InsertNewLineAboveAction extends EditorAction
+public class InsertNewLineAboveAction extends EditorAction
 {
     public InsertNewLineAboveAction()
     {
-        super(new InsertNewLineAboveHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends ChangeEditorActionHandler
+    {
+        public boolean execute(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+        {
+            if (editor.isOneLineMode())
+            {
+                return false;
+            }
+
+            CommandGroups.getInstance().getChange().insertNewLineAbove(editor, context);
+
+            return true;
+        }
     }
 }

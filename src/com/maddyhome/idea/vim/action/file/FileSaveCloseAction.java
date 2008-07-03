@@ -19,8 +19,12 @@ package com.maddyhome.idea.vim.action.file;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.maddyhome.idea.vim.handler.file.FileSaveCloseHandler;
+import com.maddyhome.idea.vim.command.Command;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.handler.AbstractEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
@@ -28,6 +32,17 @@ public class FileSaveCloseAction extends EditorAction
 {
     public FileSaveCloseAction()
     {
-        super(new FileSaveCloseHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends AbstractEditorActionHandler
+    {
+        protected boolean execute(Editor editor, DataPackage context, Command cmd)
+        {
+            CommandGroups.getInstance().getFile().saveFile(editor, context);
+            CommandGroups.getInstance().getFile().closeFile(editor, context);
+
+            return true;
+        }
     }
 }

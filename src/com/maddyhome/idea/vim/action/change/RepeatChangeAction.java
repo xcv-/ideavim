@@ -19,8 +19,17 @@ package com.maddyhome.idea.vim.action.change;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.maddyhome.idea.vim.handler.change.RepeatChangeHandler;
+import com.maddyhome.idea.vim.KeyHandler;
+import com.maddyhome.idea.vim.command.Argument;
+import com.maddyhome.idea.vim.command.Command;
+import com.maddyhome.idea.vim.command.CommandState;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.handler.AbstractEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
+import com.maddyhome.idea.vim.key.KeyParser;
+import com.maddyhome.idea.vim.undo.UndoManager;
 
 /**
  */
@@ -28,6 +37,56 @@ public class RepeatChangeAction extends EditorAction
 {
     public RepeatChangeAction()
     {
-        super(new RepeatChangeHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends AbstractEditorActionHandler
+    {
+        public boolean execute(Editor editor, DataPackage context, Command command)
+        {
+            CommandState state = CommandState.getInstance(editor);
+            Command cmd = state.getLastChangeCommand();
+            if (cmd != null)
+            {
+                if (command.getRawCount() > 0)
+                {
+                    cmd.setCount(command.getCount());
+                    Argument arg = cmd.getArgument();
+                    if (arg != null)
+                    {
+                        Command mot = arg.getMotion();
+                        if (mot != null)
+                        {
+                            mot.setCount(0);
+                        }
+                    }
+                }
+                Command save = state.getCommand();
+                state.setCommand(cmd);
+                state.pushState(CommandState.MODE_REPEAT, 0, KeyParser.MAPPING_NORMAL);
+                char reg = CommandGroups.getInstance().getRegister().getCurrentRegister();
+                CommandGroups.getInstance().getRegister().selectRegister(state.getLastChangeRegister());
+                try
+                {
+                    KeyHandler.executeAction(cmd.getAction(), context);
+                    UndoManager.getInstance().endCommand(editor);
+                    UndoManager.getInstance().beginCommand(editor);
+                }
+                catch (Exception e)
+                {
+                    // oops
+                }
+                state.popState();
+                state.setCommand(save);
+                state.saveLastChangeCommand(cmd);
+                CommandGroups.getInstance().getRegister().selectRegister(reg);
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
