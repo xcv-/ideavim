@@ -19,8 +19,13 @@ package com.maddyhome.idea.vim.action.motion.object;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.action.motion.TextObjectAction;
-import com.maddyhome.idea.vim.handler.motion.object.MotionInnerBigWordHandler;
+import com.maddyhome.idea.vim.command.Argument;
+import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.handler.motion.TextObjectActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
@@ -28,6 +33,14 @@ public class MotionInnerBigWordAction extends TextObjectAction
 {
     public MotionInnerBigWordAction()
     {
-        super(new MotionInnerBigWordHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends TextObjectActionHandler
+    {
+        public TextRange getRange(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+        {
+            return CommandGroups.getInstance().getMotion().getWordRange(editor, context, count, false, true);
+        }
     }
 }

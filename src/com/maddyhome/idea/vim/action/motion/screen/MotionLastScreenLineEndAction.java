@@ -19,17 +19,27 @@ package com.maddyhome.idea.vim.action.motion.screen;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.action.motion.MotionEditorAction;
-import com.maddyhome.idea.vim.handler.motion.screen.MotionLastScreenLineEndHandler;
+import com.maddyhome.idea.vim.command.Argument;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.handler.motion.MotionEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
-public class
-
-    MotionLastScreenLineEndAction extends MotionEditorAction
+public class MotionLastScreenLineEndAction extends MotionEditorAction
 {
     public MotionLastScreenLineEndAction()
     {
-        super(new MotionLastScreenLineEndHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends MotionEditorActionHandler
+    {
+        public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+        {
+            return CommandGroups.getInstance().getMotion().moveCaretToLastScreenLineEnd(editor, context, count);
+        }
     }
 }

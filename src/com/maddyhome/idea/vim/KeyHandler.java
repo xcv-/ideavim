@@ -46,8 +46,8 @@ import com.maddyhome.idea.vim.option.Options;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Stack;
 import java.util.List;
+import java.util.Stack;
 import javax.swing.KeyStroke;
 
 /**

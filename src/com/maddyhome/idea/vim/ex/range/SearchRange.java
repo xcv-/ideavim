@@ -27,8 +27,8 @@ import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Represents a range given by a search pattern. The pattern can be '\\/', '\\?', '\\&amp;', /{pattern}/,

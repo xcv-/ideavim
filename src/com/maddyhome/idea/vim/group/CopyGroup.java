@@ -296,6 +296,11 @@ public class CopyGroup extends AbstractActionGroup
             indent = false;
         }
 
+        if ((type & Command.FLAG_MOT_LINEWISE) != 0 && text.length() > 0 && text.charAt(text.length() - 1) != '\n')
+        {
+            text = text + '\n';
+        }
+
         int insertCnt = 0;
         int endOffset = offset;
         if ((type & Command.FLAG_MOT_BLOCKWISE) == 0)

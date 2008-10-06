@@ -30,7 +30,16 @@
 version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 <br>
 Bug Fixes<br>
-- Support for Idea Diana (8.x)<br>
+- Pasting linewise text not containing trailing newline now correctly pastes.<br>
+- Don't allow :, /, or ? commands in one line editors.</br>
+- Fix incompatibility with Groovy plugin.<br>
+<br>
+New Features<br>
+- Idea's Go To|Forward and Go To|Back commands have been replaced with the
+  corresponding jump function.<br>
+<br>
+Internal Changes<br>
+- Refactored many handlers as inner classes to their actions.<br>
 ]]>
     </change-notes>
 
@@ -141,6 +150,8 @@ Bug Fixes<br>
         <action id="VimMotionGotoMarkLine" class="com.maddyhome.idea.vim.action.motion.mark.MotionGotoMarkLineAction" text="Goto Mark Line"/>
         <action id="VimMotionJumpNext" class="com.maddyhome.idea.vim.action.motion.mark.MotionJumpNextAction" text="Goto Next Jump"/>
         <action id="VimMotionJumpPrevious" class="com.maddyhome.idea.vim.action.motion.mark.MotionJumpPreviousAction" text="Goto Previous Jump"/>
+        <action id="VimForward" class="com.maddyhome.idea.vim.action.motion.mark.MotionJumpNextAction" text="Forward"/>
+        <action id="VimBack" class="com.maddyhome.idea.vim.action.motion.mark.MotionJumpPreviousAction" text="Back"/>
         <!-- Screen -->
         <action id="VimMotionFirstScreenLine" class="com.maddyhome.idea.vim.action.motion.screen.MotionFirstScreenLineAction" text="First Screen Line"/>
         <action id="VimMotionLastScreenLine" class="com.maddyhome.idea.vim.action.motion.screen.MotionLastScreenLineAction" text="Last Screen Line"/>

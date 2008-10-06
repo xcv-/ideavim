@@ -19,8 +19,14 @@ package com.maddyhome.idea.vim.action.change.change;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.maddyhome.idea.vim.handler.change.change.ChangeVisualLinesEndHandler;
+import com.maddyhome.idea.vim.command.Command;
+import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.handler.VisualOperatorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
+import com.maddyhome.idea.vim.helper.EditorHelper;
 
 /**
  */
@@ -28,6 +34,36 @@ public class ChangeVisualLinesEndAction extends EditorAction
 {
     public ChangeVisualLinesEndAction()
     {
-        super(new ChangeVisualLinesEndHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends VisualOperatorActionHandler
+    {
+        protected boolean execute(Editor editor, DataPackage context, Command cmd, TextRange range)
+        {
+            if (range.isMultiple())
+            {
+                int[] starts = range.getStartOffsets();
+                int[] ends = range.getEndOffsets();
+                for (int i = 0; i < starts.length; i++)
+                {
+                    if (ends[i] > starts[i])
+                    {
+                        ends[i] = EditorHelper.getLineEndForOffset(editor, starts[i]);
+                    }
+                }
+
+                range = new TextRange(starts, ends);
+                return CommandGroups.getInstance().getChange().changeRange(editor, context, range,
+                    Command.FLAG_MOT_BLOCKWISE);
+            }
+            else
+            {
+                range = new TextRange(EditorHelper.getLineStartForOffset(editor, range.getStartOffset()),
+                    EditorHelper.getLineEndForOffset(editor, range.getEndOffset()) + 1);
+
+                return CommandGroups.getInstance().getChange().changeRange(editor, context, range, Command.FLAG_MOT_LINEWISE);
+            }
+        }
     }
 }

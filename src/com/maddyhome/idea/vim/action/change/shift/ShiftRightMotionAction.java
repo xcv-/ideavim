@@ -19,8 +19,12 @@ package com.maddyhome.idea.vim.action.change.shift;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.maddyhome.idea.vim.handler.change.shift.ShiftRightMotionHandler;
+import com.maddyhome.idea.vim.command.Argument;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.handler.ChangeEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
@@ -28,6 +32,16 @@ public class ShiftRightMotionAction extends EditorAction
 {
     public ShiftRightMotionAction()
     {
-        super(new ShiftRightMotionHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends ChangeEditorActionHandler
+    {
+        public boolean execute(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+        {
+            CommandGroups.getInstance().getChange().indentMotion(editor, context, count, rawCount, argument, 1);
+
+            return true;
+        }
     }
 }

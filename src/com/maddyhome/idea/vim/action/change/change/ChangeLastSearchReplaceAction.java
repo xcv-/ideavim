@@ -19,8 +19,14 @@ package com.maddyhome.idea.vim.action.change.change;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.maddyhome.idea.vim.handler.change.change.ChangeLastSearchReplaceHandler;
+import com.maddyhome.idea.vim.command.Argument;
+import com.maddyhome.idea.vim.ex.LineRange;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.handler.ChangeEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
+import com.maddyhome.idea.vim.helper.EditorHelper;
 
 /**
  */
@@ -28,6 +34,16 @@ public class ChangeLastSearchReplaceAction extends EditorAction
 {
     public ChangeLastSearchReplaceAction()
     {
-        super(new ChangeLastSearchReplaceHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends ChangeEditorActionHandler
+    {
+        public boolean execute(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+        {
+            int line = EditorHelper.getCurrentLogicalLine(editor);
+            LineRange range = new LineRange(line, line);
+            return CommandGroups.getInstance().getSearch().searchAndReplace(editor, context, range, "s", "//~/");
+        }
     }
 }

@@ -32,10 +32,10 @@ public class ChangeNumberDecAction extends EditorAction
 {
     public ChangeNumberDecAction()
     {
-        super(new ChangeNumberDecAction.ChangeNumberDecHandler());
+        super(new Handler());
     }
 
-    private static class ChangeNumberDecHandler extends ChangeEditorActionHandler
+    private static class Handler extends ChangeEditorActionHandler
     {
         public boolean execute(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
         {

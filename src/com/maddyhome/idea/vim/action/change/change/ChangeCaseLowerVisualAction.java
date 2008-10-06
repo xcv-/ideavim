@@ -19,8 +19,14 @@ package com.maddyhome.idea.vim.action.change.change;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.maddyhome.idea.vim.handler.change.change.ChangeCaseLowerVisualHandler;
+import com.maddyhome.idea.vim.command.Command;
+import com.maddyhome.idea.vim.common.TextRange;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.handler.VisualOperatorActionHandler;
+import com.maddyhome.idea.vim.helper.CharacterHelper;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
@@ -28,6 +34,15 @@ public class ChangeCaseLowerVisualAction extends EditorAction
 {
     public ChangeCaseLowerVisualAction()
     {
-        super(new ChangeCaseLowerVisualHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends VisualOperatorActionHandler
+    {
+        protected boolean execute(Editor editor, DataPackage context, Command cmd, TextRange range)
+        {
+            return CommandGroups.getInstance().getChange().changeCaseRange(editor, context, range, CharacterHelper.CASE_LOWER);
+        }
     }
 }
+

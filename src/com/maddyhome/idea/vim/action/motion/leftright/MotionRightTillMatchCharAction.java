@@ -19,8 +19,13 @@ package com.maddyhome.idea.vim.action.motion.leftright;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.action.motion.MotionEditorAction;
-import com.maddyhome.idea.vim.handler.motion.leftright.MotionRightTillMatchCharHandler;
+import com.maddyhome.idea.vim.command.Argument;
+import com.maddyhome.idea.vim.group.CommandGroups;
+import com.maddyhome.idea.vim.group.MotionGroup;
+import com.maddyhome.idea.vim.handler.motion.MotionEditorActionHandler;
+import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
@@ -28,6 +33,16 @@ public class MotionRightTillMatchCharAction extends MotionEditorAction
 {
     public MotionRightTillMatchCharAction()
     {
-        super(new MotionRightTillMatchCharHandler());
+        super(new Handler());
+    }
+
+    private static class Handler extends MotionEditorActionHandler
+    {
+        public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+        {
+            int res = CommandGroups.getInstance().getMotion().moveCaretToBeforeNextCharacterOnLine(editor, count, argument.getCharacter());
+            CommandGroups.getInstance().getMotion().setLastFTCmd(MotionGroup.LAST_t, argument.getCharacter());
+            return res;
+        }
     }
 }

@@ -400,6 +400,11 @@ public class RegisterActions
             new Shortcut('>'), Argument.MOTION);
 
         // Jump Actions
+
+        // These two replace Go To|Forward and Go To|Back
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimForward", Command.OTHER_READONLY);
+        parser.registerAction(KeyParser.MAPPING_NORMAL, "VimBack", Command.OTHER_READONLY);
+
         parser.registerAction(KeyParser.MAPPING_NORMAL, "VimMotionJumpNext", Command.OTHER_READONLY, new Shortcut[] {
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_MASK)),
             new Shortcut(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))
@@ -845,6 +850,7 @@ public class RegisterActions
         });
 
         // Update many of the built-in IDEA actions with our key handlers.
+
         parser.setupActionHandler("GenerateConstructor", "VimGenerateConstructor");
         parser.setupActionHandler("GenerateGetter", "VimGenerateGetter");
         parser.setupActionHandler("GenerateSetter", "VimGenerateSetter");

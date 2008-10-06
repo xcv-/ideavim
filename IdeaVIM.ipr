@@ -18,11 +18,11 @@
     <option name="USE_PER_PROJECT_SETTINGS" value="false" />
   </component>
   <component name="ColorBrowser">
-    <indexHtml>0</indexHtml>
-    <indexColor>0</indexColor>
+    <indexHtml>1</indexHtml>
+    <indexColor>2</indexColor>
     <indexColorUIResource>0</indexColorUIResource>
     <hexUppercase>N</hexUppercase>
-    <lastColor>-16682798</lastColor>
+    <lastColor>-16777216</lastColor>
   </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
@@ -270,13 +270,20 @@
       </item>
     </group>
   </component>
-  <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectDetails">
+    <option name="projectName" value="IdeaVIM" />
+  </component>
+  <component name="ProjectFileVersion" converted="true">
+    <converter id="javaee-modules" />
+    <converter id="ror-modules" />
+    <converter id="SelenaRunConfToDiana" />
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IdeaVim.iml" filepath="$PROJECT_DIR$/IdeaVim.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA Diana" project-jdk-type="IDEA JDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA Diana" project-jdk-type="IDEA JDK" />
   <component name="ResourceManagerContainer">
     <option name="myResourceBundles">
       <value>
