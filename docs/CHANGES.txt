@@ -4,6 +4,7 @@ History of changes for @NAME@ for IDEA @IDEA-VERSION@
 Bug Fixes
 - Pasting linewise text not containing trailing newline now correctly pastes.
 - Don't allow :, /, or ? commands in one line editors.
+- Fix incompatibility with Groovy plugin.
 
 New Features
 - Idea's Go To|Forward and Go To|Back commands have been replaced with the

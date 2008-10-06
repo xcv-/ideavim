@@ -29,6 +29,7 @@ import com.intellij.openapi.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapManager;
 import com.maddyhome.idea.vim.action.DelegateAction;
 import com.maddyhome.idea.vim.action.PassThruDelegateAction;
+import com.maddyhome.idea.vim.action.PassThruDelegateEditorAction;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.handler.key.EditorKeyHandler;
 
@@ -413,7 +414,15 @@ public class KeyParser
             daction.setOrigAction(iaction);
         }
 
-        setupActionHandler(ideaName, new PassThruDelegateAction(firstStroke));
+        if (iaction instanceof EditorAction)
+        {
+            EditorAction ea = (EditorAction)iaction;
+            setupActionHandler(ideaName, new PassThruDelegateEditorAction(firstStroke, ea.getHandler()));
+        }
+        else
+        {
+            setupActionHandler(ideaName, new PassThruDelegateAction(firstStroke));
+        }
     }
 
     /**
