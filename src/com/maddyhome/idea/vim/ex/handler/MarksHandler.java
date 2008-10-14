@@ -20,6 +20,7 @@ package com.maddyhome.idea.vim.ex.handler;
  */
 
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.common.Mark;
 import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.CommandName;
@@ -69,7 +70,8 @@ public class MarksHandler extends CommandHandler
             text.append(num);
 
             text.append(" ");
-            if (EditorData.getVirtualFile(editor).getPath().equals(mark.getFilename()))
+            VirtualFile vf = EditorData.getVirtualFile(editor);
+            if (vf != null && vf.getPath().equals(mark.getFilename()))
             {
                 text.append(StringHelper.escape(EditorHelper.getLineText(editor, mark.getLogicalLine()).trim()));
             }

@@ -23,6 +23,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorData;
@@ -356,8 +357,10 @@ public class MorePanel extends JPanel
             {
                 deactivate(false);
 
-                FileEditorManager.getInstance(EditorData.getProject(editor)).openFile(
-                        EditorData.getVirtualFile(editor), true);
+                VirtualFile vf = EditorData.getVirtualFile(editor);
+                if (vf != null) {
+                    FileEditorManager.getInstance(EditorData.getProject(editor)).openFile(vf, true);
+                }
 
                 if (e != null && e.getKeyChar() != '\n')
                 {
@@ -452,3 +455,4 @@ public class MorePanel extends JPanel
 
     private static Logger logger = Logger.getInstance(MorePanel.class.getName());
 }
+

@@ -29,6 +29,7 @@ import com.intellij.openapi.editor.event.EditorFactoryAdapter;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorData;
@@ -215,7 +216,14 @@ public class UndoManager
         EditorUndoList res = editors.get(editor.getDocument());
         if (res == null)
         {
-            logger.info("Creating new undo list for " + EditorData.getVirtualFile(editor).getPath());
+            if (logger.isDebugEnabled()) {
+                VirtualFile vf = EditorData.getVirtualFile(editor);
+                if (vf != null) {
+                    logger.info("Creating new undo list for " + vf.getPath());
+                } else {
+                    logger.info("Creating new undo list for editor with no virtual file");
+                }
+            }
             res = addEditorUndoList(editor);
         }
 

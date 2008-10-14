@@ -92,19 +92,20 @@ public class MarkGroup extends AbstractActionGroup
         // Make sure this is a valid mark
         if (VALID_GET_MARKS.indexOf(ch) < 0) return null;
 
-        if ("{}".indexOf(ch) >= 0)
+        VirtualFile vf = EditorData.getVirtualFile(editor);
+        if ("{}".indexOf(ch) >= 0 && vf != null)
         {
             int offset = SearchHelper.findNextParagraph(editor, ch == '{' ? -1 : 1, false);
             offset = EditorHelper.normalizeOffset(editor, offset, false);
             LogicalPosition lp = editor.offsetToLogicalPosition(offset);
-            mark = new Mark(ch, lp.line, lp.column, EditorData.getVirtualFile(editor).getPath());
+            mark = new Mark(ch, lp.line, lp.column, vf.getPath());
         }
-        else if ("()".indexOf(ch) >= 0)
+        else if ("()".indexOf(ch) >= 0 && vf != null)
         {
             int offset = SearchHelper.findNextSentenceStart(editor, ch == '(' ? -1 : 1, false, true);
             offset = EditorHelper.normalizeOffset(editor, offset, false);
             LogicalPosition lp = editor.offsetToLogicalPosition(offset);
-            mark = new Mark(ch, lp.line, lp.column, EditorData.getVirtualFile(editor).getPath());
+            mark = new Mark(ch, lp.line, lp.column, vf.getPath());
         }
         // If this is a file mark, get the mark from this file
         else if (FILE_MARKS.indexOf(ch) >= 0)

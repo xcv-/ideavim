@@ -170,7 +170,11 @@ public class FileGroup extends AbstractActionGroup
         Project proj = context.getProject();
         FileEditorManager fem = FileEditorManager.getInstance(proj); // API change - don't merge
         //fem.closeFile(fem.getSelectedFile());
-        fem.closeFile(EditorData.getVirtualFile(fem.getSelectedTextEditor()));
+        VirtualFile vf = EditorData.getVirtualFile(fem.getSelectedTextEditor());
+        if (vf != null)
+        {
+            fem.closeFile(vf);
+        }
 
         /*
         if (fem.getOpenFiles().length == 0)
