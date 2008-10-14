@@ -29,17 +29,9 @@
 <b>NOTE:</b> Please see the README file if upgrading to this version from
 version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 <br>
-Bug Fixes<br>
-- Pasting linewise text not containing trailing newline now correctly pastes.<br>
-- Don't allow :, /, or ? commands in one line editors.<br>
-- Fix incompatibility with Groovy plugin.<br>
-<br>
-New Features<br>
-- Idea's Go To|Forward and Go To|Back commands have been replaced with the
-  corresponding jump function.<br>
-<br>
-Internal Changes<br>
-- Refactored many handlers as inner classes to their actions.<br>
+Bug Fixes <br>
+- Fixed internal error (NPE) when performing certain actions such as
+  reformatting code using the menu.<br>
 ]]>
     </change-notes>
 

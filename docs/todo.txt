@@ -1,5 +1,6 @@
 Bugs to fix:
 
+- Check for console output editor.
 - ^ not accepted from "more" window.
 - Split text when typing fast after o command.
 - Replace mode - fix caret. Can't figure out how to keep block caret.
@@ -8,6 +9,7 @@ Bugs to fix:
 
 Requested Functionality to add:
 
+- Support it and ot text objects (new in Vim 7)
 - Support [', ]', [`, ]`
 - Support [z, ]z
 - Support ]/, ]*, [/, [*

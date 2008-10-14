@@ -36,7 +36,7 @@
     <property name="project" value="IdeaVIM" />
     <!-- Update this prior to building a new distribution -->
     <property name="idea-version" value="7.x" />
-    <property name="version" value="0.12.0" />
+    <property name="version" value="0.12.1" />
     <property name="since-version" value="6755" />
     <property name="compiler.build" value="javac15" />
 

@@ -155,7 +155,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
                 (cmd.getFlags() & Command.FLAG_EXPECT_MORE) == 0))
             {
                 logger.debug("not multikey undo - exit visual");
-                if ((cmd.getFlags() & Command.FLAG_KEEP_VISUAL) == 0)
+                if (cmd == null || (cmd.getFlags() & Command.FLAG_KEEP_VISUAL) == 0)
                 {
                     CommandGroups.getInstance().getMotion().exitVisual(editor);
                 }
