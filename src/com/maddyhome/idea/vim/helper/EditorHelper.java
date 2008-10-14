@@ -652,7 +652,8 @@ public class EditorHelper
     public static boolean canEdit(Project project, Editor editor)
     {
         return (editor.getDocument().isWritable() ||  // API change - don't merge
-            FileDocumentManager.fileForDocumentCheckedOutSuccessfully(editor.getDocument(), project));  // API change - don't merge
+            FileDocumentManager.fileForDocumentCheckedOutSuccessfully(editor.getDocument(), project)) &&  // API change - don't merge
+            !EditorData.isConsoleOutput(editor);
     }
 
     private static final Logger logger = Logger.getInstance(EditorHelper.class.getName());

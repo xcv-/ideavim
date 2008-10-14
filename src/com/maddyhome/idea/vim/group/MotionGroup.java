@@ -72,8 +72,6 @@ import java.io.File;
 
 /**
  * This handles all motion related commands and marks
- * TODO:
- *    Jumplists
  */
 public class MotionGroup extends AbstractActionGroup
 {
@@ -93,7 +91,7 @@ public class MotionGroup extends AbstractActionGroup
             {
                 final Editor editor = event.getEditor();
                 // This ridiculous code ensures that a lot of events are processed BEFORE we finally start listening
-                // to visible area changes. This primary reason for this change is to fix the cursor position bug
+                // to visible area changes. The primary reason for this change is to fix the cursor position bug
                 // using the gd and gD commands (Goto Declaration). This bug has been around since Idea 6.0.4?
                 // Prior to this change the visible area code was moving the cursor around during file load and messing
                 // with the cursor position of the Goto Declaration processing.
@@ -2118,7 +2116,9 @@ public class MotionGroup extends AbstractActionGroup
             */
             if (!visibleAreaEvent.getNewRectangle().equals(visibleAreaEvent.getOldRectangle()))
             {
-                MotionGroup.moveCaretToView(editor, null);
+                if (!EditorData.isConsoleOutput(editor)) {
+                    MotionGroup.moveCaretToView(editor, null);
+                }
             }
         }
 

@@ -32,6 +32,7 @@ version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 Bug Fixes <br>
 - Fixed internal error (NPE) when performing certain actions such as
   reformatting code using the menu.<br>
+- Check for console output editor.<br>
 ]]>
     </change-notes>
 

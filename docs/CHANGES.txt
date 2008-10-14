@@ -4,6 +4,8 @@ History of changes for @NAME@ for IDEA @IDEA-VERSION@
 Bug Fixes
 - Fixed internal error (NPE) when performing certain actions such as
   reformatting code using the menu.
+- Console output now scrolls properly when this plugin is installed and the
+  output is treated as read-only.
 
 0.12.0 from 0.11.6
 Bug Fixes
