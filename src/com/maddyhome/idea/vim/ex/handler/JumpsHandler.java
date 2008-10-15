@@ -20,6 +20,7 @@ package com.maddyhome.idea.vim.ex.handler;
  */
 
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.common.Jump;
 import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.CommandName;
@@ -78,7 +79,8 @@ public class JumpsHandler extends CommandHandler
             text.append(num);
 
             text.append(" ");
-            if (EditorData.getVirtualFile(editor).getPath().equals(jump.getFilename()))
+            VirtualFile vf = EditorData.getVirtualFile(editor);
+            if (vf != null && vf.getPath().equals(jump.getFilename()))
             {
                 text.append(StringHelper.escape(EditorHelper.getLineText(editor, jump.getLogicalLine()).trim()));
             }

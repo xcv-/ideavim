@@ -1,6 +1,13 @@
 History of changes for @NAME@ for IDEA @IDEA-VERSION@
 
-@VERSION@ from 0.11.6
+@VERSION@ from 0.12.0
+Bug Fixes
+- Fixed internal error (NPE) when performing certain actions such as
+  reformatting code using the menu.
+- Console output now scrolls properly when this plugin is installed and the
+  output is treated as read-only.
+
+0.12.0 from 0.11.6
 Bug Fixes
 - Pasting linewise text not containing trailing newline now correctly pastes.
 - Don't allow :, /, or ? commands in one line editors.

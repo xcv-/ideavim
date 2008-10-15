@@ -23,6 +23,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.command.Command;
@@ -88,7 +89,10 @@ public class ProcessGroup extends AbstractActionGroup
         SwingUtilities.invokeLater(new Runnable() {
             public void run()
             {
-                FileEditorManager.getInstance(project).openFile(EditorData.getVirtualFile(editor), true);
+                VirtualFile vf = EditorData.getVirtualFile(editor);
+                if (vf != null) {
+                    FileEditorManager.getInstance(project).openFile(EditorData.getVirtualFile(editor), true);
+                }
             }
         });
 
@@ -201,7 +205,10 @@ public class ProcessGroup extends AbstractActionGroup
                     // version 1050.
                     if ((flg & CommandParser.RES_DONT_REOPEN) == 0)
                     {
-                        FileEditorManager.getInstance(project).openFile(EditorData.getVirtualFile(editor), true);
+                        VirtualFile vf = EditorData.getVirtualFile(editor);
+                        if (vf != null) {
+                            FileEditorManager.getInstance(project).openFile(EditorData.getVirtualFile(editor), true);
+                        }
                     }
 
                     // If the result of the ex command is to display the "more" panel, show it here.
@@ -232,7 +239,11 @@ public class ProcessGroup extends AbstractActionGroup
             public void run()
             {
                 //editor.getContentComponent().requestFocus();
-                FileEditorManager.getInstance(project).openFile(EditorData.getVirtualFile(editor), true);
+                VirtualFile vf = EditorData.getVirtualFile(editor);
+                if (vf != null)
+                {
+                    FileEditorManager.getInstance(project).openFile(EditorData.getVirtualFile(editor), true);
+                }
             }
         });
 

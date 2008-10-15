@@ -10,7 +10,7 @@
 <h3>Introduction</h3>
 
 <p>
-<a href="http://www.intellij.com">IntelliJ IDEA</a> is an outstanding IDE for editing Java source code and other
+<a href="http://www.jetbrains.com/idea/index.html">IntelliJ IDEA</a> is an outstanding IDE for editing Java source code and other
 related files. However, it lacks one
 important feature - <code>vi</code> style commands for editing. I've been using <code>vi</code> and
 <a href="http://www.vim.org">VIM</a>
@@ -30,8 +30,8 @@ I'm basically using the excellent VIM documentation and VIM itself as a referenc
 </p>
 <p>
 This plugin is meant for developers that already know, and probably love, vi/VIM. I make no attempt to teach users
-how to use the VIM commands and you will not find any sort of help from within IDEA on what the key mappings are.
-Within the pages of this website however, you will find a reference of all working commands.
+how to use the VIM commands but you will find the standard VIM help text withing the help system of Idea.
+Within the pages of this website will find a reference of all working commands.
 </p>
 
 <h3>Installation</h3>
@@ -84,15 +84,15 @@ using IDEA in VIM Emulation mode:
         </tr>
         <tr>
             <td>PLUGIN_HOME</td>
-            <td>%HOME%\.IntelliJIdea[[567]0]\config/plugins</td>
-            <td>$HOME/.IntelliJIdea[[567]0]/config/plugins</td>
-            <td>$HOME/Library/Application Support/IntelliJIDEA[[567]0]</td>
+            <td>%HOME%\.IntelliJIdea[5678]0\config/plugins</td>
+            <td>$HOME/.IntelliJIdea[5678]0/config/plugins</td>
+            <td>$HOME/Library/Application Support/IntelliJIDEA[5678]0</td>
         </tr>
         <tr>
             <td>CONFIG_HOME</td>
-            <td>%HOME%\.IntelliJIdea[[567]0]\config</td>
-            <td>$HOME/.IntelliJIdea[[567]0]/config</td>
-            <td>$HOME/Preferences/IntelliJIDEA[[567]0]</td>
+            <td>%HOME%\.IntelliJIdea[5678]0\config</td>
+            <td>$HOME/.IntelliJIdea[5678]0/config</td>
+            <td>$HOME/Preferences/IntelliJIDEA[5678]0</td>
         </tr>
     </table>
     <br>
@@ -112,7 +112,7 @@ Users upgrading from 0.10.1, 0.10.2, or 0.10.3 must reinstall the Vim key mappin
 
 <h3>Download</h3>
 
-You may obtain the plugin by visiting the files page on
+You may obtain the plugin binary and/or source code by visiting the files page on
 <a href="http://sourceforge.net/project/showfiles.php?group_id=79039">SourceForge</a>
 
 <h3>Versions</h3>
@@ -129,7 +129,7 @@ Version 0.9.x was used with IDEA 5.0.x
 <br>
 Version 0.10.x is used with IDEA 4.x and 5.0.x. Just use the one with the correct version suffix (-4x or -5x).
 <br>
-Version 0.11.x is used with IDEA 5.0.x, 6.x, and 7.x. Just use the one with the correct version suffix (-5x, -6x, or -7x).
+Version 0.11.x is used with IDEA 5.0.x, 6.x, 7.x, and 8.x. Just use the one with the correct version suffix (-5x, -6x, -7x, or -8x).
 
 <hr>
 
