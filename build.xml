@@ -30,7 +30,7 @@
     <property name="install" value="install" />
     <property name="dist" value="dist" />
     <!-- Update to your IntelliJ installtion -->
-    <property name="idea.home" value="/Applications/Diana-8858.app" />
+    <property name="idea.home" value="/Applications/Diana-8890.app" />
     <property name="plugin.home" value="${user.home}/Library/Application Support/IntelliJIDEA80" />
 
     <property name="project" value="IdeaVIM" />
