@@ -30,14 +30,14 @@
     <property name="install" value="install" />
     <property name="dist" value="dist" />
     <!-- Update to your IntelliJ installtion -->
-    <property name="idea.home" value="/Applications/Diana-8890.app" />
+    <property name="idea.home" value="/Applications/IntelliJ IDEA 8.0.app" />
     <property name="plugin.home" value="${user.home}/Library/Application Support/IntelliJIDEA80" />
 
     <property name="project" value="IdeaVIM" />
     <!-- Update this prior to building a new distribution -->
     <property name="idea-version" value="8.x" />
-    <property name="version" value="0.12.1" />
-    <property name="since-version" value="8280" />
+    <property name="version" value="0.12.2" />
+    <property name="since-version" value="9000" />
     <property name="compiler.build" value="javac15" />
 
     <path id="build.classpath">

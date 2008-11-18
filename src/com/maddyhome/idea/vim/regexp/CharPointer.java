@@ -171,7 +171,11 @@ public class CharPointer
         }
         else
         {
-            return seq.subSequence(pointer, normalize(pointer + len)).toString();
+            int start = pointer;
+            int end = normalize(pointer + len);
+            int slen = seq.length();
+            //return seq.subSequence(start, end - start).toString();
+            return CharBuffer.wrap(seq, start, end).toString();
         }
     }
 
@@ -200,7 +204,8 @@ public class CharPointer
             return -1;
         }
 
-        String s = seq.subSequence(pointer, normalize(pointer + len)).toString();
+        //String s = seq.subSequence(pointer, normalize(pointer + len)).toString();
+        String s = CharBuffer.wrap(seq, pointer, normalize(pointer + len)).toString();
 
         if (len > str.length())
         {
@@ -217,8 +222,10 @@ public class CharPointer
             return -1;
         }
 
-        CharSequence cs1 = seq.subSequence(pointer, normalize(pointer + len));
-        CharSequence cs2 = str.seq.subSequence(str.pointer, str.normalize(str.pointer + len));
+        //CharSequence cs1 = seq.subSequence(pointer, normalize(pointer + len));
+        //CharSequence cs2 = str.seq.subSequence(str.pointer, str.normalize(str.pointer + len));
+        CharSequence cs1 = CharBuffer.wrap(seq, pointer, normalize(pointer + len));
+        CharSequence cs2 = CharBuffer.wrap(str.seq, str.pointer, str.normalize(str.pointer + len));
 
         int l = cs1.length();
         if (l != cs2.length())
@@ -259,8 +266,10 @@ public class CharPointer
             return -1;
         }
 
-        CharSequence cs1 = seq.subSequence(pointer, normalize(pointer + len));
-        CharSequence cs2 = str.seq.subSequence(str.pointer, str.normalize(str.pointer + len));
+        //CharSequence cs1 = seq.subSequence(pointer, normalize(pointer + len));
+        //CharSequence cs2 = str.seq.subSequence(str.pointer, str.normalize(str.pointer + len));
+        CharSequence cs1 = CharBuffer.wrap(seq, pointer, normalize(pointer + len));
+        CharSequence cs2 = CharBuffer.wrap(str.seq, str.pointer, str.normalize(str.pointer + len));
 
         int l = cs1.length();
         if (l != cs2.length())
