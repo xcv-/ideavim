@@ -30,9 +30,7 @@
 version 0.10.1 - 0.10.3. (The Vim keymap is required again).<br>
 <br>
 Bug Fixes <br>
-- Fixed internal error (NPE) when performing certain actions such as
-  reformatting code using the menu.<br>
-- Check for console output editor.<br>
+- Any form of searching broke due to a bug in JDK 1.6.0_10. Made changes to work around the bug so searching now works again.<br>
 ]]>
     </change-notes>
 
