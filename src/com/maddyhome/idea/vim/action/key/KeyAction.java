@@ -21,8 +21,8 @@ package com.maddyhome.idea.vim.action.key;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.actionSystem.ShortcutSet;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.KeyHandler;
@@ -51,7 +51,7 @@ public class KeyAction extends AnAction
         if (event.getInputEvent() instanceof KeyEvent)
         {
             KeyEvent ke = (KeyEvent)event.getInputEvent();
-            Editor editor = event.getData(DataKeys.EDITOR);
+            Editor editor = event.getData(PlatformDataKeys.EDITOR);
             if (editor != null)
             {
                 KeyStroke key = KeyStroke.getKeyStrokeForEvent(ke);

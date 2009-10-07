@@ -87,6 +87,7 @@ public abstract class VisualOperatorActionHandler extends AbstractEditorActionHa
             this.res = res;
         }
 
+        @SuppressWarnings("Since15")
         public TextRange start()
         {
             logger.debug("start");

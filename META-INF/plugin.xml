@@ -38,6 +38,9 @@ Bug Fixes <br>
 
     <idea-version since-build="@SINCE-VERSION@"/>
 
+    <!-- Mark the plugin as compatible with RubyMine and other products based on the IntelliJ platform -->
+    <depends>com.intellij.modules.lang</depends>
+
     <application-components>
         <component>
             <implementation-class>com.maddyhome.idea.vim.VimPlugin</implementation-class>

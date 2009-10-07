@@ -20,7 +20,7 @@ package com.maddyhome.idea.vim.action;
  */
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.KeyHandler;
@@ -43,7 +43,7 @@ public class PassThruDelegateAction extends AbstractDelegateAction
         {
             logger.debug("actionPerformed key=" + stroke);
         }
-        final Editor editor = event.getData(DataKeys.EDITOR); // API change - don't merge
+        final Editor editor = event.getData(PlatformDataKeys.EDITOR); // API change - don't merge
         if (editor == null || !VimPlugin.isEnabled())
         {
             getOrigAction().actionPerformed(event);

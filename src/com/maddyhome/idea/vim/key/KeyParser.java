@@ -247,6 +247,7 @@ public class KeyParser
 
         ActionManager amgr = ActionManager.getInstance();
         AnAction iaction = amgr.getAction(ideaActName);
+        if (iaction == null) return;  // ignore actions which aren't available in RubyMine
         if (vaction instanceof DelegateAction)
         {
             DelegateAction daction = (DelegateAction)vaction;

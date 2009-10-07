@@ -1938,22 +1938,12 @@ public class SearchHelper
 
     public static int findMethodStart(Editor editor, int count)
     {
-        if (PsiHelper.isJavaFile(editor))
-        {
-            return PsiHelper.findMethodStart(editor, editor.getCaretModel().getOffset(), count);
-        }
-
-        return -1; // TODO - support non-Java files. Need to figure out logic
+        return PsiHelper.findMethodStart(editor, editor.getCaretModel().getOffset(), count);
     }
 
     public static int findMethodEnd(Editor editor, int count)
     {
-        if (PsiHelper.isJavaFile(editor))
-        {
-            return PsiHelper.findMethodEnd(editor, editor.getCaretModel().getOffset(), count);
-        }
-
-        return -1; // TODO - support non-Java files. Need to figure out logic
+        return PsiHelper.findMethodEnd(editor, editor.getCaretModel().getOffset(), count);
     }
 
     private static String getPairChars()

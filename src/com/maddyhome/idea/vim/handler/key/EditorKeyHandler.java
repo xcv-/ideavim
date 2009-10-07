@@ -20,7 +20,7 @@ package com.maddyhome.idea.vim.handler.key;
  */
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.DataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
@@ -70,7 +70,7 @@ public class EditorKeyHandler extends EditorActionHandler
             logger.debug("original for " + stroke);
             logger.debug("original is " + origHandler.getClass().getName());
             logger.debug("editor viewer=" + editor.isViewer());
-            logger.debug("project=" + DataKeys.PROJECT.getData(context)); // API change - don't merge
+            logger.debug("project=" + PlatformDataKeys.PROJECT.getData(context)); // API change - don't merge
         }
         origHandler.execute(editor, context);
     }
@@ -88,7 +88,7 @@ public class EditorKeyHandler extends EditorActionHandler
             logger.debug("no editor or disabled");
             res = origHandler.isEnabled(editor, dataContext);
         }
-        else if (DataKeys.VIRTUAL_FILE.getData(dataContext) == null) // API change - don't merge
+        else if (PlatformDataKeys.VIRTUAL_FILE.getData(dataContext) == null) // API change - don't merge
         {
             logger.debug("no file");
             if (!special)
