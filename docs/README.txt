@@ -13,18 +13,18 @@ First Time Installation or Upgrade from 0.10.1 to 0.10.3
 
 UNIX/Linux
 
-Copy Vim.xml from the plugin to $HOME/.IntelliJIdea50/config/keymaps. You will
+Copy Vim.xml from the plugin to $HOME/.IntelliJIdea90/config/keymaps. You will
 have to create the keymaps directory if it doesn't exist.
 
 Mac/OSX
 
-Copy Vim.xml from the plugin to ~/Library/Preferences/IntelliJIDEA80/keymaps.
+Copy Vim.xml from the plugin to ~/Library/Preferences/IntelliJIDEA90/keymaps.
 You will have to create the keymaps directory if it doesn't exist.
 
 Windows
 
 Copy Vim.xml from the plugin to
-C:\Documents and Settings\<user>\.IntelliJIdea50\config\keymaps.
+C:\Documents and Settings\<user>\.IntelliJIdea90\config\keymaps.
 You will have to create the keymaps directory if it doesn't exist.
 
 Starting
