@@ -1,4 +1,4 @@
-<project name="IdeaVim" default="deploy" basedir=".">
+<project name="IdeaVim" default="build-plugin" basedir=".">
     <!--
     * IdeaVim - A Vim emulator plugin for IntelliJ Idea
     * Copyright (C) 2003-2008 Rick Maddy
@@ -22,6 +22,7 @@
     External Properties (set in IntelliJ project):
       idea.home - $APPLICATION_HOME_DIR$
     -->
+    <property name="idea" value="idea" />
     <property name="src" value="src" />
     <property name="resources" value="resources" />
     <property name="classes" value="classes" />
@@ -29,26 +30,31 @@
     <property name="build" value="build" />
     <property name="install" value="install" />
     <property name="dist" value="dist" />
-    <!-- Update to your IntelliJ installtion -->
-    <property name="idea.home" value="/Applications/IntelliJ IDEA 8.0.app" />
-    <property name="plugin.home" value="${user.home}/Library/Application Support/IntelliJIDEA90" />
+
+    <!-- Update to your IntelliJ installation -->
+    <property name="idea.home" value="/opt/idea-work" />
+    <property name="plugin.home" value="${user.home}/IntelliJIDEA90/config/plugins" />
 
     <property name="project" value="IdeaVIM" />
+
     <!-- Update this prior to building a new distribution -->
-    <property name="idea-version" value="8.x" />
+    <property name="idea-version" value="9.x" />
     <property name="version" value="0.12.2" />
     <property name="since-version" value="9000" />
     <property name="compiler.build" value="javac15" />
 
     <path id="build.classpath">
-        <pathelement path="${idea.home}/lib/extensions.jar" />
-        <pathelement path="${idea.home}/lib/openapi.jar" />
-        <pathelement path="${idea.home}/lib/jdom.jar" />
-        <pathelement path="${idea.home}/lib/util.jar" />
+        <fileset dir="${idea.home}/lib">
+          <include name="*.jar"/>
+        </fileset>
         <pathelement path="${classes}"/>
     </path>
 
-    <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${java.class.path}"/>
+    <path id="ant-contrib">
+        <pathelement  path="lib/ant-contrib-1.0b3.jar"/>
+    </path>
+
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="ant-contrib"/>
 
     <target name="clean.build">
         <delete dir="${build}"/>
@@ -58,6 +64,7 @@
     <target name="clean.help">
         <delete dir="${build}/help"/>
     </target>
+
 
     <target name="clean" depends="clean.build,clean.help" description="Removes all generated files" >
         <delete dir="${javadoc}"/>
@@ -166,6 +173,20 @@
     </target>
 
     <target name="build" depends="clean.build, compile, copy, classes.jar, help" description="Compiles all source code and created plugin jar file" >
+    </target>
+
+    <target name="unzip" description="Unzip downloaded artifacts and set up idea.home">
+        <delete dir="${idea}/unzip"/>
+        <mkdir dir="${idea}/unzip"/>
+        <unzip src="${idea}/ideaIU-*-jdk15.zip" dest="${idea}/unzip"/>
+        <property name="idea.home" value="${idea}/unzip" />
+    </target>
+
+    <target name="build-plugin" depends="unzip, build" description="Creates plugin zip file, which can be distributed using Plugins Manager" >
+        <mkdir dir="${build}/IdeaVIM/lib"/>
+        <copy file="${build}/${project}.jar" todir="${build}/IdeaVIM/lib" />
+        <copy file="${build}/help.jar" todir="${build}/IdeaVIM/lib" />
+        <zip destfile="${build}/ideaVIM.zip" basedir="${build}/IdeaVIM"/>
     </target>
 
     <target name="deploy" depends="build" description="Copies plugin to IntelliJ plugin directory" >
