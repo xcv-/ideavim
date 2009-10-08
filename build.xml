@@ -178,7 +178,9 @@
     <target name="unzip" description="Unzip downloaded artifacts and set up idea.home">
         <delete dir="${idea}/unzip"/>
         <mkdir dir="${idea}/unzip"/>
-        <unzip src="${idea}/idea*-jdk15.zip" dest="${idea}/unzip"/>
+        <unzip dest="${idea}/unzip">
+          <fileset dir="${idea}" includes="idea*-jdk15.zip"/>
+        </unzip>
         <property name="idea.home" value="${idea}/unzip" />
     </target>
 
