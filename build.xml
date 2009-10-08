@@ -32,7 +32,6 @@
     <property name="dist" value="dist" />
 
     <!-- Update to your IntelliJ installation -->
-    <property name="idea.home" value="/opt/idea-work" />
     <property name="plugin.home" value="${user.home}/IntelliJIDEA90/config/plugins" />
 
     <property name="project" value="IdeaVIM" />
@@ -181,10 +180,10 @@
         <unzip dest="${idea}/unzip">
           <fileset dir="${idea}" includes="idea*-jdk15.zip"/>
         </unzip>
-        <property name="idea.home" value="${idea}/unzip" />
     </target>
 
     <target name="build-plugin" depends="unzip, build" description="Creates plugin zip file, which can be distributed using Plugins Manager" >
+        <property name="idea.home" value="${idea}/unzip" />
         <mkdir dir="${build}/IdeaVIM/lib"/>
         <copy file="${build}/${project}.jar" todir="${build}/IdeaVIM/lib" />
         <copy file="${build}/help.jar" todir="${build}/IdeaVIM/lib" />
@@ -192,6 +191,7 @@
     </target>
 
     <target name="deploy" depends="build" description="Copies plugin to IntelliJ plugin directory" >
+        <property name="idea.home" value="/opt/idea-work" />
         <mkdir dir="${plugin.home}/IdeaVIM/lib"/>
         <copy file="${build}/${project}.jar" todir="${plugin.home}/IdeaVIM/lib" />
         <mkdir dir="${plugin.home}/IdeaVIM/help"/>
