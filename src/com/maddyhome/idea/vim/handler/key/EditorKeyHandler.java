@@ -27,7 +27,6 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.command.CommandState;
-import com.maddyhome.idea.vim.helper.DataPackage;
 
 import javax.swing.KeyStroke;
 
@@ -36,10 +35,10 @@ import javax.swing.KeyStroke;
  */
 public class EditorKeyHandler extends EditorActionHandler
 {
-    public EditorKeyHandler(EditorActionHandler origHandler, KeyStroke stroke)
-    {
-        this(origHandler, stroke, false);
-    }
+    //public EditorKeyHandler(EditorActionHandler origHandler, KeyStroke stroke)
+    //{
+    //    this(origHandler, stroke, false);
+    //}
 
     public EditorKeyHandler(EditorActionHandler origHandler, KeyStroke stroke, boolean special)
     {
@@ -77,13 +76,15 @@ public class EditorKeyHandler extends EditorActionHandler
 
     protected void handle(Editor editor, DataContext context)
     {
-        KeyHandler.getInstance().handleKey(editor, stroke, new DataPackage(context));
+        KeyHandler.getInstance().handleKey(editor, stroke, context);
     }
 
     public boolean isEnabled(Editor editor, DataContext dataContext)
     {
         boolean res = true;
-        if (editor == null || !VimPlugin.isEnabled())
+        if (editor == null || !VimPlugin.isEnabled() 
+            // Enable correct enter handler processing in Rename, Watches etc
+            || (special && PlatformDataKeys.VIRTUAL_FILE.getData(dataContext) == null))
         {
             logger.debug("no editor or disabled");
             res = origHandler.isEnabled(editor, dataContext);

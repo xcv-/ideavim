@@ -58,7 +58,7 @@ public class ExEditorKit extends DefaultEditorKit
      */
     public String getContentType()
     {
-        return "text/plain";
+        return "text/ideavim";
     }
 
     /**

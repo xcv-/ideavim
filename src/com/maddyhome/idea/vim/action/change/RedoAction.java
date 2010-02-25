@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.handler.AbstractEditorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.undo.UndoManager;
 
 /**
@@ -37,7 +37,7 @@ public class RedoAction extends EditorAction
 
     private static class Handler extends AbstractEditorActionHandler
     {
-        protected boolean execute(Editor editor, DataPackage context, Command cmd)
+        protected boolean execute(Editor editor, DataContext context, Command cmd)
         {
             UndoManager.getInstance().endCommand(editor);
             boolean res =  UndoManager.getInstance().redo(editor, context);

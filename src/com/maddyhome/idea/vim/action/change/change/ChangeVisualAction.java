@@ -25,7 +25,7 @@ import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.handler.VisualOperatorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  */
@@ -38,7 +38,7 @@ public class ChangeVisualAction extends EditorAction
 
     private static class Handler extends VisualOperatorActionHandler
     {
-        protected boolean execute(Editor editor, DataPackage context, Command cmd, TextRange range)
+        protected boolean execute(Editor editor, DataContext context, Command cmd, TextRange range)
         {
             int mode = range.isMultiple() ? Command.FLAG_MOT_BLOCKWISE : Command.FLAG_MOT_INCLUSIVE;
             return CommandGroups.getInstance().getChange().changeRange(editor, context, range, mode);

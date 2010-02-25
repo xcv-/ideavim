@@ -19,6 +19,8 @@ package com.maddyhome.idea.vim.group;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -31,7 +33,7 @@ import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.ex.CommandParser;
 import com.maddyhome.idea.vim.ex.ExException;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.RunnableHelper;
@@ -65,7 +67,7 @@ public class ProcessGroup extends AbstractActionGroup
         return lastCommand;
     }
 
-    public void startSearchCommand(Editor editor, DataPackage context, int count, char leader)
+    public void startSearchCommand(Editor editor, DataContext context, int count, char leader)
     {
         if (editor.isOneLineMode()) // Don't allow searching in one line editors
         {
@@ -80,12 +82,12 @@ public class ProcessGroup extends AbstractActionGroup
         panel.activate(editor, context, label, initText, count);
     }
 
-    public String endSearchCommand(final Editor editor, DataPackage context)
+    public String endSearchCommand(final Editor editor, DataContext context)
     {
         ExEntryPanel panel = ExEntryPanel.getInstance();
         panel.deactivate(false);
 
-        final Project project = context.getProject(); // API change - don't merge
+        final Project project = PlatformDataKeys.PROJECT.getData(context); // API change - don't merge
         SwingUtilities.invokeLater(new Runnable() {
             public void run()
             {
@@ -100,7 +102,7 @@ public class ProcessGroup extends AbstractActionGroup
         return panel.getText();
     }
 
-    public void startExCommand(Editor editor, DataPackage context, Command cmd)
+    public void startExCommand(Editor editor, DataContext context, Command cmd)
     {
         if (editor.isOneLineMode()) // Don't allow ex commands in one line editors
         {
@@ -113,7 +115,7 @@ public class ProcessGroup extends AbstractActionGroup
         panel.activate(editor, context, ":", initText, 1);
     }
 
-    public boolean processExKey(Editor editor, DataPackage context, KeyStroke stroke, boolean charOnly)
+    public boolean processExKey(Editor editor, DataContext context, KeyStroke stroke, boolean charOnly)
     {
         // This will only get called if somehow the key focus ended up in the editor while the ex entry window
         // is open. So I'll put focus back in the editor and process the key.
@@ -148,7 +150,7 @@ public class ProcessGroup extends AbstractActionGroup
         */
     }
 
-    public boolean processExEntry(final Editor editor, final DataPackage context)
+    public boolean processExEntry(final Editor editor, final DataContext context)
     {
         ExEntryPanel panel = ExEntryPanel.getInstance();
         panel.deactivate(false);
@@ -196,7 +198,7 @@ public class ProcessGroup extends AbstractActionGroup
         finally
         {
             final int flg = flags;
-            final Project project = context.getProject(); // API change - don't merge
+            final Project project = PlatformDataKeys.PROJECT.getData(context); // API change - don't merge
             SwingUtilities.invokeLater(new Runnable() {
                 public void run()
                 {
@@ -228,13 +230,13 @@ public class ProcessGroup extends AbstractActionGroup
         return res;
     }
 
-    public boolean cancelExEntry(final Editor editor, final DataPackage context)
+    public boolean cancelExEntry(final Editor editor, final DataContext context)
     {
         CommandState.getInstance(editor).popState();
         KeyHandler.getInstance().reset(editor);
         ExEntryPanel panel = ExEntryPanel.getInstance();
         panel.deactivate(false);
-        final Project project = context.getProject(); // API change - don't merge
+        final Project project = PlatformDataKeys.PROJECT.getData(context); // API change - don't merge
         SwingUtilities.invokeLater(new Runnable() {
             public void run()
             {
@@ -258,7 +260,7 @@ public class ProcessGroup extends AbstractActionGroup
         }
     }
 
-    public void startFilterCommand(Editor editor, DataPackage context, Command cmd)
+    public void startFilterCommand(Editor editor, DataContext context, Command cmd)
     {
         String initText = getRange(editor, cmd) + "!";
         CommandState.getInstance(editor).pushState(CommandState.MODE_EX_ENTRY, 0, KeyParser.MAPPING_CMD_LINE);
@@ -288,7 +290,7 @@ public class ProcessGroup extends AbstractActionGroup
         return initText;
     }
 
-    public boolean executeFilter(Editor editor, DataPackage context, TextRange range, String command) throws IOException
+    public boolean executeFilter(Editor editor, DataContext context, TextRange range, String command) throws IOException
     {
         if (logger.isDebugEnabled()) logger.debug("command=" + command);
         CharSequence chars = EditorHelper.getDocumentChars(editor);

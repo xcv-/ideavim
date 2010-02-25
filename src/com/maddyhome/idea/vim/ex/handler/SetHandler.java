@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.ex.ExException;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.option.Options;
 
 /**
@@ -37,7 +37,7 @@ public class SetHandler extends CommandHandler
         super("se", "t", ARGUMENT_OPTIONAL | KEEP_FOCUS);
     }
 
-    public boolean execute(Editor editor, DataPackage context, ExCommand cmd) throws ExException
+    public boolean execute(Editor editor, DataContext context, ExCommand cmd) throws ExException
     {
         String arg = cmd.getArgument();
         if (logger.isDebugEnabled())

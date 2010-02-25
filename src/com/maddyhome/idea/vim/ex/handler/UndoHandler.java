@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.CommandName;
 import com.maddyhome.idea.vim.ex.ExCommand;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.undo.UndoManager;
 
 /**
@@ -38,7 +38,7 @@ public class UndoHandler extends CommandHandler
         }, RANGE_FORBIDDEN | ARGUMENT_FORBIDDEN | WRITABLE);
     }
 
-    public boolean execute(Editor editor, DataPackage context, ExCommand cmd)
+    public boolean execute(Editor editor, DataContext context, ExCommand cmd)
     {
         return UndoManager.getInstance().undo(editor, context);
     }

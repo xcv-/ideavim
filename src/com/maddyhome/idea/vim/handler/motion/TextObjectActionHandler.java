@@ -19,6 +19,7 @@ package com.maddyhome.idea.vim.handler.motion;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.command.Command;
@@ -27,13 +28,12 @@ import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.MotionGroup;
 import com.maddyhome.idea.vim.handler.AbstractEditorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
 public abstract class TextObjectActionHandler extends AbstractEditorActionHandler
 {
-    protected final boolean execute(Editor editor, DataPackage context, Command cmd)
+    protected final boolean execute(Editor editor, DataContext context, Command cmd)
     {
         if (CommandState.getInstance(editor).getMode() == CommandState.MODE_VISUAL)
         {
@@ -71,5 +71,5 @@ public abstract class TextObjectActionHandler extends AbstractEditorActionHandle
         return true;
     }
 
-    public abstract TextRange getRange(Editor editor, DataPackage context, int count, int rawCount, Argument argument);
+    public abstract TextRange getRange(Editor editor, DataContext context, int count, int rawCount, Argument argument);
 }

@@ -22,6 +22,7 @@ package com.maddyhome.idea.vim;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
@@ -31,7 +32,6 @@ import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.RegisterGroup;
-import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.DelegateCommandListener;
 import com.maddyhome.idea.vim.helper.DigraphSequence;
 import com.maddyhome.idea.vim.helper.EditorData;
@@ -108,7 +108,7 @@ public class KeyHandler
      * @param key The keystroke typed by the user
      * @param context The data context
      */
-    public void handleKey(Editor editor, KeyStroke key, DataPackage context)
+    public void handleKey(Editor editor, KeyStroke key, DataContext context)
     {
         logger.debug("handleKey " + key);
         CommandState editorState = CommandState.getInstance(editor);
@@ -512,7 +512,7 @@ public class KeyHandler
      * @param name The name of the action to execute
      * @param context The context to run it in
      */
-    public static void executeAction(String name, DataPackage context)
+    public static void executeAction(String name, DataContext context)
     {
         logger.debug("executing action " + name);
         ActionManager aMgr = ActionManager.getInstance();
@@ -533,7 +533,7 @@ public class KeyHandler
      * @param action The action to execute
      * @param context The context to run it in
      */
-    public static void executeAction(AnAction action, DataPackage context)
+    public static void executeAction(AnAction action, DataContext context)
     {
         if (logger.isDebugEnabled())
         {
@@ -547,7 +547,7 @@ public class KeyHandler
         // What are the modifiers? Is zero OK?
         action.actionPerformed(new AnActionEvent(
             null,
-            context.getDataContext(),
+            context,
             "",
             action.getTemplatePresentation(),
             ActionManager.getInstance(), // API change - don't merge
@@ -602,7 +602,7 @@ public class KeyHandler
      */
     static class ActionRunner implements Runnable
     {
-        public ActionRunner(Editor editor, DataPackage context, Command cmd, KeyStroke key)
+        public ActionRunner(Editor editor, DataContext context, Command cmd, KeyStroke key)
         {
             this.editor = editor;
             this.context = context;
@@ -650,7 +650,7 @@ public class KeyHandler
         }
 
         private Editor editor;
-        private DataPackage context;
+        private DataContext context;
         private Command cmd;
         private KeyStroke key;
     }

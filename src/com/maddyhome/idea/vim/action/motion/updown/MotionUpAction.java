@@ -25,7 +25,7 @@ import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.handler.motion.MotionEditorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorData;
 
 /**
@@ -39,17 +39,17 @@ public class MotionUpAction extends MotionEditorAction
 
     private static class Handler extends MotionEditorActionHandler
     {
-        public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+        public int getOffset(Editor editor, DataContext context, int count, int rawCount, Argument argument)
         {
             return CommandGroups.getInstance().getMotion().moveCaretVertical(editor, -count);
         }
 
-        protected void preMove(Editor editor, DataPackage context, Command cmd)
+        protected void preMove(Editor editor, DataContext context, Command cmd)
         {
             col = EditorData.getLastColumn(editor);
         }
 
-        protected void postMove(Editor editor, DataPackage context, Command cmd)
+        protected void postMove(Editor editor, DataContext context, Command cmd)
         {
             EditorData.setLastColumn(editor, col);
         }

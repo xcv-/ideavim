@@ -25,7 +25,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
@@ -55,7 +55,7 @@ public class PassThruDelegateAction extends AbstractDelegateAction
             {
                 logger.debug("event = KeyEvent: " + key);
             }
-            KeyHandler.getInstance().handleKey(editor, key, new DataPackage(event));
+            KeyHandler.getInstance().handleKey(editor, key, event.getDataContext());
         }
         else
         {
@@ -63,7 +63,7 @@ public class PassThruDelegateAction extends AbstractDelegateAction
             {
                 logger.debug("event is a " + event.getInputEvent().getClass().getName());
             }
-            KeyHandler.getInstance().handleKey(editor, stroke, new DataPackage(event));
+            KeyHandler.getInstance().handleKey(editor, stroke, event.getDataContext());
         }
     }
 

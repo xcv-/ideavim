@@ -25,7 +25,7 @@ import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.MotionGroup;
 import com.maddyhome.idea.vim.handler.motion.MotionEditorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  */
@@ -38,7 +38,7 @@ public class MotionLeftTillMatchCharAction extends MotionEditorAction
 
     private static class Handler extends MotionEditorActionHandler
     {
-        public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+        public int getOffset(Editor editor, DataContext context, int count, int rawCount, Argument argument)
         {
             int res = CommandGroups.getInstance().getMotion().moveCaretToBeforeNextCharacterOnLine(editor, -count, argument.getCharacter());
             CommandGroups.getInstance().getMotion().setLastFTCmd(MotionGroup.LAST_T, argument.getCharacter());

@@ -29,7 +29,7 @@ import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.ex.ExException;
 import com.maddyhome.idea.vim.ex.ParseResult;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 
 /**
@@ -45,7 +45,7 @@ public class CopyTextHandler extends CommandHandler
         }, RANGE_OPTIONAL | ARGUMENT_REQUIRED | WRITABLE);
     }
 
-    public boolean execute(Editor editor, DataPackage context, ExCommand cmd) throws ExException
+    public boolean execute(Editor editor, DataContext context, ExCommand cmd) throws ExException
     {
         TextRange range = cmd.getTextRange(editor, context, false);
 

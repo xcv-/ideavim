@@ -20,7 +20,7 @@ package com.maddyhome.idea.vim.ex.range;
  */
 
 import com.intellij.openapi.editor.Editor;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 
 /**
@@ -62,7 +62,7 @@ public class LineNumberRange extends AbstractRange
      * @param lastZero True if last line was set to start of file
      * @return The zero based line number, -1 for start of file
      */
-    protected int getRangeLine(Editor editor, DataPackage context, boolean lastZero)
+    protected int getRangeLine(Editor editor, DataContext context, boolean lastZero)
     {
         if (line == CURRENT_LINE)
         {

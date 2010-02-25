@@ -24,7 +24,7 @@ import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.CommandName;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  *
@@ -39,7 +39,7 @@ public class PreviousFileHandler extends CommandHandler
         }, RANGE_OPTIONAL | ARGUMENT_OPTIONAL | RANGE_IS_COUNT | DONT_REOPEN);
     }
 
-    public boolean execute(Editor editor, DataPackage context, ExCommand cmd)
+    public boolean execute(Editor editor, DataContext context, ExCommand cmd)
     {
         int count = cmd.getCount(editor, context, 1, true);
 

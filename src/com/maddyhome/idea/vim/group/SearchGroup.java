@@ -40,7 +40,7 @@ import com.maddyhome.idea.vim.common.CharacterPosition;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.ex.LineRange;
 import com.maddyhome.idea.vim.helper.ApiHelper;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.MessageHelper;
@@ -108,7 +108,7 @@ public class SearchGroup extends AbstractActionGroup
         return lastPattern;
     }
 
-    private void setLastPattern(Editor editor, DataPackage context, String lastPattern)
+    private void setLastPattern(Editor editor, DataContext context, String lastPattern)
     {
         this.lastPattern = lastPattern;
         CommandGroups.getInstance().getRegister().storeTextInternal(editor, context, new TextRange(-1, -1),
@@ -117,7 +117,7 @@ public class SearchGroup extends AbstractActionGroup
         CommandGroups.getInstance().getHistory().addEntry(HistoryGroup.SEARCH, lastPattern);
     }
 
-    public boolean searchAndReplace(Editor editor, DataPackage context, LineRange range, String excmd, String exarg)
+    public boolean searchAndReplace(Editor editor, DataContext context, LineRange range, String excmd, String exarg)
     {
         boolean res = true;
 
@@ -598,7 +598,7 @@ public class SearchGroup extends AbstractActionGroup
         return confirmBtns;
     }
 
-    public int search(Editor editor, DataPackage context, String command, int count, int flags, boolean moveCursor)
+    public int search(Editor editor, DataContext context, String command, int count, int flags, boolean moveCursor)
     {
         int res = search(editor, context, command, editor.getCaretModel().getOffset(), count, flags);
 
@@ -611,7 +611,7 @@ public class SearchGroup extends AbstractActionGroup
         return res;
     }
 
-    public int search(Editor editor, DataPackage context, String command, int startOffset, int count, int flags)
+    public int search(Editor editor, DataContext context, String command, int startOffset, int count, int flags)
     {
         int dir = 1;
         char type = '/';
@@ -671,7 +671,7 @@ public class SearchGroup extends AbstractActionGroup
         return findItOffset(editor, context, startOffset, count, lastDir, false);
     }
 
-    public int searchWord(Editor editor, DataPackage context, int count, boolean whole, int dir)
+    public int searchWord(Editor editor, DataContext context, int count, boolean whole, int dir)
     {
         TextRange range = SearchHelper.findWordUnderCursor(editor);
         if (range == null)
@@ -702,13 +702,13 @@ public class SearchGroup extends AbstractActionGroup
         return findItOffset(editor, context, editor.getCaretModel().getOffset(), count, lastDir, true);
     }
 
-    public int searchNext(Editor editor, DataPackage context, int count)
+    public int searchNext(Editor editor, DataContext context, int count)
     {
         searchHighlight(false);
         return findItOffset(editor, context, editor.getCaretModel().getOffset(), count, lastDir, false);
     }
 
-    public int searchPrevious(Editor editor, DataPackage context, int count)
+    public int searchPrevious(Editor editor, DataContext context, int count)
     {
         searchHighlight(false);
         return findItOffset(editor, context, editor.getCaretModel().getOffset(), count, -lastDir, false);
@@ -843,7 +843,7 @@ public class SearchGroup extends AbstractActionGroup
         }
     }
 
-    private int findItOffset(Editor editor, DataPackage context, int startOffset, int count, int dir,
+    private int findItOffset(Editor editor, DataContext context, int startOffset, int count, int dir,
         boolean noSmartCase)
     {
         boolean wrap = Options.getInstance().isSet("wrapscan");
@@ -1289,7 +1289,7 @@ public class SearchGroup extends AbstractActionGroup
             color, HighlighterTargetArea.EXACT_RANGE);
     }
 
-    public void clearSearchHighlight(Editor editor, DataPackage context)
+    public void clearSearchHighlight(Editor editor, DataContext context)
     {
         if (!ApiHelper.supportsColorSchemes())
         {

@@ -19,12 +19,13 @@ package com.maddyhome.idea.vim.action.macro;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.handler.AbstractEditorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  */
@@ -37,11 +38,11 @@ public class PlaybackRegisterAction extends EditorAction
 
     private static class Handler extends AbstractEditorActionHandler
     {
-        protected boolean execute(Editor editor, DataPackage context, Command cmd)
+        protected boolean execute(Editor editor, DataContext context, Command cmd)
         {
             char reg = cmd.getArgument().getCharacter();
             return CommandGroups.getInstance().getMacro().playbackRegister(editor, context,
-                context.getProject(), reg, cmd.getCount()); // API change - don't merge
+                PlatformDataKeys.PROJECT.getData(context), reg, cmd.getCount()); // API change - don't merge
         }
     }
 }

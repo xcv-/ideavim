@@ -24,7 +24,7 @@ import com.intellij.openapi.help.HelpManager;
 import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.ex.ExException;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  *
@@ -36,7 +36,7 @@ public class HelpHandler extends CommandHandler
         super("h", "elp", ARGUMENT_OPTIONAL | DONT_REOPEN);
     }
 
-    public boolean execute(Editor editor, DataPackage context, ExCommand cmd) throws ExException
+    public boolean execute(Editor editor, DataContext context, ExCommand cmd) throws ExException
     {
         String key = cmd.getArgument();
         if (key.length() == 0)

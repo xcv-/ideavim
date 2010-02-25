@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  */
@@ -39,7 +39,7 @@ public class InsertPreviousInsertExitAction extends EditorAction
     {
         public void execute(Editor editor, DataContext context)
         {
-            CommandGroups.getInstance().getChange().insertPreviousInsert(editor, new DataPackage(context), true);
+            CommandGroups.getInstance().getChange().insertPreviousInsert(editor, context, true);
         }
     }
 }

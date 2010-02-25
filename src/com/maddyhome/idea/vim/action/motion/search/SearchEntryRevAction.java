@@ -25,7 +25,7 @@ import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.handler.motion.MotionEditorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  *
@@ -39,7 +39,7 @@ public class SearchEntryRevAction extends MotionEditorAction
 
     private static class Handler extends MotionEditorActionHandler
     {
-        public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+        public int getOffset(Editor editor, DataContext context, int count, int rawCount, Argument argument)
         {
             return CommandGroups.getInstance().getSearch().search(editor, context, argument.getString(),
                 count, Command.FLAG_SEARCH_REV, false);

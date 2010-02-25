@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.ex.ExException;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  *
@@ -36,7 +36,7 @@ public class EmptyHandler extends CommandHandler
         super(null, "", RANGE_OPTIONAL | ARGUMENT_OPTIONAL);
     }
 
-    public boolean execute(Editor editor, DataPackage context, ExCommand cmd) throws ExException
+    public boolean execute(Editor editor, DataContext context, ExCommand cmd) throws ExException
     {
         logger.info("execute");
         return true;

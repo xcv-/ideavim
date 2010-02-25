@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  *
@@ -32,6 +32,6 @@ public class VisualExitModeHandler extends EditorActionHandler
 {
     public void execute(Editor editor, DataContext context)
     {
-        CommandGroups.getInstance().getMotion().processEscape(editor, new DataPackage(context));
+        CommandGroups.getInstance().getMotion().processEscape(editor, context);
     }
 }

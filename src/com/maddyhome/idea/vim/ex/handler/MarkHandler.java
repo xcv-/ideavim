@@ -25,7 +25,7 @@ import com.maddyhome.idea.vim.ex.CommandName;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.ex.ExException;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.MessageHelper;
 import com.maddyhome.idea.vim.helper.Msg;
@@ -43,7 +43,7 @@ public class MarkHandler extends CommandHandler
         }, RANGE_OPTIONAL | ARGUMENT_REQUIRED);
     }
 
-    public boolean execute(Editor editor, DataPackage context, ExCommand cmd) throws ExException
+    public boolean execute(Editor editor, DataContext context, ExCommand cmd) throws ExException
     {
         char mark = cmd.getArgument().charAt(0);
         int line = cmd.getLine(editor, context);

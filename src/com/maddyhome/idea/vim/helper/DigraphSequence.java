@@ -19,6 +19,7 @@ package com.maddyhome.idea.vim.helper;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.group.CommandGroups;
@@ -45,7 +46,7 @@ public class DigraphSequence
         return false;
     }
 
-    public DigraphResult processKey(KeyStroke key, Editor editor, DataPackage context)
+    public DigraphResult processKey(KeyStroke key, Editor editor, DataContext context)
     {
         switch (digraphState)
         {

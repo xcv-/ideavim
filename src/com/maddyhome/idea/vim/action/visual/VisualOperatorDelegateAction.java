@@ -28,7 +28,7 @@ import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.handler.DelegateActionHandler;
 import com.maddyhome.idea.vim.handler.VisualOperatorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 public class VisualOperatorDelegateAction extends AbstractDelegateEditorAction
 {
@@ -45,7 +45,7 @@ public class VisualOperatorDelegateAction extends AbstractDelegateEditorAction
 
     private static class Handler extends VisualOperatorActionHandler implements DelegateActionHandler
     {
-        protected boolean execute(Editor editor, DataPackage context, Command cmd, TextRange range)
+        protected boolean execute(Editor editor, DataContext context, Command cmd, TextRange range)
         {
             if (logger.isDebugEnabled())
             {

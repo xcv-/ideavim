@@ -19,9 +19,9 @@ package com.maddyhome.idea.vim.ui;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
-import com.maddyhome.idea.vim.helper.DataPackage;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -105,7 +105,7 @@ public class ExEntryPanel extends JPanel
      * @param initText The initial text for the entry
      * @param count A holder for the ex entry count
      */
-    public void activate(Editor editor, DataPackage context, String label, String initText, int count)
+    public void activate(Editor editor, DataContext context, String label, String initText, int count)
     {
         //last = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         entry.setEditor(editor, context);

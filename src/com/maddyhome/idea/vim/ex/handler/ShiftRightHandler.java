@@ -24,7 +24,7 @@ import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  *
@@ -36,7 +36,7 @@ public class ShiftRightHandler extends CommandHandler
         super(">", ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", ARGUMENT_OPTIONAL | WRITABLE);
     }
 
-    public boolean execute(Editor editor, DataPackage context, ExCommand cmd)
+    public boolean execute(Editor editor, DataContext context, ExCommand cmd)
     {
         TextRange range = cmd.getTextRange(editor, context, true);
 

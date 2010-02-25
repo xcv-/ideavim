@@ -25,7 +25,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorDataContext;
 import com.maddyhome.idea.vim.option.Options;
@@ -369,7 +369,7 @@ public class MorePanel extends JPanel
                     List<KeyStroke> keys = new ArrayList<KeyStroke>(1);
                     keys.add(key);
                     CommandGroups.getInstance().getMacro().playbackKeys(editor,
-                            new DataPackage(new EditorDataContext(editor)), project, keys, 0, 0, 1);
+                            new EditorDataContext(editor), project, keys, 0, 0, 1);
                 }
             }
         });

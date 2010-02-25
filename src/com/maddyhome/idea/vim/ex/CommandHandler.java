@@ -19,10 +19,10 @@ package com.maddyhome.idea.vim.ex;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.command.CommandState;
-import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.MessageHelper;
 import com.maddyhome.idea.vim.helper.Msg;
 import com.maddyhome.idea.vim.undo.UndoManager;
@@ -192,7 +192,7 @@ public abstract class CommandHandler
      * @param count The count entered by the user prior to the command
      * @throws ExException if the range or argument is invalid or unable to run the command
      */
-    public boolean process(final Editor editor, final DataPackage context, final ExCommand cmd, final int count) throws
+    public boolean process(final Editor editor, final DataContext context, final ExCommand cmd, final int count) throws
         ExException
     {
         // No range allowed
@@ -295,7 +295,7 @@ public abstract class CommandHandler
      * @return True if able to perform the command, false if not
      * @throws ExException if the range or arguments are invalid for the command
      */
-    public abstract boolean execute(Editor editor, DataPackage context, ExCommand cmd) throws ExException;
+    public abstract boolean execute(Editor editor, DataContext context, ExCommand cmd) throws ExException;
 
     protected CommandName[] names;
     protected int argFlags;

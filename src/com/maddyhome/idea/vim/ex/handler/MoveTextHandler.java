@@ -30,7 +30,7 @@ import com.maddyhome.idea.vim.ex.InvalidRangeException;
 import com.maddyhome.idea.vim.ex.LineRange;
 import com.maddyhome.idea.vim.ex.ParseResult;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.MessageHelper;
 import com.maddyhome.idea.vim.helper.Msg;
@@ -45,7 +45,7 @@ public class MoveTextHandler extends CommandHandler
         super("m", "ove", RANGE_OPTIONAL | ARGUMENT_REQUIRED | WRITABLE);
     }
 
-    public boolean execute(Editor editor, DataPackage context, ExCommand cmd) throws ExException
+    public boolean execute(Editor editor, DataContext context, ExCommand cmd) throws ExException
     {
         TextRange range = cmd.getTextRange(editor, context, false);
         LineRange lr = cmd.getLineRange(editor, context, false);

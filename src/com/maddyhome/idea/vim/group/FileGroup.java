@@ -19,6 +19,7 @@ package com.maddyhome.idea.vim.group;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -40,7 +41,7 @@ import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.common.TextRange;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.SearchHelper;
@@ -58,13 +59,13 @@ public class FileGroup extends AbstractActionGroup
     {
     }
 
-    public boolean openFile(String filename, DataPackage context)
+    public boolean openFile(String filename, DataContext context)
     {
         if (logger.isDebugEnabled())
         {
             logger.debug("openFile(" + filename + ")");
         }
-        Project proj = context.getProject(); // API change - don't merge
+        Project proj = PlatformDataKeys.PROJECT.getData(context); // API change - don't merge
 
         VirtualFile found = null;
         if (filename.length() > 2 && filename.charAt(0) == '~' && filename.charAt(1) == File.separatorChar)
@@ -165,9 +166,9 @@ public class FileGroup extends AbstractActionGroup
      *
      * @param context The data context
      */
-    public void closeFile(Editor editor, DataPackage context)
+    public void closeFile(Editor editor, DataContext context)
     {
-        Project proj = context.getProject();
+        Project proj = PlatformDataKeys.PROJECT.getData(context);
         FileEditorManager fem = FileEditorManager.getInstance(proj); // API change - don't merge
         //fem.closeFile(fem.getSelectedFile());
         VirtualFile vf = EditorData.getVirtualFile(fem.getSelectedTextEditor());
@@ -189,7 +190,7 @@ public class FileGroup extends AbstractActionGroup
      *
      * @param context The data context
      */
-    public void closeAllButCurrent(DataPackage context)
+    public void closeAllButCurrent(DataContext context)
     {
         KeyHandler.executeAction("CloseAllEditorsButCurrent", context);
     }
@@ -199,7 +200,7 @@ public class FileGroup extends AbstractActionGroup
      *
      * @param context The data context
      */
-    public void closeAllFiles(DataPackage context)
+    public void closeAllFiles(DataContext context)
     {
         KeyHandler.executeAction("CloseAllEditors", context);
     }
@@ -209,7 +210,7 @@ public class FileGroup extends AbstractActionGroup
      *
      * @param context The data context
      */
-    public void saveFile(Editor editor, DataPackage context)
+    public void saveFile(Editor editor, DataContext context)
     {
         FileDocumentManager.getInstance().saveDocument(editor.getDocument());
     }
@@ -219,12 +220,12 @@ public class FileGroup extends AbstractActionGroup
      *
      * @param context The data context
      */
-    public void saveFiles(DataPackage context)
+    public void saveFiles(DataContext context)
     {
         FileDocumentManager.getInstance().saveAllDocuments();
     }
 
-    public void closeProject(DataPackage context)
+    public void closeProject(DataContext context)
     {
         KeyHandler.executeAction("CloseProject", context);
     }
@@ -240,9 +241,9 @@ public class FileGroup extends AbstractActionGroup
      * @param count
      * @param context
      */
-    public boolean selectFile(int count, DataPackage context)
+    public boolean selectFile(int count, DataContext context)
     {
-        Project proj = context.getProject();
+        Project proj = PlatformDataKeys.PROJECT.getData(context);
         FileEditorManager fem = FileEditorManager.getInstance(proj); // API change - don't merge
         VirtualFile[] editors = fem.getOpenFiles();
         if (count == 99)
@@ -265,9 +266,9 @@ public class FileGroup extends AbstractActionGroup
      * @param count
      * @param context
      */
-    public void selectNextFile(int count, DataPackage context)
+    public void selectNextFile(int count, DataContext context)
     {
-        Project proj = context.getProject();
+        Project proj = PlatformDataKeys.PROJECT.getData(context);
         FileEditorManager fem = FileEditorManager.getInstance(proj); // API change - don't merge
         VirtualFile[] editors = fem.getOpenFiles();
         VirtualFile current = fem.getSelectedFiles()[0];
@@ -285,9 +286,9 @@ public class FileGroup extends AbstractActionGroup
     /**
      * Selects previous editor tab
      */
-    public void selectPreviousTab(DataPackage context)
+    public void selectPreviousTab(DataContext context)
     {
-        Project proj = context.getProject();
+        Project proj = PlatformDataKeys.PROJECT.getData(context);
         FileEditorManager fem = FileEditorManager.getInstance(proj); // API change - don't merge
         VirtualFile vf = lastSelections.get(fem);
         if (vf != null)

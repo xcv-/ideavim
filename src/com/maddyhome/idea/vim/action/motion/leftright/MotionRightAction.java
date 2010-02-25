@@ -25,7 +25,7 @@ import com.maddyhome.idea.vim.command.Argument;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.handler.motion.MotionEditorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.option.BoundStringOption;
 import com.maddyhome.idea.vim.option.Options;
 
@@ -40,7 +40,7 @@ public class MotionRightAction extends MotionEditorAction
 
     private static class Handler extends MotionEditorActionHandler
     {
-        public int getOffset(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+        public int getOffset(Editor editor, DataContext context, int count, int rawCount, Argument argument)
         {
             boolean allow = false;
             if (CommandState.getInstance(editor).getMode() == CommandState.MODE_INSERT ||

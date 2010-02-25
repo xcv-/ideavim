@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  *
@@ -35,7 +35,7 @@ public class SelectLastFileHandler extends CommandHandler
         super("la", "st", ARGUMENT_OPTIONAL | DONT_REOPEN);
     }
 
-    public boolean execute(Editor editor, DataPackage context, ExCommand cmd)
+    public boolean execute(Editor editor, DataContext context, ExCommand cmd)
     {
         boolean res = CommandGroups.getInstance().getFile().selectFile(999, context);
         if (res)

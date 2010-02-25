@@ -27,7 +27,7 @@ import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.handler.AbstractEditorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.key.KeyParser;
 import com.maddyhome.idea.vim.undo.UndoManager;
 
@@ -42,7 +42,7 @@ public class RepeatChangeAction extends EditorAction
 
     private static class Handler extends AbstractEditorActionHandler
     {
-        public boolean execute(Editor editor, DataPackage context, Command command)
+        public boolean execute(Editor editor, DataContext context, Command command)
         {
             CommandState state = CommandState.getInstance(editor);
             Command cmd = state.getLastChangeCommand();

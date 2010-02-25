@@ -21,6 +21,8 @@ package com.maddyhome.idea.vim.group;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -52,7 +54,6 @@ import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.common.Register;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.helper.CharacterHelper;
-import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorData;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.SearchHelper;
@@ -130,7 +131,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to insert into
      * @param context The data context
      */
-    public void insertBeforeCursor(Editor editor, DataPackage context)
+    public void insertBeforeCursor(Editor editor, DataContext context)
     {
         initInsert(editor, context, CommandState.MODE_INSERT);
     }
@@ -140,7 +141,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to insert into
      * @param context The data context
      */
-    public void insertBeforeFirstNonBlank(Editor editor, DataPackage context)
+    public void insertBeforeFirstNonBlank(Editor editor, DataContext context)
     {
         MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretToLineStartSkipLeading(editor));
         initInsert(editor, context, CommandState.MODE_INSERT);
@@ -151,7 +152,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to insert into
      * @param context The data context
      */
-    public void insertLineStart(Editor editor, DataPackage context)
+    public void insertLineStart(Editor editor, DataContext context)
     {
         MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretToLineStart(editor));
         initInsert(editor, context, CommandState.MODE_INSERT);
@@ -162,7 +163,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to insert into
      * @param context The data context
      */
-    public void insertAfterCursor(Editor editor, DataPackage context)
+    public void insertAfterCursor(Editor editor, DataContext context)
     {
         MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretHorizontal(editor, 1, true));
         initInsert(editor, context, CommandState.MODE_INSERT);
@@ -173,7 +174,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to insert into
      * @param context The data context
      */
-    public void insertAfterLineEnd(Editor editor, DataPackage context)
+    public void insertAfterLineEnd(Editor editor, DataContext context)
     {
         MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretToLineEnd(editor, true));
         initInsert(editor, context, CommandState.MODE_INSERT);
@@ -184,7 +185,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to insert into
      * @param context The data context
      */
-    public void insertNewLineAbove(final Editor editor, final DataPackage context)
+    public void insertNewLineAbove(final Editor editor, final DataContext context)
     {
         if (EditorHelper.getCurrentVisualLine(editor) == 0)
         {
@@ -223,7 +224,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to insert into
      * @param context The data context
      */
-    public void insertNewLineBelow(final Editor editor, final DataPackage context)
+    public void insertNewLineBelow(final Editor editor, final DataContext context)
     {
         MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretToLineEnd(editor, true));
         initInsert(editor, context, CommandState.MODE_INSERT);
@@ -246,7 +247,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to insert into
      * @param context The data context
      */
-    public void insertAtPreviousInsert(Editor editor, DataPackage context)
+    public void insertAtPreviousInsert(Editor editor, DataContext context)
     {
         int offset = CommandGroups.getInstance().getMotion().moveCaretToFileMarkLine(editor, context, '^');
         if (offset != -1)
@@ -263,7 +264,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param context The data context
      * @param exit true if insert mode should be exited after the insert, false should stay in insert mode
      */
-    public void insertPreviousInsert(Editor editor, DataPackage context, boolean exit)
+    public void insertPreviousInsert(Editor editor, DataContext context, boolean exit)
     {
         repeatInsertText(editor, context, 1);
         if (exit)
@@ -277,7 +278,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to exit insert mode in
      * @param context The data context
      */
-    public void insertHelp(Editor editor, DataPackage context)
+    public void insertHelp(Editor editor, DataContext context)
     {
         processEscape(editor, context);
         KeyHandler.executeAction("HelpTopics", context);
@@ -290,7 +291,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param key The register name
      * @return true if able to insert the register contents, false if not
      */
-    public boolean insertRegister(Editor editor, DataPackage context, char key)
+    public boolean insertRegister(Editor editor, DataContext context, char key)
     {
         Register register = CommandGroups.getInstance().getRegister().getRegister(key);
         if (register != null)
@@ -314,7 +315,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param dir 1 for getting from line below cursor, -1 for getting from line aboe cursor
      * @return true if able to get the character and insert it, false if not
      */
-    public boolean insertCharacterAroundCursor(Editor editor, DataPackage context, int dir)
+    public boolean insertCharacterAroundCursor(Editor editor, DataContext context, int dir)
     {
         boolean res = false;
 
@@ -339,7 +340,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param context The data context
      * @return true if able to delete the text, false if not
      */
-    public boolean insertDeleteInsertedText(Editor editor, DataPackage context)
+    public boolean insertDeleteInsertedText(Editor editor, DataContext context)
     {
         int deleteTo = insertStart;
         int offset = editor.getCaretModel().getOffset();
@@ -364,7 +365,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param context The data context
      * @return true if able to delete text, false if not
      */
-    public boolean insertDeletePreviousWord(Editor editor, DataPackage context)
+    public boolean insertDeletePreviousWord(Editor editor, DataContext context)
     {
         int deleteTo = insertStart;
         int offset = editor.getCaretModel().getOffset();
@@ -389,7 +390,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param context The data context
      * @param mode The mode - inidicate insert or replace
      */
-    private void initInsert(Editor editor, DataPackage context, int mode)
+    private void initInsert(Editor editor, DataContext context, int mode)
     {
         CommandState state = CommandState.getInstance(editor);
 
@@ -440,7 +441,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param count The number of times to repeat the previous insert
      * @param started
      */
-    private void repeatInsert(Editor editor, DataPackage context, int count, boolean started)
+    private void repeatInsert(Editor editor, DataContext context, int count, boolean started)
     {
         int cpos;
         if (repeatLines > 0)
@@ -492,7 +493,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param context The data context
      * @param count The number of times to repeat the previous insert
      */
-    private void repeatInsertText(Editor editor, DataPackage context, int count)
+    private void repeatInsertText(Editor editor, DataContext context, int count)
     {
         for (int i = 0; i < count; i++)
         {
@@ -517,7 +518,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor that was being edited
      * @param context The data context
      */
-    public void processEscape(Editor editor, DataPackage context)
+    public void processEscape(Editor editor, DataContext context)
     {
         logger.debug("processing escape");
         int cnt = lastInsert.getCount();
@@ -560,7 +561,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to press "Enter" in
      * @param context The data context
      */
-    public void processEnter(Editor editor, DataPackage context)
+    public void processEnter(Editor editor, DataContext context)
     {
         if (editor.isOneLineMode())
         {
@@ -584,7 +585,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to toggle the state in
      * @param context The data context
      */
-    public void processInsert(Editor editor, DataPackage context)
+    public void processInsert(Editor editor, DataContext context)
     {
         KeyHandler.executeAction("VimEditorToggleInsertState", context);
         CommandState.getInstance(editor).toggleInsertOverwrite();
@@ -597,7 +598,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param editor The editor to put into NORMAL mode for one command
      * @param context The data context
      */
-    public void processSingleCommand(Editor editor, DataPackage context)
+    public void processSingleCommand(Editor editor, DataContext context)
     {
         CommandState.getInstance(editor).pushState(CommandState.MODE_COMMAND, CommandState.SUBMODE_SINGLE_COMMAND,
             KeyParser.MAPPING_NORMAL);
@@ -611,7 +612,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param key The user entered keystroke
      * @return true if this was a regular character, false if not
      */
-    public boolean processKey(final Editor editor, final DataPackage context, final KeyStroke key)
+    public boolean processKey(final Editor editor, final DataContext context, final KeyStroke key)
     {
         if (logger.isDebugEnabled())
         {
@@ -627,8 +628,7 @@ public class ChangeGroup extends AbstractActionGroup
             ApplicationManager.getApplication().runWriteAction(new Runnable() {
                 public void run()
                 {
-                    KeyHandler.getInstance().getOriginalHandler().execute(editor, key.getKeyChar(),
-                        context.getDataContext());
+                    KeyHandler.getInstance().getOriginalHandler().execute(editor, key.getKeyChar(), context);
                 }
             });
 
@@ -646,7 +646,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param cmd The command that was executed
      * @return true if the command was stored for later repeat, false if not
      */
-    public boolean processCommand(Editor editor, DataPackage context, Command cmd)
+    public boolean processCommand(Editor editor, DataContext context, Command cmd)
     {
         if ((cmd.getFlags() & Command.FLAG_SAVE_STROKE) != 0)
         {
@@ -682,7 +682,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param count The number of characters to delete
      * @return true if able to delete, false if not
      */
-    public boolean deleteCharacter(Editor editor, DataPackage context, int count)
+    public boolean deleteCharacter(Editor editor, DataContext context, int count)
     {
         int offset = CommandGroups.getInstance().getMotion().moveCaretHorizontal(editor, count, true);
         if (offset != -1)
@@ -708,7 +708,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param count The number of lines to delete
      * @return true if able to delete the lines, false if not
      */
-    public boolean deleteLine(Editor editor, DataPackage context, int count)
+    public boolean deleteLine(Editor editor, DataContext context, int count)
     {
         int start = CommandGroups.getInstance().getMotion().moveCaretToLineStart(editor);
         int offset = Math.min(CommandGroups.getInstance().getMotion().moveCaretToLineEndOffset(editor,
@@ -741,7 +741,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param count The number of lines affected
      * @return true if able to delete the text, false if not
      */
-    public boolean deleteEndOfLine(Editor editor, DataPackage context, int count)
+    public boolean deleteEndOfLine(Editor editor, DataContext context, int count)
     {
         int offset = CommandGroups.getInstance().getMotion().moveCaretToLineEndOffset(editor, count - 1, true);
         if (offset != -1)
@@ -768,7 +768,7 @@ public class ChangeGroup extends AbstractActionGroup
      *        will be removed. If false, only the newline is removed to join the lines.
      * @return true if able to join the lines, false if not
      */
-    public boolean deleteJoinLines(Editor editor, DataPackage context, int count, boolean spaces)
+    public boolean deleteJoinLines(Editor editor, DataContext context, int count, boolean spaces)
     {
         if (count < 2) count = 2;
         int lline = EditorHelper.getCurrentLogicalLine(editor);
@@ -791,7 +791,7 @@ public class ChangeGroup extends AbstractActionGroup
      *        will be removed. If false, only the newline is removed to join the lines.
      * @return true if able to join the lines, false if not
      */
-    public boolean deleteJoinRange(Editor editor, DataPackage context, TextRange range, boolean spaces)
+    public boolean deleteJoinRange(Editor editor, DataContext context, TextRange range, boolean spaces)
     {
         int startLine = editor.offsetToLogicalPosition(range.getStartOffset()).line;
         int endLine = editor.offsetToLogicalPosition(range.getEndOffset()).line;
@@ -811,7 +811,7 @@ public class ChangeGroup extends AbstractActionGroup
      *        will be removed. If false, only the newline is removed to join the lines.
      * @return true if able to join the lines, false if not
      */
-    private boolean deleteJoinNLines(Editor editor, DataPackage context, int startLine, int count, boolean spaces)
+    private boolean deleteJoinNLines(Editor editor, DataContext context, int startLine, int count, boolean spaces)
     {
         // start my moving the cursor to the very end of the first line
         MotionGroup.moveCaret(editor, context, CommandGroups.getInstance().getMotion().moveCaretToLineEnd(editor, startLine, true));
@@ -849,7 +849,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param isChange if from a change
      * @return true if able to delete the text, false if not
      */
-    public boolean deleteMotion(Editor editor, DataPackage context, int count, int rawCount, Argument argument, boolean isChange)
+    public boolean deleteMotion(Editor editor, DataContext context, int count, int rawCount, Argument argument, boolean isChange)
     {
         TextRange range = MotionGroup.getMotionRange(editor, context, count, rawCount, argument, true, false);
         if (range == null)
@@ -906,7 +906,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param isChange If from a change
      * @return true if able to delete the text, false if not
      */
-    public boolean deleteRange(Editor editor, DataPackage context, TextRange range, int type, boolean isChange)
+    public boolean deleteRange(Editor editor, DataContext context, TextRange range, int type, boolean isChange)
     {
         if (range == null)
         {
@@ -946,7 +946,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param context The data context
      * @return true
      */
-    public boolean changeReplace(Editor editor, DataPackage context)
+    public boolean changeReplace(Editor editor, DataContext context)
     {
         initInsert(editor, context, CommandState.MODE_REPLACE);
 
@@ -961,7 +961,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param ch The character to change to
      * @return true if able to change count characters, false if not
      */
-    public boolean changeCharacter(Editor editor, DataPackage context, int count, char ch)
+    public boolean changeCharacter(Editor editor, DataContext context, int count, char ch)
     {
         int col = EditorHelper.getCurrentLogicalColumn(editor);
         int len = EditorHelper.getLineLength(editor);
@@ -1015,7 +1015,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param ch The replacing character
      * @return true if able to change the range, false if not
      */
-    public boolean changeCharacterRange(Editor editor, DataPackage context, TextRange range, char ch)
+    public boolean changeCharacterRange(Editor editor, DataContext context, TextRange range, char ch)
     {
         if (logger.isDebugEnabled())
         {
@@ -1065,7 +1065,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param count The number of characters to change
      * @return true if able to delete count characters, false if not
      */
-    public boolean changeCharacters(Editor editor, DataPackage context, int count)
+    public boolean changeCharacters(Editor editor, DataContext context, int count)
     {
         int len = EditorHelper.getLineLength(editor);
         int col = EditorHelper.getCurrentLogicalColumn(editor);
@@ -1090,7 +1090,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param count The number of lines to change
      * @return true if able to delete count lines, false if not
      */
-    public boolean changeLine(Editor editor, DataPackage context, int count)
+    public boolean changeLine(Editor editor, DataContext context, int count)
     {
         boolean res = deleteLine(editor, context, count);
         if (res)
@@ -1108,7 +1108,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param count The number of lines to change
      * @return true if able to delete count lines, false if not
      */
-    public boolean changeEndOfLine(Editor editor, DataPackage context, int count)
+    public boolean changeEndOfLine(Editor editor, DataContext context, int count)
     {
         boolean res = deleteEndOfLine(editor, context, count);
         if (res)
@@ -1128,7 +1128,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param argument The motion command
      * @return true if able to delete the text, false if not
      */
-    public boolean changeMotion(Editor editor, DataPackage context, int count, int rawCount, Argument argument)
+    public boolean changeMotion(Editor editor, DataContext context, int count, int rawCount, Argument argument)
     {
         // TODO: Hack - find better way to do this exceptional case - at least make constants out of these strings
 
@@ -1210,7 +1210,7 @@ public class ChangeGroup extends AbstractActionGroup
         return res;
     }
 
-    public boolean blockInsert(Editor editor, DataPackage context, TextRange range, boolean append)
+    public boolean blockInsert(Editor editor, DataContext context, TextRange range, boolean append)
     {
         LogicalPosition start = editor.offsetToLogicalPosition(range.getStartOffset());
         int lines = range.size();
@@ -1265,7 +1265,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param type The type of the range (FLAG_MOT_LINEWISE, FLAG_MOT_CHARACTERWISE)
      * @return true if able to delete the range, false if not
      */
-    public boolean changeRange(Editor editor, DataPackage context, TextRange range, int type)
+    public boolean changeRange(Editor editor, DataContext context, TextRange range, int type)
     {
         int col = 0;
         int lines = 0;
@@ -1313,7 +1313,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param count The number of characters to change
      * @return true if able to change count characters
      */
-    public boolean changeCaseToggleCharacter(Editor editor, DataPackage context, int count)
+    public boolean changeCaseToggleCharacter(Editor editor, DataContext context, int count)
     {
         int offset = CommandGroups.getInstance().getMotion().moveCaretHorizontal(editor, count, true);
         if (offset == -1)
@@ -1341,7 +1341,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param argument The motion command
      * @return true if able to delete the text, false if not
      */
-    public boolean changeCaseMotion(Editor editor, DataPackage context, int count, int rawCount, char type, Argument argument)
+    public boolean changeCaseMotion(Editor editor, DataContext context, int count, int rawCount, char type, Argument argument)
     {
         TextRange range = MotionGroup.getMotionRange(editor, context, count, rawCount, argument, true, false);
 
@@ -1356,7 +1356,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param type The case change type (TOGGLE, UPPER, LOWER)
      * @return true if able to delete the text, false if not
      */
-    public boolean changeCaseRange(Editor editor, DataPackage context, TextRange range, char type)
+    public boolean changeCaseRange(Editor editor, DataContext context, TextRange range, char type)
     {
         if (range == null)
         {
@@ -1384,7 +1384,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param end The end offset to change
      * @param type The type of change (TOGGLE, UPPER, LOWER)
      */
-    private void changeCase(Editor editor, DataPackage context, int start, int end, char type)
+    private void changeCase(Editor editor, DataContext context, int start, int end, char type)
     {
         if (start > end)
         {
@@ -1409,12 +1409,12 @@ public class ChangeGroup extends AbstractActionGroup
         }
     }
 
-    public void autoIndentLines(Editor editor, DataPackage context, int lines)
+    public void autoIndentLines(Editor editor, DataContext context, int lines)
     {
         KeyHandler.executeAction("OrigAutoIndentLines", context);
     }
 
-    public void indentLines(Editor editor, DataPackage context, int lines, int dir)
+    public void indentLines(Editor editor, DataContext context, int lines, int dir)
     {
         int cnt = 1;
         if (CommandState.getInstance(editor).getMode() == CommandState.MODE_INSERT ||
@@ -1441,14 +1441,14 @@ public class ChangeGroup extends AbstractActionGroup
         indentRange(editor, context, new TextRange(start, end), cnt, dir);
     }
 
-    public void indentMotion(Editor editor, DataPackage context, int count, int rawCount, Argument argument, int dir)
+    public void indentMotion(Editor editor, DataContext context, int count, int rawCount, Argument argument, int dir)
     {
         TextRange range = MotionGroup.getMotionRange(editor, context, count, rawCount, argument, false, false);
 
         indentRange(editor, context, range, 1, dir);
     }
 
-    public void indentRange(Editor editor, DataPackage context, TextRange range, int count, int dir)
+    public void indentRange(Editor editor, DataContext context, TextRange range, int count, int dir)
     {
         if (logger.isDebugEnabled())
         {
@@ -1456,7 +1456,7 @@ public class ChangeGroup extends AbstractActionGroup
         }
         if (range == null) return;
 
-        Project proj = context.getProject(); // API change - don't merge
+        Project proj = PlatformDataKeys.PROJECT.getData(context); // API change - don't merge
         int tabSize = 8;
         int indentSize = 8;
         boolean useTabs = true;
@@ -1608,7 +1608,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param start The starting offset to insert at
      * @param str The text to insert
      */
-    public void insertText(Editor editor, DataPackage context, int start, String str)
+    public void insertText(Editor editor, DataContext context, int start, String str)
     {
         editor.getDocument().insertString(start, str);
         editor.getCaretModel().moveToOffset(start + str.length());
@@ -1627,7 +1627,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param type The type of deletion (FLAG_MOT_LINEWISE, FLAG_MOT_CHARACTERWISE)
      * @return true if able to delete the text, false if not
      */
-    private boolean deleteText(Editor editor, DataPackage context, TextRange range, int type)
+    private boolean deleteText(Editor editor, DataContext context, TextRange range, int type)
     {
         if (range.size() == 1 && range.getStartOffset() > range.getEndOffset())
         {
@@ -1665,7 +1665,7 @@ public class ChangeGroup extends AbstractActionGroup
      * @param end The end offset to change
      * @param str The new text
      */
-    private void replaceText(Editor editor, DataPackage context, int start, int end, String str)
+    private void replaceText(Editor editor, DataContext context, int start, int end, String str)
     {
         editor.getDocument().replaceString(start, end, str);
 
@@ -1704,7 +1704,7 @@ public class ChangeGroup extends AbstractActionGroup
         }
     }
 
-    public boolean changeNumber(Editor editor, DataPackage context, int count)
+    public boolean changeNumber(Editor editor, DataContext context, int count)
     {
         BoundListOption nf = (BoundListOption)Options.getInstance().getOption("nrformats");
         boolean alpha = nf.contains("alpha");

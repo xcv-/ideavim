@@ -22,7 +22,7 @@ package com.maddyhome.idea.vim.ex.range;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.common.Mark;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  * Represents the line specified by a mark
@@ -49,7 +49,7 @@ public class MarkRange extends AbstractRange
      * @param lastZero True if last line was set to start of file
      * @return The zero based line number, -1 if there is no such mark set in the file
      */
-    public int getRangeLine(Editor editor, DataPackage context, boolean lastZero)
+    public int getRangeLine(Editor editor, DataContext context, boolean lastZero)
     {
         Mark mark = CommandGroups.getInstance().getMark().getFileMark(editor, this.mark);
 

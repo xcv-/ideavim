@@ -23,7 +23,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.group.CommandGroups;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 
 import java.util.ArrayList;
@@ -105,7 +105,7 @@ public class SearchRange extends AbstractRange
      * @param lastZero True if last line was set to start of file
      * @return The zero based line number, -1 if the text was not found
      */
-    protected int getRangeLine(Editor editor, DataPackage context, boolean lastZero)
+    protected int getRangeLine(Editor editor, DataContext context, boolean lastZero)
     {
         // Each subsequent pattern is searched for starting in the line after the previous search match
         int line = EditorHelper.getCurrentLogicalLine(editor);

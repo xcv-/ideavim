@@ -25,7 +25,7 @@ import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.handler.AbstractEditorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  */
@@ -38,7 +38,7 @@ public class ToggleRecordingAction extends EditorAction
 
     private static class Handler extends AbstractEditorActionHandler
     {
-        protected boolean execute(Editor editor, DataPackage context, Command cmd)
+        protected boolean execute(Editor editor, DataContext context, Command cmd)
         {
             if (!CommandState.getInstance(editor).isRecording())
             {

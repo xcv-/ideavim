@@ -27,24 +27,12 @@ import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
-import com.maddyhome.idea.vim.helper.DataPackage;
 
 /**
  */
 public abstract class AbstractEditorActionHandler extends EditorActionHandler
 {
-    /**
-     * Executes the action.
-     *
-     * @param editor the editor in which the action is invoked.
-     * @param dataContext the data context for the action.
-     */
-    public final void execute(Editor editor, DataContext dataContext)
-    {
-        execute(editor, new DataPackage(dataContext));
-    }
-
-    public final void execute(Editor editor, DataPackage context)
+    public final void execute(Editor editor, DataContext context)
     {
         logger.debug("execute");
         if ((editor == null || !VimPlugin.isEnabled()) && this instanceof DelegateActionHandler)
@@ -67,7 +55,7 @@ public abstract class AbstractEditorActionHandler extends EditorActionHandler
         // No-op
     }
 
-    protected abstract boolean execute(Editor editor, DataPackage context, Command cmd);
+    protected abstract boolean execute(Editor editor, DataContext context, Command cmd);
 
     private static Logger logger = Logger.getInstance(AbstractEditorActionHandler.class.getName());
 }

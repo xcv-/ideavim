@@ -21,7 +21,7 @@ package com.maddyhome.idea.vim.ex.range;
 
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.ex.Range;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  * Base for all Ex command ranges
@@ -125,7 +125,7 @@ public abstract class AbstractRange implements Range
      * @param lastZero True if last line was set to start of file
      * @return The zero based line number, -1 if unable to get the line number
      */
-    public int getLine(Editor editor, DataPackage context, boolean lastZero)
+    public int getLine(Editor editor, DataContext context, boolean lastZero)
     {
         int line = getRangeLine(editor, context, lastZero);
 
@@ -149,7 +149,7 @@ public abstract class AbstractRange implements Range
      * @param lastZero True if last line was set to start of file
      * @return The zero based line number, -1 if inable to get the line number
      */
-    protected abstract int getRangeLine(Editor editor, DataPackage context, boolean lastZero);
+    protected abstract int getRangeLine(Editor editor, DataContext context, boolean lastZero);
 
     protected int offset;
     protected boolean move;

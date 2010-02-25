@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 import javax.swing.KeyStroke;
 
@@ -71,7 +71,7 @@ public class VimTypedActionHandler implements TypedActionHandler
 
         try
         {
-            handler.handleKey(editor, KeyStroke.getKeyStroke(charTyped), new DataPackage(context));
+            handler.handleKey(editor, KeyStroke.getKeyStroke(charTyped), context);
         }
         catch (Throwable e)
         {

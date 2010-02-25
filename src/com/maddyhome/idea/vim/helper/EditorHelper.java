@@ -496,7 +496,12 @@ public class EditorHelper
      */
     public static String getText(Editor editor, int start, int end)
     {
-        return EditorHelper.getDocumentChars(editor).subSequence(start, end).toString();
+      // Fix for IOOBE
+      final CharSequence documentChars = EditorHelper.getDocumentChars(editor);
+      if (!(0<=start && start < end && start < documentChars.length() && 0<=end && end <= documentChars.length())){
+        return "";
+      }
+      return documentChars.subSequence(start, end).toString();
     }
 
     public static String getText(Editor editor, TextRange range)

@@ -24,7 +24,7 @@ import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.ex.range.AbstractRange;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.MotionGroup;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class Ranges
      * @param context The data context
      * @return The line number represented by the range
      */
-    public int getLine(Editor editor, DataPackage context)
+    public int getLine(Editor editor, DataContext context)
     {
         processRange(editor, context);
 
@@ -93,7 +93,7 @@ public class Ranges
      * @param context The data context
      * @return The starting line number
      */
-    public int getFirstLine(Editor editor, DataPackage context)
+    public int getFirstLine(Editor editor, DataContext context)
     {
         processRange(editor, context);
 
@@ -108,7 +108,7 @@ public class Ranges
      * @param count The count given at the end of the command or -1 if no such count (use end line)
      * @return count if count != -1, else return end line of range
      */
-    public int getCount(Editor editor, DataPackage context, int count)
+    public int getCount(Editor editor, DataContext context, int count)
     {
         if (count == -1)
         {
@@ -128,7 +128,7 @@ public class Ranges
      * @param count The count given at the end of the command or -1 if no such count
      * @return The line range
      */
-    public LineRange getLineRange(Editor editor, DataPackage context, int count)
+    public LineRange getLineRange(Editor editor, DataContext context, int count)
     {
         processRange(editor, context);
         int end;
@@ -156,7 +156,7 @@ public class Ranges
      * @param count The count given at the end of the command or -1 if no such count
      * @return The text range
      */
-    public TextRange getTextRange(Editor editor, DataPackage context, int count)
+    public TextRange getTextRange(Editor editor, DataContext context, int count)
     {
         LineRange lr = getLineRange(editor, context, count);
         int start = EditorHelper.getLineStartOffset(editor, lr.getStartLine());
@@ -171,7 +171,7 @@ public class Ranges
      * @param context The data context
      * @return The range of the current line
      */
-    public static TextRange getCurrentLineRange(Editor editor, DataPackage context)
+    public static TextRange getCurrentLineRange(Editor editor, DataContext context)
     {
         Ranges ranges = new Ranges();
 
@@ -184,7 +184,7 @@ public class Ranges
      * @param context The data context
      * @return The range of the current file
      */
-    public static TextRange getFileTextRange(Editor editor, DataPackage context)
+    public static TextRange getFileTextRange(Editor editor, DataContext context)
     {
         Ranges ranges = new Ranges();
         ranges.addRange(AbstractRange.createRange("%", 0, false));
@@ -197,7 +197,7 @@ public class Ranges
      * @param editor The editor to get the lines for
      * @param context The data context
      */
-    private void processRange(Editor editor, DataPackage context)
+    private void processRange(Editor editor, DataContext context)
     {
         // Already done
         if (done) return;

@@ -24,14 +24,14 @@ import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.common.TextRange;
 import com.maddyhome.idea.vim.handler.VisualOperatorActionHandler;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 /**
  *
  */
 public class AutoIndentVisualHandler extends VisualOperatorActionHandler
 {
-    protected boolean execute(Editor editor, DataPackage context, Command cmd, TextRange range)
+    protected boolean execute(Editor editor, DataContext context, Command cmd, TextRange range)
     {
         KeyHandler.executeAction("OrigAutoIndentLines", context);
 

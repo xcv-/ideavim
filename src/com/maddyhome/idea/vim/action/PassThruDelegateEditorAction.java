@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 
 import javax.swing.KeyStroke;
 
@@ -62,7 +62,7 @@ public class PassThruDelegateEditorAction extends AbstractDelegateEditorAction
                 {
                     logger.debug("event = KeyEvent: " + stroke);
                 }
-                KeyHandler.getInstance().handleKey(editor, stroke, new DataPackage(dataContext));
+                KeyHandler.getInstance().handleKey(editor, stroke, dataContext);
             }
         }
 

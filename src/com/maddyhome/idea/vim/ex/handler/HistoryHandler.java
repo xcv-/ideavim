@@ -26,7 +26,7 @@ import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.ex.ExException;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.HistoryGroup;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.ui.MorePanel;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class HistoryHandler extends CommandHandler
         super("his", "tory", RANGE_FORBIDDEN | ARGUMENT_OPTIONAL | KEEP_FOCUS);
     }
 
-    public boolean execute(Editor editor, final DataPackage context, ExCommand cmd) throws ExException
+    public boolean execute(Editor editor, final DataContext context, ExCommand cmd) throws ExException
     {
         logger.debug("execute");
 

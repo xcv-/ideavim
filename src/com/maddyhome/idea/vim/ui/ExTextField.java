@@ -19,22 +19,26 @@ package com.maddyhome.idea.vim.ui;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.application.options.colors.ColorAndFontOptions;
+import com.intellij.application.options.editor.EditorOptions;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorFontType;
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.maddyhome.idea.vim.VimPlugin;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.HistoryGroup;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.DigraphSequence;
 
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.Date;
 import java.util.List;
-import javax.swing.Action;
-import javax.swing.InputMap;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.text.Document;
 import javax.swing.text.Keymap;
 
@@ -47,12 +51,22 @@ public class ExTextField extends JTextField
      */
     public ExTextField()
     {
-        Font font = new Font("Monospaced", Font.PLAIN, 12);
+        Font font = EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN);
         setFont(font);
+
+      // Do not override getActions() method, because it is has side effect: propogates these actions to defaults.
+      final Action[] actions = ExEditorKit.getInstance().getActions();
+      final ActionMap actionMap = getActionMap();
+      int n = actions.length;
+      for (int i = 0; i < n; i++) {
+          Action a = actions[i];
+          actionMap.put(a.getValue(Action.NAME), a);
+          //System.out.println("  " + a.getValue(Action.NAME));
+      }
 
         setInputMap(WHEN_FOCUSED, new InputMap());
         Keymap map = addKeymap("ex", getKeymap());
-        loadKeymap(map, ExKeyBindings.getBindings(), getActions());
+        loadKeymap(map, ExKeyBindings.getBindings(), actions);
         map.setDefaultAction(new ExEditorKit.DefaultExKeyHandler());
         setKeymap(map);
 
@@ -140,7 +154,7 @@ public class ExTextField extends JTextField
         }
     }
 
-    void setEditor(Editor editor, DataPackage context)
+    void setEditor(Editor editor, DataContext context)
     {
         this.editor = editor;
         this.context = context;
@@ -151,14 +165,9 @@ public class ExTextField extends JTextField
         return editor;
     }
 
-    public DataPackage getContext()
+    public DataContext getContext()
     {
         return context;
-    }
-
-    public Action[] getActions()
-    {
-        return ExEditorKit.getInstance().getActions();
     }
 
     public void handleKey(KeyStroke stroke)
@@ -425,7 +434,7 @@ public class ExTextField extends JTextField
     */
 
     private Editor editor;
-    private DataPackage context;
+    private DataContext context;
     private String lastEntry;
     private List<HistoryGroup.HistoryEntry> history;
     private int histIndex = 0;

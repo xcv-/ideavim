@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.common.Register;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.undo.UndoManager;
 
 import java.awt.Component;
@@ -54,7 +54,7 @@ public class MacroGroup extends AbstractActionGroup
      * @param count The number of times to execute the macro
      * @return true if able to play the macro, false if invalid or empty register
      */
-    public boolean playbackRegister(Editor editor, DataPackage context, Project project, char reg, int count)
+    public boolean playbackRegister(Editor editor, DataContext context, Project project, char reg, int count)
     {
         if (logger.isDebugEnabled())
         {
@@ -83,7 +83,7 @@ public class MacroGroup extends AbstractActionGroup
      * @param count The number of times to execute the macro
      * @return true if able to play the macro, false in no previous playback
      */
-    public boolean playbackLastRegister(Editor editor, DataPackage context, Project project, int count)
+    public boolean playbackLastRegister(Editor editor, DataContext context, Project project, int count)
     {
         if (lastRegister != 0)
         {
@@ -103,7 +103,7 @@ public class MacroGroup extends AbstractActionGroup
      * @param cnt count
      * @param total total
      */
-    public void playbackKeys(final Editor editor, final DataPackage context, final Project project,
+    public void playbackKeys(final Editor editor, final DataContext context, final Project project,
         final List<KeyStroke> keys, final int pos, final int cnt, final int total)
     {
         if (logger.isDebugEnabled())

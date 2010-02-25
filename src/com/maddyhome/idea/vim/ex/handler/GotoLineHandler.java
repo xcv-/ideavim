@@ -25,7 +25,7 @@ import com.maddyhome.idea.vim.ex.CommandHandler;
 import com.maddyhome.idea.vim.ex.ExCommand;
 import com.maddyhome.idea.vim.group.CommandGroups;
 import com.maddyhome.idea.vim.group.MotionGroup;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 
 /**
@@ -49,7 +49,7 @@ public class GotoLineHandler extends CommandHandler
      * @param cmd The complete Ex command including range, command, and arguments
      * @return True if able to perform the command, false if not
      */
-    public boolean execute(Editor editor, DataPackage context, ExCommand cmd)
+    public boolean execute(Editor editor, DataContext context, ExCommand cmd)
     {
         int count = cmd.getLine(editor, context);
 

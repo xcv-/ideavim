@@ -31,7 +31,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileDocumentManagerAdapter;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.maddyhome.idea.vim.VimPlugin;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.helper.EditorData;
 
 import java.util.HashMap;
@@ -116,7 +116,7 @@ public class UndoManager
         return list.size() > 0;
     }
 
-    public boolean undo(Editor editor, DataPackage context)
+    public boolean undo(Editor editor, DataContext context)
     {
         logger.debug("undo");
         EditorUndoList list = getEditorUndoList(editor);
@@ -128,7 +128,7 @@ public class UndoManager
         return res;
     }
 
-    public boolean undoLine(Editor editor, DataPackage context)
+    public boolean undoLine(Editor editor, DataContext context)
     {
         logger.debug("undoLine");
         EditorUndoList list = getEditorUndoList(editor);
@@ -140,7 +140,7 @@ public class UndoManager
         return res;
     }
 
-    public boolean redo(Editor editor, DataPackage context)
+    public boolean redo(Editor editor, DataContext context)
     {
         EditorUndoList list = getEditorUndoList(editor);
         boolean res = list.redo(editor, context);

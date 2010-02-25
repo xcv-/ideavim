@@ -27,7 +27,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.KeyHandler;
 import com.maddyhome.idea.vim.VimPlugin;
-import com.maddyhome.idea.vim.helper.DataPackage;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.maddyhome.idea.vim.ui.ExEntryPanel;
 
 import java.awt.event.KeyEvent;
@@ -55,7 +55,7 @@ public class KeyAction extends AnAction
             if (editor != null)
             {
                 KeyStroke key = KeyStroke.getKeyStrokeForEvent(ke);
-                KeyHandler.getInstance().handleKey(editor, key, new DataPackage(event));
+                KeyHandler.getInstance().handleKey(editor, key, event.getDataContext());
             }
             else
             {

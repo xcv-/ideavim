@@ -19,13 +19,13 @@ package com.maddyhome.idea.vim.group;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.maddyhome.idea.vim.command.Command;
 import com.maddyhome.idea.vim.command.CommandState;
 import com.maddyhome.idea.vim.common.Register;
 import com.maddyhome.idea.vim.common.TextRange;
-import com.maddyhome.idea.vim.helper.DataPackage;
 import com.maddyhome.idea.vim.helper.EditorHelper;
 import com.maddyhome.idea.vim.helper.StringHelper;
 import com.maddyhome.idea.vim.ui.ClipboardHandler;
@@ -102,7 +102,7 @@ public class RegisterGroup extends AbstractActionGroup
      * @param isYank is from a yank
      * @return true if able to store the text into the register, false if not
      */
-    public boolean storeText(Editor editor, DataPackage context, TextRange range, int type, boolean isDelete, boolean isYank)
+    public boolean storeText(Editor editor, DataContext context, TextRange range, int type, boolean isDelete, boolean isYank)
     {
         if (isRegisterWritable())
         {
@@ -119,7 +119,7 @@ public class RegisterGroup extends AbstractActionGroup
         registers.put(register, new Register(register, type, strokes));
     }
 
-    public boolean storeTextInternal(Editor editor, DataPackage context, TextRange range, String text, int type,
+    public boolean storeTextInternal(Editor editor, DataContext context, TextRange range, String text, int type,
         char register, boolean isDelete, boolean isYank)
     {
         // Null register doesn't get saved
