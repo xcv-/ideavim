@@ -254,7 +254,7 @@
       <module fileurl="file://$PROJECT_DIR$/IdeaVim.iml" filepath="$PROJECT_DIR$/IdeaVim.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA Diana" project-jdk-type="IDEA JDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA Plugin SDK" project-jdk-type="IDEA JDK" />
   <component name="ResourceManagerContainer">
     <option name="myResourceBundles">
       <value>
