@@ -105,6 +105,7 @@
     <action id="VimMotionRightTillMatchChar" class="com.maddyhome.idea.vim.action.motion.leftright.MotionRightTillMatchCharAction" text="Move Right till Character"/>
     <!-- Up/Down -->
     <action id="VimMotionDown" class="com.maddyhome.idea.vim.action.motion.updown.MotionDownAction" text="Down"/>
+    <action id="VimMotion5Down" class="com.maddyhome.idea.vim.action.motion.updown.Motion5DownAction" text="5 Down"/>
     <action id="VimMotionDownFirstNonSpace" class="com.maddyhome.idea.vim.action.motion.updown.MotionDownFirstNonSpaceAction" text="Down to First non-Space"/>
     <action id="VimMotionDownLess1FirstNonSpace" class="com.maddyhome.idea.vim.action.motion.updown.MotionDownLess1FirstNonSpaceAction" text="Down to First non-Space"/>
     <action id="VimMotionGotoLineFirst" class="com.maddyhome.idea.vim.action.motion.updown.MotionGotoLineFirstAction" text="Goto Line"/>
@@ -112,6 +113,7 @@
     <action id="VimMotionGotoLineLastEnd" class="com.maddyhome.idea.vim.action.motion.updown.MotionGotoLineLastEndAction" text="Goto Line End"/>
     <action id="VimMotionPercentOrMatch" class="com.maddyhome.idea.vim.action.motion.updown.MotionPercentOrMatchAction" text="Percent Down or Match"/>
     <action id="VimMotionUp" class="com.maddyhome.idea.vim.action.motion.updown.MotionUpAction" text="Up"/>
+    <action id="VimMotion5Up" class="com.maddyhome.idea.vim.action.motion.updown.Motion5UpAction" text="5 Up"/>
     <action id="VimMotionUpFirstNonSpace" class="com.maddyhome.idea.vim.action.motion.updown.MotionUpFirstNonSpaceAction" text="Up to First non-Space"/>
     <!-- Text -->
     <action id="VimMotionCamelEndLeft" class="com.maddyhome.idea.vim.action.motion.text.MotionCamelEndLeftAction" text="Camel Word End Left"/>
@@ -168,6 +170,7 @@
     <action id="VimMotionOuterParagraph" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterParagraphAction" text="Select Outer Paragraph"/>
     <action id="VimMotionInnerSentence" class="com.maddyhome.idea.vim.action.motion.object.MotionInnerSentenceAction" text="Select Inner Sentence"/>
     <action id="VimMotionOuterSentence" class="com.maddyhome.idea.vim.action.motion.object.MotionOuterSentenceAction" text="Select Outer Sentence"/>
+    <action id="VimMotionFile" class="com.maddyhome.idea.vim.action.motion.object.MotionFileAction" text="Select the entire file"/>
     <!-- Marks -->
     <action id="VimMotionMark" class="com.maddyhome.idea.vim.action.motion.mark.MotionMarkAction" text="Mark"/>
     <action id="VimMotionGotoFileMark" class="com.maddyhome.idea.vim.action.motion.mark.MotionGotoFileMarkAction" text="Goto Mark"/>
@@ -213,6 +216,7 @@
     <action id="VimVisualSwapSelections" class="com.maddyhome.idea.vim.action.motion.visual.VisualSwapSelectionsAction" text="Swap Visual Selection Ends"/>
 
     <!-- Insert -->
+    <action id="VimInsertSlash" class="com.maddyhome.idea.vim.action.change.insert.InsertSlashAction" text="Insert a slash"/>
     <action id="VimInsertAfterCursor" class="com.maddyhome.idea.vim.action.change.insert.InsertAfterCursorAction" text="Insert After Cursor"/>
     <action id="VimInsertAfterLineEnd" class="com.maddyhome.idea.vim.action.change.insert.InsertAfterLineEndAction" text="Insert After Line End"/>
     <action id="VimInsertAtPreviousInsert" class="com.maddyhome.idea.vim.action.change.insert.InsertAtPreviousInsertAction" text="Insert Before Cursor"/>
@@ -235,6 +239,29 @@
     <action id="VimInsertSingleCommand" class="com.maddyhome.idea.vim.action.change.insert.InsertSingleCommandAction" text="Execute Command"/>
     <action id="VimVisualBlockInsert" class="com.maddyhome.idea.vim.action.change.insert.VisualBlockInsertAction" text="Visual Block Insert"/>
     <action id="VimVisualBlockAppend" class="com.maddyhome.idea.vim.action.change.insert.VisualBlockAppendAction" text="Visual Block Append"/>
+
+    <!-- Normal -->
+    <action id="VimInsertNewLineNormal" class="com.maddyhome.idea.vim.action.change.insert.InsertNewLineNormalAction" text="Normal Mode New Line"/>
+
+    <!-- Surround -->
+    <!-- <action id="VimChangeSurround" class="com.maddyhome.idea.vim.action.change.change.surround.ChangeSurroundAction"/> -->
+    <action id="VimDeleteSurround" class="com.maddyhome.idea.vim.action.change.delete.DeleteSurroundAction"/>
+
+    <action id="VimInsertSurroundVisual" class="com.maddyhome.idea.vim.action.change.insert.surround.InsertSurroundVisualAction"/>
+
+    <action id="VimInsertSurroundParens" class="com.maddyhome.idea.vim.action.change.insert.surround.InsertSurroundParensAction"/>
+    <action id="VimInsertSurroundCurlyBraces" class="com.maddyhome.idea.vim.action.change.insert.surround.InsertSurroundCurlyBracesAction"/>
+    <action id="VimInsertSurroundBrackets" class="com.maddyhome.idea.vim.action.change.insert.surround.InsertSurroundBracketsAction"/>
+    <action id="VimInsertSurroundAngleBrackets" class="com.maddyhome.idea.vim.action.change.insert.surround.InsertSurroundAngleBracketsAction"/>
+    <action id="VimInsertSurroundDoubleQuotes" class="com.maddyhome.idea.vim.action.change.insert.surround.InsertSurroundDoubleQuotesAction"/>
+    <action id="VimInsertSurroundSingleQuotes" class="com.maddyhome.idea.vim.action.change.insert.surround.InsertSurroundSingleQuotesAction"/>
+
+    <action id="VimChangeSurroundParens" class="com.maddyhome.idea.vim.action.change.change.surround.ChangeSurroundParensAction"/>
+    <action id="VimChangeSurroundCurlyBraces" class="com.maddyhome.idea.vim.action.change.change.surround.ChangeSurroundCurlyBracesAction"/>
+    <action id="VimChangeSurroundBrackets" class="com.maddyhome.idea.vim.action.change.change.surround.ChangeSurroundBracketsAction"/>
+    <action id="VimChangeSurroundAngleBrackets" class="com.maddyhome.idea.vim.action.change.change.surround.ChangeSurroundAngleBracketsAction"/>
+    <action id="VimChangeSurroundDoubleQuotes" class="com.maddyhome.idea.vim.action.change.change.surround.ChangeSurroundDoubleQuotesAction"/>
+    <action id="VimChangeSurroundSingleQuotes" class="com.maddyhome.idea.vim.action.change.change.surround.ChangeSurroundSingleQuotesAction"/>
 
     <!-- Delete -->
     <action id="VimDeleteCharacter" class="com.maddyhome.idea.vim.action.change.delete.DeleteCharacterAction" text="Delete Character"/>
@@ -339,6 +366,7 @@
     <action id="VimCancelExEntry" class="com.maddyhome.idea.vim.action.ex.CancelExEntryAction" text="Cancel Ex Entry"/>
 
     <!-- Other -->
+    <action id="VimToggleRegion" class="com.maddyhome.idea.vim.action.folding.ToggleRegionAction" text="Toggle region fold"/>
     <action id="VimLastSearchReplace" class="com.maddyhome.idea.vim.action.change.change.ChangeLastSearchReplaceAction" text="Repeat Last :s"/>
     <action id="VimLastGlobalSearchReplace" class="com.maddyhome.idea.vim.action.change.change.ChangeLastGlobalSearchReplaceAction" text="Repeat Last :s"/>
     <action id="VimRepeatChange" class="com.maddyhome.idea.vim.action.change.RepeatChangeAction" text="Repeat Change"/>

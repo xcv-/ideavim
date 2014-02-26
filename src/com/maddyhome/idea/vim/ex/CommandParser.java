@@ -104,8 +104,11 @@ public class CommandParser {
     new SetHandler();
     new ShiftLeftHandler();
     new ShiftRightHandler();
+    new SplitHorizontallyHandler();
+    new SplitVerticallyHandler();
     new SubstituteHandler();
     new UndoHandler();
+    new UnsplitHandler();
     new WriteAllHandler();
     new WriteHandler();
     new WriteNextFileHandler();

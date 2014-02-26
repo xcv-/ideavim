@@ -193,6 +193,21 @@ public class ChangeGroup extends AbstractActionGroup {
     runEnterAction(editor, context);
   }
 
+  /**
+   * Insert a new line after the current line and stay in normal mode
+   *
+   * @param editor  The editor to insert into
+   * @param context The data context
+   */
+  public void insertNewLineNormal(@NotNull final Editor editor, @NotNull final DataContext context) {
+    int oldPos = editor.getCaretModel().getOffset();
+    int endLine = EditorHelper.getLineEndForOffset(editor, oldPos);
+
+    CommandGroups.getInstance().getChange().insertText(editor, endLine, "\n");
+
+    editor.getCaretModel().moveToOffset(oldPos);
+  }
+
   private void runEnterAction(Editor editor, DataContext context) {
     CommandState state = CommandState.getInstance(editor);
     if (state.getMode() != CommandState.Mode.REPEAT) {
@@ -308,7 +323,7 @@ public class ChangeGroup extends AbstractActionGroup {
     }
 
     if (deleteTo != -1) {
-      deleteRange(editor, new TextRange(deleteTo, offset), SelectionType.CHARACTER_WISE, false);
+      deleteRange(editor, new TextRange(deleteTo, offset), SelectionType.CHARACTER_WISE, false, true);
 
       return true;
     }
@@ -328,7 +343,7 @@ public class ChangeGroup extends AbstractActionGroup {
       return false;
     }
     final TextRange range = new TextRange(deleteTo, editor.getCaretModel().getOffset());
-    deleteRange(editor, range, SelectionType.CHARACTER_WISE, false);
+    deleteRange(editor, range, SelectionType.CHARACTER_WISE, false, true);
     return true;
   }
 
@@ -663,12 +678,13 @@ public class ChangeGroup extends AbstractActionGroup {
    *
    * @param editor  The editor to remove the characters from
    * @param count   The number of characters to delete
+   * @param store   Store deleted text in a register?
    * @return true if able to delete, false if not
    */
-  public boolean deleteCharacter(@NotNull Editor editor, int count, boolean isChange) {
+  public boolean deleteCharacter(@NotNull Editor editor, int count, boolean isChange, boolean store) {
     int offset = CommandGroups.getInstance().getMotion().moveCaretHorizontal(editor, count, true);
     if (offset != -1) {
-      boolean res = deleteText(editor, new TextRange(editor.getCaretModel().getOffset(), offset), SelectionType.CHARACTER_WISE);
+      boolean res = deleteText(editor, new TextRange(editor.getCaretModel().getOffset(), offset), SelectionType.CHARACTER_WISE, store);
       int pos = editor.getCaretModel().getOffset();
       int norm = EditorHelper.normalizeOffset(editor, editor.getCaretModel().getLogicalPosition().line, pos, isChange);
       if (norm != pos) {
@@ -681,14 +697,16 @@ public class ChangeGroup extends AbstractActionGroup {
     return false;
   }
 
+
   /**
    * Deletes count lines including the current line
    *
    * @param editor  The editor to remove the lines from
    * @param count   The number of lines to delete
+   * @param store   Store deleted text in a register?
    * @return true if able to delete the lines, false if not
    */
-  public boolean deleteLine(@NotNull Editor editor, int count) {
+  public boolean deleteLine(@NotNull Editor editor, int count, boolean store) {
     int start = CommandGroups.getInstance().getMotion().moveCaretToLineStart(editor);
     int offset = Math.min(CommandGroups.getInstance().getMotion().moveCaretToLineEndOffset(editor,
                                                                                            count - 1, true) + 1,
@@ -698,7 +716,7 @@ public class ChangeGroup extends AbstractActionGroup {
       logger.debug("offset=" + offset);
     }
     if (offset != -1) {
-      boolean res = deleteText(editor, new TextRange(start, offset), SelectionType.LINE_WISE);
+      boolean res = deleteText(editor, new TextRange(start, offset), SelectionType.LINE_WISE, store);
       if (res && editor.getCaretModel().getOffset() >= EditorHelper.getFileSize(editor) &&
           editor.getCaretModel().getOffset() != 0) {
         MotionGroup.moveCaret(editor,
@@ -711,17 +729,23 @@ public class ChangeGroup extends AbstractActionGroup {
     return false;
   }
 
+  public boolean deleteLine(@NotNull Editor editor, int count) {
+    return deleteLine(editor, count, true);
+  }
+
+
   /**
    * Delete from the cursor to the end of count - 1 lines down
    *
    * @param editor  The editor to delete from
    * @param count   The number of lines affected
+   * @param store   Store deleted text in a register?
    * @return true if able to delete the text, false if not
    */
-  public boolean deleteEndOfLine(@NotNull Editor editor, int count) {
+  public boolean deleteEndOfLine(@NotNull Editor editor, int count, boolean store) {
     int offset = CommandGroups.getInstance().getMotion().moveCaretToLineEndOffset(editor, count - 1, true);
     if (offset != -1) {
-      boolean res = deleteText(editor, new TextRange(editor.getCaretModel().getOffset(), offset), SelectionType.CHARACTER_WISE);
+      boolean res = deleteText(editor, new TextRange(editor.getCaretModel().getOffset(), offset), SelectionType.CHARACTER_WISE, store);
       int pos = CommandGroups.getInstance().getMotion().moveCaretHorizontal(editor, -1, false);
       if (pos != -1) {
         MotionGroup.moveCaret(editor, pos);
@@ -731,6 +755,10 @@ public class ChangeGroup extends AbstractActionGroup {
     }
 
     return false;
+  }
+
+  public boolean deleteEndOfLine(@NotNull Editor editor, int count) {
+    return deleteEndOfLine(editor, count, true);
   }
 
   /**
@@ -795,7 +823,7 @@ public class ChangeGroup extends AbstractActionGroup {
       else {
         offset = CommandGroups.getInstance().getMotion().moveCaretToLineStartOffset(editor, 1);
       }
-      deleteText(editor, new TextRange(editor.getCaretModel().getOffset(), offset), null);
+      deleteText(editor, new TextRange(editor.getCaretModel().getOffset(), offset), null, false);
       if (spaces) {
         insertText(editor, start, " ");
         MotionGroup.moveCaret(editor, CommandGroups.getInstance().getMotion().moveCaretHorizontal(editor, -1, false));
@@ -814,9 +842,10 @@ public class ChangeGroup extends AbstractActionGroup {
    * @param rawCount The actual count entered by the user
    * @param argument The motion command
    * @param isChange if from a change
+   * @param store    Store the deleted text in a register?
    * @return true if able to delete the text, false if not
    */
-  public boolean deleteMotion(@NotNull Editor editor, DataContext context, int count, int rawCount, @NotNull Argument argument, boolean isChange) {
+  public boolean deleteMotion(@NotNull Editor editor, DataContext context, int count, int rawCount, @NotNull Argument argument, boolean isChange, boolean store) {
     final TextRange range = getDeleteMotionRange(editor, context, count, rawCount, argument);
     if (range == null) {
       return (EditorHelper.getFileSize(editor) == 0);
@@ -840,8 +869,13 @@ public class ChangeGroup extends AbstractActionGroup {
         }
       }
     }
-    return deleteRange(editor, range, SelectionType.fromCommandFlags(argument.getMotion().getFlags()), isChange);
+    return deleteRange(editor, range, SelectionType.fromCommandFlags(argument.getMotion().getFlags()), isChange, store);
   }
+
+  public boolean deleteMotion(@NotNull Editor editor, DataContext context, int count, int rawCount, @NotNull Argument argument, boolean isChange) {
+    return deleteMotion(editor, context, count, rawCount, argument, isChange, true);
+  }
+
 
   public static TextRange getDeleteMotionRange(Editor editor,
                                                DataContext context,
@@ -874,13 +908,15 @@ public class ChangeGroup extends AbstractActionGroup {
    * @param range    The range to delete
    * @param type     The type of deletion
    * @param isChange is from a change action
+   * @param store    Store the deleted text in a register?
    * @return true if able to delete the text, false if not
    */
   public boolean deleteRange(@NotNull Editor editor,
                              @NotNull TextRange range,
                              @Nullable SelectionType type,
-                             boolean isChange) {
-    final boolean res = deleteText(editor, range, type);
+                             boolean isChange,
+                             boolean store) {
+    final boolean res = deleteText(editor, range, type, store);
     final int size = EditorHelper.getFileSize(editor);
     if (res) {
       final int pos;
@@ -894,6 +930,23 @@ public class ChangeGroup extends AbstractActionGroup {
     }
     return res;
   }
+
+
+  public boolean deleteSurround(@NotNull Editor editor, char lhs, char rhs) {
+    int lhsPos = CommandGroups.getInstance().getMotion().moveCaretToNextCharacterOnLine(editor, -1, lhs);
+    int rhsPos = CommandGroups.getInstance().getMotion().moveCaretToNextCharacterOnLine(editor, 1, rhs);
+
+    boolean lhsRes = deleteText(editor, new TextRange(lhsPos, lhsPos+1), SelectionType.CHARACTER_WISE, false);
+    boolean rhsRes = deleteText(editor, new TextRange(rhsPos-1, rhsPos), SelectionType.CHARACTER_WISE, false);
+
+    int pos = CommandGroups.getInstance().getMotion().moveCaretHorizontal(editor, 1, false);
+    if (pos != -1) {
+      MotionGroup.moveCaret(editor, pos);
+    }
+
+    return lhsRes && rhsRes;
+  }
+
 
   /**
    * Begin Replace mode
@@ -997,7 +1050,7 @@ public class ChangeGroup extends AbstractActionGroup {
       return changeEndOfLine(editor, context, 1);
     }
 
-    boolean res = deleteCharacter(editor, count, true);
+    boolean res = deleteCharacter(editor, count, true, false);
     if (res) {
       initInsert(editor, context, CommandState.Mode.INSERT);
     }
@@ -1014,7 +1067,7 @@ public class ChangeGroup extends AbstractActionGroup {
    * @return true if able to delete count lines, false if not
    */
   public boolean changeLine(@NotNull Editor editor, @NotNull DataContext context, int count) {
-    boolean res = deleteLine(editor, count);
+    boolean res = deleteLine(editor, count, false);
     if (res) {
       final int lastLine = EditorHelper.getLineCount(editor) - 1;
       final LogicalPosition pos = editor.offsetToLogicalPosition(editor.getCaretModel().getOffset());
@@ -1038,7 +1091,7 @@ public class ChangeGroup extends AbstractActionGroup {
    * @return true if able to delete count lines, false if not
    */
   public boolean changeEndOfLine(@NotNull Editor editor, @NotNull DataContext context, int count) {
-    boolean res = deleteEndOfLine(editor, count);
+    boolean res = deleteEndOfLine(editor, count, false);
     if (res) {
       insertAfterLineEnd(editor, context);
     }
@@ -1067,13 +1120,12 @@ public class ChangeGroup extends AbstractActionGroup {
     final int offset = editor.getCaretModel().getOffset();
     final CharacterHelper.CharacterType charType = CharacterHelper.charType(chars.charAt(offset), false);
     if (EditorHelper.getFileSize(editor) > 0 && charType != CharacterHelper.CharacterType.WHITESPACE) {
-      final boolean lastWordChar = offset <= EditorHelper.getFileSize(editor) ?
-                                   CharacterHelper.charType(chars.charAt(offset + 1), false) != charType :
-                                   true;
+      final boolean lastWordChar = offset > EditorHelper.getFileSize(editor) ||
+                                   CharacterHelper.charType(chars.charAt(offset + 1), false) != charType;
       final ImmutableSet<String> wordMotions = ImmutableSet.of(
         "VimMotionWordRight", "VimMotionBigWordRight", "VimMotionCamelRight");
       if (wordMotions.contains(id) && lastWordChar) {
-        final boolean res = deleteCharacter(editor, 1, true);
+        final boolean res = deleteCharacter(editor, 1, true, false);
         if (res) {
           insertBeforeCursor(editor, context);
         }
@@ -1124,7 +1176,7 @@ public class ChangeGroup extends AbstractActionGroup {
       }
     }
 
-    boolean res = deleteMotion(editor, context, count, rawCount, argument, true);
+    boolean res = deleteMotion(editor, context, count, rawCount, argument, true, false);
     if (res) {
       insertBeforeCursor(editor, context);
     }
@@ -1190,7 +1242,7 @@ public class ChangeGroup extends AbstractActionGroup {
       }
     }
     boolean after = range.getEndOffset() >= EditorHelper.getFileSize(editor);
-    boolean res = deleteRange(editor, range, type, true);
+    boolean res = deleteRange(editor, range, type, true, false);
     if (res) {
       if (type == SelectionType.LINE_WISE) {
         if (after) {
@@ -1210,6 +1262,48 @@ public class ChangeGroup extends AbstractActionGroup {
 
     return res;
   }
+
+  public boolean changeSurround(@NotNull Editor editor, char oldLhs, char oldRhs, char newLhs, char newRhs) {
+    int lhsPos = CommandGroups.getInstance().getMotion().moveCaretToNextCharacterOnLine(editor, -1, oldLhs);
+    int rhsPos = CommandGroups.getInstance().getMotion().moveCaretToNextCharacterOnLine(editor, 1, oldRhs);
+
+    if (lhsPos < 0 || rhsPos < 0)
+      return false;
+
+    boolean lhsRes = deleteText(editor, new TextRange(lhsPos, lhsPos+1), SelectionType.CHARACTER_WISE, false);
+    insertText(editor, lhsPos, ""+newLhs);
+
+    boolean rhsRes = deleteText(editor, new TextRange(rhsPos, rhsPos+1), SelectionType.CHARACTER_WISE, false);
+    insertText(editor, rhsPos, ""+newRhs);
+
+    return lhsRes && rhsRes;
+
+    /*
+    //int lhsPos = CommandGroups.getInstance().getMotion().moveCaretToNextCharacterOnLine(editor, -1, oldLhs);
+    //int rhsPos = CommandGroups.getInstance().getMotion().moveCaretToNextCharacterOnLine(editor, 1, oldRhs);
+
+    String text = editor.getDocument().getText();
+    int lhsPos = SearchHelper.findBalancedLhs(text, oldLhs, oldRhs, SearchHelper.Direction.BACK);
+    int rhsPos = SearchHelper.findBalancedRhs(text, oldLhs, oldRhs, SearchHelper.Direction.FORWARD);
+
+    if (lhsPos < 0 || rhsPos < 0) {
+      return false;
+    }
+
+    boolean lhsRes = deleteText(editor, new TextRange(lhsPos, lhsPos+1), SelectionType.CHARACTER_WISE, false);
+    boolean rhsRes = deleteText(editor, new TextRange(rhsPos-1, rhsPos), SelectionType.CHARACTER_WISE, false);
+
+    if (!lhsRes || !rhsRes) {
+      return false;
+    }
+
+    insertText(editor, lhsPos, Character.toString(newLhs));
+    insertText(editor, rhsPos, Character.toString(newRhs));
+
+    return true;
+    */
+  }
+
 
   /**
    * Toggles the case of count characters
@@ -1380,7 +1474,7 @@ public class ChangeGroup extends AbstractActionGroup {
               }
             }
             if (pos > wsoff) {
-              deleteText(editor, new TextRange(wsoff, pos), null);
+              deleteText(editor, new TextRange(wsoff, pos), null, false);
             }
           }
         }
@@ -1453,15 +1547,16 @@ public class ChangeGroup extends AbstractActionGroup {
    * @param editor  The editor to delete from
    * @param range   The range to delete
    * @param type    The type of deletion
+   * @param store   Store the deleted text to a register?
    * @return true if able to delete the text, false if not
    */
-  private boolean deleteText(@NotNull final Editor editor, @NotNull final TextRange range, @Nullable SelectionType type) {
+  private boolean deleteText(@NotNull final Editor editor, @NotNull final TextRange range, @Nullable SelectionType type, boolean store) {
     // Fix for http://youtrack.jetbrains.net/issue/VIM-35
     if (!range.normalize(EditorHelper.getFileSize(editor, true))) {
       return false;
     }
 
-    if (type == null || CommandGroups.getInstance().getRegister().storeText(editor, range, type, true)) {
+    if (type == null || !store || CommandGroups.getInstance().getRegister().storeText(editor, range, type, true)) {
       final Document document = editor.getDocument();
       final int[] startOffsets = range.getStartOffsets();
       final int[] endOffsets = range.getEndOffsets();
@@ -1481,6 +1576,7 @@ public class ChangeGroup extends AbstractActionGroup {
 
     return false;
   }
+
 
   /**
    * Replace text in the editor

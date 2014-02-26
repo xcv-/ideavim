@@ -226,7 +226,17 @@ public class SearchHelper {
     return res;
   }
 
-  private enum Direction {
+
+  public static int findBalancedLhs(String chars, char lhs, char rhs, Direction direction) {
+    return 0;
+  }
+
+  public static int findBalancedRhs(String chars, char lhs, char rhs, Direction direction) {
+    return 0;
+  }
+
+
+  public enum Direction {
     BACK(-1),
     FORWARD(1);
 
